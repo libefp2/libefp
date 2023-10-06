@@ -60,6 +60,7 @@ void setulb_(int *, int *, double *, double *, double *, int *,
 
 static void call_routine(struct opt_state *state)
 {
+	msg("SKP's changes in libopt/opt.c call_routine \n\n");
 	int n = (int)state->n;
 	int m = (int)state->m;
 
@@ -85,6 +86,8 @@ static void call_routine(struct opt_state *state)
 
 struct opt_state *opt_create(size_t n)
 {
+	msg("SKP's changes in libopt/opt.c opt_create \n\n");
+
 	struct opt_state *state = calloc(1, sizeof(struct opt_state));
 	assert(state);
 
@@ -119,6 +122,8 @@ struct opt_state *opt_create(size_t n)
 
 enum opt_result opt_init(struct opt_state *state, size_t n, const double *x)
 {
+	msg("SKP's changes in libopt/opt.c opt_init \n\n");
+	
 	assert(state);
 	assert(n == state->n);
 	assert(x);
@@ -147,12 +152,15 @@ enum opt_result opt_init(struct opt_state *state, size_t n, const double *x)
 
 void opt_set_func(struct opt_state *state, opt_func_t func)
 {
+	msg("SKP's changes in libopt/opt.c opt_set_func \n\n");
+
 	assert(state);
 	state->func = func;
 }
 
 void opt_set_user_data(struct opt_state *state, void *data)
 {
+	msg("SKP's changes in libopt/opt.c opt_set_uder_data \n\n");
 	assert(state);
 	state->data = data;
 }
@@ -160,6 +168,8 @@ void opt_set_user_data(struct opt_state *state, void *data)
 void opt_set_bound(struct opt_state *state, size_t n, const int *nbd,
 		const double *l, const double *u)
 {
+
+	msg("SKP's changes in libopt/opt.c opt_set_bound \n\n");
 	assert(state);
 	assert(state->n == n);
 
@@ -170,6 +180,8 @@ void opt_set_bound(struct opt_state *state, size_t n, const int *nbd,
 
 enum opt_result opt_step(struct opt_state *state)
 {
+	msg("SKP's changes in libopt/opt.c opt_step \n\n");
+
 	assert(state);
 
 next:
@@ -192,12 +204,15 @@ next:
 
 double opt_get_fx(struct opt_state *state)
 {
+
+	msg("SKP's changes in libopt/opt.c opt_get_fx \n\n");
 	assert(state);
 	return state->f;
 }
 
 void opt_get_x(struct opt_state *state, size_t size, double *out)
 {
+	msg("SKP's changes in libopt/opt.c opt_get_x \n\n");
 	assert(state);
 	assert(size >= state->n);
 	assert(out);
@@ -207,6 +222,7 @@ void opt_get_x(struct opt_state *state, size_t size, double *out)
 
 void opt_get_gx(struct opt_state *state, size_t size, double *out)
 {
+	msg("SKP's changes in libopt/opt.c opt_get_gx \n\n");
 	assert(state);
 	assert(size >= state->n);
 	assert(out);
@@ -216,6 +232,7 @@ void opt_get_gx(struct opt_state *state, size_t size, double *out)
 
 void opt_shutdown(struct opt_state *state)
 {
+	msg("SKP's changes in libopt/opt.c opt_shutdown \n\n");
 	if (state) {
 		free(state->x);
 		free(state->l);

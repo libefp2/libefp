@@ -31,6 +31,7 @@ void sim_opt(struct state *state);
 
 static double compute_efp(size_t n, const double *x, double *gx, void *data)
 {
+	msg("SKP's CHANGES IN COMPUTE_EFP\n\n");
 	size_t n_frags, n_charge;
 	struct state *state = (struct state *)data;
 
@@ -57,6 +58,7 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
 
 static void print_restart(struct efp *efp)
 {
+	msg("SKP's CHANGES IN PRINT_RESTART \n\n");
 	size_t n_frags;
 	check_fail(efp_get_frag_count(efp, &n_frags));
 
@@ -106,6 +108,7 @@ static int check_conv(double rms_grad, double max_grad, double opt_tol)
 static void get_grad_info(size_t n_coord, const double *grad, double *rms_grad_out,
 				double *max_grad_out)
 {
+	msg("SKP's CHANGES IN GET_GRAD_INFO \n\n");
 	double rms_grad = 0.0, max_grad = 0.0;
 
 	for (size_t i = 0; i < n_coord; i++) {
@@ -123,6 +126,8 @@ static void get_grad_info(size_t n_coord, const double *grad, double *rms_grad_o
 
 static void print_status(struct state *state, double e_diff, double rms_grad, double max_grad)
 {
+
+	msg("SKP's CHANGES IN PRINT_STATUS \n\n");
 	print_geometry(state->efp);
 	print_restart(state->efp);
 	print_energy(state);
@@ -138,6 +143,7 @@ static void print_status(struct state *state, double e_diff, double rms_grad, do
 void sim_opt(struct state *state)
 {
 	msg("ENERGY MINIMIZATION JOB\n\n\n");
+	msg("SKP's CHANGES\n\n\n");
 
 	size_t n_frags, n_charge, n_coord;
 	double rms_grad, max_grad;
@@ -146,6 +152,10 @@ void sim_opt(struct state *state)
 	check_fail(efp_get_point_charge_count(state->efp, &n_charge));
 
 	n_coord = 6 * n_frags + 3 * n_charge;
+
+	msg("n_frags = %d\n",n_frags);
+        msg("n_charge = %d\n",n_charge);
+        msg("n_coord = %d\n",n_coord);
 
 	struct opt_state *opt_state = opt_create(n_coord);
 	if (!opt_state)
