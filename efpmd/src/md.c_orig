@@ -70,7 +70,6 @@ struct md {
 };
 
 void sim_md(struct state *state);
-void simulate_monte_carlo();
 
 static vec_t wrap(const struct md *md, const vec_t *pos)
 {
@@ -285,11 +284,11 @@ static mat_t get_system_inertia_tensor(const struct md *md)
 
 static void remove_system_drift(struct md *md)
 {
-	vec_t cp = get_system_com(md); // system center of mass
-	vec_t cv = get_system_com_velocity(md); // center of mass velocity
-	vec_t am = get_system_angular_momentum(md); // angular momentum of system
-	// calculation with intertia and intertia_inverse matrix
-	mat_t inertia = get_system_inertia_tensor(md); 
+	vec_t cp = get_system_com(md);
+	vec_t cv = get_system_com_velocity(md);
+	vec_t am = get_system_angular_momentum(md);
+
+	mat_t inertia = get_system_inertia_tensor(md);
 	mat_t inertia_inv = mat_zero;
 
 	if (inertia.xx < EPSILON ||
@@ -307,55 +306,44 @@ static void remove_system_drift(struct md *md)
 
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		struct body *body = md->bodies + i;
-		vec_t pos = wrap(md, &body->pos); // wrap fn. apply PBC to simbox
-		// cross product of the angular velocity (av) 
-		// and the vector from the center of mass (cp) 
-		// to the particle's position (pos) to velocity 
-		// correction due to angular motion 
+		vec_t pos = wrap(md, &body->pos);
+
 		vec_t cross = {
 			av.y * (pos.z - cp.z) - av.z * (pos.y - cp.y),
 			av.z * (pos.x - cp.x) - av.x * (pos.z - cp.z),
 			av.x * (pos.y - cp.y) - av.y * (pos.x - cp.x)
 		};
-		// subtract com-velocity (cv) and the calculated cross vector
-		// from the particle's velocity to remove the system drift.
+
 		body->vel.x -= cv.x + cross.x;
 		body->vel.y -= cv.y + cross.y;
 		body->vel.z -= cv.z + cross.z;
 	}
-	// Recalculation of com-velocity and angmom
+
 	vec_t cv2 = get_system_com_velocity(md);
 	vec_t am2 = get_system_angular_momentum(md);
 
 	assert(vec_len(&cv2) < EPSILON && vec_len(&am2) < EPSILON);
-// Ensuring the conservation of momentum and angular momentum by removing
-// the translational and angular drift from the particle velocities.
-
 }
 
 static void compute_forces(struct md *md)
 {
- 
-	msg("   SKP testing workflow..compute_forces....in md.c\n\n"); //SKP
-
 	for (size_t i = 0; i < md->n_bodies; i++) {
-		double crd[12]; // position and orientation 6 each
-		// copy particle's position (pos) and rotation matrix (rotmat)
+		double crd[12];
+
 		memcpy(crd, &md->bodies[i].pos, 3 * sizeof(double));
 		memcpy(crd + 3, &md->bodies[i].rotmat, 9 * sizeof(double));
-		// checks if particle coordinates matches EFP library ??
+
 		check_fail(efp_set_frag_coordinates(md->state->efp, i,
 		    EFP_COORD_TYPE_ROTMAT, crd));
 	}
 
 	if (cfg_get_bool(md->state->cfg, "enable_multistep")) {
 		struct efp_opts opts, opts_save;
-		int multistep_steps; // what's multistep ??
+		int multistep_steps;
 
 		multistep_steps = cfg_get_int(md->state->cfg,
 		    "multistep_steps");
 		check_fail(efp_get_opts(md->state->efp, &opts));
-		// Initially computed only xr_energy and gradient
 		if (md->step % multistep_steps == 0) {
 			opts_save = opts;
 			opts.terms = EFP_TERM_XR; /* xr only */
@@ -366,8 +354,6 @@ static void compute_forces(struct md *md)
 			    6 * md->n_bodies * sizeof(double));
 			opts = opts_save;
 		}
-		// For multistep,  XR energy and gradient are added 
-		// back to the total energy and gradient
 		opts.terms &= ~EFP_TERM_XR; /* turn off xr */
 		check_fail(efp_set_opts(md->state->efp, &opts));
 		compute_energy(md->state, true);
@@ -378,7 +364,7 @@ static void compute_forces(struct md *md)
 		compute_energy(md->state, true);
 
 	md->potential_energy = md->state->energy;
-	// Forces and Torques Assignment
+
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		struct body *body = md->bodies + i;
 
@@ -393,8 +379,6 @@ static void compute_forces(struct md *md)
 		/* convert torque to body frame */
 		body->torque = mat_trans_vec(&body->rotmat, &body->torque);
 	}
-// calculate forces and torques acting on particles in an MD simulation. 
-// Interfaces with EFP library to compute the energy and forces
 }
 
 static void set_body_mass_and_inertia(struct efp *efp, size_t idx,
@@ -824,23 +808,22 @@ static struct md *md_create(struct state *state)
 	struct md *md = xcalloc(1, sizeof(struct md));
 
 	md->state = state;
-	// Creates the periodic box if the user chooses to... "box_from_str" is in common.c
 	md->box = box_from_str(cfg_get_string(state->cfg, "periodic_box"));
- 	// choice of ensemble
+
 	switch (cfg_get_enum(state->cfg, "ensemble")) {
 		case ENSEMBLE_TYPE_NVE:
-			md->get_invariant = get_invariant_nve; // calculates KE and adds to PE
-			md->update_step = update_step_nve; // makes changes to properties of the system (angmom/velo etc)
+			md->get_invariant = get_invariant_nve;
+			md->update_step = update_step_nve;
 			break;
 		case ENSEMBLE_TYPE_NVT:
-			md->get_invariant = get_invariant_nvt; // calculates KE and adds to PE and t_virt
+			md->get_invariant = get_invariant_nvt;
 			md->update_step = update_step_nvt;
 			md->data = xcalloc(1, sizeof(struct nvt_data));
 			break;
 		case ENSEMBLE_TYPE_NPT:
-			md->get_invariant = get_invariant_npt; // calculates KE and adds to PE, t_virt and p_virt
+			md->get_invariant = get_invariant_npt;
 			md->update_step = update_step_npt;
-			md->data = xcalloc(1, sizeof(struct npt_data)); 
+			md->data = xcalloc(1, sizeof(struct npt_data));
 			break;
 		default:
 			assert(0);
@@ -855,7 +838,7 @@ static struct md *md_create(struct state *state)
 
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		struct body *body = md->bodies + i;
-		// position of the atoms
+
 		body->pos.x = coord[6 * i + 0];
 		body->pos.y = coord[6 * i + 1];
 		body->pos.z = coord[6 * i + 2];
@@ -865,13 +848,13 @@ static struct md *md_create(struct state *state)
 		double c = coord[6 * i + 5];
 
 		euler_to_matrix(a, b, c, &body->rotmat);
-		// velocity of the  atoms
+
 		body->vel.x = md->state->sys->frags[i].vel[0];
 		body->vel.y = md->state->sys->frags[i].vel[1];
 		body->vel.z = md->state->sys->frags[i].vel[2];
 
 		set_body_mass_and_inertia(state->efp, i, body);
-		// angular momentum of the atoms
+
 		body->angmom.x = md->state->sys->frags[i].vel[3] *
 		    body->inertia.x;
 		body->angmom.y = md->state->sys->frags[i].vel[4] *
@@ -880,7 +863,7 @@ static struct md *md_create(struct state *state)
 		    body->inertia.z;
 
 		md->n_freedom += 3;
-		//n_freedom?? EPSILON?? 
+
 		if (body->inertia.x > EPSILON)
 			md->n_freedom++;
 		if (body->inertia.y > EPSILON)
@@ -890,8 +873,6 @@ static struct md *md_create(struct state *state)
 	}
 
 	return (md);
-// Uses coordinates and efp info to generate position, orientation, 
-// velocity, mass, and moment of inertia for each body.
 }
 
 static void velocitize(struct md *md)
@@ -899,14 +880,14 @@ static void velocitize(struct md *md)
 	rand_init();
 
 	double temperature = cfg_get_double(md->state->cfg, "temperature");
-	double ke = temperature * BOLTZMANN * // Kinetic energy
-	    md->n_freedom / (2.0 * 6.0 * md->n_bodies); // Reason fro this array size??
+	double ke = temperature * BOLTZMANN *
+	    md->n_freedom / (2.0 * 6.0 * md->n_bodies);
 
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		struct body *body = md->bodies + i;
 
-		double vel = sqrt(2.0 * ke / body->mass); // from ke = (1/2)m.v.v
-	
+		double vel = sqrt(2.0 * ke / body->mass);
+
 		body->vel.x = vel * rand_normal();
 		body->vel.y = vel * rand_normal();
 		body->vel.z = vel * rand_normal();
@@ -917,9 +898,6 @@ static void velocitize(struct md *md)
 		    rand_normal();
 		body->angmom.z = sqrt(2.0 * ke * body->inertia.z) *
 		    rand_normal();
-// Uses ke to update the velocity and anmom information;
-// In previous routine, fragment_velo(?) were used to 
-// initialize the above info in body struct.
 	}
 }
 
@@ -969,122 +947,4 @@ void sim_md(struct state *state)
 	md_shutdown(md);
 
 	msg("MOLECULAR DYNAMICS JOB COMPLETED SUCCESSFULLY\n");
-
-	simulate_monte_carlo();
-
-}
-
-void monteCarloMove(Particle* particles, int num_particles, double temperature) {
-    int particle_index = rand() % num_particles;
-    Particle selected_particle = particles[particle_index];
-    double kB = BOLTZMANN;
-
-    double dx = (rand() / (double)RAND_MAX - 0.5) * 0.1;
-    double dy = (rand() / (double)RAND_MAX - 0.5) * 0.1;
-    double dz = (rand() / (double)RAND_MAX - 0.5) * 0.1;
-
-    selected_particle.x += dx;
-    selected_particle.y += dy;
-    selected_particle.z += dz;
-
-    double energy_change = 0.0;
-    for (int i = 0; i < num_particles; i++) {
-        if (i != particle_index) {
-            energy_change += calculatePairwiseEnergy(selected_particle, particles[i]) -
-                            calculatePairwiseEnergy(particles[particle_index], particles[i]);
-        }
-    }
-
-    if (energy_change < 0.0 || exp(-energy_change / (kB * temperature)) > (rand() / (double)RAND_MAX)) {
-        particles[particle_index] = selected_particle;
-    }
-}
-
-void monteCarloSimulation(Particle* particles, int num_particles, double temperature) {
-    double kB = BOLTZMANN; // Assuming BOLTZMANN is defined elsewhere
-    int num_steps = 50;
-
-    for (int step = 0; step < num_steps; step++) {
-        int particle_index = rand() % num_particles;
-        Particle selected_particle = particles[particle_index];
-
-        double dx = (rand() / (double)RAND_MAX - 0.5) * 0.1;
-        double dy = (rand() / (double)RAND_MAX - 0.5) * 0.1;
-        double dz = (rand() / (double)RAND_MAX - 0.5) * 0.1;
-
-        selected_particle.x += dx;
-        selected_particle.y += dy;
-        selected_particle.z += dz;
-	
-	double energy_change = 0.0;
-        for (int i = 0; i < num_particles; i++) {
-            if (i != particle_index) {
-                energy_change += calculatePairwiseEnergy(selected_particle, particles[i]) -
-                                calculatePairwiseEnergy(particles[particle_index], particles[i]);
-            }
-        }
-
-        if (energy_change < 0.0 || exp(-energy_change / (kB * temperature)) > (rand() / (double)RAND_MAX)) {
-            particles[particle_index] = selected_particle;
-
-		printf("\nStep %d:\n", step + 1);
-        	for (int i = 0; i < num_particles; i++) {
-            	   printf("Particle %d: x=%.6f, y=%.6f, z=%.6f\n", i + 1, particles[i].x, particles[i].y, particles[i].z);
-        	}
-
-        }
-
-//	printf("\nStep %d:\n", step + 1);
-//        for (int i = 0; i < num_particles; i++) {
-//            printf("Particle %d: x=%.6f, y=%.6f, z=%.6f\n", i + 1, particles[i].x, particles[i].y, particles[i].z);
-//        }
-        printf("\n");
-    }
-}
-
-void simulate_monte_carlo() {
-
-    msg("\n\nMONTE CARLO JOB\n\n\n");    
-    srand(time(NULL));
-    int num_particles = 6;
-    double temperature = 298.15; 
-    Particle* particles = (Particle*)malloc(num_particles * sizeof(Particle));
-
-    double initial_coordinates[][3] = {
-    	{0.000010, 0.058100, 0.547078},
-    	{-0.752741, -0.481588, 0.386524},
-    	{0.752563, -0.481879, 0.386570},
-    	{0.000002, 0.003940, 4.377149},
-    	{-0.466697, -0.812793, 4.713742},
-    	{-0.466895, 0.803769, 4.751899}
-    };
-
-    msg("\n\nINITIAL COORDIANTES\n\n\n");
-
-    for (int i = 0; i < num_particles; i++) {
-        printf("Particle %d: x=%.6f, y=%.6f, z=%.6f\n", i + 1, 
-            initial_coordinates[i][0], initial_coordinates[i][1], initial_coordinates[i][2]);
-    }
-
-    for(int i = 0; i < num_particles; i++) {
-       particles[i].x = initial_coordinates[i][0];
-       particles[i].y = initial_coordinates[i][1];
-       particles[i].z = initial_coordinates[i][2];
-    }   
- 
-//    int num_steps = 1000;
-//    for (int step = 0; step < num_steps; step++) {
-//        monteCarloMove(particles, num_particles, temperature);
-	  monteCarloSimulation(particles, num_particles, temperature);
-//    }
-
-    msg("\n\nFINAL COORDIANTES\n\n\n");
-
-    for (int i = 0; i < num_particles; i++) {
-        printf("Particle %d: x=%.2f, y=%.2f, z=%.2f\n", i + 1, particles[i].x, particles[i].y, particles[i].z);
-    }
-    
-    free(particles);
-    msg("\n\nMONTE CARLO JOB COMPLETED SUCCESSFULLY\n");
-
 }
