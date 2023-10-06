@@ -2318,3 +2318,5 @@ extern "C" void efpenergypol2(double *jPv, INTEGER *size, double *Ecis, double *
 	*energy = EFP2::instance().get_excited_state_energy_correction(
 	    jPv, *size, *Ecis);
 }
+
+// github sucks
