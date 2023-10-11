@@ -52,7 +52,7 @@
 #include "cfg.h"
 #include "msg.h"
 #include "phys.h"
-#include "../c-libtorch/src/c_libtorch.h"
+//#include "../c-libtorch/src/c_libtorch.h"
 
 #define NORETURN __attribute__((noreturn))
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
