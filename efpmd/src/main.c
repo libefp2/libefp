@@ -39,6 +39,7 @@ void sim_grad(struct state *);
 void sim_hess(struct state *);
 void sim_opt(struct state *);
 void sim_md(struct state *);
+void sim_mc(struct state *);
 void sim_efield(struct state *);
 void sim_elpot(struct state *);
 void sim_gtest(struct state *);
@@ -60,6 +61,7 @@ static struct cfg *make_cfg(void)
 		"hess\n"
 		"opt\n"
 		"md\n"
+		"mc\n"
 		"efield\n"
         "elpot\n"
 		"gtest\n"
@@ -69,6 +71,7 @@ static struct cfg *make_cfg(void)
 			   RUN_TYPE_HESS,
 			   RUN_TYPE_OPT,
 			   RUN_TYPE_MD,
+			   RUN_TYPE_MC, // New runtype added for monte carlo 
 			   RUN_TYPE_EFIELD,
 			   RUN_TYPE_ELPOT,
 			   RUN_TYPE_GTEST,
@@ -136,7 +139,9 @@ static struct cfg *make_cfg(void)
 	cfg_add_double(cfg, "num_step_dist", 0.001);
 	cfg_add_double(cfg, "num_step_angle", 0.01);
 
-	cfg_add_enum(cfg, "ensemble", ENSEMBLE_TYPE_NVE,
+	cfg_add_double(cfg, "max_move", 0.1); // REM variable added for max_move of MC state
+	cfg_add_double(cfg, "max_rot", 0.1); // REM variable added for max_move of MC state
+	cfg_add_enum(cfg, "ensemble", ENSEMBLE_TYPE_NVE, 
 		"nve\n"
 		"nvt\n"
 		"npt\n",
@@ -184,6 +189,8 @@ static sim_fn_t get_sim_fn(enum run_type run_type)
 		    return sim_opt;
 	    case RUN_TYPE_MD:
 		    return sim_md;
+	    case RUN_TYPE_MC:
+                    return sim_mc; // New runtype added for monte carlo
 	    case RUN_TYPE_EFIELD:
 		    return sim_efield;
 		case RUN_TYPE_ELPOT:

@@ -58,6 +58,7 @@ enum run_type {
 	RUN_TYPE_HESS,
 	RUN_TYPE_OPT,
 	RUN_TYPE_MD,
+	RUN_TYPE_MC, // SKP
 	RUN_TYPE_EFIELD,
 	RUN_TYPE_ELPOT,
 	RUN_TYPE_FRAG_ELPOT,
@@ -153,7 +154,7 @@ struct state {
 	struct sys *sys;
 	double energy;
 	double *grad;
-	int fragnn;  // SKP for frag_elpot
+//	int fragnn;  // SKP for frag_elpot
 };
 
 void NORETURN die(const char *, ...);
