@@ -57,7 +57,7 @@ struct body {
 struct mc {
 	size_t n_bodies;
 	struct body *bodies;
-//	size_t n_freedom;
+	size_t n_freedom;
 	six_t box;
 	int step; /* current mc step */
 	double potential_energy;
@@ -491,13 +491,18 @@ static void update_step(struct mc *mc)
 	int frag_index = rand() % mc->n_bodies;
 	double kB = BOLTZMANN;;
 	struct body *body = mc->bodies + frag_index;
-
-        double dx = (rand() / (double)RAND_MAX - 0.5) * max_move; 
-        double dy = (rand() / (double)RAND_MAX - 0.5) * max_move;
-        double dz = (rand() / (double)RAND_MAX - 0.5) * max_move;
-	double dalpha = (rand() / (double)RAND_MAX - 0.5) * max_rot;
-        double dbeta = (rand() / (double)RAND_MAX - 0.5) * max_rot;
-        double dgamma = (rand() / (double)RAND_MAX - 0.5) * max_rot;
+ 
+	double movemax = cfg_get_double(mc->state->cfg, "max_move");
+	double rotmax = cfg_get_double(mc->state->cfg, "max_rot");
+	double temp = cfg_get_double(mc->state->cfg, "temperature"); 
+ 
+        double dx = (rand() / (double)RAND_MAX - 0.5) * movemax; 
+        double dy = (rand() / (double)RAND_MAX - 0.5) * movemax;
+        double dz = (rand() / (double)RAND_MAX - 0.5) * movemax;
+	double dalpha = (rand() / (double)RAND_MAX - 0.5) * rotmax;
+        double dbeta = (rand() / (double)RAND_MAX - 0.5) * rotmax;
+        double dgamma = (rand() / (double)RAND_MAX - 0.5) * rotmax;
+	double energy_change = 0.0;
 
 	body->pos.x += dx;
 	body->pos.y += dy;
@@ -507,7 +512,7 @@ static void update_step(struct mc *mc)
 	double old_energy = mc->state->energy;
 	compute_energy(mc->state, false);
 	
-	if (energy_change < 0.0 || exp(-energy_change / (kB * temperature)) > (rand() / (double)RAND_MAX)) {
+	if (energy_change < 0.0 || exp(-energy_change / (kB * temp)) > (rand() / (double)RAND_MAX)) {
 		printf("Step accepted!!\n"); 
 	}
 	else{ 
@@ -517,7 +522,7 @@ static void update_step(struct mc *mc)
  
         	rotate_body(body, -dalpha, -dbeta, -dgamma);
         	mc->state->energy = old_energy;
-		printf("Steps not accepted..Try Again!!\n")
+		printf("Steps not accepted..Try Again!!\n");
 	}
 }
 
@@ -981,9 +986,9 @@ void sim_mc(struct state *state)
 
 	mc_shutdown(mc);
 
-	msg("MOLECULAR DYNAMICS JOB COMPLETED SUCCESSFULLY\n");
+	msg("MONTE CARLO JOB COMPLETED SUCCESSFULLY\n");
 
-	simulate_monte_carlo();
+//	simulate_monte_carlo();
 
 }
 
@@ -1058,7 +1063,7 @@ void monteCarloSimulation(Particle* particles, int num_particles, double tempera
 void simulate_monte_carlo() {
 
     msg("\n\nMONTE CARLO JOB\n\n\n");    
-    srand(time(NULL));
+//    srand(time(NULL));
     int num_particles = 6;
     double temperature = 298.15; 
     Particle* particles = (Particle*)malloc(num_particles * sizeof(Particle));

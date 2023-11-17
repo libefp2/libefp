@@ -52,6 +52,8 @@ static void check_cfg(struct cfg *cfg)
 	check_double(cfg, "pressure");
 	check_double(cfg, "thermostat_tau");
 	check_double(cfg, "barostat_tau");
+	check_double(cfg, "max_move");
+	check_double(cfg, "max_rot");
 }
 
 static void parse_frag(struct stream *stream, enum efp_coord_type coord_type,

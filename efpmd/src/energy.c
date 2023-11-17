@@ -30,7 +30,7 @@
 void compute_energy(struct state *state, bool do_grad)
 {
 
-        msg("   SKP..compute_energy...do_grad()..line 33..in energy.c\n\n"); //SKP
+//        msg("   SKP..compute_energy...do_grad()..line 33..in energy.c\n\n"); //SKP
 
 	struct efp_atom *atoms;
 	struct efp_energy efp_energy;
@@ -44,13 +44,13 @@ void compute_energy(struct state *state, bool do_grad)
 	check_fail(efp_get_frag_count(state->efp, &nfrag));
 
 	if (do_grad) {
-	msg("Inside do_grad line 47\n\n");
+//	msg("Inside do_grad line 47\n\n");
 		check_fail(efp_get_gradient(state->efp, state->grad));
 		check_fail(efp_get_point_charge_gradient(state->efp,
 		    state->grad + 6 * nfrag));
 	}
  
-	msg("   SKP..compute_energy...do_grad()..line 52..in energy.c\n\n"); //SKP
+//	msg("   SKP..compute_energy...do_grad()..line 52..in energy.c\n\n"); //SKP
 
 	state->energy = efp_energy.total;
 
@@ -71,7 +71,7 @@ void compute_energy(struct state *state, bool do_grad)
 			state->energy += 0.5 * frag->constraint_k * dr2;
 
 			if (do_grad) {
-				msg("Inside do_grad line 74\n\n");
+//				msg("Inside do_grad line 74\n\n");
 				grad = state->grad + 6 * ifrag;
 				grad[0] += frag->constraint_k * drx;
 				grad[1] += frag->constraint_k * dry;
@@ -98,7 +98,7 @@ void compute_energy(struct state *state, bool do_grad)
 	ff_compute(state->ff, do_grad);
  
 	if (do_grad) {
-	msg("   SKP testing workflow...do_grad()..line 99..in energy.c\n\n"); //SKP
+//	msg("   SKP testing workflow...do_grad()..line 99..in energy.c\n\n"); //SKP
 		for (ifrag = 0, itotal = 0, grad = state->grad; ifrag < nfrag; ifrag++, grad += 6) {
 			check_fail(efp_get_frag_xyzabc(state->efp, ifrag, xyzabc));
 			check_fail(efp_get_frag_atom_count(state->efp, ifrag, &natom));

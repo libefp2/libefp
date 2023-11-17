@@ -970,10 +970,10 @@ void sim_md(struct state *state)
 
 	msg("MOLECULAR DYNAMICS JOB COMPLETED SUCCESSFULLY\n");
 
-	simulate_monte_carlo();
+//	simulate_monte_carlo();
 
 }
-
+/*
 void monteCarloMove(Particle* particles, int num_particles, double temperature) {
     int particle_index = rand() % num_particles;
     Particle selected_particle = particles[particle_index];
@@ -1088,3 +1088,4 @@ void simulate_monte_carlo() {
     msg("\n\nMONTE CARLO JOB COMPLETED SUCCESSFULLY\n");
 
 }
+*/

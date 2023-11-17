@@ -138,7 +138,6 @@ static struct cfg *make_cfg(void)
 	cfg_add_bool(cfg, "hess_central", false);
 	cfg_add_double(cfg, "num_step_dist", 0.001);
 	cfg_add_double(cfg, "num_step_angle", 0.01);
-
 	cfg_add_double(cfg, "max_move", 0.1); // REM variable added for max_move of MC state
 	cfg_add_double(cfg, "max_rot", 0.1); // REM variable added for max_move of MC state
 	cfg_add_enum(cfg, "ensemble", ENSEMBLE_TYPE_NVE, 
