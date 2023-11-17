@@ -64,7 +64,7 @@ struct mc {
 //	double xr_energy; /* used in multistep mc */
 //	double *xr_gradient; /* used in multistep mc */
 //	double (*get_invariant)(const struct mc *);
-	void (*update_step)(struct mc*);
+//	void (*update_step)(struct mc*);
 	struct state *state;
 //	void *data; /* nvt/npt data */
 };
@@ -488,13 +488,17 @@ static void rotate_body(struct body *body, double alpha, double beta, double gam
 static void update_step(struct mc *mc)
 {
 // Pick a fragment, make random translations and rotation
-	int frag_index = rand() % mc->n_bodies;
-	double kB = BOLTZMANN;;
+//	int frag_index = floor(rand() * mc->n_bodies);
+	int frag_index = 0;
+	printf("Frag_index = %12.8f\n",frag_index);
+	double kB = BOLTZMANN;
 	struct body *body = mc->bodies + frag_index;
  
 	double movemax = cfg_get_double(mc->state->cfg, "max_move");
 	double rotmax = cfg_get_double(mc->state->cfg, "max_rot");
 	double temp = cfg_get_double(mc->state->cfg, "temperature"); 
+
+	printf("Max_move = %12.8f\n",movemax);
  
         double dx = (rand() / (double)RAND_MAX - 0.5) * movemax; 
         double dy = (rand() / (double)RAND_MAX - 0.5) * movemax;
@@ -504,14 +508,21 @@ static void update_step(struct mc *mc)
         double dgamma = (rand() / (double)RAND_MAX - 0.5) * rotmax;
 	double energy_change = 0.0;
 
+ 	printf("dx, dy, dz = %12.8f %12.8f %12.8f\n",dx,dy,dz);	
+
 	body->pos.x += dx;
 	body->pos.y += dy;
 	body->pos.z += dz;
 
 	rotate_body(body, dalpha, dbeta, dgamma);
+
+	print_geometry(mc->state->efp);
+
 	double old_energy = mc->state->energy;
 	compute_energy(mc->state, false);
-	
+
+	energy_change = mc->state->energy - old_energy;
+	printf("Energy_change = %12.8f\n",energy_change); 
 	if (energy_change < 0.0 || exp(-energy_change / (kB * temp)) > (rand() / (double)RAND_MAX)) {
 		printf("Step accepted!!\n"); 
 	}
@@ -842,27 +853,8 @@ static struct mc *mc_create(struct state *state)
 	mc->state = state;
 	// Creates the periodic box if the user chooses to... "box_from_str" is in common.c
 	mc->box = box_from_str(cfg_get_string(state->cfg, "periodic_box"));
-	mc->update_step = update_step;
+//	mc->update_step = update_step;
 
- 	// choice of ensemble
-//	switch (cfg_get_enum(state->cfg, "ensemble")) {
-//		case ENSEMBLE_TYPE_NVE:
-//			mc->get_invariant = get_invariant_nve; // calculates KE and adds to PE
-//			mc->update_step = update_step_nve; // makes changes to properties of the system (angmom/velo etc)
-//			break;
-//		case ENSEMBLE_TYPE_NVT:
-//			mc->get_invariant = get_invariant_nvt; // calculates KE and adds to PE and t_virt
-//			mc->update_step = update_step_nvt;
-//			mc->data = xcalloc(1, sizeof(struct nvt_data));
-//			break;
-//		case ENSEMBLE_TYPE_NPT:
-//			mc->get_invariant = get_invariant_npt; // calculates KE and adds to PE, t_virt and p_virt
-//			mc->update_step = update_step_npt;
-//			mc->data = xcalloc(1, sizeof(struct npt_data)); 
-//			break;
-//		default:
-//			assert(0);
-//	}
 
 	mc->n_bodies = state->sys->n_frags;
 	mc->bodies = xcalloc(mc->n_bodies, sizeof(struct body));
@@ -883,19 +875,7 @@ static struct mc *mc_create(struct state *state)
 		double c = coord[6 * i + 5];
 
 		euler_to_matrix(a, b, c, &body->rotmat);
-		// velocity of the  atoms
-//		body->vel.x = mc->state->sys->frags[i].vel[0];
-//		body->vel.y = mc->state->sys->frags[i].vel[1];
-//		body->vel.z = mc->state->sys->frags[i].vel[2];
-
 		set_body_mass_and_inertia(state->efp, i, body);
-		// angular momentum of the atoms
-//		body->angmom.x = mc->state->sys->frags[i].vel[3] *
-//		    body->inertia.x;
-//		body->angmom.y = mc->state->sys->frags[i].vel[4] *
-//		    body->inertia.y;
-//		body->angmom.z = mc->state->sys->frags[i].vel[5] *
-//		    body->inertia.z;
 
 		mc->n_freedom += 3;
 		//n_freedom?? EPSILON?? 
@@ -963,20 +943,20 @@ void sim_mc(struct state *state)
 	msg("MONTE CARLO JOB\n\n\n");
 
 	struct mc *mc = mc_create(state);
- 
+	 
 //	if (cfg_get_bool(state->cfg, "velocitize"))
 //		velocitize(mc);
 
 //	remove_system_drift(mc);
 //	compute_forces(mc);
-
+	compute_energy(mc->state, false);
 	msg("    INITIAL STATE\n\n");
 	print_status(mc);
 
-	for (mc->step = 1;
-	     mc->step <= cfg_get_int(state->cfg, "max_steps");
+	for (mc->step = 0;
+	     mc->step < cfg_get_int(state->cfg, "max_steps");
 	     mc->step++) {
-		mc->update_step(mc);
+		update_step(mc);
 
 		if (mc->step % cfg_get_int(state->cfg, "print_step") == 0) {
 			msg("    STATE AFTER %d STEPS\n\n", mc->step);

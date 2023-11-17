@@ -14,7 +14,7 @@ Journal References:
 Project web site: https://github.com/libefp2/libefp/
 
 RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
-WALL CLOCK TIME IS Fri Nov 17 13:32:29 2023
+WALL CLOCK TIME IS Fri Nov 17 13:49:24 2023
 
 SIMULATION SETTINGS
 
@@ -86,18 +86,50 @@ A04H4                0.933582     0.000000     5.292603
 
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0000000000
-           POLARIZATION ENERGY     0.0000000000
-             DISPERSION ENERGY     0.0000000000
-     EXCHANGE REPULSION ENERGY     0.0000000000
+          ELECTROSTATIC ENERGY     0.0006047186
+           POLARIZATION ENERGY    -0.0000255683
+             DISPERSION ENERGY    -0.0001028155
+     EXCHANGE REPULSION ENERGY     0.0000169443
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
 
-                  TOTAL ENERGY     0.0000000000
+                  TOTAL ENERGY     0.0004932790
 
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
+Step accepted!!
+    STATE AFTER 0 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.063030     0.000000
+A02H2               -0.752652    -0.500166     0.000000
+A03H3                0.752652    -0.500166     0.000000
+A01N1                0.000000     0.000000     4.936823
+A02H2               -0.466791    -0.808506     5.292603
+A03H3               -0.466791     0.808506     5.292603
+A04H4                0.933582     0.000000     5.292603
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006047186
+           POLARIZATION ENERGY    -0.0000255683
+             DISPERSION ENERGY    -0.0001028155
+     EXCHANGE REPULSION ENERGY     0.0000169443
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004932790
+
+
+
+
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 1 STEPS
 
@@ -126,6 +158,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 2 STEPS
 
@@ -154,6 +188,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 3 STEPS
 
@@ -182,6 +218,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 4 STEPS
 
@@ -210,6 +248,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 5 STEPS
 
@@ -238,6 +278,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 6 STEPS
 
@@ -266,6 +308,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 7 STEPS
 
@@ -294,6 +338,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 8 STEPS
 
@@ -322,6 +368,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 9 STEPS
 
@@ -350,6 +398,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 10 STEPS
 
@@ -378,6 +428,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 11 STEPS
 
@@ -406,6 +458,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 12 STEPS
 
@@ -434,6 +488,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 13 STEPS
 
@@ -462,6 +518,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 14 STEPS
 
@@ -490,6 +548,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 15 STEPS
 
@@ -518,6 +578,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 16 STEPS
 
@@ -546,6 +608,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 17 STEPS
 
@@ -574,6 +638,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 18 STEPS
 
@@ -602,6 +668,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 19 STEPS
 
@@ -630,6 +698,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 20 STEPS
 
@@ -658,6 +728,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 21 STEPS
 
@@ -686,6 +758,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 22 STEPS
 
@@ -714,6 +788,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 23 STEPS
 
@@ -742,6 +818,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 24 STEPS
 
@@ -770,6 +848,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 25 STEPS
 
@@ -798,6 +878,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 26 STEPS
 
@@ -826,6 +908,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 27 STEPS
 
@@ -854,6 +938,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 28 STEPS
 
@@ -882,6 +968,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 29 STEPS
 
@@ -910,6 +998,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 30 STEPS
 
@@ -938,6 +1028,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 31 STEPS
 
@@ -966,6 +1058,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 32 STEPS
 
@@ -994,6 +1088,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 33 STEPS
 
@@ -1022,6 +1118,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 34 STEPS
 
@@ -1050,6 +1148,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 35 STEPS
 
@@ -1078,6 +1178,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 36 STEPS
 
@@ -1106,6 +1208,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 37 STEPS
 
@@ -1134,6 +1238,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 38 STEPS
 
@@ -1162,6 +1268,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 39 STEPS
 
@@ -1190,6 +1298,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 40 STEPS
 
@@ -1218,6 +1328,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 41 STEPS
 
@@ -1246,6 +1358,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 42 STEPS
 
@@ -1274,6 +1388,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 43 STEPS
 
@@ -1302,6 +1418,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 44 STEPS
 
@@ -1330,6 +1448,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 45 STEPS
 
@@ -1358,6 +1478,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 46 STEPS
 
@@ -1386,6 +1508,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 47 STEPS
 
@@ -1414,6 +1538,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 48 STEPS
 
@@ -1442,6 +1568,8 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
+Max_move =   0.20000000
+Energy_change =   0.00000000
 Step accepted!!
     STATE AFTER 49 STEPS
 
@@ -1470,34 +1598,6 @@ A04H4                0.933582     0.000000     5.292603
 
 
 
-Step accepted!!
-    STATE AFTER 50 STEPS
-
-    GEOMETRY (ANGSTROMS)
-
-A01O1                0.000000     0.063030     0.000000
-A02H2               -0.752652    -0.500166     0.000000
-A03H3                0.752652    -0.500166     0.000000
-A01N1                0.000000     0.000000     4.936823
-A02H2               -0.466791    -0.808506     5.292603
-A03H3               -0.466791     0.808506     5.292603
-A04H4                0.933582     0.000000     5.292603
-
-
-    ENERGY COMPONENTS (ATOMIC UNITS)
-
-          ELECTROSTATIC ENERGY     0.0006047186
-           POLARIZATION ENERGY    -0.0000255683
-             DISPERSION ENERGY    -0.0001028155
-     EXCHANGE REPULSION ENERGY     0.0000169443
-          POINT CHARGES ENERGY     0.0000000000
-     CHARGE PENETRATION ENERGY     0.0000000000
-
-                  TOTAL ENERGY     0.0004932790
-
-
-
-
 MONTE CARLO JOB COMPLETED SUCCESSFULLY
-WALL CLOCK TIME IS Fri Nov 17 13:32:29 2023
+WALL CLOCK TIME IS Fri Nov 17 13:49:24 2023
 TOTAL RUN TIME IS 0 SECONDS

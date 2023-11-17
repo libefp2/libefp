@@ -154,7 +154,6 @@ struct state {
 	struct sys *sys;
 	double energy;
 	double *grad;
-//	int fragnn;  // SKP for frag_elpot
 };
 
 void NORETURN die(const char *, ...);

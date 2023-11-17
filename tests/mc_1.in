@@ -1,7 +1,6 @@
 run_type mc
 coord xyzabc
-ensemble nve
-time_step 0.5
+max_move 0.2
 max_steps 50
 fraglib_path ../fraglib
 
