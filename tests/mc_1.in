@@ -1,7 +1,7 @@
 run_type mc
 coord xyzabc
 max_move 0.2
-max_steps 50
+max_steps 15
 fraglib_path ../fraglib
 
 fragment h2o_l

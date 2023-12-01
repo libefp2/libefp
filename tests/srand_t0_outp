@@ -1,0 +1,750 @@
+EFPMD ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+
+LIBEFP ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 32 OPENMP THREADS EACH
+WALL CLOCK TIME IS Fri Dec  1 14:19:25 2023
+
+SIMULATION SETTINGS
+
+run_type mc
+coord xyzabc
+terms elec pol disp xr
+elec_damp screen
+disp_damp overlap
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /scratch/bell/paulsk/libefp2/share/libefp/fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 0
+max_steps 15
+multistep_steps 1
+fraglib_path ../fraglib
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0001
+gtest_tol 1e-06
+ref_energy 0
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+max_move 0.2
+max_rot 0.1
+ensemble nve
+time_step 1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+enable_pairwise false
+print_pbc false
+symmetry false
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+xr_cutoff is set to 10.000000 
+
+MONTE CARLO JOB
+
+
+    INITIAL STATE
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.063030     0.000000
+A02H2               -0.752652    -0.500166     0.000000
+A03H3                0.752652    -0.500166     0.000000
+A01N1                0.000000     0.000000     4.936823
+A02H2               -0.466791    -0.808506     5.292603
+A03H3               -0.466791     0.808506     5.292603
+A04H4                0.933582     0.000000     5.292603
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006047186
+           POLARIZATION ENERGY    -0.0000255683
+             DISPERSION ENERGY    -0.0001028155
+     EXCHANGE REPULSION ENERGY     0.0000169443
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004932790
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.00504109   0.03705938   0.08088724
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.003734     0.082605     0.044660
+A02H2               -0.744887    -0.494520     0.080622
+A03H3                0.756472    -0.466013    -0.024478
+A01N1                0.000000     0.000000     4.936823
+A02H2               -0.466791    -0.808506     5.292603
+A03H3               -0.466791     0.808506     5.292603
+A04H4                0.933582     0.000000     5.292603
+
+
+Energy_change =   0.00005130
+Step accepted!!
+    STATE AFTER 0 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.003734     0.082605     0.044660
+A02H2               -0.744887    -0.494520     0.080622
+A03H3                0.756472    -0.466013    -0.024478
+A01N1                0.000000     0.000000     4.936823
+A02H2               -0.466791    -0.808506     5.292603
+A03H3               -0.466791     0.808506     5.292603
+A04H4                0.933582     0.000000     5.292603
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006606510
+           POLARIZATION ENERGY    -0.0000276657
+             DISPERSION ENERGY    -0.0001084196
+     EXCHANGE REPULSION ENERGY     0.0000200142
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005445799
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.08703826  -0.08426416  -0.02627754
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.003734     0.082605     0.044660
+A02H2               -0.744887    -0.494520     0.080622
+A03H3                0.756472    -0.466013    -0.024478
+A01N1               -0.048743    -0.042060     4.923025
+A02H2               -0.505834    -0.861574     5.265984
+A03H3               -0.494130     0.754116     5.330324
+A04H4                0.899090    -0.061480     5.238287
+
+
+Energy_change =   0.00002051
+Step accepted!!
+    STATE AFTER 1 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.003734     0.082605     0.044660
+A02H2               -0.744887    -0.494520     0.080622
+A03H3                0.756472    -0.466013    -0.024478
+A01N1               -0.048743    -0.042060     4.923025
+A02H2               -0.505834    -0.861574     5.265984
+A03H3               -0.494130     0.754116     5.330324
+A04H4                0.899090    -0.061480     5.238287
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006824702
+           POLARIZATION ENERGY    -0.0000281402
+             DISPERSION ENERGY    -0.0001102282
+     EXCHANGE REPULSION ENERGY     0.0000209865
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005650884
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =   0.05366662   0.00483306   0.00249548
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.025700     0.085016     0.048920
+A02H2               -0.722848    -0.482685     0.081573
+A03H3                0.774812    -0.470410    -0.069436
+A01N1               -0.048743    -0.042060     4.923025
+A02H2               -0.505834    -0.861574     5.265984
+A03H3               -0.494130     0.754116     5.330324
+A04H4                0.899090    -0.061480     5.238287
+
+
+Energy_change =   0.00006470
+Step accepted!!
+    STATE AFTER 2 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.025700     0.085016     0.048920
+A02H2               -0.722848    -0.482685     0.081573
+A03H3                0.774812    -0.470410    -0.069436
+A01N1               -0.048743    -0.042060     4.923025
+A02H2               -0.505834    -0.861574     5.265984
+A03H3               -0.494130     0.754116     5.330324
+A04H4                0.899090    -0.061480     5.238287
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0007484213
+           POLARIZATION ENERGY    -0.0000293326
+             DISPERSION ENERGY    -0.0001103876
+     EXCHANGE REPULSION ENERGY     0.0000210897
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0006297907
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.01453947   0.07305486   0.06722220
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.019175     0.123448     0.086784
+A02H2               -0.743275    -0.424744     0.044004
+A03H3                0.761297    -0.447426     0.002917
+A01N1               -0.048743    -0.042060     4.923025
+A02H2               -0.505834    -0.861574     5.265984
+A03H3               -0.494130     0.754116     5.330324
+A04H4                0.899090    -0.061480     5.238287
+
+
+Energy_change =   0.00007335
+Step accepted!!
+    STATE AFTER 3 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.019175     0.123448     0.086784
+A02H2               -0.743275    -0.424744     0.044004
+A03H3                0.761297    -0.447426     0.002917
+A01N1               -0.048743    -0.042060     4.923025
+A02H2               -0.505834    -0.861574     5.265984
+A03H3               -0.494130     0.754116     5.330324
+A04H4                0.899090    -0.061480     5.238287
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0008260347
+           POLARIZATION ENERGY    -0.0000317137
+             DISPERSION ENERGY    -0.0001152987
+     EXCHANGE REPULSION ENERGY     0.0000241145
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0007031368
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.09535136  -0.06798478  -0.05122935
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.033415     0.086745     0.064463
+A02H2               -0.773812    -0.491120     0.024971
+A03H3                0.724760    -0.441465    -0.108278
+A01N1               -0.048743    -0.042060     4.923025
+A02H2               -0.505834    -0.861574     5.265984
+A03H3               -0.494130     0.754116     5.330324
+A04H4                0.899090    -0.061480     5.238287
+
+
+Energy_change =   0.00011924
+Steps not accepted..Try Again!!
+    STATE AFTER 4 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.019175     0.123448     0.086784
+A02H2               -0.743275    -0.424744     0.044004
+A03H3                0.761297    -0.447426     0.002917
+A01N1               -0.048743    -0.042060     4.923025
+A02H2               -0.505834    -0.861574     5.265984
+A03H3               -0.494130     0.754116     5.330324
+A04H4                0.899090    -0.061480     5.238287
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0009453040
+           POLARIZATION ENERGY    -0.0000332768
+             DISPERSION ENERGY    -0.0001116546
+     EXCHANGE REPULSION ENERGY     0.0000220041
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0007031368
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =   0.09235327  -0.04856775   0.02081139
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.048743    -0.042060     4.923025
+A02H2               -0.505834    -0.861574     5.265984
+A03H3               -0.494130     0.754116     5.330324
+A04H4                0.899090    -0.061480     5.238287
+
+
+Energy_change =   0.00006797
+Step accepted!!
+    STATE AFTER 5 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.048743    -0.042060     4.923025
+A02H2               -0.505834    -0.861574     5.265984
+A03H3               -0.494130     0.754116     5.330324
+A04H4                0.899090    -0.061480     5.238287
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0008962891
+           POLARIZATION ENERGY    -0.0000334116
+             DISPERSION ENERGY    -0.0001168812
+     EXCHANGE REPULSION ENERGY     0.0000251145
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0007711109
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.06385820   0.00515452  -0.05974591
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.087610    -0.035214     4.892133
+A02H2               -0.498006    -0.887798     5.212806
+A03H3               -0.516281     0.719751     5.386526
+A04H4                0.882539    -0.049928     5.130355
+
+
+Energy_change =   0.00006375
+Step accepted!!
+    STATE AFTER 6 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.087610    -0.035214     4.892133
+A02H2               -0.498006    -0.887798     5.212806
+A03H3               -0.516281     0.719751     5.386526
+A04H4                0.882539    -0.049928     5.130355
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0009636842
+           POLARIZATION ENERGY    -0.0000347961
+             DISPERSION ENERGY    -0.0001214107
+     EXCHANGE REPULSION ENERGY     0.0000273830
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0008348603
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =   0.02121157   0.02467378  -0.09644277
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.082119    -0.019376     4.842448
+A02H2               -0.477274    -0.878205     5.165590
+A03H3               -0.446873     0.720541     5.406037
+A04H4                0.905738    -0.059779     4.986190
+
+
+Energy_change =   0.00004827
+Step accepted!!
+    STATE AFTER 7 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.082119    -0.019376     4.842448
+A02H2               -0.477274    -0.878205     5.165590
+A03H3               -0.446873     0.720541     5.406037
+A04H4                0.905738    -0.059779     4.986190
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0010175896
+           POLARIZATION ENERGY    -0.0000364695
+             DISPERSION ENERGY    -0.0001294623
+     EXCHANGE REPULSION ENERGY     0.0000314768
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0008831346
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.01329957   0.01483211   0.07170976
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.088634    -0.014358     4.879912
+A02H2               -0.460364    -0.872331     5.231842
+A03H3               -0.484418     0.734720     5.409435
+A04H4                0.897997    -0.016960     5.037098
+
+
+Energy_change =  -0.00006215
+Step accepted!!
+    STATE AFTER 8 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.088634    -0.014358     4.879912
+A02H2               -0.460364    -0.872331     5.231842
+A03H3               -0.484418     0.734720     5.409435
+A04H4                0.897997    -0.016960     5.037098
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0009510255
+           POLARIZATION ENERGY    -0.0000344550
+             DISPERSION ENERGY    -0.0001233906
+     EXCHANGE REPULSION ENERGY     0.0000278049
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0008209848
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.01619719  -0.09914819   0.05626374
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.099532    -0.072027     4.909882
+A02H2               -0.444297    -0.903310     5.343773
+A03H3               -0.487941     0.712408     5.391499
+A04H4                0.892064    -0.048781     5.029690
+
+
+Energy_change =  -0.00015133
+Step accepted!!
+    STATE AFTER 9 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.099532    -0.072027     4.909882
+A02H2               -0.444297    -0.903310     5.343773
+A03H3               -0.487941     0.712408     5.391499
+A04H4                0.892064    -0.048781     5.029690
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0007948922
+           POLARIZATION ENERGY    -0.0000310853
+             DISPERSION ENERGY    -0.0001186306
+     EXCHANGE REPULSION ENERGY     0.0000244784
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0006696547
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.06817498   0.02371429   0.02661429
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.134929    -0.061219     4.923785
+A02H2               -0.476473    -0.884395     5.375321
+A03H3               -0.536345     0.731500     5.380533
+A04H4                0.854980    -0.024960     5.053866
+
+
+Energy_change =  -0.00003391
+Step accepted!!
+    STATE AFTER 10 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.067159     0.097464     0.100026
+A02H2               -0.686195    -0.463676     0.064607
+A03H3                0.816045    -0.455408    -0.031039
+A01N1               -0.134929    -0.061219     4.923785
+A02H2               -0.476473    -0.884395     5.375321
+A03H3               -0.536345     0.731500     5.380533
+A04H4                0.854980    -0.024960     5.053866
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0007592114
+           POLARIZATION ENERGY    -0.0000302325
+             DISPERSION ENERGY    -0.0001164105
+     EXCHANGE REPULSION ENERGY     0.0000231725
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0006357410
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.05269534   0.07295455   0.04144740
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.040122     0.135244     0.126351
+A02H2               -0.714923    -0.424465     0.108835
+A03H3                0.775531    -0.404301    -0.101113
+A01N1               -0.134929    -0.061219     4.923785
+A02H2               -0.476473    -0.884395     5.375321
+A03H3               -0.536345     0.731500     5.380533
+A04H4                0.854980    -0.024960     5.053866
+
+
+Energy_change =   0.00005658
+Step accepted!!
+    STATE AFTER 11 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.040122     0.135244     0.126351
+A02H2               -0.714923    -0.424465     0.108835
+A03H3                0.775531    -0.404301    -0.101113
+A01N1               -0.134929    -0.061219     4.923785
+A02H2               -0.476473    -0.884395     5.375321
+A03H3               -0.536345     0.731500     5.380533
+A04H4                0.854980    -0.024960     5.053866
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0008193294
+           POLARIZATION ENERGY    -0.0000324934
+             DISPERSION ENERGY    -0.0001197840
+     EXCHANGE REPULSION ENERGY     0.0000252658
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0006923178
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =   0.05366591   0.06115317   0.01789743
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.040122     0.135244     0.126351
+A02H2               -0.714923    -0.424465     0.108835
+A03H3                0.775531    -0.404301    -0.101113
+A01N1               -0.108422    -0.030957     4.933785
+A02H2               -0.399918    -0.856704     5.414751
+A03H3               -0.529040     0.754872     5.385126
+A04H4                0.882603     0.050231     5.030907
+
+
+Energy_change =  -0.00003525
+Step accepted!!
+    STATE AFTER 12 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.040122     0.135244     0.126351
+A02H2               -0.714923    -0.424465     0.108835
+A03H3                0.775531    -0.404301    -0.101113
+A01N1               -0.108422    -0.030957     4.933785
+A02H2               -0.399918    -0.856704     5.414751
+A03H3               -0.529040     0.754872     5.385126
+A04H4                0.882603     0.050231     5.030907
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0007830689
+           POLARIZATION ENERGY    -0.0000315675
+             DISPERSION ENERGY    -0.0001185524
+     EXCHANGE REPULSION ENERGY     0.0000241234
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0006570725
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.01771751  -0.09205470  -0.05624963
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.031728     0.086766     0.095359
+A02H2               -0.723467    -0.471370     0.138252
+A03H3                0.749757    -0.458556    -0.170597
+A01N1               -0.108422    -0.030957     4.933785
+A02H2               -0.399918    -0.856704     5.414751
+A03H3               -0.529040     0.754872     5.385126
+A04H4                0.882603     0.050231     5.030907
+
+
+Energy_change =  -0.00006710
+Step accepted!!
+    STATE AFTER 13 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.031728     0.086766     0.095359
+A02H2               -0.723467    -0.471370     0.138252
+A03H3                0.749757    -0.458556    -0.170597
+A01N1               -0.108422    -0.030957     4.933785
+A02H2               -0.399918    -0.856704     5.414751
+A03H3               -0.529040     0.754872     5.385126
+A04H4                0.882603     0.050231     5.030907
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0007124821
+           POLARIZATION ENERGY    -0.0000297352
+             DISPERSION ENERGY    -0.0001144181
+     EXCHANGE REPULSION ENERGY     0.0000216456
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005899744
+
+
+
+
+Frag_index =   0.00000000
+Max_move =   0.20000000
+dx, dy, dz =  -0.04821847  -0.01598913  -0.04553557
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.006134     0.077171     0.075952
+A02H2               -0.759293    -0.464552     0.010136
+A03H3                0.735775    -0.464300    -0.165105
+A01N1               -0.108422    -0.030957     4.933785
+A02H2               -0.399918    -0.856704     5.414751
+A03H3               -0.529040     0.754872     5.385126
+A04H4                0.882603     0.050231     5.030907
+
+
+Energy_change =   0.00016960
+Step accepted!!
+    STATE AFTER 14 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.006134     0.077171     0.075952
+A02H2               -0.759293    -0.464552     0.010136
+A03H3                0.735775    -0.464300    -0.165105
+A01N1               -0.108422    -0.030957     4.933785
+A02H2               -0.399918    -0.856704     5.414751
+A03H3               -0.529040     0.754872     5.385126
+A04H4                0.882603     0.050231     5.030907
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0008823595
+           POLARIZATION ENERGY    -0.0000317817
+             DISPERSION ENERGY    -0.0001110626
+     EXCHANGE REPULSION ENERGY     0.0000200635
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0007595788
+
+
+
+
+No. of steps accepted    14
+Perc of steps accepted     0.933333 % 
+MONTE CARLO JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Fri Dec  1 14:19:46 2023
+TOTAL RUN TIME IS 21 SECONDS

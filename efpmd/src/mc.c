@@ -26,6 +26,7 @@
 
 #include "common.h"
 #include "rand.h"
+#include <time.h>
 
 #define MAX_ITER 10
 
@@ -66,6 +67,7 @@ struct mc {
 //	double (*get_invariant)(const struct mc *);
 //	void (*update_step)(struct mc*);
 	struct state *state;
+	int accept;
 //	void *data; /* nvt/npt data */
 };
 
@@ -488,8 +490,8 @@ static void rotate_body(struct body *body, double alpha, double beta, double gam
 static void update_step(struct mc *mc)
 {
 // Pick a fragment, make random translations and rotation
-//	int frag_index = floor(rand() * mc->n_bodies);
-	int frag_index = 0;
+	int frag_index = rand() % mc->n_bodies;
+//	int frag_index = 0;
 	printf("Frag_index = %12.8f\n",frag_index);
 	double kB = BOLTZMANN;
 	struct body *body = mc->bodies + frag_index;
@@ -516,6 +518,14 @@ static void update_step(struct mc *mc)
 
 	rotate_body(body, dalpha, dbeta, dgamma);
 
+	for (size_t i = 0; i < mc->n_bodies; i++) {
+                double crd[12]; // position and orientation 6 each
+                memcpy(crd, &mc->bodies[i].pos, 3 * sizeof(double));
+                memcpy(crd + 3, &mc->bodies[i].rotmat, 9 * sizeof(double));
+                check_fail(efp_set_frag_coordinates(mc->state->efp, i,
+                    EFP_COORD_TYPE_ROTMAT, crd));
+        }
+
 	print_geometry(mc->state->efp);
 
 	double old_energy = mc->state->energy;
@@ -525,6 +535,8 @@ static void update_step(struct mc *mc)
 	printf("Energy_change = %12.8f\n",energy_change); 
 	if (energy_change < 0.0 || exp(-energy_change / (kB * temp)) > (rand() / (double)RAND_MAX)) {
 		printf("Step accepted!!\n"); 
+		mc->accept++;
+		
 	}
 	else{ 
 		body->pos.x -= dx;
@@ -534,6 +546,13 @@ static void update_step(struct mc *mc)
         	rotate_body(body, -dalpha, -dbeta, -dgamma);
         	mc->state->energy = old_energy;
 		printf("Steps not accepted..Try Again!!\n");
+		for (size_t i = 0; i < mc->n_bodies; i++) {
+                	double crd[12]; // position and orientation 6 each
+                	memcpy(crd, &mc->bodies[i].pos, 3 * sizeof(double));
+                	memcpy(crd + 3, &mc->bodies[i].rotmat, 9 * sizeof(double));
+                	check_fail(efp_set_frag_coordinates(mc->state->efp, i,
+                	    EFP_COORD_TYPE_ROTMAT, crd));
+        	}
 	}
 }
 
@@ -860,6 +879,10 @@ static struct mc *mc_create(struct state *state)
 	mc->bodies = xcalloc(mc->n_bodies, sizeof(struct body));
 //	mc->xr_gradient = xcalloc(6 * mc->n_bodies, sizeof(double));
 
+//	srand(0);
+	srand(time(0));
+
+	mc->accept = 0; // for calculating percs
 	double coord[6 * mc->n_bodies];
 	check_fail(efp_get_coordinates(state->efp, coord));
 
@@ -965,7 +988,8 @@ void sim_mc(struct state *state)
 	}
 
 	mc_shutdown(mc);
-
+	printf("No. of steps accepted %5d\n",mc->accept);
+	printf("Perc of steps accepted %12.6f % \n",(float)mc->accept/cfg_get_int(state->cfg, "max_steps"));
 	msg("MONTE CARLO JOB COMPLETED SUCCESSFULLY\n");
 
 //	simulate_monte_carlo();
