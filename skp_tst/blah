@@ -1,0 +1,128 @@
+EFPMD ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+
+LIBEFP ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
+WALL CLOCK TIME IS Sun Jul  2 14:46:05 2023
+
+SIMULATION SETTINGS
+
+run_type frag_elpot
+coord atoms
+terms elec pol disp xr
+elec_damp screen
+disp_damp overlap
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /scratch/bell/paulsk/tstefp/libefp/share/libefp/fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 0
+max_steps 100
+multistep_steps 1
+fraglib_path ../fraglib
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0001
+gtest_tol 1e-06
+ref_energy 0
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+ensemble nve
+time_step 1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+frag_num 4
+enable_pairwise false
+print_pbc false
+symmetry false
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+xr_cutoff is set to 10.000000 
+
+Path: ../fraglib/ch3oh.efp
+
+Path: ../fraglib/h2o.efp
+
+Path: ../fraglib/nh3.efp
+
+CLIB-TEST in DIFF PLACE
+
+
+TEST JOB : TEST_SKP()
+
+y = 14.000000
+dy/dx = 17.000000
+
+TEST JOB : GRAD_TST()
+
+Gradient Tensor:
+Data: [2.00 4.00 6.00 8.00 ]
+Sizes: [2, 2]
+Num Dimensions: 2
+Type ID: 6
+Is Variable: 0
+
+TEST JOB : COMPUTE_GRADIENT_TST()
+
+0.00 0.00 0.00 2.00 0.00 0.00 0.00 2.00 0.00 0.00 0.00 2.00 4.00 0.00 0.00 0.00 4.00 0.00 0.00 0.00 4.00 
+
+TEST JOB : TEST2_NN()
+
+Epoch: 0, Loss: 0.540491
+Epoch: 10, Loss: 0.527017
+Epoch: 20, Loss: 0.513884
+Epoch: 30, Loss: 0.501081
+Epoch: 40, Loss: 0.488598
+Epoch: 50, Loss: 0.476426
+Epoch: 60, Loss: 0.464555
+Epoch: 70, Loss: 0.452977
+Epoch: 80, Loss: 0.441684
+Epoch: 90, Loss: 0.430667
+Energy: 0.11366 0.122557 0.261572 0.116639 0.163232 0.299346 
+FRAG-ELECTROSTATIC POTENTIAL JOB
+
+
+Inside sim_frag_elpot
+chosen_frag = 4
+COORDINATES IN ANGSTROMS, ELECTROSTATIC POTENTIAL IN ATOMIC UNITS
+     ATOM            X            Y            Z        ELPOT 
+
+ELECTROSTATIC POTENTIAL ON FRAGMENT 4
+    A01C1  -2.05600000   0.76700000  -0.30100000   0.25434138
+    A02O2  -2.97993969  -0.25295866  -0.54594692   0.27593643
+    A03H3  -1.19296501   0.40662419   0.25084195   0.26695968
+    A04H4  -2.55455651   1.51635022   0.29643344   0.24674045
+    A05H5  -1.71472983   1.23270653  -1.22071611   0.23361153
+    A06H6  -2.58762991  -0.92936870  -1.06480687   0.29261116
+
+FRAG-ELECTROSTATIC POTENTIAL JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Sun Jul  2 14:46:05 2023
+TOTAL RUN TIME IS 0 SECONDS

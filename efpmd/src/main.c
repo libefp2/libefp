@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+//#include <torch/torch.h>
 
 typedef void (*sim_fn_t)(struct state *);
 
@@ -41,8 +42,24 @@ void sim_opt(struct state *);
 void sim_md(struct state *);
 void sim_efield(struct state *);
 void sim_elpot(struct state *);
+void sim_frag_elpot(struct state *);
+void sim_clib_test(); // SKP 7thJune
 void sim_gtest(struct state *);
 void sim_etest(struct state *);
+
+//=== SKP prototypes ====//
+
+void grad_tst();
+void compute_gradient_test();
+void test2_nn();
+void test_load_enforce();
+void Test_SKP();
+void tortest_version();
+void tortest_ones_f32_1();
+void test_fft_f32();
+
+//=======================//
+
 
 #define USAGE_STRING \
 	"usage: efpmd [-d | -v | -h | input]\n" \
@@ -62,6 +79,8 @@ static struct cfg *make_cfg(void)
 		"md\n"
 		"efield\n"
         "elpot\n"
+	"frag_elpot\n"  // SKP 7thJune
+	"clib_test\n"
 		"gtest\n"
         "etest\n",
 		(int []) { RUN_TYPE_SP,
@@ -71,6 +90,8 @@ static struct cfg *make_cfg(void)
 			   RUN_TYPE_MD,
 			   RUN_TYPE_EFIELD,
 			   RUN_TYPE_ELPOT,
+			   RUN_TYPE_FRAG_ELPOT,
+			   RUN_TYPE_CLIB_TEST, // SKP 7thJune
 			   RUN_TYPE_GTEST,
 			   RUN_TYPE_ETEST});
 
@@ -117,15 +138,15 @@ static struct cfg *make_cfg(void)
 	cfg_add_bool(cfg, "enable_ff", false);
 	cfg_add_bool(cfg, "enable_multistep", false);
 	cfg_add_string(cfg, "ff_geometry", "ff.xyz");
-	cfg_add_string(cfg, "ff_parameters", FRAGLIB_PATH "/params/amber99.prm");
+	cfg_add_string(cfg, "ff_parameters", "/scratch/bell/paulsk/tstefp/libefp/share/libefp/fraglib/params/amber99.prm");
 	cfg_add_bool(cfg, "single_params_file", false);
 	cfg_add_string(cfg, "efp_params_file", "params.efp");
 	cfg_add_bool(cfg, "enable_cutoff", false);
 	cfg_add_double(cfg, "swf_cutoff", 10.0);
-    cfg_add_double(cfg, "xr_cutoff", 0.0);
+    	cfg_add_double(cfg, "xr_cutoff", 0.0);
 	cfg_add_int(cfg, "max_steps", 100);
 	cfg_add_int(cfg, "multistep_steps", 1);
-	cfg_add_string(cfg, "fraglib_path", FRAGLIB_PATH);
+	cfg_add_string(cfg, "fraglib_path", "/scratch/bell/paulsk/tstefp/libefp/share/libefp/fraglib/");
 	cfg_add_string(cfg, "userlib_path", ".");
 	cfg_add_bool(cfg, "enable_pbc", false);
 	cfg_add_string(cfg, "periodic_box", "30.0 30.0 30.0 90.0 90.0 90.0");
@@ -153,6 +174,7 @@ static struct cfg *make_cfg(void)
 	cfg_add_double(cfg, "barostat_tau", 1.0e4);
 
 	cfg_add_int(cfg, "ligand", -100);
+	cfg_add_int(cfg, "frag_num", 1);    // SKP
     cfg_add_bool(cfg, "enable_pairwise", false);
     cfg_add_bool(cfg, "print_pbc", false);
     cfg_add_bool(cfg, "symmetry", false);
@@ -186,11 +208,15 @@ static sim_fn_t get_sim_fn(enum run_type run_type)
 		    return sim_md;
 	    case RUN_TYPE_EFIELD:
 		    return sim_efield;
-		case RUN_TYPE_ELPOT:
-            return sim_elpot;
+	    case RUN_TYPE_ELPOT:
+            	    return sim_elpot;
+	    case RUN_TYPE_FRAG_ELPOT:
+                    return sim_frag_elpot;
+	    case RUN_TYPE_CLIB_TEST:
+                    return sim_clib_test;
 	    case RUN_TYPE_GTEST:
 		    return sim_gtest;
-		case RUN_TYPE_ETEST:
+	    case RUN_TYPE_ETEST:
 		    return sim_etest;
 	}
 	assert(0);
@@ -284,6 +310,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 		.xr_cutoff = cfg_get_double(cfg, "xr_cutoff"),
         .enable_pairwise = cfg_get_bool(cfg, "enable_pairwise"), 
         .ligand = cfg_get_int(cfg, "ligand"),
+//        .frag_num = cfg_get_int(cfg, "frag_num"),    // SKP
         .print_pbc = cfg_get_bool(cfg, "print_pbc"),
         .symmetry = cfg_get_bool(cfg, "symmetry"),
         .symm_frag = cfg_get_enum(cfg, "symm_frag"),
@@ -480,7 +507,16 @@ static void sys_free(struct sys *sys)
 	free(sys->charges);
 	free(sys);
 }
+/*
+void test_version() {
+  int major, minor, patch;
 
+  c_torch_version(&major, &minor, &patch);
+
+  printf("version: %d.%d.%d\n", major, minor, patch);
+
+}
+*/
 int main(int argc, char **argv)
 {
 	struct state state;

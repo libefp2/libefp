@@ -1,0 +1,1311 @@
+EFPMD ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+
+LIBEFP ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 32 OPENMP THREADS EACH
+WALL CLOCK TIME IS Mon Mar  6 14:00:00 2023
+
+Inside efp_stream_open
+Path = pol_1a.in
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  h2o_l
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  nh3_l
+Inside efp_stream_skip_space
+SIMULATION SETTINGS
+
+run_type gtest
+coord xyzabc
+terms elec pol
+elec_damp screen
+disp_damp overlap
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /home/paulsk/LS-libefp/libefp-master/share/libefp/fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 0
+max_steps 100
+multistep_steps 1
+fraglib_path ../fraglib
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0001
+gtest_tol 1e-06
+ref_energy 0.000277724
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+ensemble nve
+time_step 1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+enable_pairwise false
+print_pbc false
+symmetry false
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+xr_cutoff is set to 10.000000 
+
+Inside efp_add_potential
+Path: ../fraglib/h2o.efp
+Inside efp_stream_open
+Path = ../fraglib/h2o.efp
+1st if loop in while in parse-file
+1st if loop in while in parse-file
+Inside efp_stream_skip_space
+size = 32
+Start = H2O_L
+End = 
+Name = H2O_L
+2nd if loop in while in parse-file
+Inside efp_stream_skip_space
+Stream is =  COORDINATES (BOHR)
+Inside parse_coordinates!!
+frag->n_atoms = 0
+Inside efp_stream_skip_space
+Stream is =     A0101      0.0000000000   0.1191094785   0.0000000000  15.9949100  8.0
+Stream is =    A0101      0.0000000000   0.1191094785   0.0000000000  15.9949100  8.0
+Stream is =   A0101      0.0000000000   0.1191094785   0.0000000000  15.9949100  8.0
+Stream is =  A0101      0.0000000000   0.1191094785   0.0000000000  15.9949100  8.0
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = A0101      0.0000000000   0.1191094785   0.0000000000  15.9949100  8.0
+End =       0.0000000000   0.1191094785   0.0000000000  15.9949100  8.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+Stream is = 				A02H2     -1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+Stream is = 			A02H2     -1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+Stream is = 		A02H2     -1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+Stream is = 	A02H2     -1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2     -1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+End =      -1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+Stream is =         A03H3      1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+Stream is =        A03H3      1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+Stream is =       A03H3      1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+Stream is =      A03H3      1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+Stream is =     A03H3      1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+Stream is =    A03H3      1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+Stream is =   A03H3      1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+Stream is =  A03H3      1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3      1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+End =       1.4223059670  -0.9451766865   0.0000000000   1.0078250  1.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = BO21      -0.7111529835  -0.4130336040   0.0000000000   0.0000000  0.0
+End =       -0.7111529835  -0.4130336040   0.0000000000   0.0000000  0.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = BO31       0.7111529835  -0.4130336040   0.0000000000   0.0000000  0.0
+End =        0.7111529835  -0.4130336040   0.0000000000   0.0000000  0.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  MONOPOLES 
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A01O1     -8.4173680991   8.00000
+End =      -8.4173680991   8.00000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2     -0.3512187169   1.00000
+End =      -0.3512187169   1.00000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3     -0.3512187169   1.00000
+End =      -0.3512187169   1.00000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO21      -0.4400972335   0.00000
+End =       -0.4400972335   0.00000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO31      -0.4400972335   0.00000
+End =       -0.4400972335   0.00000
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  DIPOLES 
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A01O1       0.0000000000   -0.4127062480    0.0000000000
+End =        0.0000000000   -0.4127062480    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2      -0.0027268078   -0.0014022974    0.0000000000
+End =       -0.0027268078   -0.0014022974    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3       0.0027268078   -0.0014022974    0.0000000000
+End =        0.0027268078   -0.0014022974    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO21        0.2657818726    0.2358863756    0.0000000000
+End =         0.2657818726    0.2358863756    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO31       -0.2657818726    0.2358863756    0.0000000000
+End =        -0.2657818726    0.2358863756    0.0000000000
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  QUADRUPOLES 
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A01O1      -3.7495006512   -4.1291495807   -4.6378678881    0.0000000000             0.0000000000    0.0000000000
+End =       -3.7495006512   -4.1291495807   -4.6378678881    0.0000000000             0.0000000000    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2      -0.1692608571   -0.1690206886   -0.1691689065    0.0000353147             0.0000000000    0.0000000000
+End =       -0.1692608571   -0.1690206886   -0.1691689065    0.0000353147             0.0000000000    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3      -0.1692608571   -0.1690206886   -0.1691689065   -0.0000353147             0.0000000000    0.0000000000
+End =       -0.1692608571   -0.1690206886   -0.1691689065   -0.0000353147             0.0000000000    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO21       -0.1924885465   -0.1846098691   -0.1848031216   -0.0092326484             0.0000000000    0.0000000000
+End =        -0.1924885465   -0.1846098691   -0.1848031216   -0.0092326484             0.0000000000    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO31       -0.1924885465   -0.1846098691   -0.1848031216    0.0092326484             0.0000000000    0.0000000000
+End =        -0.1924885465   -0.1846098691   -0.1848031216    0.0092326484             0.0000000000    0.0000000000
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  OCTUPOLES  
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A01O1       0.0000000000   -1.0017712994    0.0000000000   -0.3012532793             0.0000000000    0.0000000000    0.0000000000    0.0000000000            -0.3304258976    0.0000000000
+End =        0.0000000000   -1.0017712994    0.0000000000   -0.3012532793             0.0000000000    0.0000000000    0.0000000000    0.0000000000            -0.3304258976    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2      -0.0011623499   -0.0005685770    0.0000000000   -0.0001715688             0.0000000000   -0.0003501195    0.0000000000   -0.0003998870            -0.0002082332    0.0000000000
+End =       -0.0011623499   -0.0005685770    0.0000000000   -0.0001715688             0.0000000000   -0.0003501195    0.0000000000   -0.0003998870            -0.0002082332    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3       0.0011623499   -0.0005685770    0.0000000000   -0.0001715688             0.0000000000    0.0003501195    0.0000000000    0.0003998870            -0.0002082332    0.0000000000
+End =        0.0011623499   -0.0005685770    0.0000000000   -0.0001715688             0.0000000000    0.0003501195    0.0000000000    0.0003998870            -0.0002082332    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO21        0.6405629452    0.5638506515    0.0000000000    0.2088443825             0.0000000000    0.2236371522    0.0000000000    0.2011226630             0.1831196699    0.0000000000
+End =         0.6405629452    0.5638506515    0.0000000000    0.2088443825             0.0000000000    0.2236371522    0.0000000000    0.2011226630             0.1831196699    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO31       -0.6405629452    0.5638506515    0.0000000000    0.2088443825             0.0000000000   -0.2236371522    0.0000000000   -0.2011226630             0.1831196699    0.0000000000
+End =        -0.6405629452    0.5638506515    0.0000000000    0.2088443825             0.0000000000   -0.2236371522    0.0000000000   -0.2011226630             0.1831196699    0.0000000000
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  POLARIZABLE POINTS
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  DYNAMIC POLARIZABLE POINTS
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  PROJECTION BASIS SET
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =    S          6
+Stream is =   S          6
+Stream is =  S          6
+Inside efp_stream_skip_space
+Stream is =    L          3
+Stream is =   L          3
+Stream is =  L          3
+Inside efp_stream_skip_space
+Stream is =    L          1
+Stream is =   L          1
+Stream is =  L          1
+Inside efp_stream_skip_space
+Stream is =    L          1
+Stream is =   L          1
+Stream is =  L          1
+Inside efp_stream_skip_space
+Stream is =    L          1
+Stream is =   L          1
+Stream is =  L          1
+Inside efp_stream_skip_space
+Stream is =    D          1
+Stream is =   D          1
+Stream is =  D          1
+Inside efp_stream_skip_space
+Stream is =    D          1
+Stream is =   D          1
+Stream is =  D          1
+Inside efp_stream_skip_space
+Stream is =    D          1
+Stream is =   D          1
+Stream is =  D          1
+Inside efp_stream_skip_space
+Stream is =    F          1
+Stream is =   F          1
+Stream is =  F          1
+Inside efp_stream_skip_space
+Stream is =   
+Stream is =  
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =    S          3
+Stream is =   S          3
+Stream is =  S          3
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    P          1
+Stream is =   P          1
+Stream is =  P          1
+Inside efp_stream_skip_space
+Stream is =    P          1
+Stream is =   P          1
+Stream is =  P          1
+Inside efp_stream_skip_space
+Stream is =   
+Stream is =  
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =    S          3
+Stream is =   S          3
+Stream is =  S          3
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    P          1
+Stream is =   P          1
+Stream is =  P          1
+Inside efp_stream_skip_space
+Stream is =    P          1
+Stream is =   P          1
+Stream is =  P          1
+Inside efp_stream_skip_space
+Stream is =   
+Stream is =  
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  MULTIPLICITY    1
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  PROJECTION WAVEFUNCTION    4  65
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  FOCK MATRIX ELEMENTS
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  LMO CENTROIDS
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  CANONVEC                      5                      65
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  CANONFOK
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  A01O1      1.000000000   1.995300393
+Inside efp_stream_skip_space
+size = 32
+Start = A01O1      1.000000000   1.995300393
+End =       1.000000000   1.995300393
+Inside efp_stream_skip_space
+Stream is =  A02H2      1.000000000   2.343164888
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2      1.000000000   2.343164888
+End =       1.000000000   2.343164888
+Inside efp_stream_skip_space
+Stream is =  A03H3      1.000000000   2.344880701
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3      1.000000000   2.344880701
+End =       1.000000000   2.344880701
+Inside efp_stream_skip_space
+Stream is =  BO21       1.000000000   3.225057762
+Inside efp_stream_skip_space
+size = 32
+Start = BO21       1.000000000   3.225057762
+End =        1.000000000   3.225057762
+Inside efp_stream_skip_space
+Stream is =  BO31       1.000000000   3.216505597
+Inside efp_stream_skip_space
+size = 32
+Start = BO31       1.000000000   3.216505597
+End =        1.000000000   3.216505597
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  A01O1      1.000000000   1.020021626
+Inside efp_stream_skip_space
+size = 32
+Start = A01O1      1.000000000   1.020021626
+End =       1.000000000   1.020021626
+Inside efp_stream_skip_space
+Stream is =  A02H2      1.000000000   0.893183530
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2      1.000000000   0.893183530
+End =       1.000000000   0.893183530
+Inside efp_stream_skip_space
+Stream is =  A03H3      1.000000000   0.893183174
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3      1.000000000   0.893183174
+End =       1.000000000   0.893183174
+Inside efp_stream_skip_space
+Stream is =  BO21       1.000000000  10.000000000
+Inside efp_stream_skip_space
+size = 32
+Start = BO21       1.000000000  10.000000000
+End =        1.000000000  10.000000000
+Inside efp_stream_skip_space
+Stream is =  BO31       1.000000000  10.000000000
+Inside efp_stream_skip_space
+size = 32
+Start = BO31       1.000000000  10.000000000
+End =        1.000000000  10.000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  $END
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_add_potential
+Path: ../fraglib/nh3.efp
+Inside efp_stream_open
+Path = ../fraglib/nh3.efp
+1st if loop in while in parse-file
+1st if loop in while in parse-file
+Inside efp_stream_skip_space
+size = 32
+Start = NH3_L
+End = 
+Name = NH3_L
+2nd if loop in while in parse-file
+Inside efp_stream_skip_space
+Stream is =  COORDINATES (BOHR)
+Inside parse_coordinates!!
+frag->n_atoms = 0
+Inside efp_stream_skip_space
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = A01N1      0.0000000000   0.0000000000  -0.1193880985  14.0030700  7.0
+End =       0.0000000000   0.0000000000  -0.1193880985  14.0030700  7.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2     -0.8821076766  -1.5278551402   0.5529398549   1.0078250  1.0
+End =      -0.8821076766  -1.5278551402   0.5529398549   1.0078250  1.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3     -0.8821076644   1.5278551472   0.5529398549   1.0078250  1.0
+End =      -0.8821076644   1.5278551472   0.5529398549   1.0078250  1.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = A04H4      1.7642151525   0.0000000000   0.5529399267   1.0078250  1.0
+End =       1.7642151525   0.0000000000   0.5529399267   1.0078250  1.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = BO21      -0.4410538383  -0.7639275701   0.2167758782   0.0000000  0.0
+End =       -0.4410538383  -0.7639275701   0.2167758782   0.0000000  0.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = BO31      -0.4410538322   0.7639275736   0.2167758782   0.0000000  0.0
+End =       -0.4410538322   0.7639275736   0.2167758782   0.0000000  0.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+efp_atom atom done
+Inside efp_stream_skip_space
+size = 32
+Start = BO41       0.8821075762   0.0000000000   0.2167759141   0.0000000  0.0
+End =        0.8821075762   0.0000000000   0.2167759141   0.0000000  0.0
+atom.labels checked
+atom.mass and frag-natoms done
+multipole pts done
+Last pt done
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  MONOPOLES 
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A01N1     -6.6449324364   7.00000
+End =      -6.6449324364   7.00000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2     -0.6086717606   1.00000
+End =      -0.6086717606   1.00000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3     -0.6086717614   1.00000
+End =      -0.6086717614   1.00000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A04H4     -0.6086717517   1.00000
+End =      -0.6086717517   1.00000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO21      -0.5096840942   0.00000
+End =       -0.5096840942   0.00000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO31      -0.5096840935   0.00000
+End =       -0.5096840935   0.00000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO41      -0.5096841021   0.00000
+End =       -0.5096841021   0.00000
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  DIPOLES 
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A01N1      -0.0000000307    0.0000000005    0.8238262734
+End =       -0.0000000307    0.0000000005    0.8238262734
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2      -0.0354570447   -0.0614133945    0.0085447729
+End =       -0.0354570447   -0.0614133945    0.0085447729
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3      -0.0354570442    0.0614133949    0.0085447730
+End =       -0.0354570442    0.0614133949    0.0085447730
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A04H4       0.0709140813    0.0000000001    0.0085447745
+End =        0.0709140813    0.0000000001    0.0085447745
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO21        0.1491195192    0.2582825851   -0.1701222687
+End =         0.1491195192    0.2582825851   -0.1701222687
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO31        0.1491195189   -0.2582825864   -0.1701222683
+End =         0.1491195189   -0.2582825864   -0.1701222683
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO41       -0.2982390205    0.0000000012   -0.1701222947
+End =        -0.2982390205    0.0000000012   -0.1701222947
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  QUADRUPOLES 
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A01N1      -3.5655228692   -3.5655228921   -4.6990856666    0.0000000007             0.0000000259    0.0000000009
+End =       -3.5655228692   -3.5655228921   -4.6990856666    0.0000000007             0.0000000259    0.0000000009
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2      -0.3615717478   -0.3623324771   -0.3644565695   -0.0006588110            -0.0032104756   -0.0055607072
+End =       -0.3615717478   -0.3623324771   -0.3644565695   -0.0006588110            -0.0032104756   -0.0055607072
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3      -0.3615717485   -0.3623324778   -0.3644565702    0.0006588110            -0.0032104756    0.0055607072
+End =       -0.3615717485   -0.3623324778   -0.3644565702    0.0006588110            -0.0032104756    0.0055607072
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A04H4      -0.3627128297   -0.3611913697   -0.3644565553    0.0000000000             0.0064209516    0.0000000000
+End =       -0.3627128297   -0.3611913697   -0.3644565553    0.0000000000             0.0064209516    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO21       -0.2621192678   -0.2327947160   -0.3137355944    0.0253958115            -0.0095309739   -0.0165081327
+End =        -0.2621192678   -0.2327947160   -0.3137355944    0.0253958115            -0.0095309739   -0.0165081327
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO31       -0.2621192673   -0.2327947148   -0.3137355936   -0.0253958114            -0.0095309739    0.0165081329
+End =        -0.2621192673   -0.2327947148   -0.3137355936   -0.0253958114            -0.0095309739    0.0165081329
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO41       -0.2181324437   -0.2767815519   -0.3137355960    0.0000000000             0.0190619546   -0.0000000001
+End =        -0.2181324437   -0.2767815519   -0.3137355960    0.0000000000             0.0190619546   -0.0000000001
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  OCTUPOLES  
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A01N1      -0.0441347524    0.0000000009    2.5095104451    0.0000000008             0.9039995065    0.0441346142    0.9039995000   -0.0000000311             0.0000000009    0.0000000002
+End =       -0.0441347524    0.0000000009    2.5095104451    0.0000000008             0.9039995065    0.0441346142    0.9039995000   -0.0000000311             0.0000000009    0.0000000002
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2      -0.0586056886   -0.1005168638   -0.0088276318   -0.0335056212            -0.0040551505   -0.0187722391   -0.0055830635   -0.0194887561            -0.0337555112   -0.0013232116
+End =       -0.0586056886   -0.1005168638   -0.0088276318   -0.0335056212            -0.0040551505   -0.0187722391   -0.0055830635   -0.0194887561            -0.0337555112   -0.0013232116
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3      -0.0586056877    0.1005168644   -0.0088276317    0.0335056214            -0.0040551505   -0.0187722388   -0.0055830635   -0.0194887558             0.0337555114    0.0013232116
+End =       -0.0586056877    0.1005168644   -0.0088276317    0.0335056214            -0.0040551505   -0.0187722388   -0.0055830635   -0.0194887558             0.0337555114    0.0013232116
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = A04H4       0.1154946370    0.0000000001   -0.0088276307    0.0000000000            -0.0063470197    0.0392612025   -0.0032911935    0.0389775074             0.0000000000    0.0000000000
+End =        0.1154946370    0.0000000001   -0.0088276307    0.0000000000            -0.0063470197    0.0392612025   -0.0032911935    0.0389775074             0.0000000000    0.0000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO21        0.4494657036    0.7938380938   -0.5248487871    0.2646126991            -0.1747825688    0.1616311276   -0.1805281162    0.1494813753             0.2589093442   -0.0049757905
+End =         0.4494657036    0.7938380938   -0.5248487871    0.2646126991            -0.1747825688    0.1616311276   -0.1805281162    0.1494813753             0.2589093442   -0.0049757905
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO31        0.4494657037   -0.7938380979   -0.5248487838   -0.2646127003            -0.1747825676    0.1616311277   -0.1805281151    0.1494813753            -0.2589093455    0.0049757904
+End =         0.4494657037   -0.7938380979   -0.5248487838   -0.2646127003            -0.1747825676    0.1616311277   -0.1805281151    0.1494813753            -0.2589093455    0.0049757904
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+size = 32
+Start = BO41       -0.9255021073    0.0000000043   -0.5248488855    0.0000000015            -0.1834009247   -0.2966914772   -0.1719098276   -0.2989627322             0.0000000014    0.0000000000
+End =        -0.9255021073    0.0000000043   -0.5248488855    0.0000000015            -0.1834009247   -0.2966914772   -0.1719098276   -0.2989627322             0.0000000014    0.0000000000
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  POLARIZABLE POINTS
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  DYNAMIC POLARIZABLE POINTS
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  PROJECTION BASIS SET
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =    S          6
+Stream is =   S          6
+Stream is =  S          6
+Inside efp_stream_skip_space
+Stream is =    L          3
+Stream is =   L          3
+Stream is =  L          3
+Inside efp_stream_skip_space
+Stream is =    L          1
+Stream is =   L          1
+Stream is =  L          1
+Inside efp_stream_skip_space
+Stream is =    L          1
+Stream is =   L          1
+Stream is =  L          1
+Inside efp_stream_skip_space
+Stream is =    L          1
+Stream is =   L          1
+Stream is =  L          1
+Inside efp_stream_skip_space
+Stream is =    D          1
+Stream is =   D          1
+Stream is =  D          1
+Inside efp_stream_skip_space
+Stream is =    D          1
+Stream is =   D          1
+Stream is =  D          1
+Inside efp_stream_skip_space
+Stream is =    D          1
+Stream is =   D          1
+Stream is =  D          1
+Inside efp_stream_skip_space
+Stream is =    F          1
+Stream is =   F          1
+Stream is =  F          1
+Inside efp_stream_skip_space
+Stream is =   
+Stream is =  
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =    S          3
+Stream is =   S          3
+Stream is =  S          3
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    P          1
+Stream is =   P          1
+Stream is =  P          1
+Inside efp_stream_skip_space
+Stream is =    P          1
+Stream is =   P          1
+Stream is =  P          1
+Inside efp_stream_skip_space
+Stream is =   
+Stream is =  
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =    S          3
+Stream is =   S          3
+Stream is =  S          3
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    P          1
+Stream is =   P          1
+Stream is =  P          1
+Inside efp_stream_skip_space
+Stream is =    P          1
+Stream is =   P          1
+Stream is =  P          1
+Inside efp_stream_skip_space
+Stream is =   
+Stream is =  
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =    S          3
+Stream is =   S          3
+Stream is =  S          3
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    S          1
+Stream is =   S          1
+Stream is =  S          1
+Inside efp_stream_skip_space
+Stream is =    P          1
+Stream is =   P          1
+Stream is =  P          1
+Inside efp_stream_skip_space
+Stream is =    P          1
+Stream is =   P          1
+Stream is =  P          1
+Inside efp_stream_skip_space
+Stream is =   
+Stream is =  
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  MULTIPLICITY    1
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  PROJECTION WAVEFUNCTION    4  75
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  FOCK MATRIX ELEMENTS
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  LMO CENTROIDS
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  STOP
+Inside efp_stream_skip_space
+Stream is =  CANONVEC                      5                      75
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  CANONFOK
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  A01N1      1.000000000   1.638453384
+Inside efp_stream_skip_space
+size = 32
+Start = A01N1      1.000000000   1.638453384
+End =       1.000000000   1.638453384
+Inside efp_stream_skip_space
+Stream is =  A02H2      1.000000000   2.361046226
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2      1.000000000   2.361046226
+End =       1.000000000   2.361046226
+Inside efp_stream_skip_space
+Stream is =  A03H3      1.000000000   2.361038049
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3      1.000000000   2.361038049
+End =       1.000000000   2.361038049
+Inside efp_stream_skip_space
+Stream is =  A04H4      1.000000000   2.188921079
+Inside efp_stream_skip_space
+size = 32
+Start = A04H4      1.000000000   2.188921079
+End =       1.000000000   2.188921079
+Inside efp_stream_skip_space
+Stream is =  BO21       1.000000000  10.000000000
+Inside efp_stream_skip_space
+size = 32
+Start = BO21       1.000000000  10.000000000
+End =        1.000000000  10.000000000
+Inside efp_stream_skip_space
+Stream is =  BO31       1.000000000  10.000000000
+Inside efp_stream_skip_space
+size = 32
+Start = BO31       1.000000000  10.000000000
+End =        1.000000000  10.000000000
+Inside efp_stream_skip_space
+Stream is =  BO41       1.000000000  10.000000000
+Inside efp_stream_skip_space
+size = 32
+Start = BO41       1.000000000  10.000000000
+End =        1.000000000  10.000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  A01N1      1.000000000   0.776311595
+Inside efp_stream_skip_space
+size = 32
+Start = A01N1      1.000000000   0.776311595
+End =       1.000000000   0.776311595
+Inside efp_stream_skip_space
+Stream is =  A02H2      1.000000000   0.941878819
+Inside efp_stream_skip_space
+size = 32
+Start = A02H2      1.000000000   0.941878819
+End =       1.000000000   0.941878819
+Inside efp_stream_skip_space
+Stream is =  A03H3      1.000000000   0.941873841
+Inside efp_stream_skip_space
+size = 32
+Start = A03H3      1.000000000   0.941873841
+End =       1.000000000   0.941873841
+Inside efp_stream_skip_space
+Stream is =  A04H4      1.000000000   0.900139845
+Inside efp_stream_skip_space
+size = 32
+Start = A04H4      1.000000000   0.900139845
+End =       1.000000000   0.900139845
+Inside efp_stream_skip_space
+Stream is =  BO21       1.000000000  10.000000000
+Inside efp_stream_skip_space
+size = 32
+Start = BO21       1.000000000  10.000000000
+End =        1.000000000  10.000000000
+Inside efp_stream_skip_space
+Stream is =  BO31       1.000000000  10.000000000
+Inside efp_stream_skip_space
+size = 32
+Start = BO31       1.000000000  10.000000000
+End =        1.000000000  10.000000000
+Inside efp_stream_skip_space
+Stream is =  BO41       1.000000000  10.000000000
+Inside efp_stream_skip_space
+size = 32
+Start = BO41       1.000000000  10.000000000
+End =        1.000000000  10.000000000
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Stream is =  $END
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+Inside efp_stream_skip_space
+GRADIENT TEST JOB
+
+
+    GEOMETRY (ANGSTROMS)
+
+A0101               -0.026657     0.006545    -0.056739
+A02H2                0.576926     0.598938     0.353668
+A03H3               -0.153867    -0.702819     0.546829
+A01N1                5.055087     0.016296     0.026291
+A02H2                5.128382    -0.867017    -0.434733
+A03H3                4.768465     0.694848    -0.648669
+A04H4                4.337749    -0.054247     0.718104
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0351176603
+           POLARIZATION ENERGY    -0.0001458316
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0349718286
+
+
+              REFERENCE ENERGY     0.0002777238
+               COMPUTED ENERGY     0.0349718286  DOES NOT MATCH
+
+
+    COMPUTING NUMERICAL GRADIENT
+
+A F0001    4.61422964E-03  -8.98666752E-05   4.81576708E-04
+N F0001    5.66162117E-03  -6.03490621E-05   6.48777397E-04  DOES NOT MATCH
+A D0001   -1.91699672E-04  -1.56360251E-04   2.13885913E-04
+N D0001   -2.06126946E-04  -2.40946036E-04   2.74923725E-04  DOES NOT MATCH
+A F0002   -4.61422964E-03   8.98666752E-05  -4.81576708E-04
+N F0002   -5.66162116E-03   6.03490619E-05  -6.48777397E-04  DOES NOT MATCH
+A D0002   -6.57417348E-04   4.14951263E-03   1.42730062E-03
+N D0002   -3.64717243E-04   5.56181110E-03   1.69022956E-03  DOES NOT MATCH
+
+GRADIENT TEST JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Mon Mar  6 14:00:01 2023
+TOTAL RUN TIME IS 1 SECONDS

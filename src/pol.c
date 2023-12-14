@@ -1296,6 +1296,10 @@ efp_get_elec_potential(struct efp *efp, size_t frag_idx, const double *xyz,
     assert(xyz);
     assert(elec_potential);
 
+//    printf("Inside efp_get_elec_potential\n");
+//    printf("n_frags = %d\n", efp->n_frag);
+//    printf("Frag-idx = %d\n", frag_idx);
+
     const struct frag *frag = efp->frags + frag_idx;
     double elpot = 0.0;
 

@@ -123,6 +123,9 @@ static void get_grad_info(size_t n_coord, const double *grad, double *rms_grad_o
 
 static void print_status(struct state *state, double e_diff, double rms_grad, double max_grad)
 {
+
+        msg("   SKP testing workflow..print_status()....in opt.c\n\n"); //SKP	
+
 	print_geometry(state->efp);
 	print_restart(state->efp);
 	print_energy(state);
@@ -147,7 +150,7 @@ void sim_opt(struct state *state)
 
 	n_coord = 6 * n_frags + 3 * n_charge;
 
-	struct opt_state *opt_state = opt_create(n_coord);
+	struct opt_state *opt_state = opt_create(n_coord);  // SKP
 	if (!opt_state)
 		error("unable to create an optimizer");
 

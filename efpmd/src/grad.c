@@ -31,7 +31,7 @@ void sim_grad(struct state *state);
 void sim_grad(struct state *state)
 {
 	msg("ENERGY GRADIENT JOB\n\n\n");
-
+	msg("SKP testing wprkflow.. sim_grad in grad.c  \n\n");  // SKP
 	print_geometry(state->efp);
 	compute_energy(state, true);
 	print_energy(state);

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libopt.a CMakeFiles/opt.dir/opt.c.o
+/usr/bin/ranlib libopt.a

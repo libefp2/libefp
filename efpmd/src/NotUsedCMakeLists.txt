@@ -1,0 +1,57 @@
+
+set(SRC  
+	cfg.c  
+	common.c  
+	efield.c  
+	energy.c  
+	grad.c  
+	gtest.c  
+	hess.c  
+	md.c  
+	msg.c  
+	opt.c  
+	main.c
+	parse.c  
+	rand.c  
+	sp.c
+)
+
+set(headers
+	../libff/ff.h
+	../libopt/opt.h
+	cfg.h  
+	common.h  
+	msg.h  
+	phys.h  
+	rand.h	
+)
+
+set(ext_headers 
+	../../src/balance.h
+	../../src/efp.h
+	../../src/int.h       
+	../../src/log.h       
+	../../src/private.h  
+	../../src/swf.h    
+	../../src/util.h
+	../../src/clapack.h  
+	../../src/elec.h  
+	../../src/intshift.h  
+	../../src/mathutil.h  
+	../../src/stream.h   
+	../../src/terms.h
+)
+
+include_directories(../include)
+include_directories(../../src)
+include_directories(../libopt)
+include_directories(../libff)
+add_executable(efpmd ${SRC} ${headers} ${ext_headers})
+#add_library(efp_sources ${SRC} ${headers} ${ext_headers})
+target_link_libraries(efpmd src_ff src_opt)
+
+
+#add_dependencies(efp_sources generated_headers)
+#Set the location for library installation -- i.e., /usr/lib in this case
+# not really necessary in this example. Use "sudo make install" to apply
+#install(TARGETS testStudent DESTINATION /usr/lib)

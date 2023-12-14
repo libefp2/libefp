@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+
+// Define constants and parameters
+#define NUM_PARTICLES 7
+#define NUM_STEPS 10000
+#define TEMPERATURE 300.0 // Temperature in Kelvin
+
+// Define particle types (Oxygen, Hydrogen, Nitrogen)
+enum { OXYGEN, HYDROGEN, NITROGEN };
+
+// Define particle structure
+typedef struct {
+    int type;       // Particle type
+    double x, y, z; // Position coordinates
+} Particle;
+
+// Function to calculate the energy between two particles
+double calculateEnergy(Particle p1, Particle p2) {
+    // Replace with your energy calculation based on your force field
+    return 0.0;
+}
+
+// Function to perform a Monte Carlo move
+void monteCarloMove(Particle* particles, int num_particles, double temperature) {
+    // Select a random particle
+    int particle_index = rand() % num_particles;
+    Particle selected_particle = particles[particle_index];
+    double kB = 0.01;
+
+    // Generate a random move
+    double dx = (rand() / (double)RAND_MAX - 0.5) * 0.1; // Adjust the step size as needed
+    double dy = (rand() / (double)RAND_MAX - 0.5) * 0.1;
+    double dz = (rand() / (double)RAND_MAX - 0.5) * 0.1;
+
+    // Apply the move and calculate energy change
+    selected_particle.x += dx;
+    selected_particle.y += dy;
+    selected_particle.z += dz;
+
+    // Calculate the change in energy
+    double energy_change = 0.0;
+    for (int i = 0; i < num_particles; i++) {
+        if (i != particle_index) {
+            energy_change += calculateEnergy(selected_particle, particles[i]) -
+                            calculateEnergy(particles[particle_index], particles[i]);
+        }
+    }
+
+    // Accept or reject the move based on the Metropolis criterion
+    if (energy_change < 0.0 || exp(-energy_change / (kB * temperature)) > (rand() / (double)RAND_MAX)) {
+        particles[particle_index] = selected_particle;
+    }
+}
+
+int main() {
+    // Seed the random number generator
+    srand(time(NULL));
+
+    // Create an array of particles
+    Particle particles[NUM_PARTICLES] = {
+        {OXYGEN, 0.000010, 0.058100, 0.547078},
+        {HYDROGEN, -0.752741, -0.481588, 0.386524},
+        {HYDROGEN, 0.752563, -0.481879, 0.386570},
+        {NITROGEN, 0.000002, 0.003940, 4.377149},
+        {HYDROGEN, -0.466697, -0.812793, 4.713742},
+        {HYDROGEN, -0.466895, 0.803769, 4.751899},
+        {HYDROGEN, 0.933578, -0.004341, 4.732851}
+    };
+
+    // Perform Monte Carlo steps
+    for (int step = 0; step < NUM_STEPS; step++) {
+        monteCarloMove(particles, NUM_PARTICLES, TEMPERATURE);
+    }
+
+    // Output final particle positions
+    printf("Final Particle Positions:\n");
+    for (int i = 0; i < NUM_PARTICLES; i++) {
+        printf("Particle %d (Type %d): x=%lf, y=%lf, z=%lf\n", i+1, particles[i].type,
+               particles[i].x, particles[i].y, particles[i].z);
+    }
+
+    return 0;
+}
+
+// Define the Particle structure (replace with your actual structure)
+typedef struct {
+    double x, y, z; // Particle position
+    // Add any other particle properties needed
+} Particle;
+
+// Define your calculateEnergy function based on your force field
+double calculateEnergy(Particle particle1, Particle particle2) {
+    // Replace with your specific energy calculation logic
+    double energy = 0.0;
+
+    // Calculate the potential energy between particle1 and particle2
+    // You need to implement your force field or potential model here
+    // For example, a simple Lennard-Jones potential:
+    // energy = epsilon * ((sigma / r)^12 - 2 * (sigma / r)^6)
+    // Where epsilon and sigma are force field parameters, and r is the distance between particles.
+
+    // For demonstration purposes, let's assume a simple Lennard-Jones potential:
+    double epsilon = 1.0; // Adjust as needed
+    double sigma = 1.0;   // Adjust as needed
+
+    double dx = particle1.x - particle2.x;
+    double dy = particle1.y - particle2.y;
+    double dz = particle1.z - particle2.z;
+
+    double r_squared = dx * dx + dy * dy + dz * dz;
+    double r = sqrt(r_squared);
+
+    if (r > 0.0) {
+        double r6 = r_squared * r_squared * r_squared;
+        double r12 = r6 * r6;
+        energy = 4.0 * epsilon * (sigma * sigma / r12 - sigma * sigma / r6);
+    }
+
+    return energy;
+}
+

@@ -1,0 +1,155 @@
+EFPMD ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+
+LIBEFP ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
+WALL CLOCK TIME IS Tue Dec 12 13:22:14 2023
+
+SIMULATION SETTINGS
+
+run_type clib_test
+coord xyzabc
+terms elec pol
+elec_damp screen
+disp_damp overlap
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /scratch/bell/paulsk/tstefp/libefp/share/libefp/fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 0
+max_steps 100
+multistep_steps 1
+fraglib_path ../fraglib
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0001
+gtest_tol 1e-06
+ref_energy 0.000277724
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+ensemble nve
+time_step 1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+frag_num 1
+enable_pairwise false
+print_pbc false
+symmetry false
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+xr_cutoff is set to 10.000000 
+
+Path: ../fraglib/h2o.efp
+
+Path: ../fraglib/nh3.efp
+
+
+Inside CLIB-TEST... Testing all EFP-TORCH jobs
+
+version: 2.1.0
+Inside tortest_ones_f32_1()
+
+Inside test_fft_f32()
+
+
+TEST JOB : TEST_SKP()
+
+y = 14.000000
+dy/dx = 17.000000
+
+TEST JOB : GRAD_TST()
+
+Gradient Tensor:
+Data: [2.00 4.00 6.00 8.00 ]
+Sizes: [2, 2]
+Num Dimensions: 2
+Type ID: 6
+Is Variable: 0
+
+TEST JOB : COMPUTE_GRADIENT_TST()
+
+0.00 0.00 0.00 2.00 0.00 0.00 0.00 2.00 0.00 0.00 0.00 2.00 4.00 0.00 0.00 0.00 4.00 0.00 0.00 0.00 4.00 
+
+TEST JOB : TEST2_NN()
+
+Epoch: 0, Loss: 0.665145
+Epoch: 10, Loss: 0.651039
+Epoch: 20, Loss: 0.637239
+Epoch: 30, Loss: 0.623737
+Epoch: 40, Loss: 0.610524
+Epoch: 50, Loss: 0.597593
+Epoch: 60, Loss: 0.584936
+Epoch: 70, Loss: 0.572545
+Epoch: 80, Loss: 0.560415
+Epoch: 90, Loss: 0.548537
+Energy: 0.237266 0.327434 0.0150893 0.192352 0.382264 0.00435951 
+
+
+Inside ANItest()
+Energy:
+Forces:
+
+
+Testing Methane molecule energy and force using ANI2x_saved.pt
+Species Tensor: [1, 5] - int
+Coordinates Tensor: [1, 5, 3] - float
+Energy Tensor: -40.4598
+[ CPUDoubleType{1} ]
+Before gradient calculation - Coordinates: (1,.,.) = 
+  0.0319  0.0064  0.0130
+ -0.8314  0.3937 -0.2640
+ -0.6652 -0.8446  0.2076
+  0.4555  0.5429  0.8117
+  0.6609 -0.1680 -0.9104
+[ CPUFloatType{1,5,3} ]
+Gradient: (1,.,.) = 
+ -0.0478  0.1304  0.0551
+  0.1353 -0.1581  0.0776
+ -0.0804  0.0388 -0.0387
+ -0.0254 -0.0076 -0.0433
+  0.0183 -0.0035 -0.0508
+[ CPUFloatType{1,5,3} ]
+Energy: -40.4598
+Force: (1,.,.) = 
+  0.0478 -0.1304 -0.0551
+ -0.1353  0.1581 -0.0776
+  0.0804 -0.0388  0.0387
+  0.0254  0.0076  0.0433
+ -0.0183  0.0035  0.0508
+[ CPUFloatType{1,5,3} ]
+Average Atomic Energies for species  6  1  1  1  1
+[ CPUIntType{1,5} ]: -38.0796  -0.5806  -0.5908  -0.6047  -0.6040
+[ CPUFloatType{1,5} ]
+
+Done in CLIB-TEST.. coming out!!
+
+WALL CLOCK TIME IS Tue Dec 12 13:22:23 2023
+TOTAL RUN TIME IS 9 SECONDS

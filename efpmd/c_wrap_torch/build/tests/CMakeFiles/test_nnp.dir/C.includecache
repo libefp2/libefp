@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/c_libtorch.h
+stdint.h
+-
+
+/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/tests/test_nnp.c
+stdio.h
+-
+c_libtorch.h
+/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/tests/c_libtorch.h
+

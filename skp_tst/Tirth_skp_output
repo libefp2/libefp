@@ -1,0 +1,167 @@
+EFPMD ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+
+LIBEFP ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
+WALL CLOCK TIME IS Mon Jun  5 20:48:07 2023
+
+SIMULATION SETTINGS
+
+run_type grad
+coord xyzabc
+terms elec pol disp xr
+elec_damp screen
+disp_damp tt
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /scratch/bell/paulsk/tstefp/libefp/share/libefp/fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 0
+max_steps 100
+multistep_steps 1
+fraglib_path ../fraglib
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0001
+gtest_tol 1e-06
+ref_energy 0
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+ensemble nve
+time_step 1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+frag_num 1
+enable_pairwise false
+print_pbc false
+symmetry false
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+xr_cutoff is set to 10.000000 
+
+Path: ../fraglib/h2o.efp
+
+Path: ../fraglib/nh3.efp
+
+ENERGY GRADIENT JOB
+
+
+SKP testing wprkflow.. sim_grad in grad.c  
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.063030     0.000000
+A02H2               -0.752652    -0.500166     0.000000
+A03H3                0.752652    -0.500166     0.000000
+A0101                5.047701    -0.041199     0.000000
+A02H2                5.113439     0.896539     0.000000
+A03H3                4.129507    -0.242679     0.000000
+A01N1                0.000000     5.000000    -0.063177
+A02H2                0.929426     4.912005     0.292603
+A03H3               -0.540919     4.239091     0.292603
+A04H4               -0.388507     5.848904     0.292603
+A01N1                0.000000     0.000000     4.936823
+A02H2               -0.827726    -0.431794     5.292603
+A03H3                0.039919     0.932729     5.292603
+A04H4                0.787807    -0.500935     5.292603
+A0101                4.958590     5.047518     0.000000
+A02H2                4.761176     4.128442     0.000000
+A03H3                5.896028     5.117406     0.000000
+A01N1                0.000000     5.000000     4.936823
+A02H2               -0.932543     4.955954     5.292603
+A03H3                0.428126     5.829629     5.292603
+A04H4                0.504417     4.214417     5.292603
+
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    20.1031653456
+           POLARIZATION ENERGY    -0.0015771248
+             DISPERSION ENERGY    -0.0008355477
+     EXCHANGE REPULSION ENERGY     0.0001069498
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    20.1008596229
+
+
+    GRADIENT ON FRAGMENT 1 (H2O_L)
+	SKP testing workflow..common.c
+
+
+FORCE    1.06928564E+00   2.70470280E-01  -1.47595279E-02
+TORQUE  -1.50511430E-03   1.44124730E-03  -6.09827896E-02
+
+    GRADIENT ON FRAGMENT 2 (H2O_L)
+	SKP testing workflow..common.c
+
+
+FORCE   -7.94242762E-01   7.90834658E-01   1.42295923E-03
+TORQUE   1.04744934E-04  -6.71454942E-05   1.04235226E-03
+
+    GRADIENT ON FRAGMENT 3 (NH3_L)
+	SKP testing workflow..common.c
+
+
+FORCE    5.32452051E-03  -2.43660848E-03  -1.61268862E-02
+TORQUE   8.44270602E-02   8.68399409E-02   1.29255160E-02
+
+    GRADIENT ON FRAGMENT 4 (NH3_L)
+	SKP testing workflow..common.c
+
+
+FORCE   -5.81176716E-03  -1.42217795E-03   2.11632760E-02
+TORQUE  -1.53546758E-02   4.68654242E-02   2.38214405E-04
+
+    GRADIENT ON FRAGMENT 5 (H2O_L)
+	SKP testing workflow..common.c
+
+
+FORCE   -2.68617614E-01  -1.06304315E+00   6.11967641E-03
+TORQUE  -3.00052144E-04   5.54147453E-04   7.59643597E-02
+
+    GRADIENT ON FRAGMENT 6 (NH3_L)
+	SKP testing workflow..common.c
+
+
+FORCE   -5.93801783E-03   5.59700138E-03   2.18050242E-03
+TORQUE   4.60260683E-02   4.66533420E-02  -1.05546091E-03
+
+
+ENERGY GRADIENT JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Mon Jun  5 20:48:07 2023
+TOTAL RUN TIME IS 0 SECONDS

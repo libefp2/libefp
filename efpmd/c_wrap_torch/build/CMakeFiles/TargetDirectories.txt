@@ -1,0 +1,8 @@
+/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/rebuild_cache.dir
+/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/edit_cache.dir
+/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/test.dir
+/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/clibtorch.dir
+/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/tests/CMakeFiles/edit_cache.dir
+/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/tests/CMakeFiles/test.dir
+/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/tests/CMakeFiles/rebuild_cache.dir
+/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/tests/CMakeFiles/test_nnp.dir

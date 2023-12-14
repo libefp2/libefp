@@ -234,6 +234,7 @@ void print_gradient(struct state *state)
 		check_fail(efp_get_frag_name(state->efp, i, sizeof(name), name));
 
 		msg("    GRADIENT ON FRAGMENT %zu (%s)\n", i + 1, name);
+		msg("	SKP testing workflow..common.c\n\n"); //SKP
 		msg("\nFORCE  ");
 		print_vec(state->grad + 6 * i);
 		msg("\nTORQUE ");

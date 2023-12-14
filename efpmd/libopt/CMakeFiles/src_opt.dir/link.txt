@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsrc_opt.a CMakeFiles/src_opt.dir/opt.c.o CMakeFiles/src_opt.dir/blas.f.o CMakeFiles/src_opt.dir/lbfgsb.f.o CMakeFiles/src_opt.dir/linpack.f.o CMakeFiles/src_opt.dir/timer.f.o
+/usr/bin/ranlib libsrc_opt.a

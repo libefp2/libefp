@@ -35,6 +35,8 @@ static void compute_gradient(struct state *state, size_t n_frags,
 	check_fail(efp_set_coordinates(state->efp, EFP_COORD_TYPE_XYZABC, xyzabc));
 	compute_energy(state, true);
 	memcpy(grad, state->grad, n_frags * 6 * sizeof(double));
+ 
+        msg("   SKP testing workflow..compute_gradient....in hess.c\n\n"); //SKP	
 
 	for (size_t i = 0; i < n_frags; i++) {
 		const double *euler = xyzabc + 6 * i + 3;
@@ -75,6 +77,8 @@ static void compute_hessian(struct state *state, double *hess)
 			efp_torque_to_derivative(euler, gradptr, gradptr);
 		}
 	}
+   
+	msg("   SKP testing workflow..compute_hessian....in hess.c\n\n"); //SKP
 
 	for (size_t i = 0; i < n_coord; i++) {
 		double save = xyzabc[i];

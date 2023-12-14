@@ -117,10 +117,28 @@ static void parse_frag(struct stream *stream, enum efp_coord_type coord_type,
                 frag->coord[counter*3+1] = atom_i.y;
                 frag->coord[counter*3+2] = atom_i.z;
             }
+// SKP //   
+/*
+        for (i = 0; i < sys->n_frags; i++){
+           if(sys->frags[i] == chosen_frag){
+		int frag_atom = 0; 
+		frag_nn->nn_coord[frag_atom*3] =  atom_i.x;
+		frag_nn->nn_coord[frag_atom*3+1] =  atom_i.y;
+		frag_nn->nn_coord[frag_atom*3+2] =  atom_i.z;
+ 
+		frag_nn->nn_natoms++;
+ 	        frag_nn->nn_natoms = xrealloc(frag_nn->nn_natoms, frag_nn->nn_natoms * sizeof(struct efp_atom));
+       		frag_nn->nn_natoms[frag_nn->nn_natoms - 1] = atom_i;
 
+	   }	
+	}
+*/
+//======//
             frag->n_atoms++;
             frag->atoms = xrealloc(frag->atoms, frag->n_atoms * sizeof(struct efp_atom));
             frag->atoms[frag->n_atoms - 1] = atom_i;
+
+
             counter++;
             //printf("n_atoms = %d",frag->n_atoms);
 

@@ -97,8 +97,11 @@ static int
 tok_label(struct stream *stream, size_t size, char *val)
 {
 	const char *start, *end;
-
+	
 	efp_stream_skip_space(stream);
+
+//	printf("Val = %c\n", val); // SKP
+//	printf("size = %d\n", size); // SKP
 
 	if (efp_stream_eol(stream))
 		return 0;
@@ -108,9 +111,13 @@ tok_label(struct stream *stream, size_t size, char *val)
 	end = efp_stream_get_ptr(stream);
 	memset(val, 0, size);
 
-	for (size_t i = 0; start < end && i < size - 1; i++)
-		*val++ = *start++;
+//	printf("Start = %s\n", start); // SKP
+//	printf("End = %s\n", end); // SKP
 
+	for (size_t i = 0; start < end && i < size - 1; i++){
+		*val++ = *start++;
+//		printf("Val = %s\n", val);
+	}
 	return start == end;
 }
 
@@ -147,29 +154,36 @@ static enum efp_result
 parse_coordinates(struct frag *frag, struct stream *stream)
 {
 	efp_stream_next_line(stream);
+//	printf("Inside parse_coordinates!!\n");	//SKP
 
+//	printf("frag->n_atoms = %d\n",frag->n_atoms); // SKP
 	while (!efp_stream_eof(stream)) {
 		if (tok_stop(stream)) {
 			if (frag->n_atoms < 1) {
-                efp_log("parse_coordinates(): n_atoms < 1");
-                return EFP_RESULT_SYNTAX_ERROR;
-            }
-
-			return EFP_RESULT_SUCCESS;
+                		efp_log("parse_coordinates(): n_atoms < 1");
+                		return EFP_RESULT_SYNTAX_ERROR;
+            		}	
+		return EFP_RESULT_SUCCESS;
 		}
 
 		struct efp_atom atom;
 
 		memset(&atom, 0, sizeof(atom));
+//		printf("efp_atom atom done\n");
+//		printf("Atom-label = %s\n", atom.label); //SKP
+//		printf("Atom-mass = %d\n", atom.mass); //SKP
+//		printf("Atom-x = %d\n", atom.x); // SKP		
+
 		if (!tok_label(stream, sizeof(atom.label), atom.label) ||
 		    !tok_double(stream, &atom.x) ||
 		    !tok_double(stream, &atom.y) ||
 		    !tok_double(stream, &atom.z) ||
 		    !tok_double(stream, &atom.mass) ||
 		    !tok_double(stream, &atom.znuc)) {
-            efp_log("parse_coordinates(): reading atom info failure");
-            return EFP_RESULT_SYNTAX_ERROR;
-        }
+            		efp_log("parse_coordinates(): reading atom info failure");
+            		return EFP_RESULT_SYNTAX_ERROR;
+        	}
+//		printf("atom.labels checked\n");
 
 		if (!eq(atom.mass, 0.0)) {
 			frag->n_atoms++;
@@ -179,6 +193,7 @@ parse_coordinates(struct frag *frag, struct stream *stream)
 				return EFP_RESULT_NO_MEMORY;
 			frag->atoms[frag->n_atoms - 1] = atom;
 		}
+//		printf("atom.mass and frag-natoms done\n");
 
 		frag->n_multipole_pts++;
 		frag->multipole_pts = (struct multipole_pt *)realloc(
@@ -186,6 +201,8 @@ parse_coordinates(struct frag *frag, struct stream *stream)
 		    frag->n_multipole_pts * sizeof(struct multipole_pt));
 		if (frag->multipole_pts == NULL)
 			return EFP_RESULT_NO_MEMORY;
+
+//		printf("multipole pts done\n"); // SKP
 
 		struct multipole_pt *last_pt =
 		    frag->multipole_pts + frag->n_multipole_pts - 1;
@@ -197,10 +214,13 @@ parse_coordinates(struct frag *frag, struct stream *stream)
 		last_pt->y = atom.y;
 		last_pt->z = atom.z;
 		last_pt->znuc = atom.znuc;
-        last_pt->if_znuc = true;
+        	last_pt->if_znuc = true;
+
+//		printf ("Last pt done\n") ; // SKP
 
 		efp_stream_next_line(stream);
 	}
+
 	return EFP_RESULT_SYNTAX_ERROR;
 }
 
@@ -1328,16 +1348,23 @@ parse_file(struct efp *efp, struct stream *stream)
 	while (!efp_stream_eof(stream)) {
 		if (efp_stream_get_char(stream) == '\0' ||
 		    efp_stream_get_char(stream) != '$') {
+//		printf("1st if loop in while in parse-file\n"); // SKP
 			efp_stream_next_line(stream);
 			continue;
 		}
 
 		if (!tok_label(stream, sizeof(name), name)) {
+//			printf("Name = %s\n", name); //SKP
 			efp_log("missing fragment name after $ sign");
 			return EFP_RESULT_SYNTAX_ERROR;
+		}else{
+//			printf("Name = %s\n", name); //SKP
+//			printf("2nd if loop in while in parse-file\n"); // SKP
 		}
+	
 
 		if (efp_find_lib(efp, name)) {
+//		printf("3rd if loop in while in parse-file\n"); // SKP
 			efp_log("parameters for fragment \"%s\" are "
 			    "already loaded", name);
 			return EFP_RESULT_FATAL;
@@ -1381,6 +1408,10 @@ efp_add_potential(struct efp *efp, const char *path)
 {
 	enum efp_result res;
 	struct stream *stream;
+ 	
+//	printf("Inside efp_add_potential\n");
+	printf("Path: %s\n\n", path); //SKP
+//	efp_log("efp chosen is %s\n", efp); //SKp
 
 	assert(efp);
 	assert(path);
@@ -1393,6 +1424,7 @@ efp_add_potential(struct efp *efp, const char *path)
 	efp_stream_set_split_char(stream, '>');
 	efp_stream_next_line(stream);
 	res = parse_file(efp, stream);
+//	printf("Res = %f\n", res); //SKP
 	efp_stream_close(stream);
 
 	return res;

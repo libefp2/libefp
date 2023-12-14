@@ -160,6 +160,15 @@ void sim_gtest(struct state *state)
 {
 	msg("GRADIENT TEST JOB\n\n\n");
 
+// Tor-Tests====================
+//	tortest_version();
+//	tortest_ones_f32_1();
+//	test_fft_f32();
+//	Test_SKP();
+//	grad_tst();
+//	compute_gradient_test();
+//	test2_nn();	
+//===============================
 	print_geometry(state->efp);
 	compute_energy(state, 1);
 	print_energy(state);

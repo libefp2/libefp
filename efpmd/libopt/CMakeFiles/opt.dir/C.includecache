@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/scratch/bell/paulsk/tstefp/libefp/efpmd/libopt/opt.c
+assert.h
+-
+math.h
+-
+stdlib.h
+-
+string.h
+-
+opt.h
+/scratch/bell/paulsk/tstefp/libefp/efpmd/libopt/opt.h
+
+/scratch/bell/paulsk/tstefp/libefp/efpmd/libopt/opt.h
+stddef.h
+-
+

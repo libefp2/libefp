@@ -1,0 +1,3160 @@
+EFPMD ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+
+LIBEFP ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
+WALL CLOCK TIME IS Thu Sep 28 14:28:03 2023
+
+SIMULATION SETTINGS
+
+run_type md
+coord xyzabc
+terms elec pol disp xr
+elec_damp screen
+disp_damp overlap
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /scratch/bell/paulsk/tstefp/libefp/share/libefp/fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 0
+max_steps 50
+multistep_steps 1
+fraglib_path ../fraglib
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0001
+gtest_tol 1e-06
+ref_energy 0
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+ensemble nvt
+time_step 0.5
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+frag_num 1
+enable_pairwise false
+print_pbc false
+symmetry false
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+xr_cutoff is set to 10.000000 
+
+Path: ../fraglib/h2o.efp
+
+Path: ../fraglib/nh3.efp
+
+MOLECULAR DYNAMICS JOB
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    INITIAL STATE
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.063030     0.000000
+A02H2               -0.752652    -0.500166     0.000000
+A03H3                0.752652    -0.500166     0.000000
+A01N1                0.000000     0.000000     4.936823
+A02H2               -0.466791    -0.808506     5.292603
+A03H3               -0.466791     0.808506     5.292603
+A04H4                0.933582     0.000000     5.292603
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   5.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00  -6.168510e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0776194627
+           POLARIZATION ENERGY    -0.0001596811
+             DISPERSION ENERGY    -0.0001028155
+     EXCHANGE REPULSION ENERGY     0.0000169443
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0778650151
+
+
+                KINETIC ENERGY     0.0114873044
+                     INVARIANT    -0.0663777107
+               TEMPERATURE (K)   604.5673321113
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 1 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.063029     0.006452
+A02H2               -0.752652    -0.500167     0.006402
+A03H3                0.752652    -0.500167     0.006402
+A01N1                0.000000     0.000003     4.930004
+A02H2               -0.466791    -0.808513     5.285763
+A03H3               -0.466791     0.808499     5.285806
+A04H4                0.933582    -0.000007     5.285784
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.122523e-10  -1.047651e-06   6.446334e-03  -5.387353e-05   8.886887e-05   5.382164e-05
+velocity
+  -3.884133e-11  -1.926884e-07   5.955618e-04   8.641170e-06  -4.676727e-10  -5.060573e-09
+
+fragment NH3_L
+   2.245190e-10   1.108197e-06   4.993181e+00  -3.110694e-04   2.688455e-05   3.111031e-04
+velocity
+   4.108609e-11   2.038245e-07  -6.299811e-04   2.612097e-06  -8.055457e-10   3.283148e-09
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0780781976
+           POLARIZATION ENERGY    -0.0001614889
+             DISPERSION ENERGY    -0.0001045114
+     EXCHANGE REPULSION ENERGY     0.0000178435
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0783263544
+
+
+                KINETIC ENERGY     0.0119817168
+                     INVARIANT    -0.0663446338
+               TEMPERATURE (K)   630.5878479663
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 2 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.063026     0.013052
+A02H2               -0.752652    -0.500170     0.012850
+A03H3                0.752652    -0.500170     0.012850
+A01N1                0.000000     0.000011     4.923040
+A02H2               -0.466791    -0.808533     5.278734
+A03H3               -0.466791     0.808479     5.278908
+A04H4                0.933582    -0.000027     5.278821
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -8.497284e-10  -4.215428e-06   1.302905e-02  -5.427862e-05   3.572378e-04   5.406941e-05
+velocity
+  -7.796193e-11  -3.874785e-07   6.080879e-04   1.736949e-05  -9.479870e-10  -1.020167e-08
+
+fragment NH3_L
+   8.988368e-10   4.459050e-06   4.986218e+00  -3.083016e-04   1.079877e-04   3.084373e-04
+velocity
+   8.246758e-11   4.098721e-07  -6.432311e-04   5.240231e-06  -1.608973e-09   6.618590e-09
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0785510715
+           POLARIZATION ENERGY    -0.0001633543
+             DISPERSION ENERGY    -0.0001062770
+     EXCHANGE REPULSION ENERGY     0.0000188045
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0788018983
+
+
+                KINETIC ENERGY     0.0124915519
+                     INVARIANT    -0.0663103322
+               TEMPERATURE (K)   657.4200447017
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 3 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.063020     0.019800
+A02H2               -0.752652    -0.500175     0.019346
+A03H3                0.752652    -0.500176     0.019346
+A01N1                0.000000     0.000025     4.915932
+A02H2               -0.466791    -0.808567     5.271515
+A03H3               -0.466792     0.808445     5.271909
+A04H4                0.933582    -0.000061     5.271712
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.917819e-09  -9.524484e-06   1.974942e-02  -5.478137e-05   8.069476e-04   5.430772e-05
+velocity
+  -1.177964e-10  -5.840294e-07   6.207312e-04   2.618883e-05  -1.445911e-09  -1.542651e-08
+
+fragment NH3_L
+   2.028655e-09   1.007493e-05   4.979109e+00  -3.073166e-04   2.435229e-04   3.076239e-04
+velocity
+   1.246042e-10   6.177822e-07  -6.566051e-04   7.872851e-06  -2.421026e-09   1.000849e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0790384964
+           POLARIZATION ENERGY    -0.0001652795
+             DISPERSION ENERGY    -0.0001081156
+     EXCHANGE REPULSION ENERGY     0.0000198318
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0792920597
+
+
+                KINETIC ENERGY     0.0130172667
+                     INVARIANT    -0.0662747605
+               TEMPERATURE (K)   685.0879802776
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 4 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.063013     0.026699
+A02H2               -0.752652    -0.500182     0.025888
+A03H3                0.752651    -0.500183     0.025889
+A01N1                0.000000     0.000045     4.908676
+A02H2               -0.466791    -0.808615     5.264106
+A03H3               -0.466792     0.808397     5.264807
+A04H4                0.933582    -0.000108     5.264457
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.426750e-09  -1.699219e-05   2.660874e-02  -5.541733e-05   1.439920e-03   5.457037e-05
+velocity
+  -1.587902e-10  -7.819905e-07   6.334956e-04   3.510320e-05  -1.966656e-09  -2.073847e-08
+
+fragment NH3_L
+   3.624792e-09   1.797422e-05   4.971853e+00  -3.074384e-04   4.334622e-04   3.079879e-04
+velocity
+   1.679672e-10   8.271840e-07  -6.701072e-04   1.049816e-05  -3.252560e-09   1.345508e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0795409029
+           POLARIZATION ENERGY    -0.0001672669
+             DISPERSION ENERGY    -0.0001100308
+     EXCHANGE REPULSION ENERGY     0.0000209307
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0797972699
+
+
+                KINETIC ENERGY     0.0135593391
+                     INVARIANT    -0.0662378709
+               TEMPERATURE (K)   713.6168043888
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 5 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.063003     0.033751
+A02H2               -0.752653    -0.500190     0.032479
+A03H3                0.752651    -0.500192     0.032479
+A01N1                0.000000     0.000071     4.901272
+A02H2               -0.466791    -0.808676     5.256505
+A03H3               -0.466792     0.808335     5.257600
+A04H4                0.933582    -0.000169     5.257053
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.391658e-09  -2.663202e-05   3.360835e-02  -5.619563e-05   2.258162e-03   5.486463e-05
+velocity
+  -2.013906e-10  -9.810026e-07   6.463851e-04   4.411675e-05  -2.515686e-09  -2.614102e-08
+
+fragment NH3_L
+   5.703258e-09   2.817116e-05   4.964449e+00  -3.085330e-04   6.775311e-04   3.093965e-04
+velocity
+   2.130296e-10   1.037698e-06  -6.837417e-04   1.310414e-05  -4.114279e-09   1.696073e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0800587411
+           POLARIZATION ENERGY    -0.0001693190
+             DISPERSION ENERGY    -0.0001120262
+     EXCHANGE REPULSION ENERGY     0.0000221065
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0803179800
+
+
+                KINETIC ENERGY     0.0141182690
+                     INVARIANT    -0.0661996132
+               TEMPERATURE (K)   743.0328213735
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 6 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.062991     0.040955
+A02H2               -0.752653    -0.500200     0.039117
+A03H3                0.752651    -0.500203     0.039117
+A01N1                0.000000     0.000102     4.893718
+A02H2               -0.466790    -0.808751     5.248710
+A03H3               -0.466792     0.808260     5.250287
+A04H4                0.933582    -0.000244     5.249499
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -7.832555e-09  -3.845350e-05   4.074965e-02  -5.712109e-05   3.263767e-03   5.519342e-05
+velocity
+  -2.460375e-10  -1.180700e-06   6.594041e-04   5.323380e-05  -3.098733e-09  -3.163775e-08
+
+fragment NH3_L
+   8.285222e-09   4.067584e-05   4.956895e+00  -3.105540e-04   9.752052e-04   3.118047e-04
+velocity
+   2.602568e-10   1.248936e-06  -6.975131e-04   1.567862e-05  -5.016460e-09   2.052786e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0805924824
+           POLARIZATION ENERGY    -0.0001714387
+             DISPERSION ENERGY    -0.0001141059
+     EXCHANGE REPULSION ENERGY     0.0000233653
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0808546617
+
+
+                KINETIC ENERGY     0.0146945793
+                     INVARIANT    -0.0661599347
+               TEMPERATURE (K)   773.3635587941
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 7 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.062977     0.048315
+A02H2               -0.752653    -0.500211     0.045804
+A03H3                0.752651    -0.500215     0.045804
+A01N1                0.000000     0.000139     4.886012
+A02H2               -0.466790    -0.808839     5.240721
+A03H3               -0.466793     0.808172     5.242864
+A04H4                0.933582    -0.000331     5.241793
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.077420e-08  -5.246208e-05   4.803407e-02  -5.819731e-05   4.458920e-03   5.555835e-05
+velocity
+  -2.931539e-10  -1.380710e-06   6.725570e-04   6.245883e-05  -3.721812e-09  -3.723241e-08
+
+fragment NH3_L
+   1.139687e-08   5.549402e-05   4.949190e+00  -3.134779e-04   1.325707e-03   3.151901e-04
+velocity
+   3.100961e-10   1.460505e-06  -7.114261e-04   1.820931e-05  -5.968667e-09   2.415903e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0811426199
+           POLARIZATION ENERGY    -0.0001736287
+             DISPERSION ENERGY    -0.0001162739
+     EXCHANGE REPULSION ENERGY     0.0000247136
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0814078089
+
+
+                KINETIC ENERGY     0.0152888179
+                     INVARIANT    -0.0661187800
+               TEMPERATURE (K)   804.6378421244
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 8 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.062960     0.055832
+A02H2               -0.752654    -0.500223     0.052539
+A03H3                0.752650    -0.500229     0.052539
+A01N1                0.000000     0.000182     4.878154
+A02H2               -0.466790    -0.808939     5.232537
+A03H3               -0.466793     0.808071     5.235331
+A04H4                0.933582    -0.000431     5.233935
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.424586e-08  -6.865916e-05   5.546312e-02  -5.942749e-05   5.845901e-03   5.596056e-05
+velocity
+  -3.431359e-10  -1.580657e-06   6.858482e-04   7.179651e-05  -4.391233e-09  -4.292884e-08
+
+fragment NH3_L
+   1.506917e-08   7.262718e-05   4.941332e+00  -3.172876e-04   1.728003e-03   3.195371e-04
+velocity
+   3.629668e-10   1.672008e-06  -7.254854e-04   2.068383e-05  -6.979479e-09   2.785690e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0817096704
+           POLARIZATION ENERGY    -0.0001758920
+             DISPERSION ENERGY    -0.0001185349
+     EXCHANGE REPULSION ENERGY     0.0000261585
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0819779388
+
+
+                KINETIC ENERGY     0.0159015584
+                     INVARIANT    -0.0660760898
+               TEMPERATURE (K)   836.8858703756
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 9 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.062941     0.063506
+A02H2               -0.752654    -0.500236     0.059323
+A03H3                0.752650    -0.500243     0.059324
+A01N1                0.000000     0.000230     4.870141
+A02H2               -0.466789    -0.809052     5.224157
+A03H3               -0.466794     0.807957     5.227684
+A04H4                0.933582    -0.000543     5.225922
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.828095e-08  -8.704197e-05   6.303831e-02  -6.081469e-05   7.427086e-03   5.640096e-05
+velocity
+  -3.963436e-10  -1.780163e-06   6.992825e-04   8.125166e-05  -5.113619e-09  -4.873102e-08
+
+fragment NH3_L
+   1.933746e-08   9.207239e-05   4.933319e+00  -3.219671e-04   2.180805e-03   3.248310e-04
+velocity
+   4.192495e-10   1.883043e-06  -7.396962e-04   2.308980e-05  -8.056217e-09   3.162423e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0822941757
+           POLARIZATION ENERGY    -0.0001782320
+             DISPERSION ENERGY    -0.0001208936
+     EXCHANGE REPULSION ENERGY     0.0000277075
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0825655937
+
+
+                KINETIC ENERGY     0.0165334027
+                     INVARIANT    -0.0660318031
+               TEMPERATURE (K)   870.1393091007
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 10 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.062920     0.071341
+A02H2               -0.752655    -0.500248     0.066157
+A03H3                0.752649    -0.500257     0.066158
+A01N1                0.000000     0.000283     4.861972
+A02H2               -0.466789    -0.809176     5.215582
+A03H3               -0.466794     0.807830     5.219920
+A04H4                0.933582    -0.000668     5.217752
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.291663e-08  -1.076036e-04   7.076126e-02  -6.236193e-05   9.204956e-03   5.688032e-05
+velocity
+  -4.530912e-10  -1.978847e-06   7.128649e-04   9.082933e-05  -5.895916e-09  -5.464306e-08
+
+fragment NH3_L
+   2.424105e-08   1.138224e-04   4.925149e+00  -3.274994e-04   2.682567e-03   3.310562e-04
+velocity
+   4.792767e-10   2.093211e-06  -7.540635e-04   2.541486e-05  -9.204684e-09   3.546391e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0828967044
+           POLARIZATION ENERGY    -0.0001806520
+             DISPERSION ENERGY    -0.0001233551
+     EXCHANGE REPULSION ENERGY     0.0000293692
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0831713422
+
+
+                KINETIC ENERGY     0.0171849820
+                     INVARIANT    -0.0659858550
+               TEMPERATURE (K)   904.4313921042
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 11 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.062896     0.079338
+A02H2               -0.752655    -0.500260     0.073040
+A03H3                0.752649    -0.500270     0.073041
+A01N1                0.000000     0.000342     4.853645
+A02H2               -0.466788    -0.809312     5.206810
+A03H3               -0.466795     0.807692     5.212036
+A04H4                0.933582    -0.000804     5.209425
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.819319e-08  -1.303330e-04   7.863360e-02  -6.407224e-05   1.118210e-02   5.739936e-05
+velocity
+  -5.136385e-10  -2.176334e-06   7.266004e-04   1.005347e-04  -6.745415e-09  -6.066918e-08
+
+fragment NH3_L
+   2.982256e-08   1.378654e-04   4.916822e+00  -3.338655e-04   3.231490e-03   3.381954e-04
+velocity
+   5.433233e-10   2.302110e-06  -7.685928e-04   2.764670e-05  -1.042892e-08   3.937896e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0835178533
+           POLARIZATION ENERGY    -0.0001831557
+             DISPERSION ENERGY    -0.0001259248
+     EXCHANGE REPULSION ENERGY     0.0000311524
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0837957814
+
+
+                KINETIC ENERGY     0.0178569597
+                     INVARIANT    -0.0659381770
+               TEMPERATURE (K)   939.7970202426
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 12 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000000     0.062869     0.087499
+A02H2               -0.752656    -0.500271     0.079974
+A03H3                0.752648    -0.500283     0.079975
+A01N1                0.000000     0.000406     4.845158
+A02H2               -0.466787    -0.809458     5.197842
+A03H3               -0.466796     0.807543     5.204028
+A04H4                0.933582    -0.000950     5.200937
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.415346e-08  -1.552151e-04   8.665703e-02  -6.594867e-05   1.336120e-02   5.795869e-05
+velocity
+  -5.781821e-10  -2.372246e-06   7.404943e-04   1.103733e-04  -7.669761e-09  -6.681375e-08
+
+fragment NH3_L
+   3.612729e-08   1.641854e-04   4.908335e+00  -3.410436e-04   3.825520e-03   3.462283e-04
+velocity
+   6.115970e-10   2.509345e-06  -7.832896e-04   2.977320e-05  -1.173099e-08   4.337250e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0841582498
+           POLARIZATION ENERGY    -0.0001857470
+             DISPERSION ENERGY    -0.0001286087
+     EXCHANGE REPULSION ENERGY     0.0000330672
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0844395383
+
+
+                KINETIC ENERGY     0.0185500326
+                     INVARIANT    -0.0658886965
+               TEMPERATURE (K)   976.2728739444
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 13 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000001     0.062840     0.095826
+A02H2               -0.752657    -0.500279     0.086958
+A03H3                0.752647    -0.500293     0.086959
+A01N1                0.000000     0.000475     4.836509
+A02H2               -0.466787    -0.809614     5.188678
+A03H3               -0.466797     0.807382     5.195893
+A04H4                0.933582    -0.001107     5.192288
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.084203e-08  -1.822305e-04   9.483333e-02  -6.799431e-05   1.574508e-02   5.855891e-05
+velocity
+  -6.468480e-10  -2.566214e-06   7.545521e-04   1.203507e-04  -8.676975e-09  -7.308123e-08
+
+fragment NH3_L
+   4.320241e-08   1.927621e-04   4.899686e+00  -3.490095e-04   4.462355e-03   3.551323e-04
+velocity
+   6.842313e-10   2.714523e-06  -7.981599e-04   3.178239e-05  -1.311077e-08   4.744779e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0848185534
+           POLARIZATION ENERGY    -0.0001884301
+             DISPERSION ENERGY    -0.0001314130
+     EXCHANGE REPULSION ENERGY     0.0000351242
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0851032723
+
+
+                KINETIC ENERGY     0.0192649338
+                     INVARIANT    -0.0658373372
+               TEMPERATURE (K)  1013.8975349587
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 14 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000001     0.062808     0.104320
+A02H2               -0.752657    -0.500285     0.093993
+A03H3                0.752646    -0.500302     0.093994
+A01N1                0.000000     0.000548     4.827697
+A02H2               -0.466786    -0.809779     5.179317
+A03H3               -0.466798     0.807212     5.187627
+A04H4                0.933582    -0.001274     5.183475
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.830449e-08  -2.113559e-04   1.031643e-01  -7.021230e-05   1.833666e-02   5.920052e-05
+velocity
+  -7.196846e-10  -2.757876e-06   7.687796e-04   1.304728e-04  -9.775465e-09  -7.947622e-08
+
+fragment NH3_L
+   5.109615e-08   2.235708e-04   4.890874e+00  -3.577359e-04   5.139447e-03   3.648820e-04
+velocity
+   7.612774e-10   2.917262e-06  -8.132097e-04   3.366257e-05  -1.456583e-08   5.160821e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0854994587
+           POLARIZATION ENERGY    -0.0001912094
+             DISPERSION ENERGY    -0.0001343444
+     EXCHANGE REPULSION ENERGY     0.0000373352
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0857876773
+
+
+                KINETIC ENERGY     0.0200024351
+                     INVARIANT    -0.0657840179
+               TEMPERATURE (K)  1052.7116179718
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 15 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000001     0.062773     0.112984
+A02H2               -0.752658    -0.500287     0.101079
+A03H3                0.752645    -0.500306     0.101081
+A01N1                0.000000     0.000626     4.818719
+A02H2               -0.466785    -0.809952     5.169760
+A03H3               -0.466799     0.807032     5.179226
+A04H4                0.933582    -0.001449     5.174496
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.658651e-08  -2.425643e-04   1.116518e-01  -7.260585e-05   2.113900e-02   5.988402e-05
+velocity
+  -7.966578e-10  -2.946878e-06   7.831828e-04   1.407457e-04  -1.097405e-08  -8.600343e-08
+
+fragment NH3_L
+   5.985681e-08   2.565828e-04   4.881895e+00  -3.671926e-04   5.854012e-03   3.754488e-04
+velocity
+   8.426990e-10   3.117187e-06  -8.284453e-04   3.540235e-05  -1.609125e-08   5.585725e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0862016969
+           POLARIZATION ENERGY    -0.0001940896
+             DISPERSION ENERGY    -0.0001374101
+     EXCHANGE REPULSION ENERGY     0.0000397129
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0864934837
+
+
+                KINETIC ENERGY     0.0207633495
+                     INVARIANT    -0.0657286529
+               TEMPERATURE (K)  1092.7579127838
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 16 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000001     0.062736     0.121820
+A02H2               -0.752659    -0.500285     0.108216
+A03H3                0.752645    -0.500307     0.108219
+A01N1                0.000000     0.000709     4.809574
+A02H2               -0.466784    -0.810133     5.160007
+A03H3               -0.466800     0.806844     5.170684
+A04H4                0.933582    -0.001631     5.165349
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -6.573290e-08  -2.758245e-04   1.202979e-01  -7.517819e-05   2.415528e-02   6.060981e-05
+velocity
+  -8.776460e-10  -3.132878e-06   7.977679e-04   1.511758e-04  -1.228196e-08  -9.266769e-08
+
+fragment NH3_L
+   6.953180e-08   2.917652e-04   4.872750e+00  -3.773467e-04   6.603029e-03   3.868017e-04
+velocity
+   9.283677e-10   3.313937e-06  -8.438733e-04   3.699072e-05  -1.767959e-08   6.019853e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0869260392
+           POLARIZATION ENERGY    -0.0001970759
+             DISPERSION ENERGY    -0.0001406178
+     EXCHANGE REPULSION ENERGY     0.0000422712
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0872214617
+
+
+                KINETIC ENERGY     0.0215485343
+                     INVARIANT    -0.0656711514
+               TEMPERATURE (K)  1134.0815377956
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 17 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000001     0.062695     0.130831
+A02H2               -0.752660    -0.500277     0.115406
+A03H3                0.752644    -0.500302     0.115409
+A01N1                0.000000     0.000796     4.800258
+A02H2               -0.466783    -0.810320     5.150059
+A03H3               -0.466801     0.806648     5.161997
+A04H4                0.933582    -0.001821     5.156032
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -7.578669e-08  -3.111020e-04   1.291045e-01  -7.793263e-05   2.738881e-02   6.137824e-05
+velocity
+  -9.624375e-10  -3.315550e-06   8.125414e-04   1.617697e-04  -1.370887e-08  -9.947394e-08
+
+fragment NH3_L
+   8.016663e-08   3.290815e-04   4.863434e+00  -3.881623e-04   7.383259e-03   3.989067e-04
+velocity
+   1.018060e-09   3.507166e-06  -8.595006e-04   3.841709e-05  -1.932083e-08   6.463580e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0876732993
+           POLARIZATION ENERGY    -0.0002001737
+             DISPERSION ENERGY    -0.0001439757
+     EXCHANGE REPULSION ENERGY     0.0000450254
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0879724233
+
+
+                KINETIC ENERGY     0.0223588941
+                     INVARIANT    -0.0656114167
+               TEMPERATURE (K)  1176.7301056268
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 18 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000001     0.062652     0.140018
+A02H2               -0.752661    -0.500262     0.122648
+A03H3                0.752642    -0.500291     0.122651
+A01N1                0.000000     0.000886     4.790771
+A02H2               -0.466782    -0.810513     5.139916
+A03H3               -0.466802     0.806445     5.153161
+A04H4                0.933582    -0.002017     5.146543
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -8.678806e-08  -3.483585e-04   1.380738e-01  -8.087252e-05   3.084306e-02   6.218961e-05
+velocity
+  -1.050730e-09  -3.494584e-06   8.275101e-04   1.725344e-04  -1.526492e-08  -1.064272e-07
+
+fragment NH3_L
+   9.180381e-08   3.684912e-04   4.853946e+00  -3.996009e-04   8.191245e-03   4.117274e-04
+velocity
+   1.111455e-09   3.696546e-06  -8.753344e-04   3.967140e-05  -2.100237e-08   6.917291e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0884443363
+           POLARIZATION ENERGY    -0.0002033888
+             DISPERSION ENERGY    -0.0001474927
+     EXCHANGE REPULSION ENERGY     0.0000479919
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0887472259
+
+
+                KINETIC ENERGY     0.0231953844
+                     INVARIANT    -0.0655493466
+               TEMPERATURE (K)  1220.7539017636
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 19 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000001     0.062605     0.149383
+A02H2               -0.752662    -0.500240     0.129943
+A03H3                0.752641    -0.500271     0.129946
+A01N1                0.000000     0.000980     4.781110
+A02H2               -0.466781    -0.810710     5.129579
+A03H3               -0.466803     0.806237     5.144169
+A04H4                0.933581    -0.002218     5.136879
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -9.877341e-08  -3.875527e-04   1.472079e-01  -8.400125e-05   3.452162e-02   6.304413e-05
+velocity
+  -1.142129e-09  -3.669687e-06   8.426811e-04   1.834770e-04  -1.696069e-08  -1.135327e-07
+
+fragment NH3_L
+   1.044818e-07   4.099505e-04   4.844284e+00  -4.116212e-04   9.023329e-03   4.252245e-04
+velocity
+   1.208136e-09   3.881769e-06  -8.913821e-04   4.074413e-05  -2.270914e-08   7.381383e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0892400581
+           POLARIZATION ENERGY    -0.0002067275
+             DISPERSION ENERGY    -0.0001511785
+     EXCHANGE REPULSION ENERGY     0.0000511889
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0895467752
+
+
+                KINETIC ENERGY     0.0240590153
+                     INVARIANT    -0.0654848320
+               TEMPERATURE (K)  1266.2060772354
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 20 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000001     0.062555     0.158931
+A02H2               -0.752664    -0.500208     0.137291
+A03H3                0.752640    -0.500243     0.137295
+A01N1                0.000000     0.001077     4.771271
+A02H2               -0.466780    -0.810910     5.119048
+A03H3               -0.466805     0.806023     5.135017
+A04H4                0.933581    -0.002422     5.127039
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.117743e-07  -4.286399e-04   1.565091e-01  -8.732229e-05   3.842825e-02   6.394194e-05
+velocity
+  -1.236154e-09  -3.840593e-06   8.580617e-04   1.946052e-04  -1.880729e-08  -1.207956e-07
+
+fragment NH3_L
+   1.182341e-07   4.534123e-04   4.834446e+00  -4.241795e-04   9.875663e-03   4.393566e-04
+velocity
+   1.307595e-09   4.062552e-06  -9.076517e-04   4.162641e-05  -2.442367e-08   7.856265e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0900614250
+           POLARIZATION ENERGY    -0.0002101964
+             DISPERSION ENERGY    -0.0001550433
+     EXCHANGE REPULSION ENERGY     0.0000546363
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0903720285
+
+
+                KINETIC ENERGY     0.0249508548
+                     INVARIANT    -0.0654177572
+               TEMPERATURE (K)  1313.1428564256
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 21 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000002     0.062501     0.168662
+A02H2               -0.752665    -0.500165     0.144694
+A03H3                0.752639    -0.500204     0.144698
+A01N1                0.000000     0.001178     4.761254
+A02H2               -0.466779    -0.811112     5.108325
+A03H3               -0.466806     0.805807     5.125698
+A04H4                0.933581    -0.002629     5.117019
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.258166e-07  -4.715730e-04   1.659797e-01  -9.083912e-05   4.256687e-02   6.488309e-05
+velocity
+  -1.332238e-09  -4.007057e-06   8.736598e-04   2.059267e-04  -2.081630e-08  -1.282212e-07
+
+fragment NH3_L
+   1.330880e-07   4.988266e-04   4.824428e+00  -4.372301e-04   1.074422e-02   4.540800e-04
+velocity
+   1.409232e-09   4.238637e-06  -9.241513e-04   4.231005e-05  -2.612625e-08   8.342355e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0909094532
+           POLARIZATION ENERGY    -0.0002138029
+             DISPERSION ENERGY    -0.0001590982
+     EXCHANGE REPULSION ENERGY     0.0000583556
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0912239988
+
+
+                KINETIC ENERGY     0.0258720341
+                     INVARIANT    -0.0653479987
+               TEMPERATURE (K)  1361.6237612557
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 22 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000002     0.062444     0.178580
+A02H2               -0.752666    -0.500110     0.152150
+A03H3                0.752637    -0.500153     0.152154
+A01N1                0.000000     0.001281     4.751055
+A02H2               -0.466778    -0.811315     5.097411
+A03H3               -0.466808     0.805588     5.116208
+A04H4                0.933581    -0.002838     5.106817
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.409196e-07  -5.163020e-04   1.756221e-01  -9.455531e-05   4.694154e-02   6.586755e-05
+velocity
+  -1.429736e-09  -4.168865e-06   8.894835e-04   2.174498e-04  -2.299984e-08  -1.358150e-07
+
+fragment NH3_L
+   1.490637e-07   5.461406e-04   4.814228e+00  -4.507247e-04   1.162482e-02   4.693491e-04
+velocity
+   1.512365e-09   4.409796e-06  -9.408894e-04   4.278765e-05  -2.779523e-08   8.840083e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0917852193
+           POLARIZATION ENERGY    -0.0002175548
+             DISPERSION ENERGY    -0.0001633552
+     EXCHANGE REPULSION ENERGY     0.0000623706
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0921037587
+
+
+                KINETIC ENERGY     0.0268237514
+                     INVARIANT    -0.0652754248
+               TEMPERATURE (K)  1411.7118531303
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 23 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000002     0.062383     0.188687
+A02H2               -0.752668    -0.500040     0.159661
+A03H3                0.752636    -0.500088     0.159666
+A01N1                0.000001     0.001386     4.740672
+A02H2               -0.466776    -0.811518     5.086305
+A03H3               -0.466809     0.805367     5.106538
+A04H4                0.933581    -0.003047     5.096430
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.570949e-07  -5.627749e-04   1.854388e-01  -9.847442e-05   5.155654e-02   6.689519e-05
+velocity
+  -1.527936e-09  -4.325832e-06   9.055413e-04   2.291830e-04  -2.537055e-08  -1.435824e-07
+
+fragment NH3_L
+   1.661738e-07   5.952993e-04   4.803844e+00  -4.646136e-04   1.251312e-02   4.851163e-04
+velocity
+   1.616240e-09   4.575835e-06  -9.578752e-04   4.305264e-05  -2.940722e-08   9.349891e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0926898640
+           POLARIZATION ENERGY    -0.0002214603
+             DISPERSION ENERGY    -0.0001678273
+     EXCHANGE REPULSION ENERGY     0.0000667072
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0930124445
+
+
+                KINETIC ENERGY     0.0278072770
+                     INVARIANT    -0.0651998952
+               TEMPERATURE (K)  1463.4739942075
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 24 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000002     0.062319     0.198987
+A02H2               -0.752669    -0.499955     0.167227
+A03H3                0.752634    -0.500007     0.167233
+A01N1                0.000001     0.001493     4.730101
+A02H2               -0.466775    -0.811720     5.075009
+A03H3               -0.466811     0.805147     5.096684
+A04H4                0.933581    -0.003255     5.085856
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.743461e-07  -6.109378e-04   1.954325e-01  -1.026001e-04   5.641628e-02   6.796576e-05
+velocity
+  -1.626062e-09  -4.477810e-06   9.218420e-04   2.411352e-04  -2.794165e-08  -1.515290e-07
+
+fragment NH3_L
+   1.844221e-07   6.462457e-04   4.793273e+00  -4.788452e-04   1.340468e-02   5.013327e-04
+velocity
+   1.720037e-09   4.736596e-06  -9.751180e-04   4.309934e-05  -3.093745e-08   9.872229e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0936245978
+           POLARIZATION ENERGY    -0.0002255286
+             DISPERSION ENERGY    -0.0001725285
+     EXCHANGE REPULSION ENERGY     0.0000713939
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0939512610
+
+
+                KINETIC ENERGY     0.0288239591
+                     INVARIANT    -0.0651212596
+               TEMPERATURE (K)  1516.9811297653
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 25 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000002     0.062250     0.209481
+A02H2               -0.752671    -0.499852     0.174849
+A03H3                0.752633    -0.499909     0.174856
+A01N1                0.000001     0.001602     4.719341
+A02H2               -0.466773    -0.811919     5.063524
+A03H3               -0.466813     0.804928     5.086639
+A04H4                0.933581    -0.003461     5.075092
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.926681e-07  -6.607355e-04   2.056059e-01  -1.069360e-04   6.152540e-02   6.907890e-05
+velocity
+  -1.723293e-09  -4.624685e-06   9.383951e-04   2.533159e-04  -3.072690e-08  -1.596605e-07
+
+fragment NH3_L
+   2.038029e-07   6.989214e-04   4.782512e+00  -4.933666e-04   1.429491e-02   5.179480e-04
+velocity
+   1.822887e-09   4.891960e-06  -9.926278e-04   4.292305e-05  -3.236015e-08   1.040756e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0945907050
+           POLARIZATION ENERGY    -0.0002297695
+             DISPERSION ENERGY    -0.0001774739
+     EXCHANGE REPULSION ENERGY     0.0000764619
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0949214865
+
+
+                KINETIC ENERGY     0.0298752289
+                     INVARIANT    -0.0650393576
+               TEMPERATURE (K)  1572.3085936677
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 26 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000002     0.062177     0.220175
+A02H2               -0.752673    -0.499728     0.182528
+A03H3                0.752631    -0.499791     0.182535
+A01N1                0.000001     0.001712     4.708387
+A02H2               -0.466772    -0.812113     5.051851
+A03H3               -0.466815     0.804712     5.076395
+A04H4                0.933580    -0.003663     5.064134
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.120464e-07  -7.121116e-04   2.159617e-01  -1.114859e-04   6.688871e-02   7.023415e-05
+velocity
+  -1.818773e-09  -4.766388e-06   9.552104e-04   2.657348e-04  -3.374068e-08  -1.679824e-07
+
+fragment NH3_L
+   2.243012e-07   7.532667e-04   4.771557e+00  -5.081239e-04   1.517917e-02   5.349111e-04
+velocity
+   1.923885e-09   5.041852e-06  -1.010415e-03   4.252010e-05  -3.364899e-08   1.095636e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0955895502
+           POLARIZATION ENERGY    -0.0002341935
+             DISPERSION ENERGY    -0.0001826799
+     EXCHANGE REPULSION ENERGY     0.0000819455
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0959244782
+
+
+                KINETIC ENERGY     0.0309626077
+                     INVARIANT    -0.0649540170
+               TEMPERATURE (K)  1629.5364392104
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 27 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000003     0.062099     0.231069
+A02H2               -0.752674    -0.499583     0.190263
+A03H3                0.752629    -0.499651     0.190271
+A01N1                0.000001     0.001823     4.697237
+A02H2               -0.466770    -0.812303     5.039990
+A03H3               -0.466817     0.804501     5.065946
+A04H4                0.933580    -0.003861     5.052981
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.324572e-07  -7.650094e-04   2.265029e-01  -1.162535e-04   7.251124e-02   7.143091e-05
+velocity
+  -1.911628e-09  -4.902892e-06   9.722982e-04   2.784023e-04  -3.699798e-08  -1.765005e-07
+
+fragment NH3_L
+   2.458916e-07   8.092215e-04   4.760407e+00  -5.230626e-04   1.605275e-02   5.521702e-04
+velocity
+   2.022107e-09   5.186245e-06  -1.028490e-03   4.188793e-05  -3.477752e-08   1.151911e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0966225837
+           POLARIZATION ENERGY    -0.0002388123
+             DISPERSION ENERGY    -0.0001881645
+     EXCHANGE REPULSION ENERGY     0.0000878824
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0969616781
+
+
+                KINETIC ENERGY     0.0320877130
+                     INVARIANT    -0.0648650536
+               TEMPERATURE (K)  1688.7497979418
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 28 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000003     0.062017     0.242169
+A02H2               -0.752676    -0.499412     0.198056
+A03H3                0.752628    -0.499486     0.198065
+A01N1                0.000001     0.001935     4.685889
+A02H2               -0.466768    -0.812486     5.027942
+A03H3               -0.466819     0.804295     5.055286
+A04H4                0.933580    -0.004052     5.041627
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.538669e-07  -8.193718e-04   2.372326e-01  -1.212427e-04   7.839824e-02   7.266843e-05
+velocity
+  -2.000985e-09  -5.034219e-06   9.896694e-04   2.913289e-04  -4.051441e-08  -1.852206e-07
+
+fragment NH3_L
+   2.685387e-07   8.667257e-04   4.749057e+00  -5.381278e-04   1.691088e-02   5.696733e-04
+velocity
+   2.116628e-09   5.325161e-06  -1.046865e-03   4.102512e-05  -3.571970e-08   1.209631e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0976913480
+           POLARIZATION ENERGY    -0.0002436382
+             DISPERSION ENERGY    -0.0001939469
+     EXCHANGE REPULSION ENERGY     0.0000943139
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0980346192
+
+
+                KINETIC ENERGY     0.0332522662
+                     INVARIANT    -0.0647722693
+               TEMPERATURE (K)  1750.0392694173
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 29 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000003     0.061930     0.253477
+A02H2               -0.752678    -0.499214     0.205908
+A03H3                0.752626    -0.499294     0.205917
+A01N1                0.000001     0.002047     4.674337
+A02H2               -0.466766    -0.812662     5.015708
+A03H3               -0.466821     0.804096     5.044406
+A04H4                0.933580    -0.004236     5.030071
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.762326e-07  -8.751425e-04   2.481538e-01  -1.264571e-04   8.455518e-02   7.394584e-05
+velocity
+  -2.085985e-09  -5.160441e-06   1.007335e-03   3.045261e-04  -4.430625e-08  -1.941484e-07
+
+fragment NH3_L
+   2.921969e-07   9.257196e-04   4.737505e+00  -5.532646e-04   1.774879e-02   5.873686e-04
+velocity
+   2.206541e-09   5.458678e-06  -1.065552e-03   3.993152e-05  -3.645042e-08   1.268847e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0987974851
+           POLARIZATION ENERGY    -0.0002486847
+             DISPERSION ENERGY    -0.0002000483
+     EXCHANGE REPULSION ENERGY     0.0001012856
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0991449325
+
+
+                KINETIC ENERGY     0.0344581007
+                     INVARIANT    -0.0646754515
+               TEMPERATURE (K)  1813.5013452684
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 30 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000003     0.061837     0.264997
+A02H2               -0.752680    -0.498986     0.213819
+A03H3                0.752624    -0.499072     0.213829
+A01N1                0.000001     0.002159     4.662579
+A02H2               -0.466764    -0.812829     5.003287
+A03H3               -0.466824     0.803905     5.033300
+A04H4                0.933580    -0.004411     5.018309
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.995018e-07  -9.322663e-04   2.592700e-01  -1.319009e-04   9.098776e-02   7.526213e-05
+velocity
+  -2.165813e-09  -5.281687e-06   1.025308e-03   3.180056e-04  -4.839048e-08  -2.032898e-07
+
+fragment NH3_L
+   3.168109e-07   9.861448e-04   4.725746e+00  -5.684189e-04   1.856170e-02   6.052052e-04
+velocity
+   2.290982e-09   5.586932e-06  -1.084564e-03   3.860822e-05  -3.694610e-08   1.329613e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0999427439
+           POLARIZATION ENERGY    -0.0002539666
+             DISPERSION ENERGY    -0.0002064916
+     EXCHANGE REPULSION ENERGY     0.0001088477
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1002943545
+
+
+                KINETIC ENERGY     0.0357071708
+                     INVARIANT    -0.0645743712
+               TEMPERATURE (K)  1879.2388714512
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 31 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000003     0.061739     0.276733
+A02H2               -0.752682    -0.498725     0.221789
+A03H3                0.752621    -0.498817     0.221801
+A01N1                0.000001     0.002270     4.650612
+A02H2               -0.466762    -0.812985     4.990681
+A03H3               -0.466826     0.803724     5.021960
+A04H4                0.933579    -0.004575     5.006337
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.236139e-07  -9.906895e-04   2.705844e-01  -1.375778e-04   9.770196e-02   7.661612e-05
+velocity
+  -2.239715e-09  -5.398145e-06   1.043601e-03   3.317797e-04  -5.278481e-08  -2.126507e-07
+
+fragment NH3_L
+   3.423165e-07   1.047944e-03   4.713778e+00  -5.835376e-04   1.934490e-02   6.231332e-04
+velocity
+   2.369154e-09   5.710120e-06  -1.103914e-03   3.705770e-05  -3.718530e-08   1.391983e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1011289886
+           POLARIZATION ENERGY    -0.0002595001
+             DISPERSION ENERGY    -0.0002133019
+     EXCHANGE REPULSION ENERGY     0.0001170555
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1014847351
+
+
+                KINETIC ENERGY     0.0370015609
+                     INVARIANT    -0.0644687819
+               TEMPERATURE (K)  1947.3615530979
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 32 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000004     0.061634     0.288688
+A02H2               -0.752685    -0.498428     0.229821
+A03H3                0.752619    -0.498527     0.229833
+A01N1                0.000001     0.002380     4.638431
+A02H2               -0.466760    -0.813131     4.977889
+A03H3               -0.466829     0.803555     5.010379
+A04H4                0.933579    -0.004728     4.994152
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.484999e-07  -1.050361e-03   2.821007e-01  -1.434919e-04   1.047040e-01   7.800650e-05
+velocity
+  -2.307024e-09  -5.510065e-06   1.062227e-03   3.458616e-04  -5.750775e-08  -2.222370e-07
+
+fragment NH3_L
+   3.686407e-07   1.111065e-03   4.701596e+00  -5.985696e-04   2.009372e-02   6.411049e-04
+velocity
+   2.440354e-09   5.828508e-06  -1.123616e-03   3.528381e-05  -3.714940e-08   1.456014e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1023582078
+           POLARIZATION ENERGY    -0.0002653025
+             DISPERSION ENERGY    -0.0002205066
+     EXCHANGE REPULSION ENERGY     0.0001259702
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1027180467
+
+
+                KINETIC ENERGY     0.0383434964
+                     INVARIANT    -0.0643584174
+               TEMPERATURE (K)  2017.9865070513
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 33 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000004     0.061524     0.300867
+A02H2               -0.752687    -0.498090     0.237914
+A03H3                0.752617    -0.498197     0.237928
+A01N1                0.000001     0.002490     4.626033
+A02H2               -0.466758    -0.813264     4.964911
+A03H3               -0.466832     0.803399     4.998549
+A04H4                0.933579    -0.004869     4.981749
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.740844e-07  -1.111233e-03   2.938226e-01  -1.496472e-04   1.120004e-01   7.943179e-05
+velocity
+  -2.367202e-09  -5.617764e-06   1.081200e-03   3.602649e-04  -6.257870e-08  -2.320547e-07
+
+fragment NH3_L
+   3.957039e-07   1.175454e-03   4.689196e+00  -6.134662e-04   2.080358e-02   6.590752e-04
+velocity
+   2.504010e-09   5.942432e-06  -1.143686e-03   3.329188e-05  -3.682349e-08   1.521765e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1036325243
+           POLARIZATION ENERGY    -0.0002713930
+             DISPERSION ENERGY    -0.0002281357
+     EXCHANGE REPULSION ENERGY     0.0001356592
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1039963937
+
+
+                KINETIC ENERGY     0.0397353549
+                     INVARIANT    -0.0642429904
+               TEMPERATURE (K)  2091.2388679342
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 34 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000004     0.061407     0.313274
+A02H2               -0.752689    -0.497709     0.246071
+A03H3                0.752614    -0.497823     0.246085
+A01N1                0.000001     0.002597     4.613413
+A02H2               -0.466755    -0.813383     4.951747
+A03H3               -0.466834     0.803256     4.986462
+A04H4                0.933579    -0.004995     4.969125
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.002869e-07  -1.173260e-03   3.057540e-01  -1.560480e-04   1.195978e-01   8.089040e-05
+velocity
+  -2.419894e-09  -5.721630e-06   1.100536e-03   3.750040e-04  -6.801813e-08  -2.421101e-07
+
+fragment NH3_L
+   4.234207e-07   1.241067e-03   4.676576e+00  -6.281833e-04   2.147005e-02   6.770033e-04
+velocity
+   2.559747e-09   6.052300e-06  -1.164139e-03   3.108872e-05  -3.619777e-08   1.589301e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1049542062
+           POLARIZATION ENERGY    -0.0002777926
+             DISPERSION ENERGY    -0.0002362219
+     EXCHANGE REPULSION ENERGY     0.0001461972
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1053220235
+
+
+                KINETIC ENERGY     0.0411796791
+                     INVARIANT    -0.0641221900
+               TEMPERATURE (K)  2167.2524546682
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 35 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000005     0.061282     0.325914
+A02H2               -0.752692    -0.497281     0.254291
+A03H3                0.752612    -0.497403     0.254307
+A01N1                0.000001     0.002703     4.600567
+A02H2               -0.466753    -0.813488     4.938396
+A03H3               -0.466837     0.803130     4.974111
+A04H4                0.933579    -0.005106     4.956275
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.270242e-07  -1.236404e-03   3.178990e-01  -1.626986e-04   1.275035e-01   8.238063e-05
+velocity
+  -2.465141e-09  -5.822125e-06   1.120249e-03   3.900940e-04  -7.384842e-08  -2.524101e-07
+
+fragment NH3_L
+   4.517032e-07   1.307860e-03   4.663729e+00  -6.426829e-04   2.208884e-02   6.948555e-04
+velocity
+   2.607609e-09   6.158603e-06  -1.184992e-03   2.868272e-05  -3.527245e-08   1.658693e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1063256790
+           POLARIZATION ENERGY    -0.0002845243
+             DISPERSION ENERGY    -0.0002448013
+     EXCHANGE REPULSION ENERGY     0.0001576669
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1066973378
+
+
+                KINETIC ENERGY     0.0426791906
+                     INVARIANT    -0.0639956795
+               TEMPERATURE (K)  2246.1705068919
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 36 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000005     0.061150     0.338790
+A02H2               -0.752694    -0.496802     0.262576
+A03H3                0.752609    -0.496932     0.262593
+A01N1                0.000001     0.002807     4.587490
+A02H2               -0.466750    -0.813577     4.924856
+A03H3               -0.466840     0.803020     4.961488
+A04H4                0.933579    -0.005201     4.943195
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.542166e-07  -1.300630e-03   3.302616e-01  -1.696036e-04   1.357249e-01   8.390087e-05
+velocity
+  -2.502804e-09  -5.919789e-06   1.140359e-03   4.055507e-04  -8.009167e-08  -2.629610e-07
+
+fragment NH3_L
+   4.804672e-07   1.375798e-03   4.650652e+00  -6.569433e-04   2.265584e-02   7.126136e-04
+velocity
+   2.647449e-09   6.261912e-06  -1.206263e-03   2.608381e-05  -3.404432e-08   1.730010e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1077495381
+           POLARIZATION ENERGY    -0.0002916134
+             DISPERSION ENERGY    -0.0002539136
+     EXCHANGE REPULSION ENERGY     0.0001701599
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1081249052
+
+
+                KINETIC ENERGY     0.0442368054
+                     INVARIANT    -0.0638630935
+               TEMPERATURE (K)  2328.1464866496
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 37 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000005     0.061009     0.351908
+A02H2               -0.752697    -0.496266     0.270929
+A03H3                0.752607    -0.496405     0.270947
+A01N1                0.000001     0.002908     4.574179
+A02H2               -0.466747    -0.813650     4.911127
+A03H3               -0.466843     0.802928     4.948585
+A04H4                0.933578    -0.005278     4.929880
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.817779e-07  -1.365911e-03   3.428465e-01  -1.767677e-04   1.442696e-01   8.544902e-05
+velocity
+  -2.532389e-09  -6.015245e-06   1.160881e-03   4.213911e-04  -8.676908e-08  -2.737676e-07
+
+fragment NH3_L
+   5.096212e-07   1.444851e-03   4.637339e+00  -6.709352e-04   2.316718e-02   7.302527e-04
+velocity
+   2.678743e-09   6.362884e-06  -1.227972e-03   2.330354e-05  -3.250290e-08   1.803312e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1092285644
+           POLARIZATION ENERGY    -0.0002990876
+             DISPERSION ENERGY    -0.0002636022
+     EXCHANGE REPULSION ENERGY     0.0001837783
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1096074758
+
+
+                KINETIC ENERGY     0.0458556506
+                     INVARIANT    -0.0637240352
+               TEMPERATURE (K)  2413.3449707832
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 38 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000005     0.060860     0.365273
+A02H2               -0.752700    -0.495670     0.279349
+A03H3                0.752604    -0.495818     0.279369
+A01N1                0.000002     0.003007     4.560627
+A02H2               -0.466744    -0.813705     4.897206
+A03H3               -0.466847     0.802856     4.935395
+A04H4                0.933578    -0.005337     4.916325
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.096175e-07  -1.432225e-03   3.556581e-01  -1.841951e-04   1.531457e-01   8.702256e-05
+velocity
+  -2.553624e-09  -6.109198e-06   1.181836e-03   4.376325e-04  -9.390297e-08  -2.848350e-07
+
+fragment NH3_L
+   5.390698e-07   1.514998e-03   4.623787e+00  -6.846260e-04   2.361924e-02   7.477440e-04
+velocity
+   2.701206e-09   6.462266e-06  -1.250138e-03   2.035510e-05  -3.064396e-08   1.878663e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1107657397
+           POLARIZATION ENERGY    -0.0003069775
+             DISPERSION ENERGY    -0.0002739152
+     EXCHANGE REPULSION ENERGY     0.0001986359
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1111479965
+
+
+                KINETIC ENERGY     0.0475390835
+                     INVARIANT    -0.0635780727
+               TEMPERATURE (K)  2501.9426519586
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 39 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000006     0.060702     0.378890
+A02H2               -0.752703    -0.495009     0.287839
+A03H3                0.752601    -0.495166     0.287861
+A01N1                0.000002     0.003103     4.546831
+A02H2               -0.466741    -0.813742     4.883091
+A03H3               -0.466850     0.802804     4.921910
+A04H4                0.933578    -0.005376     4.902526
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.376433e-07  -1.499561e-03   3.687014e-01  -1.918900e-04   1.623619e-01   8.861863e-05
+velocity
+  -2.566431e-09  -6.202446e-06   1.203243e-03   4.542937e-04  -1.015168e-07  -2.961683e-07
+
+fragment NH3_L
+   5.687153e-07   1.586226e-03   4.609990e+00  -6.979818e-04   2.400869e-02   7.650584e-04
+velocity
+   2.714752e-09   6.560904e-06  -1.272782e-03   1.725331e-05  -2.846866e-08   1.956131e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1123642647
+           POLARIZATION ENERGY    -0.0003153170
+             DISPERSION ENERGY    -0.0002849059
+     EXCHANGE REPULSION ENERGY     0.0002148591
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1127496285
+
+
+                KINETIC ENERGY     0.0492907126
+                     INVARIANT    -0.0634247353
+               TEMPERATURE (K)  2594.1294424254
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 40 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000006     0.060533     0.392765
+A02H2               -0.752706    -0.494276     0.296401
+A03H3                0.752598    -0.494443     0.296424
+A01N1                0.000002     0.003196     4.532784
+A02H2               -0.466738    -0.813760     4.868779
+A03H3               -0.466853     0.802773     4.908121
+A04H4                0.933578    -0.005394     4.888477
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.657630e-07  -1.567916e-03   3.819814e-01  -1.998568e-04   1.719269e-01   9.023409e-05
+velocity
+  -2.570863e-09  -6.295879e-06   1.225125e-03   4.713942e-04  -1.096347e-07  -3.077726e-07
+
+fragment NH3_L
+   5.984602e-07   1.658530e-03   4.595943e+00  -7.109689e-04   2.433252e-02   7.821663e-04
+velocity
+   2.719440e-09   6.659736e-06  -1.295929e-03   1.401470e-05  -2.598227e-08   2.035786e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1140275794
+           POLARIZATION ENERGY    -0.0003241435
+             DISPERSION ENERGY    -0.0002966329
+     EXCHANGE REPULSION ENERGY     0.0002325896
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1144157663
+
+
+                KINETIC ENERGY     0.0511144209
+                     INVARIANT    -0.0632635091
+               TEMPERATURE (K)  2690.1097030994
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 41 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000007     0.060353     0.406902
+A02H2               -0.752709    -0.493467     0.305036
+A03H3                0.752595    -0.493645     0.305061
+A01N1                0.000002     0.003285     4.518481
+A02H2               -0.466735    -0.813759     4.854267
+A03H3               -0.466857     0.802765     4.894022
+A04H4                0.933578    -0.005392     4.874172
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.938858e-07  -1.637296e-03   3.955034e-01  -2.080999e-04   1.818500e-01   9.186545e-05
+velocity
+  -2.567082e-09  -6.390484e-06   1.247504e-03   4.889547e-04  -1.182821e-07  -3.196526e-07
+
+fragment NH3_L
+   6.282082e-07   1.731920e-03   4.581639e+00  -7.235529e-04   2.458808e-02   7.990382e-04
+velocity
+   2.715442e-09   6.759809e-06  -1.319601e-03   1.065743e-05  -2.319358e-08   2.117701e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1157593848
+           POLARIZATION ENERGY    -0.0003334986
+             DISPERSION ENERGY    -0.0003091615
+     EXCHANGE REPULSION ENERGY     0.0002519857
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1161500592
+
+
+                KINETIC ENERGY     0.0530143921
+                     INVARIANT    -0.0630938321
+               TEMPERATURE (K)  2790.1036160331
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 42 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000007     0.060162     0.421309
+A02H2               -0.752712    -0.492575     0.313747
+A03H3                0.752592    -0.492763     0.313774
+A01N1                0.000002     0.003371     4.503916
+A02H2               -0.466731    -0.813737     4.839551
+A03H3               -0.466861     0.802779     4.879605
+A04H4                0.933578    -0.005367     4.859606
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -6.219229e-07  -1.707720e-03   4.092729e-01  -2.166234e-04   1.921409e-01   9.350891e-05
+velocity
+  -2.555334e-09  -6.487349e-06   1.270405e-03   5.069970e-04  -1.274847e-07  -3.318131e-07
+
+fragment NH3_L
+   6.578657e-07   1.806414e-03   4.567074e+00  -7.356985e-04   2.477311e-02   8.156433e-04
+velocity
+   2.703014e-09   6.862272e-06  -1.343825e-03   7.201354e-06  -2.011425e-08   2.201948e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1175636677
+           POLARIZATION ENERGY    -0.0003434284
+             DISPERSION ENERGY    -0.0003225641
+     EXCHANGE REPULSION ENERGY     0.0002732251
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1179564352
+
+
+                KINETIC ENERGY     0.0549951396
+                     INVARIANT    -0.0629150885
+               TEMPERATURE (K)  2894.3487197193
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 43 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000007     0.059959     0.435992
+A02H2               -0.752715    -0.491594     0.322537
+A03H3                0.752588    -0.491794     0.322566
+A01N1                0.000002     0.003454     4.489083
+A02H2               -0.466727    -0.813694     4.824625
+A03H3               -0.466865     0.802818     4.864862
+A04H4                0.933578    -0.005320     4.844773
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -6.497886e-07  -1.779219e-03   4.232959e-01  -2.254317e-04   2.028099e-01   9.516035e-05
+velocity
+  -2.535910e-09  -6.587664e-06   1.293854e-03   5.255441e-04  -1.372693e-07  -3.442584e-07
+
+fragment NH3_L
+   6.873418e-07   1.882045e-03   4.552241e+00  -7.473674e-04   2.488579e-02   8.319485e-04
+velocity
+   2.682467e-09   6.968384e-06  -1.368629e-03   3.667938e-06  -1.675812e-08   2.288602e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1194447292
+           POLARIZATION ENERGY    -0.0003539842
+             DISPERSION ENERGY    -0.0003369215
+     EXCHANGE REPULSION ENERGY     0.0002965077
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1198391271
+
+
+                KINETIC ENERGY     0.0570615394
+                     INVARIANT    -0.0627266024
+               TEMPERATURE (K)  3003.1016299402
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 44 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000008     0.059742     0.450956
+A02H2               -0.752719    -0.490517     0.331407
+A03H3                0.752585    -0.490728     0.331438
+A01N1                0.000002     0.003533     4.473975
+A02H2               -0.466724    -0.813630     4.809485
+A03H3               -0.466869     0.802880     4.849785
+A04H4                0.933578    -0.005250     4.829665
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -6.774008e-07  -1.851838e-03   4.375784e-01  -2.345293e-04   2.138676e-01   9.681528e-05
+velocity
+  -2.509110e-09  -6.692725e-06   1.317879e-03   5.446202e-04  -1.476632e-07  -3.569923e-07
+
+fragment NH3_L
+   7.165498e-07   1.958861e-03   4.537133e+00  -7.585170e-04   2.492475e-02   8.479162e-04
+velocity
+   2.654119e-09   7.079518e-06  -1.394043e-03   8.026469e-08  -1.314027e-08   2.377737e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1214072148
+           POLARIZATION ENERGY    -0.0003652235
+             DISPERSION ENERGY    -0.0003523234
+     EXCHANGE REPULSION ENERGY     0.0003220593
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1218027025
+
+
+                KINETIC ENERGY     0.0592188665
+                     INVARIANT    -0.0625276302
+               TEMPERATURE (K)  3116.6399723445
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 45 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000008     0.059511     0.466209
+A02H2               -0.752722    -0.489337     0.340362
+A03H3                0.752582    -0.489559     0.340395
+A01N1                0.000002     0.003609     4.458585
+A02H2               -0.466720    -0.813545     4.794125
+A03H3               -0.466873     0.802967     4.834367
+A04H4                0.933578    -0.005157     4.814276
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -7.046802e-07  -1.925635e-03   4.521270e-01  -2.439205e-04   2.253253e-01   9.846883e-05
+velocity
+  -2.475186e-09  -6.803939e-06   1.342511e-03   5.642512e-04  -1.586945e-07  -3.700182e-07
+
+fragment NH3_L
+   7.454058e-07   2.036923e-03   4.521743e+00  -7.690963e-04   2.488911e-02   8.635005e-04
+velocity
+   2.618235e-09   7.197159e-06  -1.420099e-03  -3.537026e-06  -9.275928e-09   2.469426e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1234561507
+           POLARIZATION ENERGY    -0.0003772103
+             DISPERSION ENERGY    -0.0003688707
+     EXCHANGE REPULSION ENERGY     0.0003501348
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1238520968
+
+
+                KINETIC ENERGY     0.0614728366
+                     INVARIANT    -0.0623173525
+               TEMPERATURE (K)  3235.2645569141
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 46 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000008     0.059265     0.481759
+A02H2               -0.752726    -0.488045     0.349403
+A03H3                0.752578    -0.488280     0.349439
+A01N1                0.000002     0.003682     4.442907
+A02H2               -0.466715    -0.813438     4.778537
+A03H3               -0.466877     0.803078     4.818600
+A04H4                0.933578    -0.005040     4.798599
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -7.315502e-07  -2.000687e-03   4.669484e-01  -2.536097e-04   2.371945e-01   1.001157e-04
+velocity
+  -2.434274e-09  -6.922821e-06   1.367782e-03   5.844641e-04  -1.703913e-07  -3.833386e-07
+
+fragment NH3_L
+   7.738287e-07   2.116312e-03   4.506065e+00  -7.790417e-04   2.477852e-02   8.786434e-04
+velocity
+   2.574958e-09   7.322911e-06  -1.446830e-03  -7.157798e-06  -5.178976e-09   2.563739e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1255969823
+           POLARIZATION ENERGY    -0.0003900167
+             DISPERSION ENERGY    -0.0003866760
+     EXCHANGE REPULSION ENERGY     0.0003810243
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1259926507
+
+
+                KINETIC ENERGY     0.0638296526
+                     INVARIANT    -0.0620948640
+               TEMPERATURE (K)  3359.3018290838
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 47 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000009     0.059001     0.497612
+A02H2               -0.752730    -0.486633     0.358536
+A03H3                0.752574    -0.486882     0.358574
+A01N1                0.000002     0.003751     4.426933
+A02H2               -0.466711    -0.813309     4.762714
+A03H3               -0.466881     0.803215     4.802477
+A04H4                0.933578    -0.004900     4.782626
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -7.579346e-07  -2.077085e-03   4.820499e-01  -2.636013e-04   2.494878e-01   1.017503e-04
+velocity
+  -2.386294e-09  -7.050999e-06   1.393727e-03   6.052876e-04  -1.827818e-07  -3.969548e-07
+
+fragment NH3_L
+   8.017379e-07   2.197126e-03   4.490091e+00  -7.882706e-04   2.459320e-02   8.932678e-04
+velocity
+   2.524205e-09   7.458498e-06  -1.474274e-03  -1.075450e-05  -8.600078e-10   2.660738e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1278356197
+           POLARIZATION ENERGY    -0.0004037235
+             DISPERSION ENERGY    -0.0004058659
+     EXCHANGE REPULSION ENERGY     0.0004150578
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1282301514
+
+
+                KINETIC ENERGY     0.0662960567
+                     INVARIANT    -0.0618591626
+               TEMPERATURE (K)  3489.1066376407
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 48 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000009     0.058721     0.513778
+A02H2               -0.752733    -0.485093     0.367764
+A03H3                0.752570    -0.485355     0.367804
+A01N1                0.000002     0.003817     4.410654
+A02H2               -0.466707    -0.813158     4.746647
+A03H3               -0.466886     0.803375     4.785991
+A04H4                0.933578    -0.004737     4.766350
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -7.837549e-07  -2.154941e-03   4.974389e-01  -2.738997e-04   2.622180e-01   1.033661e-04
+velocity
+  -2.330806e-09  -7.190217e-06   1.420383e-03   6.267520e-04  -1.958937e-07  -4.108661e-07
+
+fragment NH3_L
+   8.290505e-07   2.279481e-03   4.473813e+00  -7.966719e-04   2.433392e-02   9.072681e-04
+velocity
+   2.465510e-09   7.605761e-06  -1.502471e-03  -1.429824e-05   3.676614e-09   2.760473e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1301784879
+           POLARIZATION ENERGY    -0.0004184220
+             DISPERSION ENERGY    -0.0004265832
+     EXCHANGE REPULSION ENERGY     0.0004526129
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1305708802
+
+
+                KINETIC ENERGY     0.0688793906
+                     INVARIANT    -0.0616091362
+               TEMPERATURE (K)  3625.0653658433
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 49 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000010     0.058420     0.530263
+A02H2               -0.752737    -0.483414     0.377092
+A03H3                0.752567    -0.483691     0.377135
+A01N1                0.000002     0.003880     4.394062
+A02H2               -0.466702    -0.812986     4.730326
+A03H3               -0.466890     0.803560     4.769134
+A04H4                0.933578    -0.004550     4.749761
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -8.089254e-07  -2.234385e-03   5.131234e-01  -2.845089e-04   2.753986e-01   1.049566e-04
+velocity
+  -2.266713e-09  -7.342330e-06   1.447790e-03   6.488893e-04  -2.097522e-07  -4.250684e-07
+
+fragment NH3_L
+   8.556757e-07   2.363517e-03   4.457222e+00  -8.040923e-04   2.400209e-02   9.204970e-04
+velocity
+   2.397713e-09   7.766665e-06  -1.531462e-03  -1.775895e-05   8.438861e-09   2.862968e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1326325842
+           POLARIZATION ENERGY    -0.0004342153
+             DISPERSION ENERGY    -0.0004489889
+     EXCHANGE REPULSION ENERGY     0.0004941236
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1330216647
+
+
+                KINETIC ENERGY     0.0715876626
+                     INVARIANT    -0.0613435475
+               TEMPERATURE (K)  3767.5994801862
+
+
+   SKP testing workflow..compute_forces....in md.c
+
+   SKP..compute_energy...do_grad()..line 33..in energy.c
+
+Inside do_grad line 47
+
+   SKP..compute_energy...do_grad()..line 52..in energy.c
+
+    STATE AFTER 50 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A0101                0.000010     0.058100     0.547078
+A02H2               -0.752741    -0.481588     0.386524
+A03H3                0.752563    -0.481879     0.386570
+A01N1                0.000002     0.003940     4.377149
+A02H2               -0.466697    -0.812793     4.713742
+A03H3               -0.466895     0.803769     4.751899
+A04H4                0.933578    -0.004341     4.732851
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -8.333436e-07  -2.315568e-03   5.291120e-01  -2.954327e-04   2.890439e-01   1.065139e-04
+velocity
+  -2.191311e-09  -7.509307e-06   1.475993e-03   6.717333e-04  -2.243752e-07  -4.395487e-07
+
+fragment NH3_L
+   8.815050e-07   2.449392e-03   4.440309e+00  -8.103127e-04   2.359974e-02   9.327410e-04
+velocity
+   2.317954e-09   7.943292e-06  -1.561295e-03  -2.110547e-05   1.346585e-08   2.968181e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.1352055439
+           POLARIZATION ENERGY    -0.0004512201
+             DISPERSION ENERGY    -0.0004732650
+     EXCHANGE REPULSION ENERGY     0.0005400903
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.1355899387
+
+
+                KINETIC ENERGY     0.0744296240
+                     INVARIANT    -0.0610610165
+               TEMPERATURE (K)  3917.1695621979
+
+
+MOLECULAR DYNAMICS JOB COMPLETED SUCCESSFULLY
+
+
+MONTE CARLO JOB
+
+
+
+
+INITIAL COORDIANTES
+
+
+Particle 1: x=0.000010, y=0.058100, z=0.547078
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.466697, y=-0.812793, z=4.713742
+Particle 6: x=-0.466895, y=0.803769, z=4.751899
+
+Step 1:
+Particle 1: x=0.000010, y=0.058100, z=0.547078
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.466697, y=-0.812793, z=4.713742
+Particle 6: x=-0.466895, y=0.803769, z=4.751899
+
+
+Step 2:
+Particle 1: x=0.000010, y=0.058100, z=0.547078
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.466697, y=-0.812793, z=4.713742
+Particle 6: x=-0.466895, y=0.803769, z=4.751899
+
+
+Step 3:
+Particle 1: x=0.000010, y=0.058100, z=0.547078
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.466697, y=-0.812793, z=4.713742
+Particle 6: x=-0.466895, y=0.803769, z=4.751899
+
+
+Step 4:
+Particle 1: x=0.000010, y=0.058100, z=0.547078
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.466697, y=-0.812793, z=4.713742
+Particle 6: x=-0.466895, y=0.803769, z=4.751899
+
+
+Step 5:
+Particle 1: x=0.000010, y=0.058100, z=0.547078
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.466697, y=-0.812793, z=4.713742
+Particle 6: x=-0.466895, y=0.803769, z=4.751899
+
+
+Step 6:
+Particle 1: x=0.000010, y=0.058100, z=0.547078
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.466697, y=-0.812793, z=4.713742
+Particle 6: x=-0.466895, y=0.803769, z=4.751899
+
+
+Step 7:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.466697, y=-0.812793, z=4.713742
+Particle 6: x=-0.466895, y=0.803769, z=4.751899
+
+
+Step 8:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.466697, y=-0.812793, z=4.713742
+Particle 6: x=-0.515566, y=0.817889, z=4.715966
+
+
+Step 9:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.515566, y=0.817889, z=4.715966
+
+
+Step 10:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.515566, y=0.817889, z=4.715966
+
+
+Step 11:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.515566, y=0.817889, z=4.715966
+
+
+Step 12:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 13:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.752741, y=-0.481588, z=0.386524
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 14:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.765469, y=-0.474027, z=0.374141
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 15:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.765469, y=-0.474027, z=0.374141
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 16:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.765469, y=-0.474027, z=0.374141
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 17:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.765469, y=-0.474027, z=0.374141
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 18:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.765469, y=-0.474027, z=0.374141
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 19:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.765469, y=-0.474027, z=0.374141
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 20:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.765469, y=-0.474027, z=0.374141
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 21:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.790066, y=-0.488626, z=0.325298
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 22:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.790066, y=-0.488626, z=0.325298
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.551771, y=0.863210, z=4.737066
+
+
+Step 23:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.790066, y=-0.488626, z=0.325298
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.563635, y=0.851851, z=4.767595
+
+
+Step 24:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.815428, y=-0.451429, z=0.294513
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.563635, y=0.851851, z=4.767595
+
+
+Step 25:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.815428, y=-0.451429, z=0.294513
+Particle 3: x=0.752563, y=-0.481879, z=0.386570
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.595312, y=0.868717, z=4.788911
+
+
+Step 26:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.815428, y=-0.451429, z=0.294513
+Particle 3: x=0.788180, y=-0.481026, z=0.378900
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.595312, y=0.868717, z=4.788911
+
+
+Step 27:
+Particle 1: x=-0.001827, y=0.044273, z=0.589137
+Particle 2: x=-0.815428, y=-0.451429, z=0.294513
+Particle 3: x=0.788180, y=-0.481026, z=0.378900
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.595312, y=0.868717, z=4.788911
+
+
+Step 28:
+Particle 1: x=0.011260, y=0.045094, z=0.612327
+Particle 2: x=-0.815428, y=-0.451429, z=0.294513
+Particle 3: x=0.788180, y=-0.481026, z=0.378900
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.595312, y=0.868717, z=4.788911
+
+
+Step 29:
+Particle 1: x=0.011260, y=0.045094, z=0.612327
+Particle 2: x=-0.815428, y=-0.451429, z=0.294513
+Particle 3: x=0.788180, y=-0.481026, z=0.378900
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 30:
+Particle 1: x=0.011260, y=0.045094, z=0.612327
+Particle 2: x=-0.815428, y=-0.451429, z=0.294513
+Particle 3: x=0.788180, y=-0.481026, z=0.378900
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 31:
+Particle 1: x=0.011260, y=0.045094, z=0.612327
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.788180, y=-0.481026, z=0.378900
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 32:
+Particle 1: x=0.003943, y=0.066778, z=0.563364
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.788180, y=-0.481026, z=0.378900
+Particle 4: x=0.000002, y=0.003940, z=4.377149
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 33:
+Particle 1: x=0.003943, y=0.066778, z=0.563364
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.788180, y=-0.481026, z=0.378900
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 34:
+Particle 1: x=0.003943, y=0.066778, z=0.563364
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.826697, y=-0.446675, z=0.348963
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.512650, y=-0.796828, z=4.704756
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 35:
+Particle 1: x=0.003943, y=0.066778, z=0.563364
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.826697, y=-0.446675, z=0.348963
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.552880, y=-0.788975, z=4.670026
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 36:
+Particle 1: x=0.003943, y=0.066778, z=0.563364
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.826697, y=-0.446675, z=0.348963
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.552880, y=-0.788975, z=4.670026
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 37:
+Particle 1: x=0.003943, y=0.066778, z=0.563364
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.826697, y=-0.446675, z=0.348963
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.564275, y=-0.809914, z=4.656359
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 38:
+Particle 1: x=0.003943, y=0.066778, z=0.563364
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.826697, y=-0.446675, z=0.348963
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.564275, y=-0.809914, z=4.656359
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 39:
+Particle 1: x=0.003943, y=0.066778, z=0.563364
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.826697, y=-0.446675, z=0.348963
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.564275, y=-0.809914, z=4.656359
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 40:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.826697, y=-0.446675, z=0.348963
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.564275, y=-0.809914, z=4.656359
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 41:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.826697, y=-0.446675, z=0.348963
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.543961, y=-0.846403, z=4.629200
+Particle 6: x=-0.635539, y=0.828414, z=4.810095
+
+
+Step 42:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.826697, y=-0.446675, z=0.348963
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.543961, y=-0.846403, z=4.629200
+Particle 6: x=-0.662258, y=0.859107, z=4.797863
+
+
+Step 43:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.826697, y=-0.446675, z=0.348963
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.543961, y=-0.846403, z=4.629200
+Particle 6: x=-0.662258, y=0.859107, z=4.797863
+
+
+Step 44:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.869537, y=-0.415138, z=0.303277
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.543961, y=-0.846403, z=4.629200
+Particle 6: x=-0.662258, y=0.859107, z=4.797863
+
+
+Step 45:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.869537, y=-0.415138, z=0.303277
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.543961, y=-0.846403, z=4.629200
+Particle 6: x=-0.674696, y=0.815917, z=4.845623
+
+
+Step 46:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.869537, y=-0.415138, z=0.303277
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.543961, y=-0.846403, z=4.629200
+Particle 6: x=-0.674696, y=0.815917, z=4.845623
+
+
+Step 47:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.869537, y=-0.415138, z=0.303277
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.543961, y=-0.846403, z=4.629200
+Particle 6: x=-0.674696, y=0.815917, z=4.845623
+
+
+Step 48:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.869537, y=-0.415138, z=0.303277
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.554838, y=-0.893925, z=4.639022
+Particle 6: x=-0.674696, y=0.815917, z=4.845623
+
+
+Step 49:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.869537, y=-0.415138, z=0.303277
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.554838, y=-0.893925, z=4.639022
+Particle 6: x=-0.674696, y=0.815917, z=4.845623
+
+
+Step 50:
+Particle 1: x=-0.002063, y=0.098576, z=0.542523
+Particle 2: x=-0.850473, y=-0.449826, z=0.297874
+Particle 3: x=0.869537, y=-0.415138, z=0.303277
+Particle 4: x=-0.033545, y=0.040593, z=4.392000
+Particle 5: x=-0.554838, y=-0.893925, z=4.639022
+Particle 6: x=-0.674696, y=0.815917, z=4.845623
+
+
+
+FINAL COORDIANTES
+
+
+Particle 1: x=-0.00, y=0.10, z=0.54
+Particle 2: x=-0.85, y=-0.45, z=0.30
+Particle 3: x=0.87, y=-0.42, z=0.30
+Particle 4: x=-0.03, y=0.04, z=4.39
+Particle 5: x=-0.55, y=-0.89, z=4.64
+Particle 6: x=-0.67, y=0.82, z=4.85
+
+
+MONTE CARLO JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Thu Sep 28 14:28:03 2023
+TOTAL RUN TIME IS 0 SECONDS

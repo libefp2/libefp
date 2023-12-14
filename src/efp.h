@@ -29,6 +29,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include "../efpmd/c_wrap_torch/src/c_libtorch.h"
 
 /** \file efp.h
  * Public libefp interface.
@@ -166,6 +167,7 @@ struct efp_opts {
     /** Index of ligand for enable_pairwise.
      * default = 0 (ie the first fragment); -1 defines the ligand to be a QM region. */
     int ligand;
+    int frag_num; // SKP
     /** Prints fragment coordinates rearranged around ligand. Applicable for periodic simulations only. */
     int print_pbc;
     /** Is 1 for periodic symmetric system (ctystal lattice). Default is 0 */

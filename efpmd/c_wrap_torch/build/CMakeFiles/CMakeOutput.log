@@ -1,0 +1,541 @@
+The system is: Linux - 3.10.0-1160.95.1.el7.x86_64 - x86_64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/gcc 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is GNU, found in "/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/3.18.2/CompilerIdC/a.out"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/g++ 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+
+The CXX compiler identification is GNU, found in "/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/3.18.2/CompilerIdCXX/a.out"
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_be89a/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_be89a.dir/build.make CMakeFiles/cmTC_be89a.dir/build
+gmake[1]: Entering directory `/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o
+/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/gcc   -v -o CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o -c /apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/share/cmake-3.18/Modules/CMakeCCompilerABI.c
+Reading specs from /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/specs
+COLLECT_GCC=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/gcc
+Target: x86_64-pc-linux-gnu
+Configured with: /tmp/rcactest/spack-stage-gcc-9.3.0-z2ug7z7fbhmuwr6e4fejbtlu3jnt4om3/spack-src/configure --prefix=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7 --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c,c++,fortran --disable-nls --with-system-zlib --with-mpfr-include=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/include --with-mpfr-lib=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib --with-gmp-include=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/include --with-gmp-lib=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib --with-mpc-include=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/include --with-mpc-lib=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib --with-isl-include=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/include --with-isl-lib=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib --with-stage1-ldflags='-Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl,-rpath,/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl,-rpath,/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl,-rpath,/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl,-rpath,/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl,-rpath,/apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib' --with-boot-ldflags='-Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl,-rpath,/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl,-rpath,/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl,-rpath,/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl,-rpath,/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl,-rpath,/apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib -static-libstdc++ -static-libgcc'
+Thread model: posix
+gcc version 9.3.0 (Spack GCC) 
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/cc1 -quiet -v /apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/share/cmake-3.18/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o -version -o /tmp/cctnyNqs.s
+GNU C17 (Spack GCC) version 9.3.0 (x86_64-pc-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.1.2, MPFR version 3.1.6-p2, MPC version 1.1.0, isl version isl-0.20-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+ignoring nonexistent directory "/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../x86_64-pc-linux-gnu/include"
+#include "..." search starts here:
+#include <...> search starts here:
+ /apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include
+ /apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include
+ /apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include
+ /apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include
+ /apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include
+ /apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include
+ /apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include
+ /apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include
+ /apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include
+ /apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include
+ /apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include
+ /usr/local/include
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed
+ /usr/include
+End of search list.
+GNU C17 (Spack GCC) version 9.3.0 (x86_64-pc-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.1.2, MPFR version 3.1.6-p2, MPC version 1.1.0, isl version isl-0.20-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+Compiler executable checksum: c88d68bf179ba9cbc36856eaf2dce860
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
+ as -v --64 -o CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o /tmp/cctnyNqs.s
+GNU assembler version 2.27 (x86_64-redhat-linux) using BFD version version 2.27-44.base.el7_9.1
+COMPILER_PATH=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/
+LIBRARY_PATH=/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib/:/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/:/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib/:/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib/:/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib/:/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib/:/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/:/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib/:/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib/:/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
+Linking C executable cmTC_be89a
+/apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/bin/cmake -E cmake_link_script CMakeFiles/cmTC_be89a.dir/link.txt --verbose=1
+/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/gcc  -v CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o -o cmTC_be89a 
+Reading specs from /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/specs
+COLLECT_GCC=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/gcc
+COLLECT_LTO_WRAPPER=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: /tmp/rcactest/spack-stage-gcc-9.3.0-z2ug7z7fbhmuwr6e4fejbtlu3jnt4om3/spack-src/configure --prefix=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7 --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c,c++,fortran --disable-nls --with-system-zlib --with-mpfr-include=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/include --with-mpfr-lib=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib --with-gmp-include=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/include --with-gmp-lib=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib --with-mpc-include=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/include --with-mpc-lib=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib --with-isl-include=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/include --with-isl-lib=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib --with-stage1-ldflags='-Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl,-rpath,/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl,-rpath,/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl,-rpath,/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl,-rpath,/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl,-rpath,/apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib' --with-boot-ldflags='-Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl,-rpath,/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl,-rpath,/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl,-rpath,/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl,-rpath,/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl,-rpath,/apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib -static-libstdc++ -static-libgcc'
+Thread model: posix
+gcc version 9.3.0 (Spack GCC) 
+COMPILER_PATH=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/
+LIBRARY_PATH=/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib/:/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/:/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib/:/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib/:/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib/:/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib/:/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/:/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib/:/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib/:/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_be89a' '-mtune=generic' '-march=x86-64'
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/collect2 -plugin /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/liblto_plugin.so -plugin-opt=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccVEJ19t.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_be89a /lib/../lib64/crt1.o /lib/../lib64/crti.o /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtbegin.o -L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64 -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0 -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib -L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64 -L/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib -L/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib -L/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib -L/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib -L/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib -L/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib -L/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib -L/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../.. CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtend.o /lib/../lib64/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_be89a' '-mtune=generic' '-march=x86-64'
+gmake[1]: Leaving directory `/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/CMakeTmp'
+
+
+
+Parsed C implicit include dir info from above output: rv=done
+  found start of include info
+  found start of implicit include info
+    add: [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include]
+    add: [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include]
+    add: [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include]
+    add: [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include]
+    add: [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include]
+    add: [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include]
+    add: [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include]
+    add: [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include]
+    add: [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include]
+    add: [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include]
+    add: [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include]
+    add: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include]
+    add: [/usr/local/include]
+    add: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include]
+    add: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed]
+    add: [/usr/include]
+  end of search list found
+  collapse include dir [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include] ==> [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include]
+  collapse include dir [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include] ==> [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include]
+  collapse include dir [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include] ==> [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include]
+  collapse include dir [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include] ==> [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include]
+  collapse include dir [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include] ==> [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include]
+  collapse include dir [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include] ==> [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include]
+  collapse include dir [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include] ==> [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include]
+  collapse include dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include] ==> [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include]
+  collapse include dir [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include] ==> [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include]
+  collapse include dir [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include] ==> [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include]
+  collapse include dir [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include] ==> [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include]
+  collapse include dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include]
+  collapse include dir [/usr/local/include] ==> [/usr/local/include]
+  collapse include dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include]
+  collapse include dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed]
+  collapse include dir [/usr/include] ==> [/usr/include]
+  implicit include dirs: [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include;/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include;/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include;/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include;/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include;/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include;/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include;/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include;/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include;/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include;/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include;/usr/local/include;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed;/usr/include]
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/gmake cmTC_be89a/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_be89a.dir/build.make CMakeFiles/cmTC_be89a.dir/build]
+  ignore line: [gmake[1]: Entering directory `/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/CMakeTmp']
+  ignore line: [Building C object CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/gcc   -v -o CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o -c /apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/share/cmake-3.18/Modules/CMakeCCompilerABI.c]
+  ignore line: [Reading specs from /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/specs]
+  ignore line: [COLLECT_GCC=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/gcc]
+  ignore line: [Target: x86_64-pc-linux-gnu]
+  ignore line: [Configured with: /tmp/rcactest/spack-stage-gcc-9.3.0-z2ug7z7fbhmuwr6e4fejbtlu3jnt4om3/spack-src/configure --prefix=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7 --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c c++ fortran --disable-nls --with-system-zlib --with-mpfr-include=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/include --with-mpfr-lib=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib --with-gmp-include=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/include --with-gmp-lib=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib --with-mpc-include=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/include --with-mpc-lib=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib --with-isl-include=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/include --with-isl-lib=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib --with-stage1-ldflags='-Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl -rpath /apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl -rpath /apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl -rpath /apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl -rpath /apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl -rpath /apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib' --with-boot-ldflags='-Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl -rpath /apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl -rpath /apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl -rpath /apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl -rpath /apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl -rpath /apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib -static-libstdc++ -static-libgcc']
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Spack GCC) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/cc1 -quiet -v /apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/share/cmake-3.18/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o -version -o /tmp/cctnyNqs.s]
+  ignore line: [GNU C17 (Spack GCC) version 9.3.0 (x86_64-pc-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.1.2  MPFR version 3.1.6-p2  MPC version 1.1.0  isl version isl-0.20-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [ignoring nonexistent directory "/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../x86_64-pc-linux-gnu/include"]
+  ignore line: [#include "..." search starts here:]
+  ignore line: [#include <...> search starts here:]
+  ignore line: [ /apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include]
+  ignore line: [ /apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include]
+  ignore line: [ /apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include]
+  ignore line: [ /apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include]
+  ignore line: [ /apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include]
+  ignore line: [ /apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include]
+  ignore line: [ /apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include]
+  ignore line: [ /apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include]
+  ignore line: [ /apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include]
+  ignore line: [ /apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include]
+  ignore line: [ /apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include]
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include]
+  ignore line: [ /usr/local/include]
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include]
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed]
+  ignore line: [ /usr/include]
+  ignore line: [End of search list.]
+  ignore line: [GNU C17 (Spack GCC) version 9.3.0 (x86_64-pc-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.1.2  MPFR version 3.1.6-p2  MPC version 1.1.0  isl version isl-0.20-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [Compiler executable checksum: c88d68bf179ba9cbc36856eaf2dce860]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o /tmp/cctnyNqs.s]
+  ignore line: [GNU assembler version 2.27 (x86_64-redhat-linux) using BFD version version 2.27-44.base.el7_9.1]
+  ignore line: [COMPILER_PATH=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib/:/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/:/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib/:/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib/:/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib/:/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib/:/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/:/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib/:/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib/:/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
+  ignore line: [Linking C executable cmTC_be89a]
+  ignore line: [/apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/bin/cmake -E cmake_link_script CMakeFiles/cmTC_be89a.dir/link.txt --verbose=1]
+  ignore line: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/gcc  -v CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o -o cmTC_be89a ]
+  ignore line: [Reading specs from /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/specs]
+  ignore line: [COLLECT_GCC=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/gcc]
+  ignore line: [COLLECT_LTO_WRAPPER=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper]
+  ignore line: [Target: x86_64-pc-linux-gnu]
+  ignore line: [Configured with: /tmp/rcactest/spack-stage-gcc-9.3.0-z2ug7z7fbhmuwr6e4fejbtlu3jnt4om3/spack-src/configure --prefix=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7 --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c c++ fortran --disable-nls --with-system-zlib --with-mpfr-include=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/include --with-mpfr-lib=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib --with-gmp-include=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/include --with-gmp-lib=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib --with-mpc-include=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/include --with-mpc-lib=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib --with-isl-include=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/include --with-isl-lib=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib --with-stage1-ldflags='-Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl -rpath /apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl -rpath /apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl -rpath /apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl -rpath /apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl -rpath /apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib' --with-boot-ldflags='-Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl -rpath /apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl -rpath /apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl -rpath /apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl -rpath /apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl -rpath /apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib -static-libstdc++ -static-libgcc']
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Spack GCC) ]
+  ignore line: [COMPILER_PATH=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib/:/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/:/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib/:/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib/:/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib/:/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib/:/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/:/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib/:/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib/:/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_be89a' '-mtune=generic' '-march=x86-64']
+  link line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/collect2 -plugin /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/liblto_plugin.so -plugin-opt=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccVEJ19t.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_be89a /lib/../lib64/crt1.o /lib/../lib64/crti.o /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtbegin.o -L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64 -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0 -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib -L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64 -L/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib -L/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib -L/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib -L/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib -L/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib -L/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib -L/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib -L/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../.. CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtend.o /lib/../lib64/crtn.o]
+    arg [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccVEJ19t.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-rpath] ==> ignore
+    arg [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_be89a] ==> ignore
+    arg [/lib/../lib64/crt1.o] ==> ignore
+    arg [/lib/../lib64/crti.o] ==> ignore
+    arg [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtbegin.o] ==> ignore
+    arg [-L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64] ==> dir [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64]
+    arg [-L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64] ==> dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64]
+    arg [-L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64] ==> dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64]
+    arg [-L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0] ==> dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0]
+    arg [-L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64] ==> dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64]
+    arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+    arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+    arg [-L/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib] ==> dir [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib]
+    arg [-L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64] ==> dir [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64]
+    arg [-L/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib] ==> dir [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib]
+    arg [-L/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib] ==> dir [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib]
+    arg [-L/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib] ==> dir [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib]
+    arg [-L/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib] ==> dir [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib]
+    arg [-L/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib] ==> dir [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib]
+    arg [-L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64] ==> dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64]
+    arg [-L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib] ==> dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib]
+    arg [-L/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib] ==> dir [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib]
+    arg [-L/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib] ==> dir [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib]
+    arg [-L/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib] ==> dir [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib]
+    arg [-L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../..] ==> dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../..]
+    arg [CMakeFiles/cmTC_be89a.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [-lc] ==> lib [c]
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtend.o] ==> ignore
+    arg [/lib/../lib64/crtn.o] ==> ignore
+  collapse library dir [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64] ==> [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64]
+  collapse library dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64] ==> [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64]
+  collapse library dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64] ==> [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64]
+  collapse library dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0]
+  collapse library dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64]
+  collapse library dir [/lib/../lib64] ==> [/lib64]
+  collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+  collapse library dir [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib] ==> [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib]
+  collapse library dir [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64] ==> [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64]
+  collapse library dir [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib] ==> [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib]
+  collapse library dir [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib] ==> [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib]
+  collapse library dir [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib] ==> [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib]
+  collapse library dir [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib] ==> [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib]
+  collapse library dir [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib] ==> [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib]
+  collapse library dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64] ==> [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64]
+  collapse library dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib] ==> [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib]
+  collapse library dir [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib] ==> [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib]
+  collapse library dir [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib] ==> [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib]
+  collapse library dir [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib] ==> [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib]
+  collapse library dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../..] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib]
+  implicit libs: [gcc;gcc_s;c;gcc;gcc_s]
+  implicit dirs: [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64;/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64;/lib64;/usr/lib64;/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib;/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib;/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib;/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib;/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib;/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib;/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib;/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib;/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib;/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib]
+  implicit fwks: []
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_4bd47/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_4bd47.dir/build.make CMakeFiles/cmTC_4bd47.dir/build
+gmake[1]: Entering directory `/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o
+/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/g++   -v -o CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o -c /apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp
+Reading specs from /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/specs
+COLLECT_GCC=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/g++
+Target: x86_64-pc-linux-gnu
+Configured with: /tmp/rcactest/spack-stage-gcc-9.3.0-z2ug7z7fbhmuwr6e4fejbtlu3jnt4om3/spack-src/configure --prefix=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7 --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c,c++,fortran --disable-nls --with-system-zlib --with-mpfr-include=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/include --with-mpfr-lib=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib --with-gmp-include=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/include --with-gmp-lib=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib --with-mpc-include=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/include --with-mpc-lib=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib --with-isl-include=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/include --with-isl-lib=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib --with-stage1-ldflags='-Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl,-rpath,/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl,-rpath,/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl,-rpath,/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl,-rpath,/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl,-rpath,/apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib' --with-boot-ldflags='-Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl,-rpath,/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl,-rpath,/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl,-rpath,/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl,-rpath,/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl,-rpath,/apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib -static-libstdc++ -static-libgcc'
+Thread model: posix
+gcc version 9.3.0 (Spack GCC) 
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/cc1plus -quiet -v -D_GNU_SOURCE /apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o -version -o /tmp/cclvkcP1.s
+GNU C++14 (Spack GCC) version 9.3.0 (x86_64-pc-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.1.2, MPFR version 3.1.6-p2, MPC version 1.1.0, isl version isl-0.20-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+ignoring nonexistent directory "/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../x86_64-pc-linux-gnu/include"
+#include "..." search starts here:
+#include <...> search starts here:
+ /apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include
+ /apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include
+ /apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include
+ /apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include
+ /apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include
+ /apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include
+ /apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include
+ /apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include
+ /apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include
+ /apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include
+ /apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/x86_64-pc-linux-gnu
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/backward
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include
+ /usr/local/include
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed
+ /usr/include
+End of search list.
+GNU C++14 (Spack GCC) version 9.3.0 (x86_64-pc-linux-gnu)
+	compiled by GNU C version 9.3.0, GMP version 6.1.2, MPFR version 3.1.6-p2, MPC version 1.1.0, isl version isl-0.20-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+Compiler executable checksum: 24f2287ca835930e79da8d3d28c469de
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ as -v --64 -o CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o /tmp/cclvkcP1.s
+GNU assembler version 2.27 (x86_64-redhat-linux) using BFD version version 2.27-44.base.el7_9.1
+COMPILER_PATH=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/
+LIBRARY_PATH=/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib/:/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/:/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib/:/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib/:/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib/:/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib/:/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/:/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib/:/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib/:/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+Linking CXX executable cmTC_4bd47
+/apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4bd47.dir/link.txt --verbose=1
+/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/g++  -v CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_4bd47 
+Reading specs from /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/specs
+COLLECT_GCC=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/g++
+COLLECT_LTO_WRAPPER=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: /tmp/rcactest/spack-stage-gcc-9.3.0-z2ug7z7fbhmuwr6e4fejbtlu3jnt4om3/spack-src/configure --prefix=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7 --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c,c++,fortran --disable-nls --with-system-zlib --with-mpfr-include=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/include --with-mpfr-lib=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib --with-gmp-include=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/include --with-gmp-lib=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib --with-mpc-include=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/include --with-mpc-lib=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib --with-isl-include=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/include --with-isl-lib=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib --with-stage1-ldflags='-Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl,-rpath,/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl,-rpath,/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl,-rpath,/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl,-rpath,/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl,-rpath,/apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib' --with-boot-ldflags='-Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl,-rpath,/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl,-rpath,/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl,-rpath,/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl,-rpath,/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl,-rpath,/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl,-rpath,/apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib -static-libstdc++ -static-libgcc'
+Thread model: posix
+gcc version 9.3.0 (Spack GCC) 
+COMPILER_PATH=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/
+LIBRARY_PATH=/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib/:/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/:/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib/:/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib/:/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib/:/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib/:/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/:/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib/:/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib/:/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_4bd47' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/collect2 -plugin /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/liblto_plugin.so -plugin-opt=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccwtMre4.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_4bd47 /lib/../lib64/crt1.o /lib/../lib64/crti.o /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtbegin.o -L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64 -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0 -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib -L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64 -L/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib -L/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib -L/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib -L/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib -L/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib -L/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib -L/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib -L/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../.. CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtend.o /lib/../lib64/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_4bd47' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+gmake[1]: Leaving directory `/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/CMakeTmp'
+
+
+
+Parsed CXX implicit include dir info from above output: rv=done
+  found start of include info
+  found start of implicit include info
+    add: [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include]
+    add: [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include]
+    add: [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include]
+    add: [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include]
+    add: [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include]
+    add: [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include]
+    add: [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include]
+    add: [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include]
+    add: [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include]
+    add: [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include]
+    add: [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include]
+    add: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0]
+    add: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/x86_64-pc-linux-gnu]
+    add: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/backward]
+    add: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include]
+    add: [/usr/local/include]
+    add: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include]
+    add: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed]
+    add: [/usr/include]
+  end of search list found
+  collapse include dir [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include] ==> [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include]
+  collapse include dir [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include] ==> [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include]
+  collapse include dir [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include] ==> [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include]
+  collapse include dir [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include] ==> [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include]
+  collapse include dir [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include] ==> [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include]
+  collapse include dir [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include] ==> [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include]
+  collapse include dir [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include] ==> [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include]
+  collapse include dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include] ==> [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include]
+  collapse include dir [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include] ==> [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include]
+  collapse include dir [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include] ==> [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include]
+  collapse include dir [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include] ==> [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include]
+  collapse include dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include/c++/9.3.0]
+  collapse include dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/x86_64-pc-linux-gnu] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include/c++/9.3.0/x86_64-pc-linux-gnu]
+  collapse include dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/backward] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include/c++/9.3.0/backward]
+  collapse include dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include]
+  collapse include dir [/usr/local/include] ==> [/usr/local/include]
+  collapse include dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include]
+  collapse include dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed]
+  collapse include dir [/usr/include] ==> [/usr/include]
+  implicit include dirs: [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include;/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include;/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include;/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include;/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include;/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include;/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include;/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include;/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include;/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include;/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include/c++/9.3.0;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include/c++/9.3.0/x86_64-pc-linux-gnu;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include/c++/9.3.0/backward;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include;/usr/local/include;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed;/usr/include]
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/gmake cmTC_4bd47/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_4bd47.dir/build.make CMakeFiles/cmTC_4bd47.dir/build]
+  ignore line: [gmake[1]: Entering directory `/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/CMakeTmp']
+  ignore line: [Building CXX object CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/g++   -v -o CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o -c /apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Reading specs from /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/specs]
+  ignore line: [COLLECT_GCC=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/g++]
+  ignore line: [Target: x86_64-pc-linux-gnu]
+  ignore line: [Configured with: /tmp/rcactest/spack-stage-gcc-9.3.0-z2ug7z7fbhmuwr6e4fejbtlu3jnt4om3/spack-src/configure --prefix=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7 --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c c++ fortran --disable-nls --with-system-zlib --with-mpfr-include=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/include --with-mpfr-lib=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib --with-gmp-include=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/include --with-gmp-lib=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib --with-mpc-include=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/include --with-mpc-lib=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib --with-isl-include=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/include --with-isl-lib=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib --with-stage1-ldflags='-Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl -rpath /apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl -rpath /apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl -rpath /apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl -rpath /apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl -rpath /apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib' --with-boot-ldflags='-Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl -rpath /apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl -rpath /apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl -rpath /apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl -rpath /apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl -rpath /apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib -static-libstdc++ -static-libgcc']
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Spack GCC) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/cc1plus -quiet -v -D_GNU_SOURCE /apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o -version -o /tmp/cclvkcP1.s]
+  ignore line: [GNU C++14 (Spack GCC) version 9.3.0 (x86_64-pc-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.1.2  MPFR version 3.1.6-p2  MPC version 1.1.0  isl version isl-0.20-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [ignoring nonexistent directory "/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../x86_64-pc-linux-gnu/include"]
+  ignore line: [#include "..." search starts here:]
+  ignore line: [#include <...> search starts here:]
+  ignore line: [ /apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/include]
+  ignore line: [ /apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/include]
+  ignore line: [ /apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/include]
+  ignore line: [ /apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/include]
+  ignore line: [ /apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/include]
+  ignore line: [ /apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/include]
+  ignore line: [ /apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/include]
+  ignore line: [ /apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/include]
+  ignore line: [ /apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/include]
+  ignore line: [ /apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/include]
+  ignore line: [ /apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/include]
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0]
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/x86_64-pc-linux-gnu]
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/backward]
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include]
+  ignore line: [ /usr/local/include]
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/include]
+  ignore line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed]
+  ignore line: [ /usr/include]
+  ignore line: [End of search list.]
+  ignore line: [GNU C++14 (Spack GCC) version 9.3.0 (x86_64-pc-linux-gnu)]
+  ignore line: [	compiled by GNU C version 9.3.0  GMP version 6.1.2  MPFR version 3.1.6-p2  MPC version 1.1.0  isl version isl-0.20-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [Compiler executable checksum: 24f2287ca835930e79da8d3d28c469de]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o /tmp/cclvkcP1.s]
+  ignore line: [GNU assembler version 2.27 (x86_64-redhat-linux) using BFD version version 2.27-44.base.el7_9.1]
+  ignore line: [COMPILER_PATH=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib/:/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/:/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib/:/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib/:/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib/:/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib/:/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/:/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib/:/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib/:/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  ignore line: [Linking CXX executable cmTC_4bd47]
+  ignore line: [/apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4bd47.dir/link.txt --verbose=1]
+  ignore line: [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/g++  -v CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_4bd47 ]
+  ignore line: [Reading specs from /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/specs]
+  ignore line: [COLLECT_GCC=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/bin/g++]
+  ignore line: [COLLECT_LTO_WRAPPER=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper]
+  ignore line: [Target: x86_64-pc-linux-gnu]
+  ignore line: [Configured with: /tmp/rcactest/spack-stage-gcc-9.3.0-z2ug7z7fbhmuwr6e4fejbtlu3jnt4om3/spack-src/configure --prefix=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7 --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c c++ fortran --disable-nls --with-system-zlib --with-mpfr-include=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/include --with-mpfr-lib=/apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib --with-gmp-include=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/include --with-gmp-lib=/apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib --with-mpc-include=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/include --with-mpc-lib=/apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib --with-isl-include=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/include --with-isl-lib=/apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib --with-stage1-ldflags='-Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl -rpath /apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl -rpath /apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl -rpath /apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl -rpath /apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl -rpath /apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib' --with-boot-ldflags='-Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib -Wl -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 -Wl -rpath /apps/spack/bell/apps/gmp/6.1.2-gcc-4.8.5-6bsovvk/lib -Wl -rpath /apps/spack/bell/apps/mpfr/3.1.6-gcc-4.8.5-xyisskj/lib -Wl -rpath /apps/spack/bell/apps/mpc/1.1.0-gcc-4.8.5-wwn2jff/lib -Wl -rpath /apps/spack/bell/apps/isl/0.20-gcc-4.8.5-fsuch7d/lib -Wl -rpath /apps/spack/bell/apps/zlib/1.2.11-gcc-4.8.5-64vg6e4/lib -static-libstdc++ -static-libgcc']
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 9.3.0 (Spack GCC) ]
+  ignore line: [COMPILER_PATH=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib/:/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/:/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib/:/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib/:/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib/:/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib/:/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/:/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/:/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib/:/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib/:/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib/:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_4bd47' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  link line: [ /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/collect2 -plugin /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/liblto_plugin.so -plugin-opt=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccwtMre4.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -rpath /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64 --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_4bd47 /lib/../lib64/crt1.o /lib/../lib64/crti.o /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtbegin.o -L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64 -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0 -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib -L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64 -L/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib -L/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib -L/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib -L/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib -L/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64 -L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib -L/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib -L/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib -L/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib -L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../.. CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtend.o /lib/../lib64/crtn.o]
+    arg [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccwtMre4.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-rpath] ==> ignore
+    arg [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib:/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_4bd47] ==> ignore
+    arg [/lib/../lib64/crt1.o] ==> ignore
+    arg [/lib/../lib64/crti.o] ==> ignore
+    arg [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtbegin.o] ==> ignore
+    arg [-L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64] ==> dir [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64]
+    arg [-L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64] ==> dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64]
+    arg [-L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64] ==> dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64]
+    arg [-L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0] ==> dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0]
+    arg [-L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64] ==> dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64]
+    arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+    arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+    arg [-L/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib] ==> dir [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib]
+    arg [-L/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64] ==> dir [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64]
+    arg [-L/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib] ==> dir [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib]
+    arg [-L/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib] ==> dir [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib]
+    arg [-L/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib] ==> dir [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib]
+    arg [-L/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib] ==> dir [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib]
+    arg [-L/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib] ==> dir [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib]
+    arg [-L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64] ==> dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64]
+    arg [-L/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib] ==> dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib]
+    arg [-L/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib] ==> dir [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib]
+    arg [-L/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib] ==> dir [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib]
+    arg [-L/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib] ==> dir [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib]
+    arg [-L/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../..] ==> dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../..]
+    arg [CMakeFiles/cmTC_4bd47.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [-lstdc++] ==> lib [stdc++]
+    arg [-lm] ==> lib [m]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lc] ==> lib [c]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/crtend.o] ==> ignore
+    arg [/lib/../lib64/crtn.o] ==> ignore
+  collapse library dir [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64/../lib64] ==> [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64]
+  collapse library dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64/../lib64] ==> [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64]
+  collapse library dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib/../lib64] ==> [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64]
+  collapse library dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0]
+  collapse library dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../lib64] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64]
+  collapse library dir [/lib/../lib64] ==> [/lib64]
+  collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+  collapse library dir [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib] ==> [/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib]
+  collapse library dir [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64] ==> [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64]
+  collapse library dir [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib] ==> [/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib]
+  collapse library dir [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib] ==> [/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib]
+  collapse library dir [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib] ==> [/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib]
+  collapse library dir [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib] ==> [/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib]
+  collapse library dir [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib] ==> [/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib]
+  collapse library dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64] ==> [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64]
+  collapse library dir [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib] ==> [/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib]
+  collapse library dir [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib] ==> [/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib]
+  collapse library dir [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib] ==> [/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib]
+  collapse library dir [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib] ==> [/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib]
+  collapse library dir [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../..] ==> [/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib]
+  implicit libs: [stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
+  implicit dirs: [/apps/spack/bell/apps/netlib-lapack/3.8.0-gcc-10.2.0-u6wadoq/lib64;/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib64;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib/gcc/x86_64-pc-linux-gnu/9.3.0;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib64;/lib64;/usr/lib64;/apps/spack/bell/apps/openmpi/3.1.6-gcc-10.2.0-kn4ct52/lib;/apps/spack/bell/apps/openblas/0.3.8-gcc-10.2.0-yierafl/lib;/apps/spack/bell/apps/hdf5/1.10.6-gcc-10.2.0-fa6zg3j/lib;/apps/spack/bell/apps/libszip/2.1.1-gcc-10.2.0-ep7tepl/lib;/apps/spack/bell/apps/boost/1.68.0-gcc-10.2.0-illfiwk/lib;/apps/spack/bell/apps/zlib/1.2.11-gcc-10.2.0-vfja5fy/lib;/apps/spack/bell/apps/gcc/10.2.0-gcc-4.8.5-mgcgzho/lib;/apps/spack/bell-20231031/apps/mpc/1.1.0-gcc-4.8.5-falbgx3/lib;/apps/spack/bell-20231031/apps/mpfr/3.1.6-gcc-4.8.5-cslxql4/lib;/apps/spack/bell-20231031/apps/gmp/6.2.1-gcc-4.8.5-dse55eg/lib;/apps/spack/bell/apps/gcc/9.3.0-gcc-4.8.5-z2ug7z7/lib]
+  implicit fwks: []
+
+

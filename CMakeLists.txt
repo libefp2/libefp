@@ -2,11 +2,13 @@ cmake_minimum_required(VERSION 3.0)
 # project_VERSION* variables populated from project(... VERSION x.x.x) string
 cmake_policy(SET CMP0048 NEW)
 
-project(libefp VERSION 1.7.2 LANGUAGES C)
+project(libefp VERSION 1.7.2 LANGUAGES C CXX)
 set(libefp_AUTHORS "Ilya A. Kaliman, Lori A. Burns, Dmitry Morozov, Carlos H. Borca, Yen (Terri) Bui, Yongbin Kim, Lyudmila V. Slipchenko")
 set(libefp_DESCRIPTION "Parallel implementation of the Effective Fragment Potential method")
 set(libefp_URL "https://github.com/libefp2/libefp")
 set(libefp_LICENSE "BSD 2-clause")
+#set(Torch_DIR "~/libtorch/share/cmake/Torch")
+#set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=0")
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
@@ -126,6 +128,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PN}Config.cmake
 install(EXPORT "${PN}Targets"
         NAMESPACE "${PN}::"
         DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+
+add_subdirectory(efpmd)
 
 # Notes on CMake: CMake builds libefp, the shared or static library,
 #   but not efpmd because Psi4 doesn't use it. Also not implemented

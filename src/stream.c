@@ -31,6 +31,7 @@
 
 #include "stream.h"
 
+
 struct stream {
 	char *buffer;
 	char *ptr;
@@ -130,6 +131,8 @@ efp_stream_open(const char *path)
 	struct stream *stream;
 
 	assert(path);
+//	printf("Inside efp_stream_open\n");
+//	printf("Path = %s\n", path); // SKP
 
 	stream = (struct stream *)calloc(1, sizeof(struct stream));
 	if (stream == NULL)
@@ -192,7 +195,8 @@ char
 efp_stream_get_char(struct stream *stream)
 {
 	assert(stream);
-
+//	printf("Inside get_char\n");
+//	printf("Stream in get_char is = %s\n", stream->ptr); // SKP	
 	return stream->ptr && *stream->ptr ? *stream->ptr++ : '\0';
 }
 
@@ -265,12 +269,20 @@ void
 efp_stream_skip_space(struct stream *stream)
 {
 	assert(stream);
-
-	if (!stream->ptr)
+//	printf("Inside efp_stream_skip_space\n");
+	if (!stream->ptr){
+//		printf("stream->ptr is not true\n");
 		return;
-
+	}
 	while (*stream->ptr && isspace(*stream->ptr))
-		stream->ptr++;
+	{
+//	printf("Stream is = %s\n", stream->ptr); // SKP
+
+//	printf("stream-ptr visited\n");
+//	while (*stream->ptr)
+			stream->ptr++;
+	}
+
 }
 
 void

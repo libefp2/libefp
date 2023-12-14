@@ -586,7 +586,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 	efp->energy.charge_penetration += e_cp;
 
     if (efp->opts.print > 0) {
-        printf(" In compute_two_body_range() \n");
+//        printf(" In compute_two_body_range() \n");
         print_ene(&efp->energy);
         print_energies(efp);
     }
@@ -2067,6 +2067,10 @@ efp_get_frag_atom_count(struct efp *efp, size_t frag_idx, size_t *n_atoms)
 	assert(n_atoms);
 	assert(frag_idx < efp->n_frag);
 
+//	printf("Inside efp_get_frag_atom_count\n");
+//        printf("n_frags = %d\n", efp->n_frag);
+//        printf("Frag-idx = %d\n", frag_idx);
+
 	*n_atoms = efp->frags[frag_idx].n_atoms;
 
 	return EFP_RESULT_SUCCESS;
@@ -2082,6 +2086,10 @@ efp_get_frag_atoms(struct efp *efp, size_t frag_idx, size_t size,
 	assert(atoms);
 	assert(frag_idx < efp->n_frag);
 	assert(size >= efp->frags[frag_idx].n_atoms);
+
+//        printf("Inside efp_get_frag_atoms\n");
+//        printf("n_frags = %d\n", efp->n_frag);
+//        printf("Frag-idx = %d\n", frag_idx);
 
 	frag = efp->frags + frag_idx;
 	memcpy(atoms, frag->atoms, frag->n_atoms * sizeof(struct efp_atom));

@@ -25,9 +25,20 @@
  */
 
 #include "common.h"
+#include "efp.h"
+#include "cfg.h"
+#include "../c_wrap_torch/src/c_libtorch.h"
+#include "autodiff.h"
+#include <stdio.h>
+//#include "../c_wrap_torch/tests/acutest.h"
+//#include "c_libtorch.h"
+
+//using namespace torch::autograd;
 
 void sim_efield(struct state *state);
 void sim_elpot(struct state *state);
+void sim_frag_elpot(struct state *state); // SKP
+
 
 static void
 print_field(size_t frag_idx, const struct efp_atom *atom, const double *field)
@@ -129,4 +140,46 @@ sim_elpot(struct state *state)
     }
 
     msg("ELECTROSTATIC POTENTIAL JOB COMPLETED SUCCESSFULLY\n");
+}
+
+
+void
+sim_frag_elpot(struct state *state)
+{
+    size_t chosen_frag = cfg_get_int(state->cfg, "frag_num");
+
+    msg("CLIB-TEST in DIFF PLACE\n\n");
+//    Test_SKP();
+//    grad_tst();
+//    compute_gradient_test();
+//    test2_nn();
+
+    msg("FRAG-ELECTROSTATIC POTENTIAL JOB\n\n\n");
+ 
+    printf("Inside sim_frag_elpot\n");
+    printf("chosen_frag = %d\n", chosen_frag);
+
+  msg("COORDINATES IN ANGSTROMS, ELECTROSTATIC POTENTIAL IN ATOMIC UNITS\n");
+  msg("     ATOM            X            Y            Z        ELPOT \n\n");
+
+      double elpot;
+      struct efp_atom *atoms;
+      size_t n_atoms;
+
+
+      check_fail(efp_get_frag_atom_count(state->efp, chosen_frag, &n_atoms));  // SKP
+      atoms = xmalloc(n_atoms * sizeof(struct efp_atom));
+      check_fail(efp_get_frag_atoms(state->efp, chosen_frag, n_atoms, atoms));
+
+      msg("ELECTROSTATIC POTENTIAL ON FRAGMENT %zu\n", chosen_frag);
+
+      for (size_t j = 0; j < n_atoms; j++) {
+            check_fail(efp_get_elec_potential(state->efp, chosen_frag, &atoms[j].x, &elpot));
+            print_elpot(atoms + j, elpot);
+      }
+
+      msg("\n");
+      free(atoms);
+
+    msg("FRAG-ELECTROSTATIC POTENTIAL JOB COMPLETED SUCCESSFULLY\n");
 }

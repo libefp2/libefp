@@ -1,0 +1,3 @@
+/scratch/bell/paulsk/tstefp/libefp/src/build/CMakeFiles/rebuild_cache.dir
+/scratch/bell/paulsk/tstefp/libefp/src/build/CMakeFiles/edit_cache.dir
+/scratch/bell/paulsk/tstefp/libefp/src/build/CMakeFiles/frg_sources.dir
