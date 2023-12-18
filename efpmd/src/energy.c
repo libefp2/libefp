@@ -127,38 +127,3 @@ void compute_energy(struct state *state, bool do_grad)
 	state->energy += ff_get_energy(state->ff);
 }
 
-double calculatePairwiseEnergy(Particle particle1, Particle particle2) {
-
-    double energy = 0.0;
-
-    double epsilon = 1.0; 
-    double sigma = 1.0; 
-
-    double dx = particle1.x - particle2.x;
-    double dy = particle1.y - particle2.y;
-    double dz = particle1.z - particle2.z;
-
-    double r_squared = dx * dx + dy * dy + dz * dz;
-    double r = sqrt(r_squared);
-
-    if (r > 0.0) {
-        double r6 = r_squared * r_squared * r_squared;
-        double r12 = r6 * r6;
-        energy = 4.0 * epsilon * (sigma * sigma / r12 - sigma * sigma / r6);
-    }
-
-    return energy; 
-}
-
-double calculateEnergy(Particle particles[6]) {
-    double total_energy = 0.0;
-
-    for (int i = 0; i < 6; i++) {
-        for (int j = i + 1; j < 6; j++) {
-            double pairwise_energy = calculatePairwiseEnergy(particles[i], particles[j]);
-            total_energy += pairwise_energy;
-        }
-    }
-
-    return total_energy;
-}

@@ -80,18 +80,12 @@ typedef struct {
     double x, y, z; // Position coordinates
 } Particle;
 
-double calculateEnergy(Particle particles[6]);
-double calculatePairwiseEnergy(Particle particle1, Particle particle2);
-void monteCarloMove(Particle* particles, int num_particles, double temperature);
-void monteCarloSimulation(Particle* particles, int num_particles, double temperature);
-
 // =============//
 
 struct frag {
 	char *name;
 	double coord[12];
 	size_t n_atoms;
-//	size_t chosen_frag;  // SKP for frag_elpot
 	struct efp_atom *atoms;
 	double vel[6];
 	bool constraint_enable;
@@ -99,42 +93,6 @@ struct frag {
 	double constraint_k;
 };
 
-// SKP 6th June
-/*
-struct Tensor{
-    void* data;
-    int64_t* sizes;
-    int ndim;
-    int type_id;
-    int is_variable;
-};
-
-
-struct TenGrad {
-    float *data;
-    int64_t *sizes;
-    int num_dims;
-};
-
-
-//struct Net Net;
-struct Net *createNet();
-void destroyNet(struct Net *model);
-void forward(struct Net* model, const float *inputs, float *output, int input_size, int output_size);
-void trainModelWrapper(struct Net *model, const float **input_data, const float *target_data, int num_samples, int num_epochs, float learning_rate);
-void generateEnergyWrapper(struct Net *model, const float **input_data, int batch_size, int input_size);
-
-*/
-
-// SKP
-/*
-struct frag_nn {
-	char *nn_name;	
-        int chosen_frag;
-        double nn_coord[12];
-        size_t nn_natoms;
-};
-*/
 struct charge {
 	double q;
 	vec_t pos;
