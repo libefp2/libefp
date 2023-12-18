@@ -3,7 +3,7 @@ mkdir build
 
 cd build
 
-TORCH_INSTALLED_DIR=~/libtorch/share/cmake/Torch
+TORCH_INSTALLED_DIR=~/libtorch/share/cmake/Torch ## Address for the location of your LibTorch installation
 
 echo "TORCH_DIR = " ${TORCH_INSTALLED_DIR}
 

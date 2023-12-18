@@ -1,0 +1,7 @@
+
+
+For any changes to the c_wrapper source code, compile using the following :
+
+$ ./scripts/bootstrap-linux.sh
+$ cd build
+$ make

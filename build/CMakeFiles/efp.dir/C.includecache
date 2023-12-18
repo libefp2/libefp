@@ -30,6 +30,12 @@ private.h
 stddef.h
 -
 
+/scratch/bell/paulsk/libefp/src/clapack.c
+stdlib.h
+-
+clapack.h
+/scratch/bell/paulsk/libefp/src/clapack.h
+
 /scratch/bell/paulsk/libefp/src/clapack.h
 
 /scratch/bell/paulsk/libefp/src/disp.c
@@ -80,9 +86,35 @@ stdbool.h
 mathutil.h
 /scratch/bell/paulsk/libefp/src/mathutil.h
 
+/scratch/bell/paulsk/libefp/src/electerms.c
+elec.h
+/scratch/bell/paulsk/libefp/src/elec.h
+
+/scratch/bell/paulsk/libefp/src/int.c
+stdlib.h
+-
+string.h
+-
+int.h
+/scratch/bell/paulsk/libefp/src/int.h
+intshift.h
+/scratch/bell/paulsk/libefp/src/intshift.h
+
 /scratch/bell/paulsk/libefp/src/int.h
 mathutil.h
 /scratch/bell/paulsk/libefp/src/mathutil.h
+
+/scratch/bell/paulsk/libefp/src/intshift.h
+
+/scratch/bell/paulsk/libefp/src/log.c
+stdarg.h
+-
+stdio.h
+-
+mpi.h
+-
+log.h
+/scratch/bell/paulsk/libefp/src/log.h
 
 /scratch/bell/paulsk/libefp/src/log.h
 
@@ -146,9 +178,25 @@ terms.h
 util.h
 /scratch/bell/paulsk/libefp/src/util.h
 
+/scratch/bell/paulsk/libefp/src/stream.c
+assert.h
+-
+ctype.h
+-
+stdio.h
+-
+stdlib.h
+-
+stream.h
+/scratch/bell/paulsk/libefp/src/stream.h
+
 /scratch/bell/paulsk/libefp/src/stream.h
 stddef.h
 -
+
+/scratch/bell/paulsk/libefp/src/swf.c
+swf.h
+/scratch/bell/paulsk/libefp/src/swf.h
 
 /scratch/bell/paulsk/libefp/src/swf.h
 mathutil.h
