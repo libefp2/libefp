@@ -164,6 +164,10 @@ get_elec_field(const struct efp *efp, size_t frag_idx, size_t pt_idx)
 		// do not use skip list if symmetry is 1
         if (efp->opts.symmetry == 0 && efp_skip_frag_pair(efp, i, frag_idx))
             continue;
+        // this might need to be changed to a more careful separation of
+        // elec and pol contributions to the field
+        if (i == efp->opts.special_fragment && !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
+            continue;
 		const struct frag *fr_i = efp->frags + i;
 		struct swf swf = efp_make_swf(efp, fr_i, fr_j, 0);
 		if (swf.swf == 0.0)
@@ -282,6 +286,9 @@ compute_elec_field_range(struct efp *efp, size_t from, size_t to, void *data)
 #pragma omp parallel for schedule(dynamic)
 #endif
 	for (size_t i = from; i < to; i++) {
+        if (i == efp->opts.special_fragment &&
+        !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
+            continue;
         // const struct frag *frag = efp->frags + i;
 		struct frag *frag = efp->frags + i;
 
@@ -413,7 +420,11 @@ get_induced_dipole_field(struct efp *efp, size_t frag_idx,
         if (efp->opts.symmetry == 0 && efp_skip_frag_pair(efp, frag_idx, j))
             continue;
 
-		struct frag *fr_j = efp->frags + j;
+        if (j == efp->opts.special_fragment &&
+            !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
+            continue;
+
+        struct frag *fr_j = efp->frags + j;
 		struct swf swf = efp_make_swf(efp, fr_i, fr_j, 0);
 		if (swf.swf == 0)
 		    continue;
@@ -536,7 +547,12 @@ compute_id_range(struct efp *efp, size_t from, size_t to, void *data)
 #pragma omp parallel for schedule(dynamic) reduction(+:conv)
 #endif
 	for (size_t i = from; i < to; i++) {
-		struct frag *frag = efp->frags + i;
+
+        if (i == efp->opts.special_fragment &&
+            !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
+            continue;
+
+        struct frag *frag = efp->frags + i;
 
 		for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
 			struct polarizable_pt *pt = frag->polarizable_pts + j;

@@ -107,42 +107,55 @@ set_coord_points(struct frag *frag, const double *coord)
 static enum efp_result
 set_coord_atoms(struct frag *frag, const double *coord)
 {
-    /* allow fragments with less than 3 atoms by using multipole points of
-     * ghost atoms; multipole points have the same coordinates as atoms */
-    if (frag->n_multipole_pts < 3) {
-        efp_log("fragment must contain at least three atoms");
-        return EFP_RESULT_FATAL;
+    int natoms = frag->n_atoms;
+
+    double ref_coord[3*natoms];
+    for (size_t i=0; i<natoms; i++) {
+        ref_coord[3*i] = frag->lib->atoms[i].x;
+        ref_coord[3*i+1] = frag->lib->atoms[i].y;
+        ref_coord[3*i+2] = frag->lib->atoms[i].z;
     }
-
-    int natoms = frag->lib->n_atoms;
-
-    double ref[9] = {
-            frag->lib->multipole_pts[0].x,
-            frag->lib->multipole_pts[0].y,
-            frag->lib->multipole_pts[0].z,
-            frag->lib->multipole_pts[1].x,
-            frag->lib->multipole_pts[1].y,
-            frag->lib->multipole_pts[1].z,
-            frag->lib->multipole_pts[2].x,
-            frag->lib->multipole_pts[2].y,
-            frag->lib->multipole_pts[2].z
-    };
 
     vec_t p1;
     mat_t rot1, rot2;
 
+    /* compute new rotation matrix */
+    /* might need to change to a smarter algorithm later */
     efp_points_to_matrix(coord, &rot1);
-    efp_points_to_matrix(ref, &rot2);
+    efp_points_to_matrix(ref_coord, &rot2);
     rot2 = mat_transpose(&rot2);
     frag->rotmat = mat_mat(&rot1, &rot2);
-    p1 = mat_vec(&frag->rotmat, VEC(frag->lib->multipole_pts[0].x));
 
-    /* center of mass */
-    frag->x = coord[0] - p1.x;
-    frag->y = coord[1] - p1.y;
-    frag->z = coord[2] - p1.z;
+    double mass = 0.0;
+    vec_t com = {0.0, 0.0, 0.0};
+    for (size_t i=0; i<natoms; i++) {
+        mass += frag->atoms[i].mass;
+        com.x += coord[3*i] * frag->atoms[i].mass;
+        com.y += coord[3*i+1] * frag->atoms[i].mass;
+        com.z += coord[3*i+2] * frag->atoms[i].mass;
+    }
+    com.x /= mass;
+    com.y /= mass;
+    com.z /= mass;
 
-    update_fragment(frag);
+    /* update center of mass */
+    frag->x = com.x;
+    frag->y = com.y;
+    frag->z = com.z;
+
+    /* update atom positions */
+    for (size_t i=0; i<natoms; i++) {
+        frag->atoms[i].x = coord[3*i];
+        frag->atoms[i].y = coord[3*i + 1];
+        frag->atoms[i].z = coord[3*i + 2];
+    }
+
+    //update_fragment_(frag);
+    /* update positions of other parameters just in case */
+    efp_update_elec(frag);
+    efp_update_pol(frag);
+    efp_update_disp(frag);
+    efp_update_xr(frag);
 
     return EFP_RESULT_SUCCESS;
 }
@@ -370,6 +383,18 @@ clean_frag_atoms(struct frag *frag)
     return EFP_RESULT_SUCCESS;
 }
 
+static enum efp_result zero_atomic_gradient(struct efp *efp)
+{
+    for (size_t i=0; i<efp->n_frag; i++) {
+        for (size_t j=0; j<efp->frags[i].n_atoms; j++) {
+            efp->frags[i].atoms[j].gx = 0.0;
+            efp->frags[i].atoms[j].gy = 0.0;
+            efp->frags[i].atoms[j].gz = 0.0;
+        }
+    }
+    return EFP_RESULT_SUCCESS;
+}
+
 static enum efp_result
 check_opts(const struct efp_opts *opts)
 {
@@ -494,11 +519,24 @@ do_xr(const struct efp_opts *opts)
 	return xr || cp || dd;
 }
 
+static int
+do_lj(const struct efp_opts *opts)
+{
+    return opts->terms & EFP_TERM_LJ;
+}
+
+static int
+do_qq(const struct efp_opts *opts)
+{
+    return opts->terms & EFP_TERM_QQ;
+}
+
 static void
 compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
     void *data)
 {
 	double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0, e_elec_tmp = 0.0, e_disp_tmp = 0.0;
+    double e_lj = 0.0, e_qq = 0.0;
 
 	(void)data;
 
@@ -516,6 +554,14 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 		for (size_t j = i + 1; j < i + 1 + cnt; j++) {
 			size_t fr_j = j % efp->n_frag;
 
+            // special fragment - additional check on special terms
+            bool if_special_fragment = efp->opts.special_fragment == i || efp->opts.special_fragment == fr_j;
+            bool special_xr = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_XR);
+            bool special_elec = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_ELEC);
+            bool special_disp = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_DISP);
+            bool special_qq = (!if_special_fragment) || (if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_QQ));
+            bool special_lj = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_LJ);
+
 			if (!efp_skip_frag_pair(efp, i, fr_j)) {
 				double *s;
 				six_t *ds;
@@ -527,7 +573,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                     s = (double *) calloc(n_lmo_ij, sizeof(double));
                     ds = (six_t *) calloc(n_lmo_ij, sizeof(six_t));
 
-                    if (do_xr(&efp->opts)) {
+                    if (do_xr(&efp->opts) || special_xr) {
                         double exr, ecp;
 
                         efp_frag_frag_xr(efp, i, fr_j,
@@ -548,7 +594,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                         }
                     }
                 }
-				if (do_elec(&efp->opts) && efp->frags[i].n_multipole_pts > 0 &&
+				if ((do_elec(&efp->opts) || special_elec) && efp->frags[i].n_multipole_pts > 0 &&
 				    efp->frags[fr_j].n_multipole_pts > 0) {
 					e_elec_tmp = efp_frag_frag_elec(efp, i, fr_j);
 					e_elec += e_elec_tmp;
@@ -560,7 +606,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                             efp->pair_energies[i].electrostatic = e_elec_tmp;
                     }
 				}
-				if (do_disp(&efp->opts) && efp->frags[i].n_dynamic_polarizable_pts > 0 &&
+				if ((do_disp(&efp->opts) || special_disp) && efp->frags[i].n_dynamic_polarizable_pts > 0 &&
                         efp->frags[fr_j].n_dynamic_polarizable_pts > 0) {
 					e_disp_tmp = efp_frag_frag_disp(efp,
 					    i, fr_j, s, ds);
@@ -573,6 +619,15 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                             efp->pair_energies[i].dispersion = e_disp_tmp;
                     }
 				}
+                // LJ terms
+                if (do_lj(&efp->opts) || special_lj) {
+                    e_lj += efp_frag_frag_lj(efp, i, fr_j);
+                }
+                // MM-like charge-charge interactions
+                if (do_qq(&efp->opts) && special_qq) {
+                    e_qq += efp_frag_frag_qq(efp, i, fr_j);
+                }
+
                 if (n_lmo_ij > 0) {
                     free(s);
                     free(ds);
@@ -584,11 +639,14 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 	efp->energy.dispersion += e_disp;
 	efp->energy.exchange_repulsion += e_xr;
 	efp->energy.charge_penetration += e_cp;
+    efp->energy.qq += e_qq;
+    efp->energy.lj += e_lj;
 
     if (efp->opts.print > 0) {
         printf(" In compute_two_body_range() \n");
         print_ene(&efp->energy);
-        print_energies(efp);
+        if (efp->opts.print > 1)
+            print_energies(efp);
     }
 }
 
@@ -904,6 +962,50 @@ efp_set_point_charges(struct efp *efp, size_t n_ptc, const double *ptc,
 	memset(efp->ptc_grad, 0, n_ptc * sizeof(vec_t));
 
 	return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+update_special_fragment(struct efp *efp, const double *coord)
+{
+    assert(efp);
+    assert(coord);
+
+    size_t fr_i = efp->opts.special_fragment;
+    struct frag *spec_frag = efp->frags + fr_i;
+
+    if (set_coord_atoms(spec_frag, coord)) {
+        efp_log("set_coord_atoms() failure");
+        return EFP_RESULT_FATAL;
+    }
+
+    return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+update_gradient_special_fragment(struct efp *efp)
+{
+    assert(efp);
+    if (efp->opts.special_fragment < 0) {
+        efp_log("special fragment not set, continue");
+        return EFP_RESULT_SUCCESS;
+    }
+
+    size_t fr_i = efp->opts.special_fragment;
+    struct frag *spec_frag = efp->frags + fr_i;
+
+    for (size_t i=0; i<spec_frag->n_atoms; i++) {
+        // update ptc gradients
+        efp->ptc_grad[i].x += spec_frag->atoms[i].gx;
+        efp->ptc_grad[i].y += spec_frag->atoms[i].gy;
+        efp->ptc_grad[i].z += spec_frag->atoms[i].gz;
+
+        // update special fragment gradients
+        spec_frag->atoms[i].gx = efp->ptc_grad[i].x;
+        spec_frag->atoms[i].gy = efp->ptc_grad[i].y;
+        spec_frag->atoms[i].gz = efp->ptc_grad[i].z;
+    }
+
+    return EFP_RESULT_SUCCESS;
 }
 
 EFP_EXPORT enum efp_result
@@ -1309,7 +1411,9 @@ efp_compute(struct efp *efp, int do_gradient)
 		return EFP_RESULT_FATAL;
 	}
 
-	efp->do_gradient = do_gradient;
+    // WARNING!!! Lyuda!!!
+	//efp->do_gradient = do_gradient;
+    efp->do_gradient = 1;
 
 	if (efp_counter == 0)
 	    if ((res = check_params(efp))) {
@@ -1322,6 +1426,10 @@ efp_compute(struct efp *efp, int do_gradient)
 	memset(efp->grad, 0, efp->n_frag * sizeof(six_t));
 	memset(efp->ptc_grad, 0, efp->n_ptc * sizeof(vec_t));
 	memset(efp->pair_energies, 0, efp->n_frag * sizeof(efp->energy));
+    if (res = zero_atomic_gradient(efp)) {
+        efp_log("zero_atomic_gradient(efp) failure");
+        return res;
+    }
 
 	if (efp->opts.symmetry == 0) { // standard case
         efp_balance_work(efp, compute_two_body_range, NULL);
@@ -1345,12 +1453,18 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_log("efp_compute_ai_disp() failure");
         return res;
     }
+    if (res = efp_compute_ai_qq(efp)){
+        efp_log("efp_compute_ai_mm() failure");
+        return res;
+    }
 
 #ifdef EFP_USE_MPI
 	efp_allreduce(&efp->energy.electrostatic, 1);
 	efp_allreduce(&efp->energy.dispersion, 1);
 	efp_allreduce(&efp->energy.exchange_repulsion, 1);
 	efp_allreduce(&efp->energy.charge_penetration, 1);
+	efp_allreduce(&efp->energy.lj, 1);
+    efp_allreduce(&efp->energy.qq, 1);
 
 	if (efp->do_gradient) {
 		efp_allreduce((double *)efp->grad, 6 * efp->n_frag);
@@ -1361,10 +1475,12 @@ efp_compute(struct efp *efp, int do_gradient)
 	efp->energy.total = efp->energy.electrostatic +
 			    efp->energy.charge_penetration +
 			    efp->energy.electrostatic_point_charges +
+                efp->energy.qq +
 			    efp->energy.polarization +
 			    efp->energy.dispersion +
 			    efp->energy.ai_dispersion +
-			    efp->energy.exchange_repulsion;
+			    efp->energy.exchange_repulsion +
+                efp->energy.lj;
 
 	efp_counter++;
 
@@ -1861,6 +1977,7 @@ efp_opts_default(struct efp_opts *opts)
 	memset(opts, 0, sizeof(*opts));
 	opts->terms = EFP_TERM_ELEC | EFP_TERM_POL | EFP_TERM_DISP |
 	    EFP_TERM_XR | EFP_TERM_AI_ELEC | EFP_TERM_AI_POL;
+    opts->special_terms = EFP_SPEC_TERM_DISP | EFP_SPEC_TERM_XR ;
 }
 
 EFP_EXPORT void
@@ -2103,6 +2220,28 @@ efp_set_frag_atoms(struct efp *efp, size_t frag_idx, size_t n_atoms,
     frag->n_atoms = n_atoms;
     memcpy(frag->atoms, atoms, n_atoms * sizeof(struct efp_atom));
 
+    return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result efp_get_atom_mm_info(struct efp *efp, double *charges, double *coords) {
+
+    assert(coords);
+    assert(charges);
+
+    int natom = 0;
+    for (size_t fr_i = 0; fr_i < efp->n_frag; fr_i++) {
+        // assume that this function is always used in QM/MM like models with QM fragment
+        if (efp->opts.special_fragment == fr_i) continue;
+        struct frag *frag = efp->frags + fr_i;
+        for (size_t j = 0; j < frag->n_atoms; j++) {
+            struct efp_atom *atom = frag->atoms + j;
+
+            *coords++ = atom->x;
+            *coords++ = atom->y;
+            *coords++ = atom->z;
+            *charges++ = atom->mm_charge;
+        }
+    }
     return EFP_RESULT_SUCCESS;
 }
 
@@ -2442,6 +2581,7 @@ print_atoms(struct efp *efp, size_t frag_index, size_t atom_index) {
     struct efp_atom *atom = efp->frags[frag_index].atoms + atom_index;
     printf(" Atom %s %lf %lf %lf\n", atom->label, atom->x, atom->y, atom->z);
     printf(" znuc, mass %lf %lf\n", atom->znuc, atom->mass);
+    printf(" mm_charge, sigma, epsilon, atom_type %lf %lf %lf %s\n", atom->mm_charge, atom->sigma, atom->epsilon, atom->ff_label);
     printf("\n");
 }
 
@@ -2538,9 +2678,14 @@ void print_ene(struct efp_energy *energy) {
     printf(" DISPERSION ENERGY             %lf \n", energy->dispersion);
     printf(" AI DISPERSION ENERGY          %lf \n", energy->ai_dispersion);
     printf(" EXCHANGE-REPULSION ENERGY     %lf \n", energy->exchange_repulsion);
+
+    printf(" COULOMB MM ENERGY             %lf \n", energy->qq);
+    printf(" LENNARD-JONES MM ENERGY       %lf \n", energy->lj);
+
     double ene_sum = energy->electrostatic + energy->charge_penetration +
                      energy->electrostatic_point_charges + energy->polarization +
-                     energy->dispersion + energy->exchange_repulsion;
+                     energy->dispersion + energy->exchange_repulsion +
+                     energy->qq + energy->lj;
     printf(" SUM ENERGY                    %lf \n", ene_sum);
     printf(" TOTAL ENERGY                  %lf \n", energy->total);
     printf("\n");
