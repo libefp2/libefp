@@ -37,11 +37,15 @@ double efp_frag_frag_disp(struct efp *, size_t, size_t,
     const double *, const six_t *);
 void efp_frag_frag_xr(struct efp *, size_t, size_t, double *,
     six_t *, double *, double *);
+double efp_frag_frag_qq(struct efp *, size_t, size_t);
+double efp_frag_frag_lj(struct efp *, size_t, size_t);
+
 enum efp_result efp_compute_pol(struct efp *);
 enum efp_result efp_compute_ai_elec(struct efp *);
 enum efp_result efp_compute_ai_disp(struct efp *);
 enum efp_result efp_compute_pol_energy(struct efp *, double *);
 enum efp_result efp_compute_pol_correction(struct efp *, double *);
+enum efp_result efp_compute_ai_qq(struct efp *);
 void efp_update_elec(struct frag *);
 void efp_update_pol(struct frag *);
 void efp_update_disp(struct frag *);

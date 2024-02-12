@@ -196,8 +196,9 @@ parse_coordinates(struct frag *frag, struct stream *stream)
 		last_pt->x = atom.x;
 		last_pt->y = atom.y;
 		last_pt->z = atom.z;
-		last_pt->znuc = atom.znuc;
-        last_pt->if_znuc = true;
+        // LVS: let's not use znuc from coordiante section; read it from monopole section instead!
+		//last_pt->znuc = atom.znuc;
+        //last_pt->if_znuc = true;
 
 		efp_stream_next_line(stream);
 	}
@@ -234,6 +235,9 @@ parse_monopoles(struct frag *frag, struct stream *stream)
                 // found a match
                 frag->multipole_pts[j].monopole = tmp_pt.monopole;
                 frag->multipole_pts[j].if_mon = true;
+                // LVS: use znuc from monopole section now!
+                frag->multipole_pts[j].znuc = tmp_pt.znuc;
+                frag->multipole_pts[j].if_znuc = true;
                 counter++;
                 break;
             }
@@ -1256,6 +1260,145 @@ parse_polab(struct frag *frag, struct stream *stream)
 	return EFP_RESULT_SUCCESS;
 }
 
+static enum efp_result
+parse_mm_atom_charge(struct frag *frag, struct stream *stream)
+{
+    if (!frag->atoms){
+        efp_log("parse_mm_atom_charge() failure: no atoms");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    efp_stream_next_line(stream);
+    int counter = 0;
+    for (size_t i = 0; i < frag->n_atoms; i++) {
+
+        if (tok_stop(stream)) {
+            printf(" Found %d mm_atoms of %d expected in fragment %s \n",
+                   counter, frag->n_atoms, frag->name);
+            return EFP_RESULT_SUCCESS;
+        }
+        struct efp_atom atom;
+        memset(&atom, 0, sizeof(atom));
+        if (!tok_label(stream, sizeof(atom.label), atom.label) ||
+            !tok_double(stream, &atom.mm_charge)){
+            efp_log("parse_mm_atom_charge() failure");
+            return EFP_RESULT_SYNTAX_ERROR;
+        }
+        for (size_t j = 0; j < frag->n_atoms; j++) {
+            if (!strcmp(atom.label, frag->atoms[j].label)) {
+                // found a match
+                frag->atoms[j].mm_charge = atom.mm_charge;
+                counter++;
+                break;
+            }
+        }
+        efp_stream_next_line(stream);
+    }
+
+    if (!tok_stop(stream)){
+        efp_log("parse_mm_atom_charge() failure");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    return EFP_RESULT_SUCCESS;
+}
+
+static enum efp_result
+parse_mm_lj(struct frag *frag, struct stream *stream)
+{
+    if (!frag->atoms){
+        efp_log("parse_mm_lj() failure: no atoms");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    // conversion of LJ params to a.u.
+    // assuming sigma-epsilon form (combination rules 2 and 3)
+    // epsilon has dimension of energy; sigma has dimension of length
+    // in Gromacs energies are in kJ/mol, lengths are in nm
+    double nm2bohr = 10.0/0.52917721092;
+    double kJmol2H = 1.0/2625.5002;
+
+    efp_stream_next_line(stream);
+    int counter = 0;
+    for (size_t i = 0; i < frag->n_atoms; i++) {
+
+        if (tok_stop(stream)) {
+            printf(" Found %d mm_atoms of %d expected in fragment %s \n",
+                   counter, frag->n_atoms, frag->name);
+            return EFP_RESULT_SUCCESS;
+        }
+        struct efp_atom atom;
+        memset(&atom, 0, sizeof(atom));
+        if (!tok_label(stream, sizeof(atom.label), atom.label) ||
+            !tok_double(stream, &atom.sigma) ||
+            !tok_double(stream, &atom.epsilon)){
+            efp_log("parse_mm_lj() failure");
+            return EFP_RESULT_SYNTAX_ERROR;
+        }
+        for (size_t j = 0; j < frag->n_atoms; j++) {
+            if (!strcmp(atom.label, frag->atoms[j].label)) {
+                // found a match
+                // convert to a.u.
+                frag->atoms[j].sigma = atom.sigma * nm2bohr;
+                frag->atoms[j].epsilon = atom.epsilon * kJmol2H;
+                counter++;
+                break;
+            }
+        }
+        efp_stream_next_line(stream);
+    }
+
+    if (!tok_stop(stream)){
+        efp_log("parse_mm_lj() failure");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    return EFP_RESULT_SUCCESS;
+}
+
+static enum efp_result
+parse_mm_atomtype(struct frag *frag, struct stream *stream)
+{
+    if (!frag->atoms){
+        efp_log("parse_mm_atomtype() failure: no atoms");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    efp_stream_next_line(stream);
+    int counter = 0;
+    for (size_t i = 0; i < frag->n_atoms; i++) {
+
+        if (tok_stop(stream)) {
+            printf(" Found %d mm_atoms of %d expected in fragment %s \n",
+                   counter, frag->n_atoms, frag->name);
+            return EFP_RESULT_SUCCESS;
+        }
+        struct efp_atom atom;
+        memset(&atom, 0, sizeof(atom));
+        if (!tok_label(stream, sizeof(atom.label), atom.label) ||
+            !tok_label(stream, sizeof(atom.ff_label), atom.ff_label)){
+            efp_log("parse_mm_atomtype() failure");
+            return EFP_RESULT_SYNTAX_ERROR;
+        }
+        for (size_t j = 0; j < frag->n_atoms; j++) {
+            if (!strcmp(atom.label, frag->atoms[j].label)) {
+                // found a match
+                strcpy(frag->atoms[j].ff_label,atom.ff_label);
+                counter++;
+                break;
+            }
+        }
+        efp_stream_next_line(stream);
+    }
+
+    if (!tok_stop(stream)){
+        efp_log("parse_mm_atomtype() failure");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    return EFP_RESULT_SUCCESS;
+}
+
 typedef enum efp_result (*parse_fn)(struct frag *, struct stream *);
 
 static parse_fn
@@ -1285,6 +1428,9 @@ get_parse_fn(struct stream *stream)
         { "SCREEN",                     parse_screen                  },
 		{ "XRFIT",                      parse_xrfit                   },
 		{ "POLAB",                      parse_polab                   },
+        { "MM_CHARGE",                  parse_mm_atom_charge          },
+        { "MM_LJ",                      parse_mm_lj                   },
+        { "MM_ATOMTYPE",                parse_mm_atomtype             },
 	};
 
 	for (size_t i = 0; i < ARRAY_SIZE(funcs); i++)

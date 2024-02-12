@@ -85,6 +85,7 @@ static struct cfg *make_cfg(void)
 			   EFP_COORD_TYPE_ATOMS});
 
 	cfg_add_string(cfg, "terms", "elec pol disp xr");
+    cfg_add_string(cfg, "special_terms", "elec pol disp xr");
 
 	cfg_add_enum(cfg, "elec_damp", EFP_ELEC_DAMP_SCREEN,
 		"screen\n"
@@ -156,6 +157,8 @@ static struct cfg *make_cfg(void)
     cfg_add_bool(cfg, "enable_pairwise", false);
     cfg_add_bool(cfg, "print_pbc", false);
     cfg_add_bool(cfg, "symmetry", false);
+
+    cfg_add_int(cfg, "special_fragment", -100);
 
     cfg_add_enum(cfg, "symm_frag", EFP_SYMM_FRAG_FRAG,
                  "frag\n"
@@ -248,8 +251,11 @@ static unsigned get_terms(const char *str)
 		{ "elec", EFP_TERM_ELEC },
 		{ "pol",  EFP_TERM_POL  },
 		{ "disp", EFP_TERM_DISP },
-		{ "xr",   EFP_TERM_XR   }
-	};
+		{ "xr",   EFP_TERM_XR   },
+        { "qq",   EFP_TERM_QQ   },
+        { "lj",   EFP_TERM_LJ   }
+
+    };
 
 	unsigned terms = 0;
 
@@ -270,10 +276,44 @@ next:
 	return terms;
 }
 
+static unsigned get_special_terms(const char *str)
+{
+    static const struct {
+        const char *name;
+        enum efp_term value;
+    } list[] = {
+            { "elec", EFP_SPEC_TERM_ELEC },
+            { "pol",  EFP_SPEC_TERM_POL  },
+            { "disp", EFP_SPEC_TERM_DISP },
+            { "xr",   EFP_SPEC_TERM_XR   },
+            { "qq",   EFP_SPEC_TERM_QQ   },
+            { "lj",   EFP_SPEC_TERM_LJ   }
+    };
+
+    unsigned terms = 0;
+
+    while (*str) {
+        for (size_t i = 0; i < ARRAY_SIZE(list); i++) {
+            if (efp_strncasecmp(list[i].name, str, strlen(list[i].name)) == 0) {
+                str += strlen(list[i].name);
+                terms |= list[i].value;
+                goto next;
+            }
+        }
+        error("unknown energy term specified");
+        next:
+        while (*str && isspace(*str))
+            str++;
+    }
+
+    return terms;
+}
+
 static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 {
 	struct efp_opts opts = {
 		.terms = get_terms(cfg_get_string(cfg, "terms")),
+        .special_terms = get_special_terms(cfg_get_string(cfg, "special_terms")),
 		.elec_damp = cfg_get_enum(cfg, "elec_damp"),
 		.disp_damp = cfg_get_enum(cfg, "disp_damp"),
 		.pol_damp = cfg_get_enum(cfg, "pol_damp"),
@@ -284,6 +324,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 		.xr_cutoff = cfg_get_double(cfg, "xr_cutoff"),
         .enable_pairwise = cfg_get_bool(cfg, "enable_pairwise"), 
         .ligand = cfg_get_int(cfg, "ligand"),
+        .special_fragment = cfg_get_int(cfg, "special_fragment"),
         .print_pbc = cfg_get_bool(cfg, "print_pbc"),
         .symmetry = cfg_get_bool(cfg, "symmetry"),
         .symm_frag = cfg_get_enum(cfg, "symm_frag"),
