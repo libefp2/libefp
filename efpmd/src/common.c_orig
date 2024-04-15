@@ -98,11 +98,8 @@ void print_vec(const double *vec)
 
 void print_geometry(struct efp *efp)
 {
-	msg("Inside print_geom routine\n\n");
-
 	size_t n_frags;
 	check_fail(efp_get_frag_count(efp, &n_frags));
-	msg("In print_geometry, number of frags %2d\n",n_frags);
 
 	msg("    GEOMETRY (ANGSTROMS)\n\n");
 

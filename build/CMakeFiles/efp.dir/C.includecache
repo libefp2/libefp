@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/depot/lslipche/data/skp/branch/libefp/efpmd/c_wrap_torch/src/c_libtorch.h
-stdint.h
--
-
 /depot/lslipche/data/skp/branch/libefp/src/aidisp.c
 balance.h
 /depot/lslipche/data/skp/branch/libefp/src/balance.h
@@ -67,8 +63,6 @@ stddef.h
 -
 stdbool.h
 -
-../efpmd/c_wrap_torch/src/c_libtorch.h
-/depot/lslipche/data/skp/branch/libefp/efpmd/c_wrap_torch/src/c_libtorch.h
 
 /depot/lslipche/data/skp/branch/libefp/src/elec.c
 balance.h

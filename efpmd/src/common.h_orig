@@ -156,21 +156,9 @@ struct state {
 	struct ff *ff;
 	struct cfg *cfg;
 	struct sys *sys;
-//	struct torch_frag *torch_frag_data;
 	double energy;
 	double *grad;
-	double torch_frag_energy; // added by LS/SKP
-	double *torch_frag_grad; // added by LS/SKP
 	int fragnn;  // SKP for frag_elpot
-};
- 
-// Added for torch computation on ML fragments
-
-struct torch_frag {
-    float total_energy;
-    float *atomic_energies;
-    float *forces;
-    float *gradients;
 };
 
 void NORETURN die(const char *, ...);
@@ -193,7 +181,6 @@ void print_pair_energy(struct state *);
 
 void check_fail(enum efp_result);
 void compute_energy(struct state *, bool);
-void compute_energy_with_torch(struct state *, size_t); // SKP Torch
 struct sys *parse_input(struct cfg *, const char *);
 six_t box_from_str(const char *);
 int efp_strcasecmp(const char *, const char *);

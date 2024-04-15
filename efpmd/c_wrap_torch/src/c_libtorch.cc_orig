@@ -405,51 +405,11 @@ void nnp_test6(const torch::Tensor& coordinates, const torch::Tensor& species) {
 
     std::cout << "Energy: " << energy << std::endl;
     std::cout << "Force: " << force << std::endl;
- 
-//    std::cout << "Test force index " << force[0][0][0].item<float>() << std::endl;
- 
-//    std::cout << "Force indices printing : " << force[0][0][0].item<float>() << "\t" << force[0][0][2] << "\t" << force[0][1][1] << std::endl;
-//    std::cout << "Gradient indices printing : " << gradient[0][0][1] << "\t" << gradient[0][1][0] << "\t" << gradient[0][2][2] << std::endl;
 
     auto output2 = module.get_method("atomic_energies")(inputs).toTuple();
     auto atomic_energies = output2->elements()[1].toTensor();
 
     std::cout << "Average Atomic Energies for species " << species << ": " << atomic_energies << std::endl;
-}
-
-void nnp_test7(const torch::Tensor& coordinates, const torch::Tensor& species, float *atomic_energies, float *gradients, float *forces) {
-
-    torch::jit::Module module = torch::jit::load("/depot/lslipche/data/skp/efpdev/libefp/efpmd/c-libtorch/src/ANI2x_saved.pt");
-
-    std::vector<torch::jit::IValue> inputs;
-    inputs.push_back(std::make_tuple(species, coordinates));
-
-    auto output = module.forward(inputs).toTuple();
-    at::Tensor energy_tensor = output->elements()[1].toTensor();
-
-    std::cout << "Energy Tensor: " << energy_tensor << std::endl;
-
-    auto energy = energy_tensor.item<float>();
-    energy_tensor.backward(torch::ones_like(energy_tensor));
-
-    auto gradient = coordinates.grad();
-
-    if (!gradient.defined() || gradient.numel() == 0) {
-        std::cerr << "Error: Gradient is not defined or empty." << std::endl;
-        return;
-    }
-
-    auto force = -gradient;
-    auto atomic_energies_tensor = module.get_method("atomic_energies")(inputs).toTuple()->elements()[1].toTensor();
-
-    // Copy atomic energies
-       memcpy(atomic_energies, atomic_energies_tensor.data_ptr<float>(), atomic_energies_tensor.numel() * sizeof(float));
-    // Copy gradients 
-       memcpy(gradients, gradient.data_ptr<float>(), gradient.numel() * sizeof(float));
-    // Copy forces
-       memcpy(forces, force.data_ptr<float>(), force.numel() * sizeof(float));
-    coordinates.grad().zero_();
- 
 }
 
 //=============================//
@@ -817,19 +777,6 @@ void nnp_test6_wrapper(float* coordinates_data, int* species_data, int num_atoms
         // Call the C++ function
 	nnp_test6(coordinatesTensor, speciesTensor);
 
-}
-
-// previously nnp_test7_wrapper
-
-void get_torch_energy_grad(float* coordinates_data, int* species_data, int num_atoms, float *atomic_energies, float *gradients, float *forces) {
-	torch::Tensor speciesTensor = torch::from_blob(const_cast<int*>(species_data), {1, num_atoms}, torch::kInt32);
-        torch::Tensor coordinatesTensor = torch::from_blob(const_cast<float*>(coordinates_data), {1, num_atoms, 3}, torch::requires_grad(true));
-
-	nnp_test7(coordinatesTensor, speciesTensor, atomic_energies, gradients, forces);
- 
-//	std::cout << "Atomic Energies: " << atomic_energies[0] << std::endl;
-//        std::cout << "Gradients: " << gradients[0] << std::endl;
-//        std::cout << "Forces: " << forces[0] << std::endl; 
 }
 //=====================================// 
 

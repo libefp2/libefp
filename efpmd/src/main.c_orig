@@ -39,8 +39,6 @@ void sim_sp(struct state *);
 void sim_grad(struct state *);
 void sim_hess(struct state *);
 void sim_opt(struct state *);
-//void single_frag_total_optim(struct state *);
-void sim_opt_with_ml(struct state *);
 void sim_md(struct state *);
 void sim_efield(struct state *);
 void sim_elpot(struct state *);
@@ -108,9 +106,8 @@ static struct cfg *make_cfg(void)
 			   EFP_COORD_TYPE_ATOMS});
 
 	cfg_add_string(cfg, "terms", "elec pol disp xr");
-//	cfg_add_string(cfg, "special_terms", "elec pol disp xr"); // SKp Feb21	
- 
-	cfg_add_enum(cfg, "elec_damp", EFP_ELEC_DAMP_SCREEN, 
+
+	cfg_add_enum(cfg, "elec_damp", EFP_ELEC_DAMP_SCREEN,
 		"screen\n"
 		"overlap\n"
 		"off\n",
@@ -141,7 +138,7 @@ static struct cfg *make_cfg(void)
 	cfg_add_bool(cfg, "enable_ff", false);
 	cfg_add_bool(cfg, "enable_multistep", false);
 	cfg_add_string(cfg, "ff_geometry", "ff.xyz");
-	cfg_add_string(cfg, "ff_parameters", "/depot/lslipche/data/skp/efpdev/libefp/share/libefp/fraglib/params/amber99.prm");
+	cfg_add_string(cfg, "ff_parameters", "/scratch/bell/paulsk/tstefp/libefp/share/libefp/fraglib/params/amber99.prm");
 	cfg_add_bool(cfg, "single_params_file", false);
 	cfg_add_string(cfg, "efp_params_file", "params.efp");
 	cfg_add_bool(cfg, "enable_cutoff", false);
@@ -149,7 +146,7 @@ static struct cfg *make_cfg(void)
     	cfg_add_double(cfg, "xr_cutoff", 0.0);
 	cfg_add_int(cfg, "max_steps", 100);
 	cfg_add_int(cfg, "multistep_steps", 1);
-	cfg_add_string(cfg, "fraglib_path", "/depot/lslipche/data/skp/efpdev/libefp/share/libefp/fraglib/");
+	cfg_add_string(cfg, "fraglib_path", "/scratch/bell/paulsk/tstefp/libefp/share/libefp/fraglib/");
 	cfg_add_string(cfg, "userlib_path", ".");
 	cfg_add_bool(cfg, "enable_pbc", false);
 	cfg_add_string(cfg, "periodic_box", "30.0 30.0 30.0 90.0 90.0 90.0");
@@ -159,7 +156,7 @@ static struct cfg *make_cfg(void)
 	cfg_add_bool(cfg, "hess_central", false);
 	cfg_add_double(cfg, "num_step_dist", 0.001);
 	cfg_add_double(cfg, "num_step_angle", 0.01);
-	cfg_add_double(cfg, "chosen_fragment_torch", 1); // REM variable added for chosen fragment for monte carlo movement
+
 	cfg_add_enum(cfg, "ensemble", ENSEMBLE_TYPE_NVE,
 		"nve\n"
 		"nvt\n"
@@ -181,8 +178,6 @@ static struct cfg *make_cfg(void)
     cfg_add_bool(cfg, "enable_pairwise", false);
     cfg_add_bool(cfg, "print_pbc", false);
     cfg_add_bool(cfg, "symmetry", false);
-
-//    cfg_add_int(cfg, "special_fragment", -100); // SKp Feb21
 
     cfg_add_enum(cfg, "symm_frag", EFP_SYMM_FRAG_FRAG,
                  "frag\n"
@@ -208,8 +203,7 @@ static sim_fn_t get_sim_fn(enum run_type run_type)
 	    case RUN_TYPE_HESS:
 		    return sim_hess;
 	    case RUN_TYPE_OPT:
-//		    return sim_opt;
-		    return sim_opt_with_ml;
+		    return sim_opt;
 	    case RUN_TYPE_MD:
 		    return sim_md;
 	    case RUN_TYPE_EFIELD:
@@ -281,9 +275,6 @@ static unsigned get_terms(const char *str)
 		{ "pol",  EFP_TERM_POL  },
 		{ "disp", EFP_TERM_DISP },
 		{ "xr",   EFP_TERM_XR   }
-//	        { "qq",   EFP_TERM_QQ   },
-//	        { "lj",   EFP_TERM_LJ   }
-
 	};
 
 	unsigned terms = 0;
@@ -305,48 +296,10 @@ next:
 	return terms;
 }
 
-// SKP Feb 21
-/*
-static unsigned get_special_terms(const char *str)
-{
-    static const struct {
-        const char *name;
-        enum efp_term value;
-    } list[] = {
-            { "elec", EFP_SPEC_TERM_ELEC },
-            { "pol",  EFP_SPEC_TERM_POL  },
-            { "disp", EFP_SPEC_TERM_DISP },
-            { "xr",   EFP_SPEC_TERM_XR   },
-            { "qq",   EFP_SPEC_TERM_QQ   },
-            { "lj",   EFP_SPEC_TERM_LJ   }
-    };
-
-    unsigned terms = 0;
-
-    while (*str) {
-        for (size_t i = 0; i < ARRAY_SIZE(list); i++) {
-            if (efp_strncasecmp(list[i].name, str, strlen(list[i].name)) == 0) {
-                str += strlen(list[i].name);
-                terms |= list[i].value;
-                goto next;
-            }
-        }
-        error("unknown energy term specified");
-        next:
-        while (*str && isspace(*str))
-            str++;
-    }
-
-    return terms;
-}
-*/
-// ======= SKp Feb21 ==========//
-
 static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 {
 	struct efp_opts opts = {
 		.terms = get_terms(cfg_get_string(cfg, "terms")),
-//		.special_terms = get_special_terms(cfg_get_string(cfg, "special_terms")),
 		.elec_damp = cfg_get_enum(cfg, "elec_damp"),
 		.disp_damp = cfg_get_enum(cfg, "disp_damp"),
 		.pol_damp = cfg_get_enum(cfg, "pol_damp"),
@@ -357,7 +310,6 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 		.xr_cutoff = cfg_get_double(cfg, "xr_cutoff"),
         .enable_pairwise = cfg_get_bool(cfg, "enable_pairwise"), 
         .ligand = cfg_get_int(cfg, "ligand"),
-//	.special_fragment = cfg_get_int(cfg, "special_fragment"),
 //        .frag_num = cfg_get_int(cfg, "frag_num"),    // SKP
         .print_pbc = cfg_get_bool(cfg, "print_pbc"),
         .symmetry = cfg_get_bool(cfg, "symmetry"),

@@ -586,7 +586,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 	efp->energy.charge_penetration += e_cp;
 
     if (efp->opts.print > 0) {
-        printf(" In compute_two_body_range() \n");
+//        printf(" In compute_two_body_range() \n");
         print_ene(&efp->energy);
         print_energies(efp);
     }
@@ -703,57 +703,14 @@ efp_get_gradient(struct efp *efp, double *grad)
 {
 	assert(efp);
 	assert(grad);
-	printf("Inside efp_get_gradient\n\n");
+
 	if (!efp->do_gradient) {
 		efp_log("gradient calculation was not requested");
 		return EFP_RESULT_FATAL;
 	}
 	memcpy(grad, efp->grad, efp->n_frag * sizeof(six_t));
- 
-	printf("\nALL GRAD PRINT in efp_get_gradient\n");
-	size_t grad_size = efp->n_frag * sizeof(six_t) / sizeof(&efp->grad[0]);
-	printf("grad array_size = %2d\n",grad_size);
-                for (size_t i = 0; i < grad_size; i++) {
-                    printf("grad %12.8f\n", grad[i]);
-		    printf("efp->grad %12.8f\n", &efp->grad[i]);
-                }
 	return EFP_RESULT_SUCCESS;
 }
-
-EFP_EXPORT enum efp_result
-efp_get_gradient_ml_frag(struct efp *efp, double *mlgrad, size_t frag_idx)
-{
-        assert(efp);
-        assert(mlgrad);
-
-//	printf("Inside efp_get_gradient_ml_frag\n\n");
-        if (!efp->do_gradient) {
-                efp_log("gradient calculation was not requested");
-                return EFP_RESULT_FATAL;
-        }
-
-        if (frag_idx >= efp->n_frag) {
-                efp_log("Invalid fragment index");
-                return EFP_RESULT_FATAL;
-        }
-
-        // Each fragment has 6 elements in the gradient
-
-        memcpy(mlgrad, efp->grad + frag_idx, sizeof(six_t));
-
-//                for (size_t i = 0; i < 6; i++) {
-//                    printf("%12.8f\n", mlgrad[i]);
-//                }
-        return EFP_RESULT_SUCCESS;
-}
-
-//EFP_EXPORT enum efp_result
-//print_gradient(double *grad, size_t size) {
-//    for (size_t i = 0; i < size; i++) {
-//        printf("%f\n", grad[i]);
-//    }
-//}
-
 
 EFP_EXPORT enum efp_result
 efp_get_atomic_gradient(struct efp *efp, double *grad)
@@ -1411,8 +1368,6 @@ efp_compute(struct efp *efp, int do_gradient)
 
 	efp_counter++;
 
-//	print_ene(&efp->energy); // SKP
-
 	return EFP_RESULT_SUCCESS;
 }
 
@@ -1556,13 +1511,13 @@ efp_get_multipole_values(struct efp *efp, double *mult)
 {
 	assert(efp);
 	assert(mult);
-	efp_log("Inside efp_get_multipole_values\n\n");
+
 	for (size_t i = 0; i < efp->n_frag; i++) {
 		struct frag *frag = efp->frags + i;
 
 		for (size_t j = 0; j < frag->n_multipole_pts; j++) {
 			struct multipole_pt *pt = frag->multipole_pts + j;
-			efp_log("pt->monopole = %f",pt->monopole);	
+
 			*mult++ = pt->monopole;
 
 			*mult++ = pt->dipole.x;
@@ -1575,7 +1530,6 @@ efp_get_multipole_values(struct efp *efp, double *mult)
 				*mult++ = pt->octupole[t];
 		}
 	}
-	efp_log("Coming out of efp_get_multipole_values\n\n");
 	return EFP_RESULT_SUCCESS;
 }
 
@@ -2113,6 +2067,10 @@ efp_get_frag_atom_count(struct efp *efp, size_t frag_idx, size_t *n_atoms)
 	assert(n_atoms);
 	assert(frag_idx < efp->n_frag);
 
+//	printf("Inside efp_get_frag_atom_count\n");
+//        printf("n_frags = %d\n", efp->n_frag);
+//        printf("Frag-idx = %d\n", frag_idx);
+
 	*n_atoms = efp->frags[frag_idx].n_atoms;
 
 	return EFP_RESULT_SUCCESS;
@@ -2128,6 +2086,10 @@ efp_get_frag_atoms(struct efp *efp, size_t frag_idx, size_t size,
 	assert(atoms);
 	assert(frag_idx < efp->n_frag);
 	assert(size >= efp->frags[frag_idx].n_atoms);
+
+//        printf("Inside efp_get_frag_atoms\n");
+//        printf("n_frags = %d\n", efp->n_frag);
+//        printf("Frag-idx = %d\n", frag_idx);
 
 	frag = efp->frags + frag_idx;
 	memcpy(atoms, frag->atoms, frag->n_atoms * sizeof(struct efp_atom));
@@ -2160,7 +2122,7 @@ efp_get_frag_mult_pt(struct efp *efp, size_t frag_idx, size_t pt_idx,
     assert(mult_pt);
     assert(frag_idx < efp->n_frag);
     assert(pt_idx < efp->frags[frag_idx].n_multipole_pts);
-	efp_log("Inside efp_get_frag_mult_pt\n\n");
+
     struct frag *frag;
     frag = efp->frags + frag_idx;
     struct multipole_pt *pt;
@@ -2471,10 +2433,6 @@ n_symm_frag(struct efp *efp, size_t *symm_frag) {
 void
 print_mult_pt(struct efp *efp, size_t frag_index, size_t pt_index) {
     struct multipole_pt *pt = efp->frags[frag_index].multipole_pts + pt_index;
-
-//	efp_log("Inside print_mult_pt\n\n");
-//        efp_log("pt->monopole = %f\n\n",pt->monopole);
-
     printf(" Multipole point %s %lf %lf %lf\n", pt->label, pt->x, pt->y, pt->z);
     printf(" znuc, monopole %lf %lf\n", pt->znuc, pt->monopole);
     printf(" dipole     %lf %lf %lf\n", pt->dipole.x, pt->dipole.y, pt->dipole.z);
