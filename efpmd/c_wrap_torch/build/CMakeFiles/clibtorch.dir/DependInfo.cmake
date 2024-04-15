@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/src/c_libtorch.cc" "/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/CMakeFiles/clibtorch.dir/src/c_libtorch.cc.o"
+  "/depot/lslipche/data/skp/branch/libefp/efpmd/c_wrap_torch/src/c_libtorch.cc" "/depot/lslipche/data/skp/branch/libefp/efpmd/c_wrap_torch/build/CMakeFiles/clibtorch.dir/src/c_libtorch.cc.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

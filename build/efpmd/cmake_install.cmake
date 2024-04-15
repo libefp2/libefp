@@ -1,4 +1,4 @@
-# Install script for directory: /scratch/bell/paulsk/libefp/efpmd
+# Install script for directory: /depot/lslipche/data/skp/branch/libefp/efpmd
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

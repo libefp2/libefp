@@ -1,8 +1,8 @@
-# Install script for directory: /scratch/bell/paulsk/libefp
+# Install script for directory: /depot/lslipche/data/skp/branch/libefp
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/usr/local")
+  set(CMAKE_INSTALL_PREFIX "/depot/lslipche/data/skp/branch/libefp")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,26 +43,26 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/libefp" TYPE FILE FILES "/scratch/bell/paulsk/libefp/fraglib/makefp.inp")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/libefp" TYPE FILE FILES "/depot/lslipche/data/skp/branch/libefp/fraglib/makefp.inp")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/libefp" TYPE DIRECTORY FILES "/scratch/bell/paulsk/libefp/build/fraglib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/libefp" TYPE DIRECTORY FILES "/depot/lslipche/data/skp/branch/libefp/build/fraglib")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES "/scratch/bell/paulsk/libefp/src//efp.h")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES "/depot/lslipche/data/skp/branch/libefp/src//efp.h")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE STATIC_LIBRARY FILES "/scratch/bell/paulsk/libefp/build/libefp.a")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE STATIC_LIBRARY FILES "/depot/lslipche/data/skp/branch/libefp/build/libefp.a")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/libefp" TYPE FILE FILES
-    "/scratch/bell/paulsk/libefp/build/libefpConfig.cmake"
-    "/scratch/bell/paulsk/libefp/build/libefpConfigVersion.cmake"
-    "/scratch/bell/paulsk/libefp/cmake/FindTargetLAPACK.cmake"
+    "/depot/lslipche/data/skp/branch/libefp/build/libefpConfig.cmake"
+    "/depot/lslipche/data/skp/branch/libefp/build/libefpConfigVersion.cmake"
+    "/depot/lslipche/data/skp/branch/libefp/cmake/FindTargetLAPACK.cmake"
     )
 endif()
 
@@ -70,7 +70,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/libefp/libefpTargets.cmake")
     file(DIFFERENT EXPORT_FILE_CHANGED FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/libefp/libefpTargets.cmake"
-         "/scratch/bell/paulsk/libefp/build/CMakeFiles/Export/share/cmake/libefp/libefpTargets.cmake")
+         "/depot/lslipche/data/skp/branch/libefp/build/CMakeFiles/Export/share/cmake/libefp/libefpTargets.cmake")
     if(EXPORT_FILE_CHANGED)
       file(GLOB OLD_CONFIG_FILES "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/libefp/libefpTargets-*.cmake")
       if(OLD_CONFIG_FILES)
@@ -79,15 +79,15 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
       endif()
     endif()
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/libefp" TYPE FILE FILES "/scratch/bell/paulsk/libefp/build/CMakeFiles/Export/share/cmake/libefp/libefpTargets.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/libefp" TYPE FILE FILES "/depot/lslipche/data/skp/branch/libefp/build/CMakeFiles/Export/share/cmake/libefp/libefpTargets.cmake")
   if("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/libefp" TYPE FILE FILES "/scratch/bell/paulsk/libefp/build/CMakeFiles/Export/share/cmake/libefp/libefpTargets-debug.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/libefp" TYPE FILE FILES "/depot/lslipche/data/skp/branch/libefp/build/CMakeFiles/Export/share/cmake/libefp/libefpTargets-debug.cmake")
   endif()
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/scratch/bell/paulsk/libefp/build/efpmd/cmake_install.cmake")
+  include("/depot/lslipche/data/skp/branch/libefp/build/efpmd/cmake_install.cmake")
 
 endif()
 
@@ -99,5 +99,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/scratch/bell/paulsk/libefp/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/depot/lslipche/data/skp/branch/libefp/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

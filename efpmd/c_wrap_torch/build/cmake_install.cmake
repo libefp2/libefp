@@ -1,4 +1,4 @@
-# Install script for directory: /scratch/bell/paulsk/libefp/efpmd/c_wrap_torch
+# Install script for directory: /depot/lslipche/data/skp/branch/libefp/efpmd/c_wrap_torch
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,7 +44,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/tests/cmake_install.cmake")
+  include("/depot/lslipche/data/skp/branch/libefp/efpmd/c_wrap_torch/build/tests/cmake_install.cmake")
 
 endif()
 
@@ -56,5 +56,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/depot/lslipche/data/skp/branch/libefp/efpmd/c_wrap_torch/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

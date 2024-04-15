@@ -66,10 +66,10 @@ RM = /apps/spack/bell/apps/cmake/3.18.2-gcc-10.2.0-z3hxs65/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /scratch/bell/paulsk/libefp
+CMAKE_SOURCE_DIR = /depot/lslipche/data/skp/branch/libefp
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /scratch/bell/paulsk/libefp/build
+CMAKE_BINARY_DIR = /depot/lslipche/data/skp/branch/libefp/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -116,14 +116,14 @@ efpmd/clean: efpmd/CMakeFiles/efpmd.dir/clean
 CMakeFiles/efp.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/efp.dir/build.make CMakeFiles/efp.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/efp.dir/build.make CMakeFiles/efp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/scratch/bell/paulsk/libefp/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 "Built target efp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/depot/lslipche/data/skp/branch/libefp/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 "Built target efp"
 .PHONY : CMakeFiles/efp.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/efp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/bell/paulsk/libefp/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /depot/lslipche/data/skp/branch/libefp/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/efp.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/bell/paulsk/libefp/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /depot/lslipche/data/skp/branch/libefp/build/CMakeFiles 0
 .PHONY : CMakeFiles/efp.dir/rule
 
 # Convenience name for target.
@@ -143,14 +143,14 @@ CMakeFiles/efp.dir/clean:
 efpmd/CMakeFiles/efpmd.dir/all: CMakeFiles/efp.dir/all
 	$(MAKE) $(MAKESILENT) -f efpmd/CMakeFiles/efpmd.dir/build.make efpmd/CMakeFiles/efpmd.dir/depend
 	$(MAKE) $(MAKESILENT) -f efpmd/CMakeFiles/efpmd.dir/build.make efpmd/CMakeFiles/efpmd.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/scratch/bell/paulsk/libefp/build/CMakeFiles --progress-num=18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34 "Built target efpmd"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/depot/lslipche/data/skp/branch/libefp/build/CMakeFiles --progress-num=18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34 "Built target efpmd"
 .PHONY : efpmd/CMakeFiles/efpmd.dir/all
 
 # Build rule for subdir invocation for target.
 efpmd/CMakeFiles/efpmd.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/bell/paulsk/libefp/build/CMakeFiles 34
+	$(CMAKE_COMMAND) -E cmake_progress_start /depot/lslipche/data/skp/branch/libefp/build/CMakeFiles 34
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 efpmd/CMakeFiles/efpmd.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/bell/paulsk/libefp/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /depot/lslipche/data/skp/branch/libefp/build/CMakeFiles 0
 .PHONY : efpmd/CMakeFiles/efpmd.dir/rule
 
 # Convenience name for target.

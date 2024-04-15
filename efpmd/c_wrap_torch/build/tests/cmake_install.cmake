@@ -1,4 +1,4 @@
-# Install script for directory: /scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/tests
+# Install script for directory: /depot/lslipche/data/skp/branch/libefp/efpmd/c_wrap_torch/tests
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

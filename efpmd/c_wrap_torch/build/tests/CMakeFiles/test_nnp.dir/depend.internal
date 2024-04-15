@@ -3,4 +3,4 @@
 
 tests/CMakeFiles/test_nnp.dir/test_nnp.c.o
  ../src/c_libtorch.h
- /scratch/bell/paulsk/libefp/efpmd/c_wrap_torch/tests/test_nnp.c
+ /depot/lslipche/data/skp/branch/libefp/efpmd/c_wrap_torch/tests/test_nnp.c
