@@ -14,13 +14,13 @@ Journal References:
 Project web site: https://github.com/libefp2/libefp/
 
 RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
-WALL CLOCK TIME IS Thu Jun 22 15:51:55 2023
+WALL CLOCK TIME IS Tue Apr 23 22:28:53 2024
 
 SIMULATION SETTINGS
 
-run_type clib_test
-coord xyzabc
-terms elec pol
+run_type opt
+coord points
+terms elec pol disp xr
 elec_damp screen
 disp_damp overlap
 pol_damp tt
@@ -28,7 +28,7 @@ pol_driver iterative
 enable_ff false
 enable_multistep false
 ff_geometry ff.xyz
-ff_parameters /scratch/bell/paulsk/tstefp/libefp/share/libefp/fraglib/params/amber99.prm
+ff_parameters /depot/lslipche/data/skp/efpdev/libefp/share/libefp/fraglib/params/amber99.prm
 single_params_file false
 efp_params_file params.efp
 enable_cutoff false
@@ -36,16 +36,17 @@ swf_cutoff 10
 xr_cutoff 0
 max_steps 100
 multistep_steps 1
-fraglib_path ../fraglib
+fraglib_path /depot/lslipche/data/skp/branch/libefp/fraglib
 userlib_path .
 enable_pbc false
 periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
 opt_tol 0.0001
 gtest_tol 1e-06
-ref_energy 0.000277724
+ref_energy 0
 hess_central false
 num_step_dist 0.001
 num_step_angle 0.01
+chosen_fragment_torch 1
 ensemble nve
 time_step 1
 print_step 1
@@ -67,50 +68,2322 @@ print 0
 
 xr_cutoff is set to 10.000000 
 
-Path: ../fraglib/h2o.efp
+Path: /depot/lslipche/data/skp/branch/libefp/fraglib/h2o.efp
 
-Path: ../fraglib/nh3.efp
-
-
-Inside CLIB-TEST... Testing all EFP-TORCH jobs
-
-version: 2.1.0
-Inside tortest_ones_f32_1()
-
-Inside test_fft_f32()
+ENERGY MINIMIZATION JOB
 
 
-TEST JOB : TEST_SKP()
+n_charge in sim_opt    0
+Inside efp_get_gradient
 
-y = 14.000000
-dy/dx = 17.000000
 
-TEST JOB : GRAD_TST()
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.00036820
+efp->grad   0.00036820
+grad   0.00091837
+efp->grad   0.00091837
+grad  -0.00012492
+efp->grad  -0.00012492
+grad  -0.00131090
+efp->grad  -0.00131090
+grad   0.00215218
+efp->grad   0.00215218
+grad   0.00276212
+efp->grad   0.00276212
+grad  -0.00036820
+efp->grad  -0.00036820
+grad  -0.00091837
+efp->grad  -0.00091837
+grad   0.00012492
+efp->grad   0.00012492
+grad   0.00221188
+efp->grad   0.00221188
+grad  -0.00190309
+efp->grad  -0.00190309
+grad   0.00172452
+efp->grad   0.00172452
+euler, gradptr = -2.145468 -0.001311
+euler, gradptr = 3.035253 0.002152
+euler, gradptr = 2.867199 0.002762
+euler, gradptr = 0.046868 0.002212
+euler, gradptr = 0.616231 -0.001903
+euler, gradptr = 2.553218 0.001725
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000368 0.000000
+euler, gradptr = 0.000918 0.000000
+euler, gradptr = -0.000125 0.000000
+euler, gradptr = 0.002762 0.000000
+n_coord = 12
+Inside get_grad_info
 
-Gradient Tensor:
-Data: [2.00 4.00 6.00 8.00 ]
-Sizes: [2, 2]
-Num Dimensions: 2
-Type ID: 6
-Is Variable: 0
+rms_grad, grad = 0.000000 0.000368
+rms_grad, grad = 0.000001 0.000918
+rms_grad, grad = 0.000001 -0.000125
+rms_grad, grad = 0.000009 0.002762
+rms_grad, grad = 0.000010 -0.001094
+rms_grad, grad = 0.000016 -0.002506
+rms_grad, grad = 0.000016 -0.000368
+rms_grad, grad = 0.000017 -0.000918
+rms_grad, grad = 0.000017 0.000125
+rms_grad, grad = 0.000020 0.001725
+rms_grad, grad = 0.000025 0.002120
+rms_grad, grad = 0.000031 0.002566
+rms_grad = 0.001611
+    INITIAL STATE
 
-TEST JOB : COMPUTE_GRADIENT_TST()
+   SKP testing workflow..print_status()....in opt.c
 
-0.00 0.00 0.00 2.00 0.00 0.00 0.00 2.00 0.00 0.00 0.00 2.00 4.00 0.00 0.00 0.00 4.00 0.00 0.00 0.00 4.00 
+Inside print_geom routine
 
-TEST JOB : TEST2_NN()
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
 
-Epoch: 0, Loss: 0.684343
-Epoch: 10, Loss: 0.665283
-Epoch: 20, Loss: 0.646712
-Epoch: 30, Loss: 0.628614
-Epoch: 40, Loss: 0.610978
-Epoch: 50, Loss: 0.59379
-Epoch: 60, Loss: 0.577038
-Epoch: 70, Loss: 0.56071
-Epoch: 80, Loss: 0.544796
-Epoch: 90, Loss: 0.529285
-Energy: 0.124018 0.0548636 0.163815 0.0497798 0.0103795 0.203531 
+A01O1               -3.044600     1.421700     0.199400
+A02H2               -3.803616     0.868273     0.235295
+A03H3               -3.356434     2.304969     0.278587
+A01O1               -1.944300    -2.076400     0.128700
+A02H2               -1.008603    -1.991043     0.158038
+A03H3               -2.291348    -1.368671     0.640903
 
-TEST JOB : TEST_LOAD_ENFORCE()
 
+    RESTART DATA
+
+fragment H2O_L
+  -3.104522e+00   1.440157e+00   2.058397e-01  -2.145468e+00   3.035253e+00   2.867199e+00
+
+fragment H2O_L
+  -1.911361e+00  -2.032021e+00   1.590033e-01   4.686813e-02   6.162308e-01   2.553218e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0017521199
+           POLARIZATION ENERGY    -0.0001032411
+             DISPERSION ENERGY    -0.0004825313
+     EXCHANGE REPULSION ENERGY     0.0002879050
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0020499873
+
+
+                 ENERGY CHANGE     0.0000000000
+                  RMS GRADIENT     0.0016110677
+              MAXIMUM GRADIENT     0.0027621152
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00172793
+efp->grad  -0.00172793
+grad   0.00012789
+efp->grad   0.00012789
+grad  -0.00032664
+efp->grad  -0.00032664
+grad   0.00043956
+efp->grad   0.00043956
+grad  -0.00012363
+efp->grad  -0.00012363
+grad  -0.00404804
+efp->grad  -0.00404804
+grad   0.00172793
+efp->grad   0.00172793
+grad  -0.00012789
+efp->grad  -0.00012789
+grad   0.00032664
+efp->grad   0.00032664
+grad   0.00161324
+efp->grad   0.00161324
+grad   0.00113351
+efp->grad   0.00113351
+grad  -0.00641577
+efp->grad  -0.00641577
+euler, gradptr = -2.640391 0.000440
+euler, gradptr = 3.231264 -0.000124
+euler, gradptr = 3.316151 -0.004048
+euler, gradptr = -0.262136 0.001613
+euler, gradptr = 0.236313 0.001134
+euler, gradptr = 2.093450 -0.006416
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.001728 0.000000
+euler, gradptr = 0.000128 0.000000
+euler, gradptr = -0.000327 0.000000
+euler, gradptr = -0.004048 0.000000
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00085044
+efp->grad  -0.00085044
+grad   0.00160219
+efp->grad   0.00160219
+grad  -0.00059257
+efp->grad  -0.00059257
+grad  -0.00002344
+efp->grad  -0.00002344
+grad   0.00106571
+efp->grad   0.00106571
+grad  -0.00033166
+efp->grad  -0.00033166
+grad   0.00085044
+efp->grad   0.00085044
+grad  -0.00160219
+efp->grad  -0.00160219
+grad   0.00059257
+efp->grad   0.00059257
+grad   0.00399585
+efp->grad   0.00399585
+grad   0.00039993
+efp->grad   0.00039993
+grad  -0.00140664
+efp->grad  -0.00140664
+euler, gradptr = -2.376450 -0.000023
+euler, gradptr = 3.126732 0.001066
+euler, gradptr = 3.076726 -0.000332
+euler, gradptr = -0.097345 0.003996
+euler, gradptr = 0.438922 0.000400
+euler, gradptr = 2.338643 -0.001407
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000850 0.000000
+euler, gradptr = 0.001602 0.000000
+euler, gradptr = -0.000593 0.000000
+euler, gradptr = -0.000332 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000001 -0.000850
+rms_grad, grad = 0.000003 0.001602
+rms_grad, grad = 0.000004 -0.000593
+rms_grad, grad = 0.000004 -0.000332
+rms_grad, grad = 0.000004 -0.000721
+rms_grad, grad = 0.000004 0.000343
+rms_grad, grad = 0.000005 0.000850
+rms_grad, grad = 0.000008 -0.001602
+rms_grad, grad = 0.000008 0.000593
+rms_grad, grad = 0.000010 -0.001407
+rms_grad, grad = 0.000026 0.003938
+rms_grad, grad = 0.000028 -0.001607
+rms_grad = 0.001530
+    STATE AFTER 1 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -3.074308     1.356985     0.210433
+A02H2               -3.997814     1.181617     0.218060
+A03H3               -2.981924     2.292430     0.219510
+A01O1               -1.944048    -2.026416     0.134870
+A02H2               -1.033712    -2.251991     0.071009
+A03H3               -1.979053    -1.174735     0.531214
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.120816e+00   1.399517e+00   2.113679e-01  -2.376450e+00   3.126732e+00   3.076726e+00
+
+fragment H2O_L
+  -1.895067e+00  -1.991381e+00   1.534750e-01  -9.734497e-02   4.389219e-01   2.338643e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0035854818
+           POLARIZATION ENERGY    -0.0002096585
+             DISPERSION ENERGY    -0.0005431201
+     EXCHANGE REPULSION ENERGY     0.0004966156
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0038416448
+
+
+                 ENERGY CHANGE    -0.0017916574
+                  RMS GRADIENT     0.0015303030
+              MAXIMUM GRADIENT     0.0039380646
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00173094
+efp->grad  -0.00173094
+grad   0.00166471
+efp->grad   0.00166471
+grad  -0.00015398
+efp->grad  -0.00015398
+grad   0.00014364
+efp->grad   0.00014364
+grad   0.00010411
+efp->grad   0.00010411
+grad  -0.00235301
+efp->grad  -0.00235301
+grad   0.00173094
+efp->grad   0.00173094
+grad  -0.00166471
+efp->grad  -0.00166471
+grad   0.00015398
+efp->grad   0.00015398
+grad   0.00110548
+efp->grad   0.00110548
+grad   0.00055978
+efp->grad   0.00055978
+grad  -0.00451115
+efp->grad  -0.00451115
+euler, gradptr = -2.508826 0.000144
+euler, gradptr = 3.221301 0.000104
+euler, gradptr = 3.194709 -0.002353
+euler, gradptr = -0.120701 0.001105
+euler, gradptr = 0.130070 0.000560
+euler, gradptr = 2.279896 -0.004511
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.001731 0.000000
+euler, gradptr = 0.001665 0.000000
+euler, gradptr = -0.000154 0.000000
+euler, gradptr = -0.002353 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000003 -0.001731
+rms_grad, grad = 0.000006 0.001665
+rms_grad, grad = 0.000006 -0.000154
+rms_grad, grad = 0.000011 -0.002353
+rms_grad, grad = 0.000011 -0.000177
+rms_grad, grad = 0.000017 0.002346
+rms_grad, grad = 0.000020 0.001731
+rms_grad, grad = 0.000023 -0.001665
+rms_grad, grad = 0.000023 0.000154
+rms_grad, grad = 0.000043 -0.004511
+rms_grad, grad = 0.000044 0.001030
+rms_grad, grad = 0.000065 -0.004562
+rms_grad = 0.002325
+    STATE AFTER 2 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -3.074660     1.278861     0.235440
+A02H2               -4.011719     1.336268     0.187477
+A03H3               -2.752450     2.160974     0.193841
+A01O1               -1.959206    -1.957937     0.129092
+A02H2               -1.072770    -2.269710     0.102568
+A03H3               -1.909421    -1.027133     0.250747
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.109066e+00   1.331434e+00   2.304281e-01   6.327665e-01   3.061884e+00   5.311628e-02
+
+fragment H2O_L
+  -1.906817e+00  -1.923298e+00   1.344149e-01  -1.207008e-01   1.300698e-01   2.279896e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0046036297
+           POLARIZATION ENERGY    -0.0003274942
+             DISPERSION ENERGY    -0.0007017271
+     EXCHANGE REPULSION ENERGY     0.0009356809
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0046971702
+
+
+                 ENERGY CHANGE    -0.0008555254
+                  RMS GRADIENT     0.0023252081
+              MAXIMUM GRADIENT     0.0045623844
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00101351
+efp->grad  -0.00101351
+grad   0.00187277
+efp->grad   0.00187277
+grad   0.00060076
+efp->grad   0.00060076
+grad  -0.00008951
+efp->grad  -0.00008951
+grad  -0.00049668
+efp->grad  -0.00049668
+grad  -0.00074281
+efp->grad  -0.00074281
+grad   0.00101351
+efp->grad   0.00101351
+grad  -0.00187277
+efp->grad  -0.00187277
+grad  -0.00060076
+efp->grad  -0.00060076
+grad  -0.00296295
+efp->grad  -0.00296295
+grad  -0.00052746
+efp->grad  -0.00052746
+grad  -0.00121419
+efp->grad  -0.00121419
+euler, gradptr = -2.528698 -0.000090
+euler, gradptr = 3.300798 -0.000497
+euler, gradptr = 3.202600 -0.000743
+euler, gradptr = 0.030074 -0.002963
+euler, gradptr = -0.127085 -0.000527
+euler, gradptr = 2.399494 -0.001214
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.001014 0.000000
+euler, gradptr = 0.001873 0.000000
+euler, gradptr = 0.000601 0.000000
+euler, gradptr = -0.000743 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000001 -0.001014
+rms_grad, grad = 0.000005 0.001873
+rms_grad, grad = 0.000005 0.000601
+rms_grad, grad = 0.000005 -0.000743
+rms_grad, grad = 0.000006 0.000359
+rms_grad, grad = 0.000006 0.000790
+rms_grad, grad = 0.000007 0.001014
+rms_grad, grad = 0.000011 -0.001873
+rms_grad, grad = 0.000011 -0.000601
+rms_grad, grad = 0.000013 -0.001214
+rms_grad, grad = 0.000021 -0.002977
+rms_grad, grad = 0.000023 -0.001260
+rms_grad = 0.001385
+    STATE AFTER 3 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -3.033826     1.193904     0.256070
+A02H2               -3.965594     1.272585     0.159676
+A03H3               -2.684440     2.062757     0.174226
+A01O1               -1.990661    -1.886131     0.124635
+A02H2               -1.052922    -1.950773     0.136494
+A03H3               -2.192251    -0.975457     0.007553
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.066415e+00   1.246925e+00   2.460961e-01   6.128942e-01   2.982388e+00   6.100759e-02
+
+fragment H2O_L
+  -1.949468e+00  -1.838789e+00   1.187468e-01  -3.111519e+00   1.270853e-01  -7.420989e-01
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0066283209
+           POLARIZATION ENERGY    -0.0005939273
+             DISPERSION ENERGY    -0.0010110437
+     EXCHANGE REPULSION ENERGY     0.0021301316
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0061031603
+
+
+                 ENERGY CHANGE    -0.0014059901
+                  RMS GRADIENT     0.0013850972
+              MAXIMUM GRADIENT     0.0029774677
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.00019338
+efp->grad   0.00019338
+grad   0.00112595
+efp->grad   0.00112595
+grad   0.00030166
+efp->grad   0.00030166
+grad   0.00018044
+efp->grad   0.00018044
+grad  -0.00044437
+efp->grad  -0.00044437
+grad   0.00141711
+efp->grad   0.00141711
+grad  -0.00019338
+efp->grad  -0.00019338
+grad  -0.00112595
+efp->grad  -0.00112595
+grad  -0.00030166
+efp->grad  -0.00030166
+grad  -0.00164187
+efp->grad  -0.00164187
+grad  -0.00019588
+efp->grad  -0.00019588
+grad   0.00190951
+efp->grad   0.00190951
+euler, gradptr = -2.498561 0.000180
+euler, gradptr = 3.296853 -0.000444
+euler, gradptr = 3.169536 0.001417
+euler, gradptr = 0.096339 -0.001642
+euler, gradptr = -0.049314 -0.000196
+euler, gradptr = 2.470315 0.001910
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000193 0.000000
+euler, gradptr = 0.001126 0.000000
+euler, gradptr = 0.000302 0.000000
+euler, gradptr = 0.001417 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 0.000193
+rms_grad, grad = 0.000001 0.001126
+rms_grad, grad = 0.000001 0.000302
+rms_grad, grad = 0.000003 0.001417
+rms_grad, grad = 0.000003 0.000122
+rms_grad, grad = 0.000005 -0.001328
+rms_grad, grad = 0.000005 -0.000193
+rms_grad, grad = 0.000006 -0.001126
+rms_grad, grad = 0.000007 -0.000302
+rms_grad, grad = 0.000010 0.001910
+rms_grad, grad = 0.000013 -0.001653
+rms_grad, grad = 0.000017 0.001905
+rms_grad = 0.001176
+    STATE AFTER 4 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.999422     1.134050     0.245483
+A02H2               -3.934899     1.154100     0.155174
+A03H3               -2.705787     2.023111     0.161678
+A01O1               -2.014825    -1.829622     0.131536
+A02H2               -1.076927    -1.766220     0.132874
+A03H3               -2.340107    -0.948794     0.086721
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.035338e+00   1.184922e+00   2.357401e-01   6.430314e-01   2.986333e+00   2.794335e-02
+
+fragment H2O_L
+  -1.980544e+00  -1.776786e+00   1.291029e-01  -3.045254e+00   4.931354e-02  -6.712774e-01
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0081314907
+           POLARIZATION ENERGY    -0.0007970611
+             DISPERSION ENERGY    -0.0013320322
+     EXCHANGE REPULSION ENERGY     0.0035808661
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0066797179
+
+
+                 ENERGY CHANGE    -0.0005765576
+                  RMS GRADIENT     0.0011757718
+              MAXIMUM GRADIENT     0.0019095116
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.00037589
+efp->grad   0.00037589
+grad  -0.00017733
+efp->grad  -0.00017733
+grad   0.00003245
+efp->grad   0.00003245
+grad   0.00031137
+efp->grad   0.00031137
+grad  -0.00010662
+efp->grad  -0.00010662
+grad   0.00053800
+efp->grad   0.00053800
+grad  -0.00037589
+efp->grad  -0.00037589
+grad   0.00017733
+efp->grad   0.00017733
+grad  -0.00003245
+efp->grad  -0.00003245
+grad  -0.00051783
+efp->grad  -0.00051783
+grad  -0.00002149
+efp->grad  -0.00002149
+grad   0.00115359
+efp->grad   0.00115359
+euler, gradptr = -2.529441 0.000311
+euler, gradptr = 3.297164 -0.000107
+euler, gradptr = 3.195833 0.000538
+euler, gradptr = 0.077410 -0.000518
+euler, gradptr = 0.012110 -0.000021
+euler, gradptr = 2.450840 0.001154
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000376 0.000000
+euler, gradptr = -0.000177 0.000000
+euler, gradptr = 0.000032 0.000000
+euler, gradptr = 0.000538 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 0.000376
+rms_grad, grad = 0.000000 -0.000177
+rms_grad, grad = 0.000000 0.000032
+rms_grad, grad = 0.000000 0.000538
+rms_grad, grad = 0.000001 -0.000194
+rms_grad, grad = 0.000001 -0.000490
+rms_grad, grad = 0.000001 -0.000376
+rms_grad, grad = 0.000001 0.000177
+rms_grad, grad = 0.000001 -0.000032
+rms_grad, grad = 0.000002 0.001154
+rms_grad, grad = 0.000003 -0.000518
+rms_grad, grad = 0.000004 0.001153
+rms_grad = 0.000566
+    STATE AFTER 5 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.990437     1.085106     0.237860
+A02H2               -3.922938     1.158473     0.144402
+A03H3               -2.646461     1.956211     0.157047
+A01O1               -2.028794    -1.781358     0.136147
+A02H2               -1.089152    -1.754043     0.135596
+A03H3               -2.320076    -0.887654     0.147210
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.023369e+00   1.137956e+00   2.281082e-01   6.121520e-01   2.986022e+00   5.424012e-02
+
+fragment H2O_L
+  -1.992514e+00  -1.729820e+00   1.367348e-01   7.740980e-02   1.210975e-02   2.450840e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0095279393
+           POLARIZATION ENERGY    -0.0010386105
+             DISPERSION ENERGY    -0.0016318269
+     EXCHANGE REPULSION ENERGY     0.0052451755
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0069532012
+
+
+                 ENERGY CHANGE    -0.0002734833
+                  RMS GRADIENT     0.0005659755
+              MAXIMUM GRADIENT     0.0011535919
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00036540
+efp->grad  -0.00036540
+grad   0.00048007
+efp->grad   0.00048007
+grad  -0.00018513
+efp->grad  -0.00018513
+grad   0.00026360
+efp->grad   0.00026360
+grad   0.00012490
+efp->grad   0.00012490
+grad  -0.00054058
+efp->grad  -0.00054058
+grad   0.00036540
+efp->grad   0.00036540
+grad  -0.00048007
+efp->grad  -0.00048007
+grad   0.00018513
+efp->grad   0.00018513
+grad   0.00082841
+efp->grad   0.00082841
+grad   0.00030175
+efp->grad   0.00030175
+grad  -0.00050836
+efp->grad  -0.00050836
+euler, gradptr = -2.524738 0.000264
+euler, gradptr = 3.291486 0.000125
+euler, gradptr = 3.191693 -0.000541
+euler, gradptr = 0.028193 0.000828
+euler, gradptr = 0.089658 0.000302
+euler, gradptr = 2.410356 -0.000508
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000365 0.000000
+euler, gradptr = 0.000480 0.000000
+euler, gradptr = -0.000185 0.000000
+euler, gradptr = -0.000541 0.000000
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00000702
+efp->grad  -0.00000702
+grad   0.00017911
+efp->grad   0.00017911
+grad  -0.00007852
+efp->grad  -0.00007852
+grad   0.00028493
+efp->grad   0.00028493
+grad   0.00002495
+efp->grad   0.00002495
+grad  -0.00000895
+efp->grad  -0.00000895
+grad   0.00000702
+efp->grad   0.00000702
+grad  -0.00017911
+efp->grad  -0.00017911
+grad   0.00007852
+efp->grad   0.00007852
+grad   0.00017295
+efp->grad   0.00017295
+grad   0.00013087
+efp->grad   0.00013087
+grad   0.00032346
+efp->grad   0.00032346
+euler, gradptr = -2.527079 0.000285
+euler, gradptr = 3.294312 0.000025
+euler, gradptr = 3.193753 -0.000009
+euler, gradptr = 0.052690 0.000173
+euler, gradptr = 0.051059 0.000131
+euler, gradptr = 2.430507 0.000323
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000007 0.000000
+euler, gradptr = 0.000179 0.000000
+euler, gradptr = -0.000079 0.000000
+euler, gradptr = -0.000009 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 -0.000007
+rms_grad, grad = 0.000000 0.000179
+rms_grad, grad = 0.000000 -0.000079
+rms_grad, grad = 0.000000 -0.000009
+rms_grad, grad = 0.000000 -0.000247
+rms_grad, grad = 0.000000 0.000031
+rms_grad, grad = 0.000000 0.000007
+rms_grad, grad = 0.000000 -0.000179
+rms_grad, grad = 0.000000 0.000079
+rms_grad, grad = 0.000000 0.000323
+rms_grad, grad = 0.000000 0.000180
+rms_grad, grad = 0.000000 0.000317
+rms_grad = 0.000177
+    STATE AFTER 6 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.995890     1.094164     0.235858
+A02H2               -3.928882     1.163609     0.144327
+A03H3               -2.655918     1.966952     0.156267
+A01O1               -2.025377    -1.788546     0.136124
+A02H2               -1.085462    -1.803497     0.132831
+A03H3               -2.276051    -0.883757     0.182972
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.029074e+00   1.146889e+00   2.262821e-01   6.145141e-01   2.988873e+00   5.216064e-02
+
+fragment H2O_L
+  -1.986809e+00  -1.738753e+00   1.385609e-01   5.268999e-02   5.105939e-02   2.430507e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0092936521
+           POLARIZATION ENERGY    -0.0009831423
+             DISPERSION ENERGY    -0.0015642078
+     EXCHANGE REPULSION ENERGY     0.0048460262
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0069949761
+
+
+                 ENERGY CHANGE    -0.0000417749
+                  RMS GRADIENT     0.0001770106
+              MAXIMUM GRADIENT     0.0003234610
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00005323
+efp->grad  -0.00005323
+grad  -0.00002257
+efp->grad  -0.00002257
+grad  -0.00005856
+efp->grad  -0.00005856
+grad   0.00032585
+efp->grad   0.00032585
+grad   0.00000524
+efp->grad   0.00000524
+grad  -0.00030451
+efp->grad  -0.00030451
+grad   0.00005323
+efp->grad   0.00005323
+grad   0.00002257
+efp->grad   0.00002257
+grad   0.00005856
+efp->grad   0.00005856
+grad  -0.00001186
+efp->grad  -0.00001186
+grad   0.00011891
+efp->grad   0.00011891
+grad  -0.00002878
+efp->grad  -0.00002878
+euler, gradptr = -2.530597 0.000326
+euler, gradptr = 3.306399 0.000005
+euler, gradptr = 3.195633 -0.000305
+euler, gradptr = 0.044088 -0.000012
+euler, gradptr = 0.041514 0.000119
+euler, gradptr = 2.420261 -0.000029
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000053 0.000000
+euler, gradptr = -0.000023 0.000000
+euler, gradptr = -0.000059 0.000000
+euler, gradptr = -0.000305 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 -0.000053
+rms_grad, grad = 0.000000 -0.000023
+rms_grad, grad = 0.000000 -0.000059
+rms_grad, grad = 0.000000 -0.000305
+rms_grad, grad = 0.000000 -0.000270
+rms_grad, grad = 0.000000 0.000330
+rms_grad, grad = 0.000000 0.000053
+rms_grad, grad = 0.000000 0.000023
+rms_grad, grad = 0.000000 0.000059
+rms_grad, grad = 0.000000 -0.000029
+rms_grad, grad = 0.000000 -0.000007
+rms_grad, grad = 0.000000 -0.000034
+rms_grad = 0.000156
+    STATE AFTER 7 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.995030     1.087465     0.237919
+A02H2               -3.926952     1.160997     0.138985
+A03H3               -2.649779     1.957609     0.152325
+A01O1               -2.027524    -1.781213     0.135286
+A02H2               -1.088058    -1.813896     0.132210
+A03H3               -2.261108    -0.871458     0.173466
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.027858e+00   1.140271e+00   2.275929e-01   6.109961e-01   2.976787e+00   5.404075e-02
+
+fragment H2O_L
+  -1.988025e+00  -1.732135e+00   1.372501e-01   4.408841e-02   4.151424e-02   2.420261e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0094557665
+           POLARIZATION ENERGY    -0.0010226746
+             DISPERSION ENERGY    -0.0016085472
+     EXCHANGE REPULSION ENERGY     0.0050837187
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0070032696
+
+
+                 ENERGY CHANGE    -0.0000082935
+                  RMS GRADIENT     0.0001555241
+              MAXIMUM GRADIENT     0.0003303480
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00004786
+efp->grad  -0.00004786
+grad  -0.00003491
+efp->grad  -0.00003491
+grad  -0.00005535
+efp->grad  -0.00005535
+grad   0.00034673
+efp->grad   0.00034673
+grad  -0.00000210
+efp->grad  -0.00000210
+grad  -0.00027189
+efp->grad  -0.00027189
+grad   0.00004786
+efp->grad   0.00004786
+grad   0.00003491
+efp->grad   0.00003491
+grad   0.00005535
+efp->grad   0.00005535
+grad  -0.00005273
+efp->grad  -0.00005273
+grad   0.00011917
+efp->grad   0.00011917
+grad  -0.00005617
+efp->grad  -0.00005617
+euler, gradptr = -2.523139 0.000347
+euler, gradptr = 3.318873 -0.000002
+euler, gradptr = 3.186862 -0.000272
+euler, gradptr = 0.037074 -0.000053
+euler, gradptr = 0.041232 0.000119
+euler, gradptr = 2.413491 -0.000056
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000048 0.000000
+euler, gradptr = -0.000035 0.000000
+euler, gradptr = -0.000055 0.000000
+euler, gradptr = -0.000272 0.000000
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00004056
+efp->grad  -0.00004056
+grad  -0.00005929
+efp->grad  -0.00005929
+grad  -0.00003607
+efp->grad  -0.00003607
+grad   0.00041900
+efp->grad   0.00041900
+grad  -0.00004544
+efp->grad  -0.00004544
+grad  -0.00017679
+efp->grad  -0.00017679
+grad   0.00004056
+efp->grad   0.00004056
+grad   0.00005929
+efp->grad   0.00005929
+grad   0.00003607
+efp->grad   0.00003607
+grad  -0.00023586
+efp->grad  -0.00023586
+grad   0.00012393
+efp->grad   0.00012393
+grad  -0.00015819
+efp->grad  -0.00015819
+euler, gradptr = -2.493307 0.000419
+euler, gradptr = 3.368771 -0.000045
+euler, gradptr = 3.151775 -0.000177
+euler, gradptr = 0.009016 -0.000236
+euler, gradptr = 0.040103 0.000124
+euler, gradptr = 2.386413 -0.000158
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000041 0.000000
+euler, gradptr = -0.000059 0.000000
+euler, gradptr = -0.000036 0.000000
+euler, gradptr = -0.000177 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 -0.000041
+rms_grad, grad = 0.000000 -0.000059
+rms_grad, grad = 0.000000 -0.000036
+rms_grad, grad = 0.000000 -0.000177
+rms_grad, grad = 0.000000 -0.000307
+rms_grad, grad = 0.000000 0.000237
+rms_grad, grad = 0.000000 0.000041
+rms_grad, grad = 0.000000 0.000059
+rms_grad, grad = 0.000000 0.000036
+rms_grad, grad = 0.000000 -0.000158
+rms_grad, grad = 0.000000 -0.000235
+rms_grad, grad = 0.000000 -0.000163
+rms_grad = 0.000158
+    STATE AFTER 8 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.988584     1.083763     0.248710
+A02H2               -3.919759     1.076111     0.120142
+A03H3               -2.710896     1.973094     0.123594
+A01O1               -2.033518    -1.771209     0.128488
+A02H2               -1.098535    -1.868490     0.124247
+A03H3               -2.203870    -0.847479     0.165613
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.025152e+00   1.133099e+00   2.345145e-01   6.482861e-01   2.914414e+00   1.018249e-02
+
+fragment H2O_L
+  -1.990731e+00  -1.724963e+00   1.303285e-01   9.016302e-03   4.010277e-02   2.386413e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0095457136
+           POLARIZATION ENERGY    -0.0010469790
+             DISPERSION ENERGY    -0.0016585202
+     EXCHANGE REPULSION ENERGY     0.0052153734
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0070358394
+
+
+                 ENERGY CHANGE    -0.0000325698
+                  RMS GRADIENT     0.0001584405
+              MAXIMUM GRADIENT     0.0003065536
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00008734
+efp->grad  -0.00008734
+grad   0.00006270
+efp->grad   0.00006270
+grad   0.00002641
+efp->grad   0.00002641
+grad   0.00044535
+efp->grad   0.00044535
+grad  -0.00026306
+efp->grad  -0.00026306
+grad  -0.00016299
+efp->grad  -0.00016299
+grad   0.00008734
+efp->grad   0.00008734
+grad  -0.00006270
+efp->grad  -0.00006270
+grad  -0.00002641
+efp->grad  -0.00002641
+grad  -0.00056879
+efp->grad  -0.00056879
+grad   0.00023633
+efp->grad   0.00023633
+grad  -0.00018176
+efp->grad  -0.00018176
+euler, gradptr = -2.426376 0.000445
+euler, gradptr = 3.578428 -0.000263
+euler, gradptr = 3.053352 -0.000163
+euler, gradptr = -0.060706 -0.000569
+euler, gradptr = 0.072212 0.000236
+euler, gradptr = 2.322955 -0.000182
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000087 0.000000
+euler, gradptr = 0.000063 0.000000
+euler, gradptr = 0.000026 0.000000
+euler, gradptr = -0.000163 0.000000
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.00030582
+efp->grad   0.00030582
+grad   0.00049675
+efp->grad   0.00049675
+grad   0.00075175
+efp->grad   0.00075175
+grad  -0.00129455
+efp->grad  -0.00129455
+grad  -0.00282116
+efp->grad  -0.00282116
+grad   0.00013010
+efp->grad   0.00013010
+grad  -0.00030582
+efp->grad  -0.00030582
+grad  -0.00049675
+efp->grad  -0.00049675
+grad  -0.00075175
+efp->grad  -0.00075175
+grad  -0.00221572
+efp->grad  -0.00221572
+grad   0.00125058
+efp->grad   0.00125058
+grad   0.00233575
+efp->grad   0.00233575
+euler, gradptr = -2.158651 -0.001295
+euler, gradptr = 4.417052 -0.002821
+euler, gradptr = 2.659657 0.000130
+euler, gradptr = -0.339596 -0.002216
+euler, gradptr = 0.200650 0.001251
+euler, gradptr = 2.069126 0.002336
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000306 0.000000
+euler, gradptr = 0.000497 0.000000
+euler, gradptr = 0.000752 0.000000
+euler, gradptr = 0.000130 0.000000
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00024743
+efp->grad  -0.00024743
+grad   0.00059080
+efp->grad   0.00059080
+grad   0.00037771
+efp->grad   0.00037771
+grad  -0.00012116
+efp->grad  -0.00012116
+grad  -0.00116715
+efp->grad  -0.00116715
+grad  -0.00057072
+efp->grad  -0.00057072
+grad   0.00024743
+efp->grad   0.00024743
+grad  -0.00059080
+efp->grad  -0.00059080
+grad  -0.00037771
+efp->grad  -0.00037771
+grad  -0.00161177
+efp->grad  -0.00161177
+grad   0.00055191
+efp->grad   0.00055191
+grad   0.00039783
+efp->grad   0.00039783
+euler, gradptr = -2.318911 -0.000121
+euler, gradptr = 3.915053 -0.001167
+euler, gradptr = 2.895322 -0.000571
+euler, gradptr = -0.172653 -0.001612
+euler, gradptr = 0.123767 0.000552
+euler, gradptr = 2.221068 0.000398
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000247 0.000000
+euler, gradptr = 0.000591 0.000000
+euler, gradptr = 0.000378 0.000000
+euler, gradptr = -0.000571 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 -0.000247
+rms_grad, grad = 0.000000 0.000591
+rms_grad, grad = 0.000001 0.000378
+rms_grad, grad = 0.000001 -0.000571
+rms_grad, grad = 0.000002 0.000938
+rms_grad, grad = 0.000003 0.000901
+rms_grad, grad = 0.000003 0.000247
+rms_grad, grad = 0.000003 -0.000591
+rms_grad, grad = 0.000003 -0.000378
+rms_grad, grad = 0.000003 0.000398
+rms_grad, grad = 0.000006 -0.001683
+rms_grad, grad = 0.000006 0.000362
+rms_grad = 0.000721
+    STATE AFTER 9 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.967302     1.068782     0.333354
+A02H2               -3.747474     0.609658     0.079956
+A03H3               -2.946832     1.858331    -0.176419
+A01O1               -2.061997    -1.707821     0.069483
+A02H2               -1.215519    -2.115419     0.037622
+A03H3               -1.909030    -0.787599     0.185529
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.009813e+00   1.087272e+00   2.906489e-01   8.226819e-01   2.368133e+00  -2.462706e-01
+
+fragment H2O_L
+  -2.006070e+00  -1.679136e+00   7.419413e-02  -1.726530e-01   1.237673e-01   2.221068e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0093658599
+           POLARIZATION ENERGY    -0.0009950137
+             DISPERSION ENERGY    -0.0019640086
+     EXCHANGE REPULSION ENERGY     0.0051249515
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0071999308
+
+
+                 ENERGY CHANGE    -0.0001640914
+                  RMS GRADIENT     0.0007213103
+              MAXIMUM GRADIENT     0.0016826242
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.02105610
+efp->grad   0.02105610
+grad  -0.04598402
+efp->grad  -0.04598402
+grad  -0.03178393
+efp->grad  -0.03178393
+grad  -0.01013101
+efp->grad  -0.01013101
+grad  -0.00980564
+efp->grad  -0.00980564
+grad   0.01750487
+efp->grad   0.01750487
+grad  -0.02105610
+efp->grad  -0.02105610
+grad   0.04598402
+efp->grad   0.04598402
+grad   0.03178393
+efp->grad   0.03178393
+grad  -0.00474216
+efp->grad  -0.00474216
+grad  -0.00498093
+efp->grad  -0.00498093
+grad  -0.00596523
+efp->grad  -0.00596523
+euler, gradptr = -0.353340 -0.010131
+euler, gradptr = 9.581237 -0.009806
+euler, gradptr = 0.070600 0.017505
+euler, gradptr = -2.207228 -0.004742
+euler, gradptr = 1.244056 -0.004981
+euler, gradptr = 0.382231 -0.005965
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.021056 0.000000
+euler, gradptr = -0.045984 0.000000
+euler, gradptr = -0.031784 0.000000
+euler, gradptr = 0.017505 0.000000
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.00032422
+efp->grad   0.00032422
+grad   0.00043237
+efp->grad   0.00043237
+grad   0.00066108
+efp->grad   0.00066108
+grad  -0.00131755
+efp->grad  -0.00131755
+grad  -0.00251444
+efp->grad  -0.00251444
+grad   0.00026204
+efp->grad   0.00026204
+grad  -0.00032422
+efp->grad  -0.00032422
+grad  -0.00043237
+efp->grad  -0.00043237
+grad  -0.00066108
+efp->grad  -0.00066108
+grad  -0.00176127
+efp->grad  -0.00176127
+grad   0.00110564
+efp->grad   0.00110564
+grad   0.00216935
+efp->grad   0.00216935
+euler, gradptr = -2.144071 -0.001318
+euler, gradptr = 4.419066 -0.002514
+euler, gradptr = 2.644060 0.000262
+euler, gradptr = -0.353631 -0.001761
+euler, gradptr = 0.223418 0.001106
+euler, gradptr = 2.057501 0.002169
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000324 0.000000
+euler, gradptr = 0.000432 0.000000
+euler, gradptr = 0.000661 0.000000
+euler, gradptr = 0.000262 0.000000
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00023226
+efp->grad  -0.00023226
+grad   0.00084857
+efp->grad   0.00084857
+grad   0.00057008
+efp->grad   0.00057008
+grad  -0.00064954
+efp->grad  -0.00064954
+grad  -0.00174137
+efp->grad  -0.00174137
+grad  -0.00064847
+efp->grad  -0.00064847
+grad   0.00023226
+efp->grad   0.00023226
+grad  -0.00084857
+efp->grad  -0.00084857
+grad  -0.00057008
+efp->grad  -0.00057008
+grad  -0.00189319
+efp->grad  -0.00189319
+grad   0.00078194
+efp->grad   0.00078194
+grad   0.00104063
+efp->grad   0.00104063
+euler, gradptr = -2.258875 -0.000650
+euler, gradptr = 4.088118 -0.001741
+euler, gradptr = 2.809045 -0.000648
+euler, gradptr = -0.234796 -0.001893
+euler, gradptr = 0.157985 0.000782
+euler, gradptr = 2.164903 0.001041
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000232 0.000000
+euler, gradptr = 0.000849 0.000000
+euler, gradptr = 0.000570 0.000000
+euler, gradptr = -0.000648 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 -0.000232
+rms_grad, grad = 0.000001 0.000849
+rms_grad, grad = 0.000001 0.000570
+rms_grad, grad = 0.000002 -0.000648
+rms_grad, grad = 0.000005 0.001758
+rms_grad, grad = 0.000005 0.000869
+rms_grad, grad = 0.000005 0.000232
+rms_grad, grad = 0.000006 -0.000849
+rms_grad, grad = 0.000006 -0.000570
+rms_grad, grad = 0.000008 0.001041
+rms_grad, grad = 0.000012 -0.002023
+rms_grad, grad = 0.000013 0.000977
+rms_grad = 0.001024
+    STATE AFTER 10 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.964414     1.064848     0.356298
+A02H2               -3.662381     0.479675     0.123725
+A03H3               -2.980681     1.761176    -0.275000
+A01O1               -2.070405    -1.684667     0.051334
+A02H2               -1.277627    -2.187483     0.002810
+A03H3               -1.810549    -0.793417     0.199056
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.004381e+00   1.071068e+00   3.079582e-01   8.827174e-01   2.195067e+00  -3.325476e-01
+
+fragment H2O_L
+  -2.011502e+00  -1.662931e+00   5.688476e-02  -2.347961e-01   1.579849e-01   2.164903e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0092298813
+           POLARIZATION ENERGY    -0.0008634344
+             DISPERSION ENERGY    -0.0020669940
+     EXCHANGE REPULSION ENERGY     0.0049062513
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0072540584
+
+
+                 ENERGY CHANGE    -0.0000541277
+                  RMS GRADIENT     0.0010244760
+              MAXIMUM GRADIENT     0.0020231574
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00003067
+efp->grad  -0.00003067
+grad   0.00073207
+efp->grad   0.00073207
+grad   0.00053390
+efp->grad   0.00053390
+grad  -0.00124781
+efp->grad  -0.00124781
+grad  -0.00191852
+efp->grad  -0.00191852
+grad  -0.00009052
+efp->grad  -0.00009052
+grad   0.00003067
+efp->grad   0.00003067
+grad  -0.00073207
+efp->grad  -0.00073207
+grad  -0.00053390
+efp->grad  -0.00053390
+grad  -0.00103326
+efp->grad  -0.00103326
+grad   0.00095351
+efp->grad   0.00095351
+grad   0.00128266
+efp->grad   0.00128266
+euler, gradptr = -2.132890 -0.001248
+euler, gradptr = 4.352853 -0.001919
+euler, gradptr = 2.648495 -0.000091
+euler, gradptr = -0.365980 -0.001033
+euler, gradptr = 0.238932 0.000954
+euler, gradptr = 2.047394 0.001283
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000031 0.000000
+euler, gradptr = 0.000732 0.000000
+euler, gradptr = 0.000534 0.000000
+euler, gradptr = -0.000091 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 -0.000031
+rms_grad, grad = 0.000001 0.000732
+rms_grad, grad = 0.000001 0.000534
+rms_grad, grad = 0.000001 -0.000091
+rms_grad, grad = 0.000006 0.002288
+rms_grad, grad = 0.000006 0.000001
+rms_grad, grad = 0.000006 0.000031
+rms_grad, grad = 0.000007 -0.000732
+rms_grad, grad = 0.000007 -0.000534
+rms_grad, grad = 0.000009 0.001283
+rms_grad, grad = 0.000010 -0.001306
+rms_grad, grad = 0.000012 0.001123
+rms_grad = 0.000979
+    STATE AFTER 11 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.962408     1.056095     0.385172
+A02H2               -3.499465     0.295758     0.254283
+A03H3               -3.004903     1.551336    -0.412704
+A01O1               -2.083395    -1.639316     0.024799
+A02H2               -1.436382    -2.314308    -0.072329
+A03H3               -1.616154    -0.853686     0.244223
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.994839e+00   1.041261e+00   3.332003e-01   1.008703e+00   1.930332e+00  -4.930981e-01
+
+fragment H2O_L
+  -2.021044e+00  -1.633125e+00   3.164268e-02  -3.659798e-01   2.389315e-01   2.047394e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0092598237
+           POLARIZATION ENERGY    -0.0006610069
+             DISPERSION ENERGY    -0.0022669028
+     EXCHANGE REPULSION ENERGY     0.0048630083
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0073247252
+
+
+                 ENERGY CHANGE    -0.0000706667
+                  RMS GRADIENT     0.0009789791
+              MAXIMUM GRADIENT     0.0022883676
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00041596
+efp->grad  -0.00041596
+grad   0.00112540
+efp->grad   0.00112540
+grad   0.00038326
+efp->grad   0.00038326
+grad  -0.00105963
+efp->grad  -0.00105963
+grad  -0.00103856
+efp->grad  -0.00103856
+grad  -0.00077949
+efp->grad  -0.00077949
+grad   0.00041596
+efp->grad   0.00041596
+grad  -0.00112540
+efp->grad  -0.00112540
+grad  -0.00038326
+efp->grad  -0.00038326
+grad  -0.00032345
+efp->grad  -0.00032345
+grad   0.00053638
+efp->grad   0.00053638
+grad   0.00075303
+efp->grad   0.00075303
+euler, gradptr = -2.187169 -0.001060
+euler, gradptr = 4.173501 -0.001039
+euler, gradptr = 2.707225 -0.000779
+euler, gradptr = -0.322282 -0.000323
+euler, gradptr = 0.251002 0.000536
+euler, gradptr = 2.098324 0.000753
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000416 0.000000
+euler, gradptr = 0.001125 0.000000
+euler, gradptr = 0.000383 0.000000
+euler, gradptr = -0.000779 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 -0.000416
+rms_grad, grad = 0.000001 0.001125
+rms_grad, grad = 0.000002 0.000383
+rms_grad, grad = 0.000002 -0.000779
+rms_grad, grad = 0.000004 0.001460
+rms_grad, grad = 0.000004 0.000173
+rms_grad, grad = 0.000005 0.000416
+rms_grad, grad = 0.000006 -0.001125
+rms_grad, grad = 0.000006 -0.000383
+rms_grad, grad = 0.000007 0.000753
+rms_grad, grad = 0.000007 -0.000477
+rms_grad, grad = 0.000007 0.000629
+rms_grad = 0.000771
+    STATE AFTER 12 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.960453     1.056149     0.365183
+A02H2               -3.573454     0.363230     0.198546
+A03H3               -3.049349     1.665395    -0.345163
+A01O1               -2.077545    -1.655234     0.040853
+A02H2               -1.369133    -2.266401    -0.050256
+A03H3               -1.688836    -0.831352     0.272797
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.999730e+00   1.051467e+00   3.161091e-01   9.544240e-01   2.109685e+00  -4.343679e-01
+
+fragment H2O_L
+  -2.016153e+00  -1.643331e+00   4.873386e-02  -3.222817e-01   2.510024e-01   2.098324e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0092686951
+           POLARIZATION ENERGY    -0.0007224695
+             DISPERSION ENERGY    -0.0021984430
+     EXCHANGE REPULSION ENERGY     0.0046388490
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0075507586
+
+
+                 ENERGY CHANGE    -0.0002260334
+                  RMS GRADIENT     0.0007708966
+              MAXIMUM GRADIENT     0.0014599968
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00002441
+efp->grad  -0.00002441
+grad   0.00016494
+efp->grad   0.00016494
+grad   0.00004759
+efp->grad   0.00004759
+grad  -0.00104490
+efp->grad  -0.00104490
+grad   0.00016214
+efp->grad   0.00016214
+grad  -0.00114758
+efp->grad  -0.00114758
+grad   0.00002441
+efp->grad   0.00002441
+grad  -0.00016494
+efp->grad  -0.00016494
+grad  -0.00004759
+efp->grad  -0.00004759
+grad   0.00087720
+efp->grad   0.00087720
+grad  -0.00023831
+efp->grad  -0.00023831
+grad   0.00132557
+efp->grad   0.00132557
+euler, gradptr = -2.174307 -0.001045
+euler, gradptr = 3.986736 0.000162
+euler, gradptr = 2.748700 -0.001148
+euler, gradptr = -0.322016 0.000877
+euler, gradptr = 0.281460 -0.000238
+euler, gradptr = 2.119001 0.001326
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000024 0.000000
+euler, gradptr = 0.000165 0.000000
+euler, gradptr = 0.000048 0.000000
+euler, gradptr = -0.001148 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 -0.000024
+rms_grad, grad = 0.000000 0.000165
+rms_grad, grad = 0.000000 0.000048
+rms_grad, grad = 0.000001 -0.001148
+rms_grad, grad = 0.000002 0.000460
+rms_grad, grad = 0.000002 0.000049
+rms_grad, grad = 0.000002 0.000024
+rms_grad, grad = 0.000002 -0.000165
+rms_grad, grad = 0.000002 -0.000048
+rms_grad, grad = 0.000003 0.001326
+rms_grad, grad = 0.000004 0.000908
+rms_grad, grad = 0.000006 0.001259
+rms_grad = 0.000693
+    STATE AFTER 13 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.943307     1.022101     0.337806
+A02H2               -3.587123     0.359512     0.164164
+A03H3               -3.112802     1.721528    -0.266964
+A01O1               -2.088080    -1.628935     0.061471
+A02H2               -1.366092    -2.223089    -0.035424
+A03H3               -1.719678    -0.804082     0.321417
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.988818e+00   1.024162e+00   2.942483e-01   9.672854e-01   2.296450e+00  -3.928929e-01
+
+fragment H2O_L
+  -2.027065e+00  -1.616026e+00   7.059469e-02  -3.220158e-01   2.814597e-01   2.119001e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0102421112
+           POLARIZATION ENERGY    -0.0008502071
+             DISPERSION ENERGY    -0.0025273511
+     EXCHANGE REPULSION ENERGY     0.0058066628
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0078130066
+
+
+                 ENERGY CHANGE    -0.0002622480
+                  RMS GRADIENT     0.0006926230
+              MAXIMUM GRADIENT     0.0013255744
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.00043081
+efp->grad   0.00043081
+grad  -0.00104132
+efp->grad  -0.00104132
+grad   0.00000342
+efp->grad   0.00000342
+grad  -0.00243016
+efp->grad  -0.00243016
+grad   0.00039443
+efp->grad   0.00039443
+grad   0.00067288
+efp->grad   0.00067288
+grad  -0.00043081
+efp->grad  -0.00043081
+grad   0.00104132
+efp->grad   0.00104132
+grad  -0.00000342
+efp->grad  -0.00000342
+grad   0.00200049
+efp->grad   0.00200049
+grad  -0.00057136
+efp->grad  -0.00057136
+grad  -0.00041872
+efp->grad  -0.00041872
+euler, gradptr = -2.002172 -0.002430
+euler, gradptr = 3.924505 0.000394
+euler, gradptr = 2.676737 0.000673
+euler, gradptr = -0.467107 0.002000
+euler, gradptr = 0.315468 -0.000571
+euler, gradptr = 2.014213 -0.000419
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000431 0.000000
+euler, gradptr = -0.001041 0.000000
+euler, gradptr = 0.000003 0.000000
+euler, gradptr = 0.000673 0.000000
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00003082
+efp->grad  -0.00003082
+grad  -0.00000232
+efp->grad  -0.00000232
+grad   0.00003579
+efp->grad   0.00003579
+grad  -0.00162891
+efp->grad  -0.00162891
+grad   0.00036043
+efp->grad   0.00036043
+grad  -0.00076494
+efp->grad  -0.00076494
+grad   0.00003082
+efp->grad   0.00003082
+grad   0.00000232
+efp->grad   0.00000232
+grad  -0.00003579
+efp->grad  -0.00003579
+grad   0.00145176
+efp->grad   0.00145176
+grad  -0.00041191
+efp->grad  -0.00041191
+grad   0.00060907
+efp->grad   0.00060907
+euler, gradptr = -2.090624 -0.001629
+euler, gradptr = 3.956482 0.000360
+euler, gradptr = 2.713715 -0.000765
+euler, gradptr = -0.392552 0.001452
+euler, gradptr = 0.297993 -0.000412
+euler, gradptr = 2.068058 0.000609
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000031 0.000000
+euler, gradptr = -0.000002 0.000000
+euler, gradptr = 0.000036 0.000000
+euler, gradptr = -0.000765 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 -0.000031
+rms_grad, grad = 0.000000 -0.000002
+rms_grad, grad = 0.000000 0.000036
+rms_grad, grad = 0.000001 -0.000765
+rms_grad, grad = 0.000001 0.000496
+rms_grad, grad = 0.000001 -0.000634
+rms_grad, grad = 0.000001 0.000031
+rms_grad, grad = 0.000001 0.000002
+rms_grad, grad = 0.000001 -0.000036
+rms_grad, grad = 0.000002 0.000609
+rms_grad, grad = 0.000004 0.001499
+rms_grad, grad = 0.000004 0.000531
+rms_grad = 0.000587
+    STATE AFTER 14 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.934764     1.009785     0.332636
+A02H2               -3.510145     0.280808     0.187021
+A03H3               -3.201678     1.682314    -0.267478
+A01O1               -2.096164    -1.603854     0.065108
+A02H2               -1.450763    -2.277522    -0.050231
+A03H3               -1.630402    -0.834335     0.338204
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.981897e+00   1.006627e+00   2.909070e-01   1.050968e+00   2.326703e+00  -4.278776e-01
+
+fragment H2O_L
+  -2.033986e+00  -1.598490e+00   7.393603e-02  -3.925516e-01   2.979926e-01   2.068058e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0104880363
+           POLARIZATION ENERGY    -0.0007928511
+             DISPERSION ENERGY    -0.0027211575
+     EXCHANGE REPULSION ENERGY     0.0059899755
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0080120693
+
+
+                 ENERGY CHANGE    -0.0001990627
+                  RMS GRADIENT     0.0005872105
+              MAXIMUM GRADIENT     0.0014989085
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.00106054
+efp->grad   0.00106054
+grad  -0.00137269
+efp->grad  -0.00137269
+grad   0.00016022
+efp->grad   0.00016022
+grad  -0.00200139
+efp->grad  -0.00200139
+grad  -0.00016974
+efp->grad  -0.00016974
+grad   0.00252749
+efp->grad   0.00252749
+grad  -0.00106054
+efp->grad  -0.00106054
+grad   0.00137269
+efp->grad   0.00137269
+grad  -0.00016022
+efp->grad  -0.00016022
+grad   0.00084368
+efp->grad   0.00084368
+grad  -0.00040302
+efp->grad  -0.00040302
+grad   0.00022860
+efp->grad   0.00022860
+euler, gradptr = -1.877913 -0.002001
+euler, gradptr = 3.657661 -0.000170
+euler, gradptr = 2.767948 0.002527
+euler, gradptr = -0.488847 0.000844
+euler, gradptr = 0.199685 -0.000403
+euler, gradptr = 2.013680 0.000229
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.001061 0.000000
+euler, gradptr = -0.001373 0.000000
+euler, gradptr = 0.000160 0.000000
+euler, gradptr = 0.002527 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000001 0.001061
+rms_grad, grad = 0.000003 -0.001373
+rms_grad, grad = 0.000003 0.000160
+rms_grad, grad = 0.000009 0.002527
+rms_grad, grad = 0.000010 0.000767
+rms_grad, grad = 0.000020 -0.003114
+rms_grad, grad = 0.000021 -0.001061
+rms_grad, grad = 0.000023 0.001373
+rms_grad, grad = 0.000023 -0.000160
+rms_grad, grad = 0.000023 0.000229
+rms_grad, grad = 0.000024 0.000934
+rms_grad, grad = 0.000024 0.000216
+rms_grad = 0.001406
+    STATE AFTER 15 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.904988     0.984057     0.285891
+A02H2               -3.385916     0.185802     0.162717
+A03H3               -3.417778     1.666143    -0.108419
+A01O1               -2.118000    -1.566050     0.102551
+A02H2               -1.585888    -2.336089     0.015535
+A03H3               -1.529414    -0.856235     0.285319
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.960594e+00   9.775566e-01   2.569337e-01   1.263680e+00   2.625524e+00  -3.736450e-01
+
+fragment H2O_L
+  -2.055289e+00  -1.569420e+00   1.079093e-01  -4.888475e-01   1.996850e-01   2.013680e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0118088101
+           POLARIZATION ENERGY    -0.0008807949
+             DISPERSION ENERGY    -0.0032127333
+     EXCHANGE REPULSION ENERGY     0.0076329326
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0082694058
+
+
+                 ENERGY CHANGE    -0.0002573364
+                  RMS GRADIENT     0.0014058434
+              MAXIMUM GRADIENT     0.0031144102
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad  -0.00075345
+efp->grad  -0.00075345
+grad  -0.00022114
+efp->grad  -0.00022114
+grad   0.00000992
+efp->grad   0.00000992
+grad  -0.00030159
+efp->grad  -0.00030159
+grad  -0.00000294
+efp->grad  -0.00000294
+grad  -0.00175112
+efp->grad  -0.00175112
+grad   0.00075345
+efp->grad   0.00075345
+grad   0.00022114
+efp->grad   0.00022114
+grad  -0.00000992
+efp->grad  -0.00000992
+grad   0.00022380
+efp->grad   0.00022380
+grad   0.00008795
+efp->grad   0.00008795
+grad  -0.00226134
+efp->grad  -0.00226134
+euler, gradptr = -1.816900 -0.000302
+euler, gradptr = 3.311153 -0.000003
+euler, gradptr = 2.926589 -0.001751
+euler, gradptr = -0.505373 0.000224
+euler, gradptr = 0.065536 0.000088
+euler, gradptr = 2.015206 -0.002261
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = -0.000753 0.000000
+euler, gradptr = -0.000221 0.000000
+euler, gradptr = 0.000010 0.000000
+euler, gradptr = -0.001751 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000001 -0.000753
+rms_grad, grad = 0.000001 -0.000221
+rms_grad, grad = 0.000001 0.000010
+rms_grad, grad = 0.000004 -0.001751
+rms_grad, grad = 0.000004 0.000076
+rms_grad, grad = 0.000007 0.001677
+rms_grad, grad = 0.000007 0.000753
+rms_grad, grad = 0.000007 0.000221
+rms_grad, grad = 0.000007 -0.000010
+rms_grad, grad = 0.000012 -0.002261
+rms_grad, grad = 0.000012 0.000153
+rms_grad, grad = 0.000017 -0.002269
+rms_grad = 0.001204
+    STATE AFTER 16 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.895616     0.979355     0.228590
+A02H2               -3.476524     0.243218     0.162837
+A03H3               -3.425249     1.746672     0.108642
+A01O1               -2.121008    -1.569072     0.144869
+A02H2               -1.604259    -2.353817     0.116224
+A03H3               -1.513961    -0.853863     0.205229
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.957759e+00   9.810996e-01   2.181989e-01   1.324693e+00   2.972033e+00  -2.150032e-01
+
+fragment H2O_L
+  -2.058124e+00  -1.572963e+00   1.466441e-01  -5.053731e-01   6.553623e-02   2.015206e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0111331604
+           POLARIZATION ENERGY    -0.0007947964
+             DISPERSION ENERGY    -0.0031300719
+     EXCHANGE REPULSION ENERGY     0.0065022489
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0085557798
+
+
+                 ENERGY CHANGE    -0.0002863741
+                  RMS GRADIENT     0.0012041943
+              MAXIMUM GRADIENT     0.0022686222
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.00006284
+efp->grad   0.00006284
+grad  -0.00000150
+efp->grad  -0.00000150
+grad   0.00003492
+efp->grad   0.00003492
+grad  -0.00016203
+efp->grad  -0.00016203
+grad  -0.00006665
+efp->grad  -0.00006665
+grad  -0.00005874
+efp->grad  -0.00005874
+grad  -0.00006284
+efp->grad  -0.00006284
+grad   0.00000150
+efp->grad   0.00000150
+grad  -0.00003492
+efp->grad  -0.00003492
+grad  -0.00000772
+efp->grad  -0.00000772
+grad   0.00000070
+efp->grad   0.00000070
+grad   0.00036137
+efp->grad   0.00036137
+euler, gradptr = -1.796725 -0.000162
+euler, gradptr = 3.254608 -0.000067
+euler, gradptr = 2.936992 -0.000059
+euler, gradptr = -0.469400 -0.000008
+euler, gradptr = 0.037096 0.000001
+euler, gradptr = 2.049038 0.000361
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000063 0.000000
+euler, gradptr = -0.000002 0.000000
+euler, gradptr = 0.000035 0.000000
+euler, gradptr = -0.000059 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 0.000063
+rms_grad, grad = 0.000000 -0.000002
+rms_grad, grad = 0.000000 0.000035
+rms_grad, grad = 0.000000 -0.000059
+rms_grad, grad = 0.000000 0.000101
+rms_grad, grad = 0.000000 0.000042
+rms_grad, grad = 0.000000 -0.000063
+rms_grad, grad = 0.000000 0.000002
+rms_grad, grad = 0.000000 -0.000035
+rms_grad, grad = 0.000000 0.000361
+rms_grad, grad = 0.000000 -0.000007
+rms_grad, grad = 0.000000 0.000361
+rms_grad = 0.000155
+    STATE AFTER 17 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.891808     0.987770     0.218933
+A02H2               -3.468449     0.246731     0.173988
+A03H3               -3.434445     1.751255     0.139497
+A01O1               -2.124462    -1.581429     0.151794
+A02H2               -1.554506    -2.328821     0.136625
+A03H3               -1.568231    -0.824396     0.186190
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.954440e+00   9.890261e-01   2.119727e-01   1.344868e+00   3.028577e+00  -2.046006e-01
+
+fragment H2O_L
+  -2.061443e+00  -1.580890e+00   1.528703e-01  -4.694003e-01   3.709619e-02   2.049038e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0112298680
+           POLARIZATION ENERGY    -0.0007924697
+             DISPERSION ENERGY    -0.0030825591
+     EXCHANGE REPULSION ENERGY     0.0064565457
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0086483511
+
+
+                 ENERGY CHANGE    -0.0000925713
+                  RMS GRADIENT     0.0001546383
+              MAXIMUM GRADIENT     0.0003613733
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.00010488
+efp->grad   0.00010488
+grad  -0.00014075
+efp->grad  -0.00014075
+grad   0.00001809
+efp->grad   0.00001809
+grad  -0.00011161
+efp->grad  -0.00011161
+grad  -0.00002212
+efp->grad  -0.00002212
+grad   0.00019919
+efp->grad   0.00019919
+grad  -0.00010488
+efp->grad  -0.00010488
+grad   0.00014075
+efp->grad   0.00014075
+grad  -0.00001809
+efp->grad  -0.00001809
+grad   0.00001221
+efp->grad   0.00001221
+grad  -0.00001695
+efp->grad  -0.00001695
+grad   0.00007303
+efp->grad   0.00007303
+euler, gradptr = -1.764280 -0.000112
+euler, gradptr = 3.186022 -0.000022
+euler, gradptr = 2.952603 0.000199
+euler, gradptr = -0.483558 0.000012
+euler, gradptr = 0.018242 -0.000017
+euler, gradptr = 2.042388 0.000073
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000105 0.000000
+euler, gradptr = -0.000141 0.000000
+euler, gradptr = 0.000018 0.000000
+euler, gradptr = 0.000199 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 0.000105
+rms_grad, grad = 0.000000 -0.000141
+rms_grad, grad = 0.000000 0.000018
+rms_grad, grad = 0.000000 0.000199
+rms_grad, grad = 0.000000 0.000043
+rms_grad, grad = 0.000000 -0.000204
+rms_grad, grad = 0.000000 -0.000105
+rms_grad, grad = 0.000000 0.000141
+rms_grad, grad = 0.000000 -0.000018
+rms_grad, grad = 0.000000 0.000073
+rms_grad, grad = 0.000000 0.000019
+rms_grad, grad = 0.000000 0.000073
+rms_grad = 0.000114
+    STATE AFTER 18 STEPS
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.888998     0.986495     0.207158
+A02H2               -3.455172     0.236303     0.188869
+A03H3               -3.448134     1.741538     0.176309
+A01O1               -2.126938    -1.577872     0.159912
+A02H2               -1.572757    -2.337148     0.152349
+A03H3               -1.554848    -0.832149     0.176810
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.951968e+00   9.867662e-01   2.044082e-01   1.377313e+00   3.097163e+00  -1.889896e-01
+
+fragment H2O_L
+  -2.063915e+00  -1.578630e+00   1.604348e-01  -4.835584e-01   1.824210e-02   2.042388e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0113334669
+           POLARIZATION ENERGY    -0.0008006232
+             DISPERSION ENERGY    -0.0031237009
+     EXCHANGE REPULSION ENERGY     0.0066013071
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0086564840
+
+
+                 ENERGY CHANGE    -0.0000081328
+                  RMS GRADIENT     0.0001141409
+              MAXIMUM GRADIENT     0.0002036712
+
+
+Inside efp_get_gradient
+
+
+ALL GRAD PRINT in efp_get_gradient
+grad array_size = 12
+grad   0.00000430
+efp->grad   0.00000430
+grad  -0.00001188
+efp->grad  -0.00001188
+grad   0.00001401
+efp->grad   0.00001401
+grad  -0.00007665
+efp->grad  -0.00007665
+grad  -0.00000337
+efp->grad  -0.00000337
+grad   0.00004212
+efp->grad   0.00004212
+grad  -0.00000430
+efp->grad  -0.00000430
+grad   0.00001188
+efp->grad   0.00001188
+grad  -0.00001401
+efp->grad  -0.00001401
+grad   0.00000777
+efp->grad   0.00000777
+grad  -0.00002046
+efp->grad  -0.00002046
+grad  -0.00004122
+efp->grad  -0.00004122
+euler, gradptr = -1.758281 -0.000077
+euler, gradptr = 3.159705 -0.000003
+euler, gradptr = 2.961283 0.000042
+euler, gradptr = -0.484655 0.000008
+euler, gradptr = 0.009460 -0.000020
+euler, gradptr = 2.042949 -0.000041
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000000 0.000000
+euler, gradptr = 0.000004 0.000000
+euler, gradptr = -0.000012 0.000000
+euler, gradptr = 0.000014 0.000000
+euler, gradptr = 0.000042 0.000000
+Inside get_grad_info
+
+rms_grad, grad = 0.000000 0.000004
+rms_grad, grad = 0.000000 -0.000012
+rms_grad, grad = 0.000000 0.000014
+rms_grad, grad = 0.000000 0.000042
+rms_grad, grad = 0.000000 0.000018
+rms_grad, grad = 0.000000 -0.000043
+rms_grad, grad = 0.000000 -0.000004
+rms_grad, grad = 0.000000 0.000012
+rms_grad, grad = 0.000000 -0.000014
+rms_grad, grad = 0.000000 -0.000041
+rms_grad, grad = 0.000000 0.000016
+rms_grad, grad = 0.000000 -0.000041
+rms_grad = 0.000026
+    FINAL STATE
+
+   SKP testing workflow..print_status()....in opt.c
+
+Inside print_geom routine
+
+In print_geometry, number of frags  2
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -2.889213     0.988463     0.202557
+A02H2               -3.457727     0.239859     0.194966
+A03H3               -3.446883     1.745115     0.190077
+A01O1               -2.126676    -1.579988     0.163138
+A02H2               -1.572925    -2.339606     0.159220
+A03H3               -1.554134    -0.834473     0.171902
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.952231e+00   9.889133e-01   2.014336e-01   1.383312e+00   3.123480e+00  -1.803096e-01
+
+fragment H2O_L
+  -2.063652e+00  -1.580777e+00   1.634094e-01  -4.846547e-01   9.459905e-03   2.042949e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0112367435
+           POLARIZATION ENERGY    -0.0007909075
+             DISPERSION ENERGY    -0.0030928107
+     EXCHANGE REPULSION ENERGY     0.0064618310
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0086586307
+
+
+                 ENERGY CHANGE    -0.0000021468
+                  RMS GRADIENT     0.0000263629
+              MAXIMUM GRADIENT     0.0000434646
+
+
+OPTIMIZATION CONVERGED
+ENERGY MINIMIZATION JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Tue Apr 23 22:28:53 2024
+TOTAL RUN TIME IS 0 SECONDS

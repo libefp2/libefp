@@ -104,8 +104,8 @@ add_library(${C_LIBTORCH_BUILD_TARGET} SHARED
     src/c_libtorch.cc)
 add_sanitizers(${C_LIBTORCH_BUILD_TARGET})
 
-set_target_properties(${C_LIBTORCH_BUILD_TARGET}
-                      PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+#set_target_properties(${C_LIBTORCH_BUILD_TARGET}
+#                      PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # Increase warning level for clang.
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")

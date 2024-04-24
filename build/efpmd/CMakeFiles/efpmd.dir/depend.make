@@ -7,7 +7,6 @@ efpmd/CMakeFiles/efpmd.dir/src/autodiff.c.o: ../efpmd/src/autodiff.h
 efpmd/CMakeFiles/efpmd.dir/src/cfg.c.o: ../efpmd/src/cfg.c
 efpmd/CMakeFiles/efpmd.dir/src/cfg.c.o: ../efpmd/src/cfg.h
 
-efpmd/CMakeFiles/efpmd.dir/src/clib.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/clib.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/clib.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/clib.c.o: ../src/mathutil.h
@@ -20,7 +19,6 @@ efpmd/CMakeFiles/efpmd.dir/src/clib.c.o: ../efpmd/src/common.h
 efpmd/CMakeFiles/efpmd.dir/src/clib.c.o: ../efpmd/src/msg.h
 efpmd/CMakeFiles/efpmd.dir/src/clib.c.o: ../efpmd/src/phys.h
 
-efpmd/CMakeFiles/efpmd.dir/src/common.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/common.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/common.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/common.c.o: ../src/mathutil.h
@@ -31,7 +29,6 @@ efpmd/CMakeFiles/efpmd.dir/src/common.c.o: ../efpmd/src/common.h
 efpmd/CMakeFiles/efpmd.dir/src/common.c.o: ../efpmd/src/msg.h
 efpmd/CMakeFiles/efpmd.dir/src/common.c.o: ../efpmd/src/phys.h
 
-efpmd/CMakeFiles/efpmd.dir/src/efield.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/efield.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/efield.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/efield.c.o: ../src/mathutil.h
@@ -43,7 +40,6 @@ efpmd/CMakeFiles/efpmd.dir/src/efield.c.o: ../efpmd/src/efield.c
 efpmd/CMakeFiles/efpmd.dir/src/efield.c.o: ../efpmd/src/msg.h
 efpmd/CMakeFiles/efpmd.dir/src/efield.c.o: ../efpmd/src/phys.h
 
-efpmd/CMakeFiles/efpmd.dir/src/energy.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/energy.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/energy.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/energy.c.o: ../src/mathutil.h
@@ -54,7 +50,6 @@ efpmd/CMakeFiles/efpmd.dir/src/energy.c.o: ../efpmd/src/energy.c
 efpmd/CMakeFiles/efpmd.dir/src/energy.c.o: ../efpmd/src/msg.h
 efpmd/CMakeFiles/efpmd.dir/src/energy.c.o: ../efpmd/src/phys.h
 
-efpmd/CMakeFiles/efpmd.dir/src/grad.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/grad.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/grad.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/grad.c.o: ../src/mathutil.h
@@ -65,7 +60,6 @@ efpmd/CMakeFiles/efpmd.dir/src/grad.c.o: ../efpmd/src/grad.c
 efpmd/CMakeFiles/efpmd.dir/src/grad.c.o: ../efpmd/src/msg.h
 efpmd/CMakeFiles/efpmd.dir/src/grad.c.o: ../efpmd/src/phys.h
 
-efpmd/CMakeFiles/efpmd.dir/src/gtest.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/gtest.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/gtest.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/gtest.c.o: ../src/mathutil.h
@@ -76,7 +70,6 @@ efpmd/CMakeFiles/efpmd.dir/src/gtest.c.o: ../efpmd/src/gtest.c
 efpmd/CMakeFiles/efpmd.dir/src/gtest.c.o: ../efpmd/src/msg.h
 efpmd/CMakeFiles/efpmd.dir/src/gtest.c.o: ../efpmd/src/phys.h
 
-efpmd/CMakeFiles/efpmd.dir/src/hess.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/hess.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/hess.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/hess.c.o: ../src/clapack.h
@@ -88,7 +81,6 @@ efpmd/CMakeFiles/efpmd.dir/src/hess.c.o: ../efpmd/src/hess.c
 efpmd/CMakeFiles/efpmd.dir/src/hess.c.o: ../efpmd/src/msg.h
 efpmd/CMakeFiles/efpmd.dir/src/hess.c.o: ../efpmd/src/phys.h
 
-efpmd/CMakeFiles/efpmd.dir/src/main.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/main.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/main.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/main.c.o: ../src/mathutil.h
@@ -99,7 +91,6 @@ efpmd/CMakeFiles/efpmd.dir/src/main.c.o: ../efpmd/src/main.c
 efpmd/CMakeFiles/efpmd.dir/src/main.c.o: ../efpmd/src/msg.h
 efpmd/CMakeFiles/efpmd.dir/src/main.c.o: ../efpmd/src/phys.h
 
-efpmd/CMakeFiles/efpmd.dir/src/md.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/md.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/md.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/md.c.o: ../src/mathutil.h
@@ -114,7 +105,6 @@ efpmd/CMakeFiles/efpmd.dir/src/md.c.o: ../efpmd/src/rand.h
 efpmd/CMakeFiles/efpmd.dir/src/msg.c.o: ../efpmd/src/msg.c
 efpmd/CMakeFiles/efpmd.dir/src/msg.c.o: ../efpmd/src/msg.h
 
-efpmd/CMakeFiles/efpmd.dir/src/opt.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/opt.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/opt.c.o: ../efpmd/libopt/opt.h
 efpmd/CMakeFiles/efpmd.dir/src/opt.c.o: ../include/efp.h
@@ -126,7 +116,6 @@ efpmd/CMakeFiles/efpmd.dir/src/opt.c.o: ../efpmd/src/msg.h
 efpmd/CMakeFiles/efpmd.dir/src/opt.c.o: ../efpmd/src/opt.c
 efpmd/CMakeFiles/efpmd.dir/src/opt.c.o: ../efpmd/src/phys.h
 
-efpmd/CMakeFiles/efpmd.dir/src/parse.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/parse.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/parse.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/parse.c.o: ../src/mathutil.h
@@ -141,7 +130,6 @@ efpmd/CMakeFiles/efpmd.dir/src/parse.c.o: ../efpmd/src/phys.h
 efpmd/CMakeFiles/efpmd.dir/src/rand.c.o: ../efpmd/src/rand.c
 efpmd/CMakeFiles/efpmd.dir/src/rand.c.o: ../efpmd/src/rand.h
 
-efpmd/CMakeFiles/efpmd.dir/src/sp.c.o: ../efpmd/c_wrap_torch/src/c_libtorch.h
 efpmd/CMakeFiles/efpmd.dir/src/sp.c.o: ../efpmd/libff/ff.h
 efpmd/CMakeFiles/efpmd.dir/src/sp.c.o: ../include/efp.h
 efpmd/CMakeFiles/efpmd.dir/src/sp.c.o: ../src/mathutil.h

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libsrc_ff.a CMakeFiles/src_ff.dir/ff.c.o
-/usr/bin/ranlib libsrc_ff.a

@@ -63,6 +63,10 @@ static void call_routine(struct opt_state *state)
 	int n = (int)state->n;
 	int m = (int)state->m;
 
+	printf("Inside call_routine\n");
+	printf("n = %4d\n",n);
+	printf("m = %4d\n",m);
+
 	setulb_(&n,
 		&m,
 		 state->x,
@@ -81,6 +85,7 @@ static void call_routine(struct opt_state *state)
 		 state->lsave,
 		 state->isave,
 		 state->dsave);
+	printf("Coming out of the call_routine\n");
 }
 
 struct opt_state *opt_create(size_t n)
@@ -113,6 +118,8 @@ struct opt_state *opt_create(size_t n)
 	assert(state->nbd);
 	state->iwa = calloc(3 * n, sizeof(int));
 	assert(state->iwa);
+	
+	printf("n_coord in opt_create %4d\n",n);
 
 	return state;
 }
@@ -171,7 +178,7 @@ void opt_set_bound(struct opt_state *state, size_t n, const int *nbd,
 enum opt_result opt_step(struct opt_state *state)
 {
 	assert(state);
-
+	printf ("Inside opt_step\n");
 next:
 	call_routine(state);
 
@@ -187,6 +194,7 @@ next:
 	if (strncmp(state->task, "NEW_X", strlen("NEW_X")) == 0)
 		return OPT_RESULT_SUCCESS;
 
+	printf("Coming out of opt_step\n");
 	return OPT_RESULT_ERROR;
 }
 

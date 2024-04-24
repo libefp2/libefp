@@ -1,0 +1,15 @@
+# water tetramer
+
+run_type opt
+max_steps 100
+coord points
+fraglib_path /depot/lslipche/data/skp/branch/libefp/fraglib
+
+fragment h2o_l
+   -3.0446  1.4217  0.1994
+   -3.8439  0.8389  0.2372
+   -3.3220  2.3687  0.2792
+fragment h2o_l
+   -1.9443 -2.0764  0.1287
+   -0.9588 -1.9865  0.1596
+   -2.3592 -1.3491  0.6570
