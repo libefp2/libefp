@@ -1,0 +1,59 @@
+# pylibefpConfig.cmake
+# --------------------
+#
+# PylibEFP cmake module.
+# This module sets the following variables in your project::
+#
+#   pylibefp_FOUND - true if pylibefp and all required components found on the system
+#   pylibefp_VERSION - pylibefp version in format Major.Minor.Release
+##   libefp_INCLUDE_DIRS - Directory where libefp header is located.
+##   libefp_INCLUDE_DIR - same as DIRS
+##   libefp_DEFINITIONS - Definitions necessary to use libefp, namely USING_libefp.
+##   libefp_LIBRARIES - libefp library to link against.
+##   libefp_LIBRARY - same as LIBRARIES
+##   libefp_FRAGLIB_DIRS - Directories (list) where EFP fragments are located
+#   pylibefp_PYMOD - path to pylibefp python modules
+#
+#
+# Available components: None
+#
+#
+# Exported targets::
+#
+# If pylibefp is found, this module defines the following :prop_tgt:`IMPORTED`
+## target. Target is always shared _or_ static, so, for both, use separate, not
+## overlapping, installations. ::
+#
+#   pylibefp::core - the main pylibefp library with libefp and pybind11 attached.
+#
+#
+# Suggested usage::
+#
+#   find_package(pylibefp)
+#   find_package(pylibefp 0.1 EXACT CONFIG REQUIRED)
+#
+#
+# The following variables can be set to guide the search for this package::
+#
+#   pylibefp_DIR - CMake variable, set to directory containing this Config file
+#   CMAKE_PREFIX_PATH - CMake variable, set to root directory of this package
+#   PATH - environment variable, set to bin directory of this package
+#   CMAKE_DISABLE_FIND_PACKAGE_pylibefp - CMake variable, disables
+#     find_package(pylibefp) when not REQUIRED, perhaps to force internal build
+
+@PACKAGE_INIT@
+
+set(PN pylibefp)
+
+set(${PN}_PYMOD "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@@PYMOD_INSTALL_LIBDIR@")
+
+check_required_components(${PN})
+
+#-----------------------------------------------------------------------------
+# Don't include targets if this file is being picked up by another
+# project which has already built this as a subproject
+#-----------------------------------------------------------------------------
+if(NOT TARGET ${PN}::core)
+    include("${CMAKE_CURRENT_LIST_DIR}/${PN}Targets.cmake")
+endif()
+

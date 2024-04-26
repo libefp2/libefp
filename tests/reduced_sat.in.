@@ -1,0 +1,26 @@
+run_type gtest
+ref_energy -0.0013508688
+gtest_tol 5.0e-6
+coord points
+terms elec pol disp xr
+elec_damp overlap
+disp_damp overlap
+pol_damp tt
+fraglib_path ../fraglib
+
+fragment h2o_l
+  -3.394  -1.900  -3.700
+  -3.524  -1.089  -3.147
+  -2.544  -2.340  -3.445
+fragment h2o_l
+  -0.126  -2.228  -0.815
+   0.310  -2.476   0.037
+   0.053  -1.277  -1.011
+fragment h2o_satarupa_l
+  -1.850   1.697   3.172
+  -1.050   1.592   2.599
+  -2.666   1.643   2.614
+fragment h2o_reduced_l
+  -5.773  -1.738  -0.926
+  -5.017  -1.960  -1.522
+  -5.469  -1.766   0.014

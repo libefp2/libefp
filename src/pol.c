@@ -277,6 +277,49 @@ get_ligand_field(const struct efp *efp, size_t frag_idx, size_t pt_idx, int liga
     return elec_field;
 }
 
+static enum efp_result
+add_electron_density_field(struct efp *efp)
+{
+    enum efp_result res;
+    vec_t *xyz, *field;
+
+    if (efp->get_electron_density_field == NULL)
+        return EFP_RESULT_SUCCESS;
+
+    xyz = (vec_t *)malloc(efp->n_polarizable_pts * sizeof(vec_t));
+    field = (vec_t *)malloc(efp->n_polarizable_pts * sizeof(vec_t));
+
+    for (size_t i = 0, idx = 0; i < efp->n_frag; i++) {
+        struct frag *frag = efp->frags + i;
+
+        for (size_t j = 0; j < frag->n_polarizable_pts; j++, idx++) {
+            struct polarizable_pt *pt = frag->polarizable_pts + j;
+
+            xyz[idx].x = pt->x;
+            xyz[idx].y = pt->y;
+            xyz[idx].z = pt->z;
+        }
+    }
+
+    if ((res = efp->get_electron_density_field(efp->n_polarizable_pts,
+                                               (const double *)xyz, (double *)field,
+                                               efp->get_electron_density_field_user_data)))
+        goto error;
+
+    for (size_t i = 0, idx = 0; i < efp->n_frag; i++) {
+        struct frag *frag = efp->frags + i;
+
+        for (size_t j = 0; j < frag->n_polarizable_pts; j++, idx++) {
+            struct polarizable_pt *pt = frag->polarizable_pts + j;
+            pt->elec_field_wf = field[idx];
+        }
+    }
+    error:
+    free(xyz);
+    free(field);
+    return res;
+}
+
 static void
 compute_elec_field_range(struct efp *efp, size_t from, size_t to, void *data)
 {
@@ -356,7 +399,12 @@ compute_elec_field(struct efp *efp) {
         }
 	}
 
-	return EFP_RESULT_SUCCESS;
+    // this part is needed for interface with PSI4 only
+    if (efp->opts.terms & EFP_TERM_AI_POL)
+        if ((res = add_electron_density_field(efp)))
+            return res;
+
+    return EFP_RESULT_SUCCESS;
 }
 
 static enum efp_result
@@ -682,7 +730,7 @@ pol_scf_iter(struct efp *efp)
             for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
                 struct polarizable_pt *pt = frag->polarizable_pts + j;
                 if (vec_len(&pt->indip) > INDIP_PRINT_TRESH) {
-                    printf("\n WARNING: induced dipole %d on fragment %d: %lf ", j, i, vec_len(&pt->indip));
+                    printf("\n WARNING: induced dipole %zu on fragment %zu: %lf ", j, i, vec_len(&pt->indip));
                 }
             }
         }
@@ -970,10 +1018,10 @@ efp_compute_pol_energy_crystal(struct efp *efp, double *energy)
 
     // think how to skip recomputing static field in qm scf iterations
     // check on efp->do_gradient breaks gtests...
-    if (res = compute_elec_field_crystal(efp))
+    if ((res = compute_elec_field_crystal(efp)))
         return res;
 
-    if (res = efp_compute_id_iterative(efp))
+    if ((res = efp_compute_id_iterative(efp)))
         return res;
 
     if (efp->opts.print > 1) {

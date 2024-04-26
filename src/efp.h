@@ -326,8 +326,8 @@ struct efp_pol_pt {
  * \return The implemented function should return ::EFP_RESULT_FATAL on error
  * and ::EFP_RESULT_SUCCESS if the calculation has succeeded.
  */
-//typedef enum efp_result (*efp_electron_density_field_fn)(size_t n_pt,
-//    const double *xyz, double *field, void *user_data);
+typedef enum efp_result (*efp_electron_density_field_fn)(size_t n_pt,
+    const double *xyz, double *field, void *user_data);
 
 /**
  * Get a human readable banner string with information about the library.
@@ -462,8 +462,8 @@ enum efp_result efp_skip_fragments(struct efp *efp, size_t i, size_t j,
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-// enum efp_result efp_set_electron_density_field_fn(struct efp *efp,
-//    efp_electron_density_field_fn fn);
+enum efp_result efp_set_electron_density_field_fn(struct efp *efp,
+    efp_electron_density_field_fn fn);
 
 /**
  * Set user data to be passed to ::efp_electron_density_field_fn.
@@ -475,8 +475,8 @@ enum efp_result efp_skip_fragments(struct efp *efp, size_t i, size_t j,
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-// enum efp_result efp_set_electron_density_field_user_data(struct efp *efp,
-//    void *user_data);
+enum efp_result efp_set_electron_density_field_user_data(struct efp *efp,
+    void *user_data);
 
 /**
  * Setup arbitrary point charges interacting with EFP subsystem.

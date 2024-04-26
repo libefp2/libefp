@@ -20,6 +20,8 @@
 #      (skip via CMAKE_DISABLE_FIND_PACKAGE_TargetLAPACK), or
 #  (3) the libraries detected by the usual FindLAPACK.cmake module.
 #
+# libefp specialization
+# * None
 
 set(PN TargetLAPACK)
 
@@ -33,7 +35,7 @@ if (LAPACK_LIBRARIES)
     set_property (TARGET tgt::lapack PROPERTY INTERFACE_LINK_LIBRARIES ${LAPACK_LIBRARIES})
 else()
     # 2nd precedence - target already prepared and findable in TargetLAPACKConfig.cmake
-    if (NOT "${DISABLE_FIND_PACKAGE_${PN}}")
+    if (NOT "${CMAKE_DISABLE_FIND_PACKAGE_${PN}}")
         find_package (TargetLAPACK QUIET CONFIG)
     endif()
     if (TARGET tgt::lapack)
@@ -42,7 +44,11 @@ else()
         endif()
     else()
         # 3rd precedence - usual variables from FindLAPACK.cmake
-        find_package (LAPACK QUIET MODULE)
+        if (TargetLAPACK_FIND_REQUIRED)
+            find_package (LAPACK QUIET MODULE REQUIRED)
+        else()
+            find_package (LAPACK QUIET MODULE)
+        endif()
         if (NOT ${PN}_FIND_QUIETLY)
             message (STATUS "LAPACK detected.")
         endif()

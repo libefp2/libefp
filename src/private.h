@@ -226,8 +226,14 @@ struct efp {
 
     /* ligand index in fragment list */
     size_t ligand_index;
+    
+    /* callback which computes electric field from electrons */
+    efp_electron_density_field_fn get_electron_density_field;
 
-	/* user parameters for this EFP computation */
+    /* user data for get_electron_density_field */
+    void *get_electron_density_field_user_data;
+
+    /* user parameters for this EFP computation */
 	struct efp_opts opts;
 
 	/* gradient will also be computed if nonzero */

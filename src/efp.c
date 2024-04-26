@@ -1435,21 +1435,21 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_balance_work(efp, compute_two_body_range, NULL);
 	}
 	else {  // high-symmetry crystals
-	    if (res = compute_two_body_crystal(efp)){
+	    if ((res = compute_two_body_crystal(efp))) {
             efp_log("compute_two_body_crystal() failure");
             return res;
         }
 	}
 
-	if (res = efp_compute_pol(efp)) {
+	if ((res = efp_compute_pol(efp))) {
         efp_log("efp_compute_pol() failure");
         return res;
     }
-	if (res = efp_compute_ai_elec(efp)){
+	if ((res = efp_compute_ai_elec(efp))) {
         efp_log("efp_compute_ai_elec() failure");
         return res;
     }
-	if (res = efp_compute_ai_disp(efp)){
+	if ((res = efp_compute_ai_disp(efp))) {
         efp_log("efp_compute_ai_disp() failure");
         return res;
     }
@@ -2015,7 +2015,7 @@ efp_add_fragment(struct efp *efp, const char *name)
     // if update/rotate parameters
 	if (efp->opts.update_params == 1) {
         // first, sanity check: do fragment atoms match those in the library fragment?
-        if (res = check_frag_atoms(frag, lib)) {
+        if ((res = check_frag_atoms(frag, lib))) {
             efp_log("check_frag_atoms() failure");
             return res;
         }
@@ -2106,6 +2106,27 @@ efp_create(void)
 	efp_opts_default(&efp->opts);
 
 	return efp;
+}
+
+EFP_EXPORT enum efp_result
+efp_set_electron_density_field_fn(struct efp *efp,
+                                  efp_electron_density_field_fn fn)
+{
+    assert(efp);
+
+    efp->get_electron_density_field = fn;
+
+    return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+efp_set_electron_density_field_user_data(struct efp *efp, void *user_data)
+{
+    assert(efp);
+
+    efp->get_electron_density_field_user_data = user_data;
+
+    return EFP_RESULT_SUCCESS;
 }
 
 EFP_EXPORT enum efp_result
@@ -2609,9 +2630,9 @@ void print_ligand(struct efp *efp, size_t frag_index) {
     if (! efp->opts.enable_pairwise)
         return;
     if (efp->ligand_index == frag_index) {
-        printf("Ligand index %d\n", efp->ligand_index);
+        printf("Ligand index %zu\n", efp->ligand_index);
         if (efp->ligand_index > -1) {
-            printf("Number of ligand points %d", efp->ligand->n_ligand_pts);
+            printf("Number of ligand points %zu", efp->ligand->n_ligand_pts);
         }
     }
 }
@@ -2639,7 +2660,7 @@ print_frag_info(struct efp *efp, size_t frag_index) {
 
 void
 print_efp_mult_pt(struct efp_mult_pt *pt) {
-    printf(" Multipole point of rank     %d\n", pt->rank);
+    printf(" Multipole point of rank     %zu\n", pt->rank);
     printf(" Coordinates    %lf %lf %lf\n", pt->x, pt->y, pt->z);
     printf(" znuc, monopole %lf %lf\n", pt->znuc, pt->monopole);
     printf(" dipole         %lf %lf %lf\n", pt->dipole[0], pt->dipole[1], pt->dipole[2]);
@@ -2694,7 +2715,7 @@ void print_ene(struct efp_energy *energy) {
 void print_energies(struct efp *efp) {
     printf(" --- PAIRWISE ENERGIES --- \n");
     for (size_t i=0; i<efp->n_frag; i++) {
-        printf(" PAIR ENERGY on FRAGMENT %d %s \n", i, efp->frags[i].name);
+        printf(" PAIR ENERGY on FRAGMENT %zu %s \n", i, efp->frags[i].name);
         print_ene(&efp->pair_energies[i]);
     }
     printf("\n");
