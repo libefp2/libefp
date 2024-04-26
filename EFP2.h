@@ -17,13 +17,18 @@ public:
     /* Returns if_multipole_field value. */
     bool get_if_multipole_field();
 
-    /* Returns updated if_multipole_field value. */
+    /* Modifies if_multipole_field that determines whether multipole integrals need to be computed
+     * Currently computes multipole integrals two times (it's a mystery why second time is needed) */
     void update_multipole_field();
 
     /* Returns if_pol_field value. */
     bool get_if_pol_field();
 
-    /* Returns updated if_pol_field value. */
+    /* sets if_pol_field value. */
+    void set_if_pol_field(bool true_false);
+
+    /* Modifies if_pol_field value that determines whether pol integrals need
+     * to be computed (true) or read from disk (false) */
     void update_pol_field();
 
 	/* Reorient EFP fragments according to Q-Chem's orientation of
@@ -56,17 +61,12 @@ public:
  * \p code - Q-Chem's ShlPrs code. */
     void update_pol_ints(double *h, INTEGER code);
 
-    /* Update quantum mechanical Hamiltonian with the contributions
-	 * from EFPs using AOints.
-	 * \p h - a Hamiltonian matrix.
-	 * \p code - Q-Chem's ShlPrs code. */
-	// void update_wf(double *h, INTEGER code);
-
 	/* Update quantum mechanical Hamiltonian with the contributions
 	 * from EFPs using libqints.
+	 * NEED TO BE UPDATED TO MATCH NEW EFP STRUCTURE
 	 * \p h - a Hamiltonian matrix.
 	 * \p code - Q-Chem's ShlPrs code. */
-	void update_wf_qints(double *h, INTEGER code);
+	// void update_wf_qints(double *h, INTEGER code);
 
 	/* Update the positions of quantum nuclei for libefp. */
 	void update_qm_atoms();
@@ -97,9 +97,9 @@ public:
 	void get_gradient(std::vector<double> &a);
 
     /* computes pairwise energies between QM region and EFP fragments.
-     *  \p Escf - reference AI energy (HF or excitation energy)
+     *  \p Estate - reference AI energy (HF or excitation energy)
      *  \p if_excited = 1/0 a switch to distinguish between the ground state (0) or excited state (1). */
-    void get_pairwise_energy(double Estate, int if_excited);
+    void compute_integral_pairwise_energy(double Estate, int if_excited);
 
 	/* Print EFP energy terms to stdout. */
 	void print_energy();
@@ -113,6 +113,7 @@ public:
 		static EFP2 instance;
 		return instance;
 	}
+
 
 private:
 	EFP2();
