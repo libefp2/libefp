@@ -1180,6 +1180,46 @@ efp_get_frag_xyzabc(struct efp *efp, size_t frag_idx, double *xyzabc)
 }
 
 EFP_EXPORT enum efp_result
+efp_get_frag_atom_coord(struct efp *efp, size_t frag_idx, double *coord) {
+
+    struct frag *frag;
+
+    assert(efp);
+    assert(frag_idx < efp->n_frag);
+    assert(coord);
+
+    frag = efp->frags + frag_idx;
+
+    for (size_t i=0; i<frag->n_atoms; i++) {
+        coord[3*i] = frag->atoms[i].x;
+        coord[3*i + 1] = frag->atoms[i].y;
+        coord[3*i + 2] = frag->atoms[i].z;
+    }
+
+    return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+efp_set_frag_atom_coord(struct efp *efp, size_t frag_idx, const double *coord) {
+
+    struct frag *frag;
+
+    assert(efp);
+    assert(frag_idx < efp->n_frag);
+    assert(coord);
+
+    frag = efp->frags + frag_idx;
+
+    for (size_t i=0; i<frag->n_atoms; i++) {
+        frag->atoms[i].x = coord[3*i];
+        frag->atoms[i].y = coord[3*i + 1];
+        frag->atoms[i].z = coord[3*i + 2];
+    }
+
+    return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
 efp_set_periodic_box(struct efp *efp, double x, double y, double z, double alpha, double beta, double gamma)
 {
 	assert(efp);

@@ -43,6 +43,7 @@
 
 #include <efp.h>
 #include <ff.h>
+#include "torch.h"
 #include <mathutil.h>
 
 #include "cfg.h"
@@ -105,10 +106,13 @@ struct sys {
 struct state {
 	struct efp *efp;
 	struct ff *ff;
+    struct torch *torch;
 	struct cfg *cfg;
 	struct sys *sys;
 	double energy;
+    double torch_energy;
 	double *grad;
+    double *torch_grad;
 };
 
 void NORETURN die(const char *, ...);

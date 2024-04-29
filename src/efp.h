@@ -194,6 +194,10 @@ struct efp_opts {
     int ligand;
     /** Index of a special (QM or ML) fragment */
     int special_fragment;
+    /** Enable interface to libtorch */
+    int enable_torch;
+    /** Instructions on how to optimize a special fragment */
+    int opt_special_frag;
     /** Prints fragment coordinates rearranged around ligand. Applicable for periodic simulations only. */
     int print_pbc;
     /** Is 1 for periodic symmetric system (ctystal lattice). Default is 0 */
@@ -685,6 +689,26 @@ enum efp_result update_gradient_special_fragment(struct efp *efp);
  */
 enum efp_result efp_get_frag_xyzabc(struct efp *efp, size_t frag_idx,
     double *xyzabc);
+
+/**
+ * Get coordinates of all fragment atoms
+ * @param efp The efp structure.
+ * @param frag_idx ndex of a fragment. Must be a value between zero and
+ * the total number of fragments minus one.
+ * @param coord Upon return the coordinates of fragment atoms
+ * @return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_frag_atom_coord(struct efp *efp, size_t frag_idx, double *coord);
+
+/**
+ * Set coordinates of all fragment atoms
+ * @param efp The efp structure.
+ * @param frag_idx ndex of a fragment. Must be a value between zero and
+ * the total number of fragments minus one.
+ * @param coord Values of the atoms coordinates
+ * @return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_set_frag_atom_coord(struct efp *efp, size_t frag_idx, const double *coord);
 
 /**
  * Setup periodic box size.

@@ -25,6 +25,7 @@
  */
 
 #include "common.h"
+#include "torch.h"
 
 /* current coordinates from efp struct are used */
 void compute_energy(struct state *state, bool do_grad)
@@ -32,7 +33,7 @@ void compute_energy(struct state *state, bool do_grad)
 	struct efp_atom *atoms;
 	struct efp_energy efp_energy;
 	double xyz[3], xyzabc[6], *grad;
-	size_t ifrag, nfrag, iatom, natom;
+	size_t ifrag, nfrag, iatom, natom, spec_frag, n_special_atoms;
 	int itotal;
 
 	/* EFP part */
@@ -72,6 +73,18 @@ void compute_energy(struct state *state, bool do_grad)
 			}
 		}
 	}
+
+    /* Torch fragment part here */
+    if (cfg_get_int(state->cfg, "enable_torch")) {
+        // prototype to compute energy and gradients with torch
+        // torch_compute_energy(struct torch *, bool do_grad);
+        torch_compute(state->torch, do_grad);
+        state->torch_energy = torch_get_energy(state->torch);
+
+        if (do_grad) {
+            torch_get_gradient(state->torch, state->torch_grad);
+        }
+    }
 
 	/* MM force field part */
 	if (state->ff == NULL)

@@ -160,6 +160,9 @@ static struct cfg *make_cfg(void)
 
     cfg_add_int(cfg, "special_fragment", -100);
 
+    cfg_add_bool(cfg, "enable_torch", false);
+    cfg_add_int(cfg, "opt_special_frag", -1);
+
     cfg_add_enum(cfg, "symm_frag", EFP_SYMM_FRAG_FRAG,
                  "frag\n"
                  "list\n",
@@ -325,6 +328,8 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
         .enable_pairwise = cfg_get_bool(cfg, "enable_pairwise"), 
         .ligand = cfg_get_int(cfg, "ligand"),
         .special_fragment = cfg_get_int(cfg, "special_fragment"),
+        .enable_torch = cfg_get_bool(cfg, "enable_torch"),
+        .opt_special_frag = cfg_get_int(cfg, "opt_special_frag"),
         .print_pbc = cfg_get_bool(cfg, "print_pbc"),
         .symmetry = cfg_get_bool(cfg, "symmetry"),
         .symm_frag = cfg_get_enum(cfg, "symm_frag"),
@@ -404,13 +409,13 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 
 static void state_init(struct state *state, const struct cfg *cfg, const struct sys *sys)
 {
-	size_t ntotal, ifrag, nfrag, natom;
+	size_t ntotal, ifrag, nfrag, natom, spec_frag, n_special_atoms, iatom;
 
 	state->efp = create_efp(cfg, sys);
 	state->energy = 0;
 	state->grad = xcalloc(sys->n_frags * 6 + sys->n_charges * 3, sizeof(double));
 	state->ff = NULL;
-
+    state->torch = NULL;
 
 	if (cfg_get_bool(cfg, "enable_ff")) {
 		if ((state->ff = ff_create()) == NULL)
@@ -432,6 +437,31 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 		if (ff_get_atom_count(state->ff) != (int)ntotal)
 			error("total fragment number of atoms does not match .xyz file");
 	}
+
+    // initiate torch state
+    if (cfg_get_bool(cfg, "enable_torch")) {
+        if (cfg_get_bool(cfg, "special_fragment") < 0 || cfg_get_bool(cfg, "special_fragment") > nfrag-1)
+            error("do not know for which fragment to compute torch: set special_fragment");
+
+        // prototype to create torch state
+        if ((state->torch = torch_create()) == NULL)
+            error("cannot create torch object");
+
+        spec_frag = cfg_get_bool(cfg, "special_fragment");
+        check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
+
+        struct efp_atom *special_atoms;
+        special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
+        check_fail(efp_get_frag_atoms(state->efp, ifrag, n_special_atoms, special_atoms));
+
+        for (iatom = 0; iatom < n_special_atoms; iatom++) {
+            // send atom coordinates to torch
+            torch_set_atom_coord(state->torch, iatom, &special_atoms[iatom].x);
+            // send atom types to torch
+            torch_set_atom_species(state->torch, iatom, (int*)&special_atoms[iatom].znuc);
+        }
+        free(special_atoms);
+    }
 }
 
 static void print_banner(void)
