@@ -38,7 +38,7 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
 	check_fail(efp_get_frag_count(state->efp, &n_frags));
 	check_fail(efp_get_point_charge_count(state->efp, &n_charge));
 
-    if (cfg_get_int(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
+    if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
         // prepare for optimization of atom coordinates of a special fragment
         // through forces provided externally
         spec_frag = cfg_get_int(state->cfg, "special_fragment");
@@ -383,7 +383,7 @@ void static opt_consequently(struct state *state)
 }
 
 void sim_opt(struct state *state) {
-    if (cfg_get_int(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1)
+    if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1)
         switch (cfg_get_int(state->cfg, "opt_special_frag")) {
             case 0:
                 opt_spec_frag_only(state);

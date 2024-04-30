@@ -25,7 +25,7 @@
  */
 
 #include "common.h"
-#include "torch.h"
+#include "../torch/torch.h"
 
 /* current coordinates from efp struct are used */
 void compute_energy(struct state *state, bool do_grad)
@@ -75,7 +75,7 @@ void compute_energy(struct state *state, bool do_grad)
 	}
 
     /* Torch fragment part here */
-    if (cfg_get_int(state->cfg, "enable_torch")) {
+    if (cfg_get_bool(state->cfg, "enable_torch")) {
         // prototype to compute energy and gradients with torch
         // torch_compute_energy(struct torch *, bool do_grad);
         torch_compute(state->torch, do_grad);

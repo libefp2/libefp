@@ -25,6 +25,7 @@
  */
 
 #include "torch.h"
+#include <stdio.h>
 
 struct torch {
     double energy;
@@ -40,11 +41,60 @@ struct torch *torch_create(void) {
     return (torch);
 }
 
-void torch_compute(struct torch *torch, bool do_grad) {
+int torch_load_nn(struct torch *torch, const char *nn_name) {
+    // load NN
+    FILE *fp;
+    if ((fp = fopen(nn_name, "r")) == NULL)
+        return (0);
+    fclose(fp);
+
+    // blah
+    return (1);
+}
+
+void torch_get_atom_count(struct torch *torch , size_t natom) {
+    natom = torch->natoms;
+}
+
+void torch_set_atom_count(struct torch *torch, size_t natom) {
+    torch->natoms = natom;
+}
+
+void torch_get_atom_coord(struct torch *torch, size_t atom, double *coord) {
+    assert(atom < torch->natoms);
+    memcpy(coord, torch->atom_coords + (atom * 3), 3*sizeof(double));
+}
+
+void torch_set_atom_coord(struct torch *torch, size_t atom, const double *coord) {
+    assert(atom < torch->natoms);
+    memcpy(torch->atom_coords + (atom * 3), coord, 3*sizeof(double));
+}
+
+void torch_get_coord(struct torch *torch, double *coords) {
+    memcpy(coords, torch->atom_coords, (3 * torch->natoms) * sizeof(double));
+}
+
+void torch_set_coord(struct torch *torch, const double *coords) {
+    memcpy(torch->atom_coords, coords, (3 * torch->natoms) * sizeof(double));
+}
+
+void torch_set_atom_species(struct torch *torch, size_t atom, int *atom_z) {
+    assert(atom < torch->natoms);
+    memcpy(torch->atom_types, atom_z, (torch->natoms) * sizeof(int));
+}
+
+void torch_compute(struct torch *torch, int do_grad) {
     // prepare data and call this function
     //get_torch_energy_grad(float *coordinates_data, int *species_data, int num_atoms, float *atomic_energies,
     //                           float *gradients, float *forces);
     // save data in energy and grad
+}
+
+double torch_get_energy(struct torch *torch) {
+    return torch->energy;
+}
+void torch_get_gradient(struct torch *torch, double *grad) {
+    memcpy(grad, torch->grad, (3 * torch->natoms) * sizeof(double));
 }
 
 void torch_free(struct torch *torch) {

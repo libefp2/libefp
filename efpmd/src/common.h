@@ -43,7 +43,7 @@
 
 #include <efp.h>
 #include <ff.h>
-#include "torch.h"
+#include "../torch/torch.h"
 #include <mathutil.h>
 
 #include "cfg.h"

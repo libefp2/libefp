@@ -24,21 +24,24 @@
  * SUCH DAMAGE.
  */
 
-#include "common.h"
+#include <stddef.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <string.h>
 
 /* calculations with torch ani */
 struct torch;
 
 struct torch *torch_create(void);
-void torch_load_nn(struct torch *, const char *);
-void torch_get_atom_count(struct torch *, int *natom);
-void torch_set_atom_count(struct torch *, int *natom);
-void torch_get_atom_coord(struct torch *, int, double *);
-void torch_set_atom_coord(struct torch *, int, const double *);
+int torch_load_nn(struct torch *, const char *);
+void torch_get_atom_count(struct torch *, size_t natom);
+void torch_set_atom_count(struct torch *, size_t natom);
+void torch_get_atom_coord(struct torch *, size_t, double *);
+void torch_set_atom_coord(struct torch *, size_t, const double *);
 void torch_get_coord(struct torch *, double *);
 void torch_set_coord(struct torch *, const double *);
-void torch_set_atom_species(struct torch *, int, const int *);
-void torch_compute(struct torch *torch, bool do_grad);
+void torch_set_atom_species(struct torch *, size_t, int *);
+void torch_compute(struct torch *torch, int do_grad);
 double torch_get_energy(struct torch *torch);
 void torch_get_gradient(struct torch *, double *);
 void torch_free(struct torch *);

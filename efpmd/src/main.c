@@ -162,6 +162,7 @@ static struct cfg *make_cfg(void)
 
     cfg_add_bool(cfg, "enable_torch", false);
     cfg_add_int(cfg, "opt_special_frag", -1);
+    cfg_add_string(cfg, "torch_nn", "ani.pt");
 
     cfg_add_enum(cfg, "symm_frag", EFP_SYMM_FRAG_FRAG,
                  "frag\n"
@@ -440,14 +441,18 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 
     // initiate torch state
     if (cfg_get_bool(cfg, "enable_torch")) {
-        if (cfg_get_bool(cfg, "special_fragment") < 0 || cfg_get_bool(cfg, "special_fragment") > nfrag-1)
+        if (cfg_get_int(cfg, "special_fragment") < 0 || cfg_get_int(cfg, "special_fragment") > nfrag-1)
             error("do not know for which fragment to compute torch: set special_fragment");
 
-        // prototype to create torch state
+        // create torch state
         if ((state->torch = torch_create()) == NULL)
             error("cannot create torch object");
 
-        spec_frag = cfg_get_bool(cfg, "special_fragment");
+        // load torch NN
+        if (!torch_load_nn(state->torch, cfg_get_string(cfg, "torch_nn")))
+            error("cannot load torch NN");
+
+        spec_frag = cfg_get_int(cfg, "special_fragment");
         check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
         struct efp_atom *special_atoms;
