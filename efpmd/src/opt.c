@@ -81,7 +81,10 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
                 assert(n == (6 * (n_frags-1) + 3 * n_charge + 3 * n_special_atoms));
 
                 // skips coordinates of special fragment
-                check_fail(efp_set_coordinates_special(state->efp, spec_frag, EFP_COORD_TYPE_XYZABC, x));
+                for (size_t i = 0; i < n_frags; i++) {
+                    if (i==spec_frag) continue;
+                    check_fail(efp_set_frag_coordinates(state->efp, i, EFP_COORD_TYPE_XYZABC, x+6*i));
+                }
                 check_fail(efp_set_point_charge_coordinates(state->efp, x + 6 * (n_frags-1)));
                 // check_fail(efp_set_frag_atom_coord(state->efp, spec_frag, x + 6 * n_frags + 3 * n_charge));
                 check_fail(update_special_fragment(state->efp, x + 6 * (n_frags-1) + 3 * n_charge));
@@ -109,7 +112,10 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
                 }
 
                 // skips gradient of special fragment
-                check_fail(efp_get_gradient_special(state->efp, spec_frag, gx));
+                for (size_t i=0; i<n_frags; i++) {
+                    if (i == spec_frag) continue;
+                    memcpy(gx + 6*i, state->grad+6*i, 6 * sizeof(double));
+                }
                 // memcpy(gx, state->grad, (6 * n_frags + 3 * n_charge) * sizeof(double));
                 memcpy(gx + 6 * (n_frags-1) + 3 * n_charge, state->torch_grad, (3 * n_special_atoms) * sizeof(double));
 
@@ -378,9 +384,15 @@ void static opt_together(struct state *state)
     opt_set_user_data(opt_state, state);
 
     double coord[n_coord], grad[n_coord];
-    check_fail(efp_get_coordinates(state->efp, coord));
-    check_fail(efp_get_point_charge_coordinates(state->efp, coord + 6 * n_frags));
-    torch_get_coord(state->torch, coord + 6 * n_frags + 3 * n_charge);
+
+    // getting efp coordinates of all but special fragment
+    for (size_t i=0; i<n_frags; i++) {
+        if (i==spec_frag) continue;
+        check_fail(efp_get_frag_xyzabc(state->efp, spec_frag, coord + 6*i));
+    }
+    // check_fail(efp_get_coordinates(state->efp, coord));
+    check_fail(efp_get_point_charge_coordinates(state->efp, coord + 6 * (n_frags-1)));
+    torch_get_coord(state->torch, coord + 6 * (n_frags-1) + 3 * n_charge);
 
     if (opt_init(opt_state, n_coord, coord))
         error("unable to initialize an optimizer");

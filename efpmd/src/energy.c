@@ -37,6 +37,7 @@ void compute_energy(struct state *state, bool do_grad)
 	int itotal;
 
 	/* EFP part */
+    print_geometry(state->efp);
 	check_fail(efp_compute(state->efp, do_grad));
 	check_fail(efp_get_energy(state->efp, &efp_energy));
 	check_fail(efp_get_frag_count(state->efp, &nfrag));

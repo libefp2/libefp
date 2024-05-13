@@ -484,10 +484,11 @@ void efp_update_elec_special(struct frag *frag)
             out->y = frag->atoms[i].y;
             out->z = frag->atoms[i].z;
         }
+        /* recomputing positions of mid-points using atom positions */
         else {
             if (out->label[0] == 'B' && out->label[1] == 'O') {
                 int length = strlen(out->label) - 2;
-                printf(" Analyzing label %s, length is %d\n", out->label, length);
+                //printf(" Analyzing label %s, length is %d\n", out->label, length);
                 size_t m1, m2;
                 if (length == 2) {
                     char label1[1], label2[1];

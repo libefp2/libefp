@@ -770,24 +770,6 @@ efp_get_gradient(struct efp *efp, double *grad)
 }
 
 EFP_EXPORT enum efp_result
-efp_get_gradient_special(struct efp *efp, size_t frag_id, double *grad)
-{
-    assert(efp);
-    assert(grad);
-    assert(frag_id < efp->n_frag);
-
-    if (!efp->do_gradient) {
-        efp_log("gradient calculation was not requested");
-        return EFP_RESULT_FATAL;
-    }
-    for (size_t i=0; i<efp->n_frag; i++) {
-        if (i == frag_id) continue;
-        memcpy(grad + 6*i, &efp->grad[i], efp->n_frag * sizeof(six_t));
-    }
-    return EFP_RESULT_SUCCESS;
-}
-
-EFP_EXPORT enum efp_result
 efp_get_atomic_gradient(struct efp *efp, double *grad)
 {
 	six_t *efpgrad = NULL; /* Calculated EFP gradient */
@@ -1280,43 +1262,6 @@ efp_set_coordinates(struct efp *efp, enum efp_coord_type coord_type,
     }
 
 	return EFP_RESULT_SUCCESS;
-}
-
-EFP_EXPORT enum efp_result
-efp_set_coordinates_special(struct efp *efp, size_t frag_id, enum efp_coord_type coord_type,
-                    const double *coord)
-{
-    assert(efp);
-    assert(coord);
-    assert(frag_id < efp->n_frag);
-
-    size_t stride;
-    enum efp_result res;
-
-    switch (coord_type) {
-        case EFP_COORD_TYPE_XYZABC:
-            stride = 6;
-            break;
-        case EFP_COORD_TYPE_POINTS:
-            stride = 9;
-            break;
-        case EFP_COORD_TYPE_ROTMAT:
-            stride = 12;
-            break;
-        case EFP_COORD_TYPE_ATOMS:
-            stride = 9;
-            break;
-    }
-
-    for (size_t i = 0; i < efp->n_frag; i++, coord += stride) {
-        if (i==frag_id) continue;
-        if ((res = efp_set_frag_coordinates(efp, i, coord_type, coord))) {
-            efp_log("efp_set_coordinates() failure");
-            return res;
-        }
-    }
-
-    return EFP_RESULT_SUCCESS;
 }
 
 EFP_EXPORT enum efp_result
