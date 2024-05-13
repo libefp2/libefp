@@ -464,17 +464,20 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 
         //torch_print(state->torch);
         double *atom_coord_tmp = malloc(3 * n_special_atoms * sizeof(double));
+        int *atom_types_tmp = malloc(n_special_atoms * sizeof(int));
         for (iatom = 0; iatom < n_special_atoms; iatom++) {
-            // send atom coordinates to torch
+            // atom coordinates
             atom_coord_tmp[3*iatom] = special_atoms[iatom].x;
             atom_coord_tmp[3*iatom + 1] = special_atoms[iatom].y;
             atom_coord_tmp[3*iatom + 2] = special_atoms[iatom].z;
-            // send atom types to torch
-            torch_set_atom_species(state->torch, iatom, (int*)&special_atoms[iatom].znuc);
+            // atom types
+            atom_types_tmp[iatom] = (int)special_atoms[iatom].znuc;
         }
         torch_set_coord(state->torch, atom_coord_tmp);
+        torch_set_atom_types(state->torch, atom_types_tmp);
         free(special_atoms);
         free(atom_coord_tmp);
+        free(atom_types_tmp);
         torch_print(state->torch);
     }
 }

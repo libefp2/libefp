@@ -81,9 +81,10 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
                 assert(n == (6 * (n_frags-1) + 3 * n_charge + 3 * n_special_atoms));
 
                 // skips coordinates of special fragment
-                for (size_t i = 0; i < n_frags; i++) {
+                for (size_t i = 0, k=0; i < n_frags; i++) {
                     if (i==spec_frag) continue;
-                    check_fail(efp_set_frag_coordinates(state->efp, i, EFP_COORD_TYPE_XYZABC, x+6*i));
+                    check_fail(efp_set_frag_coordinates(state->efp, i, EFP_COORD_TYPE_XYZABC, x+6*k));
+                    k++;
                 }
                 check_fail(efp_set_point_charge_coordinates(state->efp, x + 6 * (n_frags-1)));
                 // check_fail(efp_set_frag_atom_coord(state->efp, spec_frag, x + 6 * n_frags + 3 * n_charge));
@@ -112,20 +113,22 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
                 }
 
                 // skips gradient of special fragment
-                for (size_t i=0; i<n_frags; i++) {
+                for (size_t i=0, k=0; i<n_frags; i++) {
                     if (i == spec_frag) continue;
-                    memcpy(gx + 6*i, state->grad+6*i, 6 * sizeof(double));
+                    memcpy(gx + 6*k, state->grad+6*i, 6 * sizeof(double));
+                    k++;
                 }
                 // memcpy(gx, state->grad, (6 * n_frags + 3 * n_charge) * sizeof(double));
                 memcpy(gx + 6 * (n_frags-1) + 3 * n_charge, state->torch_grad, (3 * n_special_atoms) * sizeof(double));
 
-                for (size_t i = 0; i < n_frags; i++) {
+                for (size_t i = 0, k=0 ; i < n_frags; i++) {
                     if (i==spec_frag)
                         continue;
-                    const double *euler = x + 6 * i + 3;
-                    double *gradptr = gx + 6 * i + 3;
+                    const double *euler = x + 6 * k + 3;
+                    double *gradptr = gx + 6 * k + 3;
 
                     efp_torque_to_derivative(euler, gradptr, gradptr);
+                    k++;
                 }
                 break;
 
@@ -386,9 +389,10 @@ void static opt_together(struct state *state)
     double coord[n_coord], grad[n_coord];
 
     // getting efp coordinates of all but special fragment
-    for (size_t i=0; i<n_frags; i++) {
+    for (size_t i=0, k=0; i<n_frags; i++) {
         if (i==spec_frag) continue;
-        check_fail(efp_get_frag_xyzabc(state->efp, spec_frag, coord + 6*i));
+        check_fail(efp_get_frag_xyzabc(state->efp, i, coord + 6*k));
+        k++;
     }
     // check_fail(efp_get_coordinates(state->efp, coord));
     check_fail(efp_get_point_charge_coordinates(state->efp, coord + 6 * (n_frags-1)));

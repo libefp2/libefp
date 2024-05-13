@@ -85,9 +85,8 @@ void torch_set_coord(struct torch *torch, const double *coords) {
     memcpy(torch->atom_coords, coords, (3 * torch->natoms) * sizeof(double));
 }
 
-void torch_set_atom_species(struct torch *torch, size_t atom, int *atom_z) {
-    assert(atom < torch->natoms);
-    memcpy(torch->atom_types + atom, atom_z, sizeof(int));
+void torch_set_atom_types(struct torch *torch, int *atom_z) {
+    memcpy(torch->atom_types, atom_z, torch->natoms * sizeof(int));
 }
 
 void torch_compute(struct torch *torch, int do_grad) {
