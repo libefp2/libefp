@@ -33,9 +33,10 @@
 struct torch;
 
 struct torch *torch_create(void);
+void torch_init(struct torch *, size_t);
 int torch_load_nn(struct torch *, const char *);
 void torch_get_atom_count(struct torch *, size_t natom);
-void torch_set_atom_count(struct torch *, size_t natom);
+void torch_set_atom_count(struct torch *, size_t *natom);
 void torch_get_atom_coord(struct torch *, size_t, double *);
 void torch_set_atom_coord(struct torch *, size_t, const double *);
 void torch_get_coord(struct torch *, double *);
@@ -45,3 +46,4 @@ void torch_compute(struct torch *torch, int do_grad);
 double torch_get_energy(struct torch *torch);
 void torch_get_gradient(struct torch *, double *);
 void torch_free(struct torch *);
+void torch_print(struct torch *);

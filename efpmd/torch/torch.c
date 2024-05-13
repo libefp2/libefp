@@ -41,6 +41,13 @@ struct torch *torch_create(void) {
     return (torch);
 }
 
+void torch_init(struct torch *torch, size_t natom) {
+    torch->natoms = natom;
+    torch->atom_coords = malloc(3*natom*sizeof(double));
+    torch->atom_types = malloc(natom*sizeof(int));
+    torch->grad = malloc(3*natom*sizeof(double));
+}
+
 int torch_load_nn(struct torch *torch, const char *nn_name) {
     // load NN
     FILE *fp;
@@ -56,8 +63,8 @@ void torch_get_atom_count(struct torch *torch , size_t natom) {
     natom = torch->natoms;
 }
 
-void torch_set_atom_count(struct torch *torch, size_t natom) {
-    torch->natoms = natom;
+void torch_set_atom_count(struct torch *torch, size_t *natom) {
+    torch->natoms = *natom;
 }
 
 void torch_get_atom_coord(struct torch *torch, size_t atom, double *coord) {
@@ -80,7 +87,7 @@ void torch_set_coord(struct torch *torch, const double *coords) {
 
 void torch_set_atom_species(struct torch *torch, size_t atom, int *atom_z) {
     assert(atom < torch->natoms);
-    memcpy(torch->atom_types, atom_z, (torch->natoms) * sizeof(int));
+    memcpy(torch->atom_types + atom, atom_z, sizeof(int));
 }
 
 void torch_compute(struct torch *torch, int do_grad) {
@@ -88,6 +95,23 @@ void torch_compute(struct torch *torch, int do_grad) {
     //get_torch_energy_grad(float *coordinates_data, int *species_data, int num_atoms, float *atomic_energies,
     //                           float *gradients, float *forces);
     // save data in energy and grad
+    static int iter = 0;
+
+    // initialization
+    if (iter == 0) {
+        for (size_t g=0; g<torch->natoms*3; g++) {
+            torch->grad[g] = 0.1;
+        }
+        torch->energy = -55.0;
+    }
+    // iteration
+    else {
+        for (size_t g = 0; g<torch->natoms * 3; g++) {
+            torch->grad[g] = -torch->grad[g] * 0.5;
+        }
+        torch->energy = torch->energy - 0.1 / (iter+1);
+    }
+    iter++;
 }
 
 double torch_get_energy(struct torch *torch) {
@@ -103,5 +127,22 @@ void torch_free(struct torch *torch) {
         free(torch->atom_coords);
         free(torch->atom_types);
         free(torch);
+    }
+}
+
+void torch_print(struct torch *torch) {
+    if (torch) {
+        printf("\n TORCH INFO \n");
+        printf(" %zu atoms with coordinates \n", torch->natoms);
+        for (size_t i=0; i< torch->natoms; i++) {
+            printf("%d   %lf    %lf   %lf\n", torch->atom_types[i], torch->atom_coords[i*3],
+                   torch->atom_coords[i*3+1], torch->atom_coords[i*3+2]);
+        }
+        printf("\n atom gradients \n", torch->natoms);
+        for (size_t i=0; i< torch->natoms; i++) {
+            printf("%lf      %lf     %lf\n", torch->grad[i*3],
+                   torch->grad[i*3+1], torch->grad[i*3+2]);
+        }
+        printf("\n Torch energy %lf \n\n", torch->energy);
     }
 }

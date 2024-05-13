@@ -47,6 +47,8 @@ enum efp_result efp_compute_pol_energy(struct efp *, double *);
 enum efp_result efp_compute_pol_correction(struct efp *, double *);
 enum efp_result efp_compute_ai_qq(struct efp *);
 void efp_update_elec(struct frag *);
+/* Updates multipoles based on new positions of atoms */
+void efp_update_elec_special(struct frag *);
 void efp_update_pol(struct frag *);
 void efp_update_disp(struct frag *);
 void efp_update_xr(struct frag *);

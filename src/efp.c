@@ -150,9 +150,8 @@ set_coord_atoms(struct frag *frag, const double *coord)
         frag->atoms[i].z = coord[3*i + 2];
     }
 
-    //update_fragment_(frag);
-    /* update positions of other parameters just in case */
-    efp_update_elec(frag);
+    /* update positions of other parameters  */
+    efp_update_elec_special(frag);
     efp_update_pol(frag);
     efp_update_disp(frag);
     efp_update_xr(frag);
@@ -771,6 +770,24 @@ efp_get_gradient(struct efp *efp, double *grad)
 }
 
 EFP_EXPORT enum efp_result
+efp_get_gradient_special(struct efp *efp, size_t frag_id, double *grad)
+{
+    assert(efp);
+    assert(grad);
+    assert(frag_id < efp->n_frag);
+
+    if (!efp->do_gradient) {
+        efp_log("gradient calculation was not requested");
+        return EFP_RESULT_FATAL;
+    }
+    for (size_t i=0; i<efp->n_frag; i++) {
+        if (i == frag_id) continue;
+        memcpy(grad + 6*i, &efp->grad[i], efp->n_frag * sizeof(six_t));
+    }
+    return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
 efp_get_atomic_gradient(struct efp *efp, double *grad)
 {
 	six_t *efpgrad = NULL; /* Calculated EFP gradient */
@@ -931,6 +948,163 @@ error:
 	free(Ia);
 	free(efpgrad);
 	return res;
+}
+
+EFP_EXPORT enum efp_result
+efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad)
+{
+    six_t *efpgrad = NULL; /* Calculated EFP gradient */
+    vec_t *pgrad; /* Conversion of grad to vec_t type */
+    size_t i, j, k, l;
+    size_t nr; /* Number of atoms in the current fragment */
+    size_t maxa; /* Maximum number of size of m, Ia, r arrays */
+    vec_t *r = NULL; /* Radius-vector of each atom inside current fragment
+			    with respect to CoM of that fragment */
+    double mm, *m = NULL; /* Total Mass of fragments and individual atoms */
+    double I, *Ia = NULL; /* Inertia along axis and contribution of each
+				 individual atom */
+    mat_t Id; /* Total inertia tensor of a fragment */
+    vec_t v, g; /* Principal axis and Inertia along that axis */
+    vec_t rbuf, rbuf2, tq, ri, rt;
+    double dist, sina, ft, norm;
+    enum efp_result res;
+
+    assert(efp);
+    assert(grad);
+    assert(frag_id < efp->n_frag);
+
+    if (!efp->do_gradient) {
+        efp_log("gradient calculation was not requested");
+        return EFP_RESULT_FATAL;
+    }
+    pgrad = (vec_t *)grad;
+
+    /* Calculate maximum size of a fragment */
+    maxa = efp->frags[frag_id].n_atoms;
+
+    res = EFP_RESULT_NO_MEMORY;
+    /* Create and initialize some arrays for work */
+    if ((r = (vec_t *)malloc(maxa * sizeof(*r))) == NULL)
+        goto error;
+    if ((m = (double *)malloc(maxa * sizeof(*m))) == NULL)
+        goto error;
+    if ((Ia = (double *)malloc(maxa * sizeof(*Ia))) == NULL)
+        goto error;
+
+    /* Copy computed efp->grad */
+    if ((efpgrad = (six_t *)malloc(sizeof(*efpgrad))) == NULL)
+        goto error;
+    memcpy(efpgrad, efp->grad + 6 * frag_id, sizeof(*efpgrad));
+
+        nr = efp->frags[frag_id].n_atoms;
+        memset(r, 0, maxa * sizeof(*r));
+        memset(m, 0, maxa * sizeof(*m));
+        memset(Ia, 0, maxa * sizeof(*Ia));
+        mm = 0.0;
+        Id = mat_zero;
+        v = vec_zero;
+        g = vec_zero;
+
+        for (i = 0; i < nr ; i++) {
+            r[i].x = efp->frags[frag_id].atoms[i].x - efp->frags[frag_id].x;
+            r[i].y = efp->frags[frag_id].atoms[i].y - efp->frags[frag_id].y;
+            r[i].z = efp->frags[frag_id].atoms[i].z - efp->frags[frag_id].z;
+            m[i] = efp->frags[frag_id].atoms[i].mass;
+            mm += m[i];
+
+            /* Inertia tensor contribution calculations */
+            Id.xx += m[i] * (r[i].y*r[i].y + r[i].z*r[i].z);
+            Id.yy += m[i] * (r[i].x*r[i].x + r[i].z*r[i].z);
+            Id.zz += m[i] * (r[i].x*r[i].x + r[i].y*r[i].y);
+            Id.xy -= m[i] * r[i].x * r[i].y;
+            Id.yx -= m[i] * r[i].x * r[i].y;
+            Id.xz -= m[i] * r[i].x * r[i].z;
+            Id.zx -= m[i] * r[i].x * r[i].z;
+            Id.yz -= m[i] * r[i].y * r[i].z;
+            Id.zy -= m[i] * r[i].y * r[i].z;
+        }
+
+        /* Try to diagonalize Id and get principal axis */
+        if (efp_dsyev('V', 'U', 3, (double *)&Id, 3, (double *)&g)) {
+            efp_log("inertia tensor diagonalization failed");
+            res = EFP_RESULT_FATAL;
+            goto error;
+        }
+
+        /* Add any additional forces from grad array to efpgrad array */
+        for (i = 0; i < nr; i++) {
+            efpgrad->x += pgrad[i].x;
+            efpgrad->y += pgrad[i].y;
+            efpgrad->z += pgrad[i].z;
+            rbuf = vec_cross(&r[i], &pgrad[i]);
+            efpgrad->a += rbuf.x;
+            efpgrad->b += rbuf.y;
+            efpgrad->c += rbuf.z;
+            pgrad[i] = vec_zero;
+        }
+
+        /* Now we are ready to redistribute efpgrad over the atoms */
+
+        /* Redistribute total translation grad[i]=m[i]/mm*efpgrad[j] */
+        for (i = 0; i < nr; i++) {
+            pgrad[i].x = efpgrad->x;
+            pgrad[i].y = efpgrad->y;
+            pgrad[i].z = efpgrad->z;
+            vec_scale(&pgrad[i], m[i] / mm);
+        }
+
+        /* Redistribution of torque should be done over 3 principal
+           axes computed previously */
+        for (l = 0; l < 3; l++) {
+            v = ((vec_t *)&Id)[l];
+            tq.x = efpgrad->a;
+            tq.y = efpgrad->b;
+            tq.z = efpgrad->c;
+
+            /* Calculate contribution of each atom to moment of
+               inertia with respect to current axis */
+            I = 0.0;
+            for (i = 0; i < nr; i++) {
+                rbuf = vec_cross(&v, &r[i]);
+                dist = vec_len(&rbuf);
+                Ia[i] = m[i] * dist * dist;
+                I += Ia[i];
+            }
+
+            /* Project torque onto v axis */
+            norm = vec_dot(&tq, &v);
+            tq = v;
+            vec_scale(&tq, norm);
+
+            /* Now distribute torque using Ia[i]/I as a scale */
+            for (i = 0; i < nr; i++) {
+                if (eq(Ia[i], 0.0))
+                    continue;
+                /* If atom is not on the current axis */
+                rbuf = tq;
+                vec_scale(&rbuf, Ia[i]/I);
+                ft = vec_len(&rbuf);
+                ri = r[i];
+                vec_normalize(&ri);
+                rt = tq;
+                vec_normalize(&rt);
+                rbuf2 = vec_cross(&rt, &ri);
+                sina = vec_len(&rbuf2);
+                vec_normalize(&rbuf2);
+                vec_scale(&rbuf2, ft/sina/vec_len(&r[i]));
+                /* Update grad with torque contribution of
+                   atom i over axis v */
+                pgrad[i] = vec_add(&pgrad[i], &rbuf2);
+            }
+        }
+
+    res = EFP_RESULT_SUCCESS;
+    error:
+    free(r);
+    free(m);
+    free(Ia);
+    free(efpgrad);
+    return res;
 }
 
 EFP_EXPORT enum efp_result
@@ -1106,6 +1280,43 @@ efp_set_coordinates(struct efp *efp, enum efp_coord_type coord_type,
     }
 
 	return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+efp_set_coordinates_special(struct efp *efp, size_t frag_id, enum efp_coord_type coord_type,
+                    const double *coord)
+{
+    assert(efp);
+    assert(coord);
+    assert(frag_id < efp->n_frag);
+
+    size_t stride;
+    enum efp_result res;
+
+    switch (coord_type) {
+        case EFP_COORD_TYPE_XYZABC:
+            stride = 6;
+            break;
+        case EFP_COORD_TYPE_POINTS:
+            stride = 9;
+            break;
+        case EFP_COORD_TYPE_ROTMAT:
+            stride = 12;
+            break;
+        case EFP_COORD_TYPE_ATOMS:
+            stride = 9;
+            break;
+    }
+
+    for (size_t i = 0; i < efp->n_frag; i++, coord += stride) {
+        if (i==frag_id) continue;
+        if ((res = efp_set_frag_coordinates(efp, i, coord_type, coord))) {
+            efp_log("efp_set_coordinates() failure");
+            return res;
+        }
+    }
+
+    return EFP_RESULT_SUCCESS;
 }
 
 EFP_EXPORT enum efp_result

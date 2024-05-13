@@ -470,6 +470,108 @@ efp_update_elec(struct frag *frag)
 	}
 }
 
+void efp_update_elec_special(struct frag *frag)
+{
+    size_t natom = frag->n_atoms;
+
+    for (size_t i = 0; i < frag->n_multipole_pts; i++) {
+        const struct multipole_pt *in = frag->lib->multipole_pts + i;
+        struct multipole_pt *out = frag->multipole_pts + i;
+
+        /* copy atom coordinates into multipole points */
+        if (i < natom) {
+            out->x = frag->atoms[i].x;
+            out->y = frag->atoms[i].y;
+            out->z = frag->atoms[i].z;
+        }
+        else {
+            if (out->label[0] == 'B' && out->label[1] == 'O') {
+                int length = strlen(out->label) - 2;
+                printf(" Analyzing label %s, length is %d\n", out->label, length);
+                size_t m1, m2;
+                if (length == 2) {
+                    char label1[1], label2[1];
+                    strncpy(label1,out->label+2,1);
+                    strncpy(label2,out->label+3,1);
+                    sscanf(label1, "%zu", &m1);
+                    sscanf(label2, "%zu", &m2);
+                }
+                else if (length == 3) {
+                    char label1[2], label2[1];
+                    strncpy(label1,out->label+2,2);
+                    strncpy(label2,out->label+4,1);
+                    sscanf(label1, "%zu", &m1);
+                    sscanf(label2, "%zu", &m2);
+                }
+                else if (length == 4) {
+                    char label1[2], label2[2];
+                    strncpy(label1,out->label+2,2);
+                    strncpy(label2,out->label+4,2);
+                    sscanf(label1, "%zu", &m1);
+                    sscanf(label2, "%zu", &m2);
+                }
+                else printf("Reading BO point %s but do not know what to do with it!\n", out->label);
+
+                out->x = (frag->atoms[m1-1].x + frag->atoms[m2-1].x)/2;
+                out->y = (frag->atoms[m1-1].y + frag->atoms[m2-1].y)/2;
+                out->z = (frag->atoms[m1-1].z + frag->atoms[m2-1].z)/2;
+            }
+        }
+
+        /* rotate dipole */
+        if (out->if_dip)
+            out->dipole = mat_vec(&frag->rotmat, &in->dipole);
+
+        /* rotate quadrupole */
+        if (out->if_quad) {
+            rotate_quadrupole(&frag->rotmat, in->quadrupole, out->quadrupole);
+
+            /* correction for Buckingham quadrupoles */
+            double *quad = out->quadrupole;
+
+            double qtr = quad[quad_idx(0, 0)] +
+                         quad[quad_idx(1, 1)] +
+                         quad[quad_idx(2, 2)];
+
+            quad[0] = 1.5 * quad[0] - 0.5 * qtr;
+            quad[1] = 1.5 * quad[1] - 0.5 * qtr;
+            quad[2] = 1.5 * quad[2] - 0.5 * qtr;
+            quad[3] = 1.5 * quad[3];
+            quad[4] = 1.5 * quad[4];
+            quad[5] = 1.5 * quad[5];
+        }
+
+        /* rotate octupole */
+        if (out->if_oct) {
+            rotate_octupole(&frag->rotmat, in->octupole, out->octupole);
+
+            /* correction for Buckingham octupoles */
+            double *oct = out->octupole;
+
+            double otrx = oct[oct_idx(0, 0, 0)] +
+                          oct[oct_idx(0, 1, 1)] +
+                          oct[oct_idx(0, 2, 2)];
+            double otry = oct[oct_idx(0, 0, 1)] +
+                          oct[oct_idx(1, 1, 1)] +
+                          oct[oct_idx(1, 2, 2)];
+            double otrz = oct[oct_idx(0, 0, 2)] +
+                          oct[oct_idx(1, 1, 2)] +
+                          oct[oct_idx(2, 2, 2)];
+
+            oct[0] = 2.5 * oct[0] - 1.5 * otrx;
+            oct[1] = 2.5 * oct[1] - 1.5 * otry;
+            oct[2] = 2.5 * oct[2] - 1.5 * otrz;
+            oct[3] = 2.5 * oct[3] - 0.5 * otry;
+            oct[4] = 2.5 * oct[4] - 0.5 * otrz;
+            oct[5] = 2.5 * oct[5] - 0.5 * otrx;
+            oct[6] = 2.5 * oct[6] - 0.5 * otrz;
+            oct[7] = 2.5 * oct[7] - 0.5 * otrx;
+            oct[8] = 2.5 * oct[8] - 0.5 * otry;
+            oct[9] = 2.5 * oct[9];
+        }
+    }
+}
+
 static double
 compute_ai_elec_frag(struct efp *efp, size_t frag_idx)
 {

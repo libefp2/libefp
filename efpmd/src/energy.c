@@ -80,10 +80,12 @@ void compute_energy(struct state *state, bool do_grad)
         // torch_compute_energy(struct torch *, bool do_grad);
         torch_compute(state->torch, do_grad);
         state->torch_energy = torch_get_energy(state->torch);
+        state->energy += state->torch_energy;
 
         if (do_grad) {
             torch_get_gradient(state->torch, state->torch_grad);
         }
+        torch_print(state->torch);
     }
 
 	/* MM force field part */

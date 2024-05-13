@@ -49,28 +49,73 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
             case 0:
                 assert(n == (3 * n_special_atoms));
 
-                // this is just to keep trac of special fragment coordinates
-                check_fail(efp_set_frag_atom_coord(state->efp, spec_frag, x));
-                // this is where all fun happens
+                // propagate special fragment coordinates to EFP and update fragment parameters
+                check_fail(update_special_fragment(state->efp, x));
+                // propagate special fragment coordinates to torch
                 torch_set_coord(state->torch, x);
-
+                // compute EFP and torch energies and gradients
                 compute_energy(state, true);
+
+                if (cfg_get_int(state->cfg, "print") > 1) {
+                    printf("\nTorch gradient\n");
+                    for (size_t i = 0; i < n; i++) {
+                        printf("%lf ", state->torch_grad[i]);
+                    }
+                }
+
+                // combine EFP and torch (atomic) gradients on special fragments
+                check_fail(efp_get_frag_atomic_gradient(state->efp, spec_frag, state->torch_grad));
+
+                if (cfg_get_int(state->cfg, "print") > 1) {
+                    printf("\nTotal torch + EFP gradient\n");
+                    for (size_t i = 0; i < n; i++) {
+                        printf("%lf ", state->torch_grad[i]);
+                    }
+                }
+
                 memcpy(gx, state->torch_grad, (3 * n_special_atoms) * sizeof(double));
                 break;
 
                 // optimize special fragment atoms and all fragments - the most general case
             case 1:
-                assert(n == (6 * n_frags + 3 * n_charge + 3 * n_special_atoms));
+                assert(n == (6 * (n_frags-1) + 3 * n_charge + 3 * n_special_atoms));
 
-                check_fail(efp_set_coordinates(state->efp, EFP_COORD_TYPE_XYZABC, x));
-                check_fail(efp_set_point_charge_coordinates(state->efp, x + 6 * n_frags));
-                check_fail(efp_set_frag_atom_coord(state->efp, spec_frag, x + 6 * n_frags + 3 * n_charge));
+                // skips coordinates of special fragment
+                check_fail(efp_set_coordinates_special(state->efp, spec_frag, EFP_COORD_TYPE_XYZABC, x));
+                check_fail(efp_set_point_charge_coordinates(state->efp, x + 6 * (n_frags-1)));
+                // check_fail(efp_set_frag_atom_coord(state->efp, spec_frag, x + 6 * n_frags + 3 * n_charge));
+                check_fail(update_special_fragment(state->efp, x + 6 * (n_frags-1) + 3 * n_charge));
+                // propagate special fragment coordinates to torch
+                torch_set_coord(state->torch, x + 6 * (n_frags-1) + 3 * n_charge);
 
+                // compute EFP and torch energies and gradients
                 compute_energy(state, true);
-                memcpy(gx, state->grad, (6 * n_frags + 3 * n_charge) * sizeof(double));
-                memcpy(gx, state->torch_grad, (3 * n_special_atoms) * sizeof(double));
+
+                if (cfg_get_int(state->cfg, "print") > 1) {
+                    printf("\nTorch gradient\n");
+                    for (size_t i = 0; i < n; i++) {
+                        printf("%lf ", state->torch_grad[i]);
+                    }
+                }
+
+                // combine EFP and torch (atomic) gradients on special fragments
+                check_fail(efp_get_frag_atomic_gradient(state->efp, spec_frag, state->torch_grad));
+
+                if (cfg_get_int(state->cfg, "print") > 1) {
+                    printf("\nTotal torch + EFP gradient\n");
+                    for (size_t i = 0; i < n; i++) {
+                        printf("%lf ", state->torch_grad[i]);
+                    }
+                }
+
+                // skips gradient of special fragment
+                check_fail(efp_get_gradient_special(state->efp, spec_frag, gx));
+                // memcpy(gx, state->grad, (6 * n_frags + 3 * n_charge) * sizeof(double));
+                memcpy(gx + 6 * (n_frags-1) + 3 * n_charge, state->torch_grad, (3 * n_special_atoms) * sizeof(double));
 
                 for (size_t i = 0; i < n_frags; i++) {
+                    if (i==spec_frag)
+                        continue;
                     const double *euler = x + 6 * i + 3;
                     double *gradptr = gx + 6 * i + 3;
 
@@ -323,7 +368,7 @@ void static opt_together(struct state *state)
     spec_frag = cfg_get_int(state->cfg, "special_fragment");
     check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
-    n_coord = 6 * n_frags + 3 * n_charge + 3 * n_special_atoms;
+    n_coord = 6 * (n_frags-1) + 3 * n_charge + 3 * n_special_atoms;
 
     struct opt_state *opt_state = opt_create(n_coord);
     if (!opt_state)

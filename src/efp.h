@@ -611,6 +611,17 @@ enum efp_result efp_set_coordinates(struct efp *efp,
     enum efp_coord_type coord_type, const double *coord);
 
 /**
+ * This function is taken from efp_set_coordinates(). The difference is that
+ * it skips fragment frag_id when copying coordinates
+ * @param efp
+ * @param frag_id the fragment to be skipped
+ * @param coord_type
+ * @param coord
+ * @return
+ */
+enum efp_result efp_set_coordinates_special(struct efp *efp, size_t frag_id, enum efp_coord_type coord_type,
+                            const double *coord);
+/**
  * Update position and orientation of the specified effective fragment.
  *
  * \param[in] efp The efp structure.
@@ -1200,6 +1211,16 @@ enum efp_result efp_get_energy(struct efp *efp, struct efp_energy *energy);
 enum efp_result efp_get_gradient(struct efp *efp, double *grad);
 
 /**
+ * The function is very similar to efp_get_gradient(). The difference that this one
+ * skips gradient of one fragment when copying to grad.
+ * @param efp
+ * @param frag_id The fragment which gradient to be skipped
+ * @param grad
+ * @return
+ */
+enum efp_result efp_get_gradient_special(struct efp *efp, size_t frag_id, double *grad);
+
+/**
  * Get computed EFP energy gradient on individual atoms.
  *
  * \param[in] efp The efp structure.
@@ -1215,6 +1236,22 @@ enum efp_result efp_get_gradient(struct efp *efp, double *grad);
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
 enum efp_result efp_get_atomic_gradient(struct efp *efp, double *grad);
+
+/**
+ * Get computed EFP energy gradient on individual atoms of fragment frag_id. The function is
+ * adapted from efp_get_atomic_gradient(struct efp *efp, double *grad)
+ * @param efp The efp structure.
+ * @param frag_id The index of fragment which atoms are analyzed here
+ * @param[out] grad For each atom, \a x \a y \a z components of negative force
+ * will be added to this array. The size of this array must be
+ * [3 * \a n] elements, where \a n is the number of atoms in fragment frag_id.
+ * An atom is a point with non-zero mass inside a fragment.
+ * Any initial gradient from this array will be gathered on fragments at the
+ * beginning and then redistributed back to the atoms. This can be used to
+ * account for other interactions, e.g., bonded forces from MM forcefield.
+ * @return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad);
 
 /**
  * Get the number of fragments in this computation.

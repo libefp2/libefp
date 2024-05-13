@@ -450,22 +450,32 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 
         // load torch NN
         if (!torch_load_nn(state->torch, cfg_get_string(cfg, "torch_nn")))
-            error("cannot load torch NN");
+            printf("Could not load torch nn %s, continue testing\n", cfg_get_string(cfg, "torch_nn"));
+            //error("cannot load torch NN");
 
         spec_frag = cfg_get_int(cfg, "special_fragment");
         check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
+        torch_init(state->torch, n_special_atoms);
+        state->torch_grad = xcalloc(n_special_atoms * 3, sizeof(double));
 
         struct efp_atom *special_atoms;
         special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
         check_fail(efp_get_frag_atoms(state->efp, ifrag, n_special_atoms, special_atoms));
 
+        //torch_print(state->torch);
+        double *atom_coord_tmp = malloc(3 * n_special_atoms * sizeof(double));
         for (iatom = 0; iatom < n_special_atoms; iatom++) {
             // send atom coordinates to torch
-            torch_set_atom_coord(state->torch, iatom, &special_atoms[iatom].x);
+            atom_coord_tmp[3*iatom] = special_atoms[iatom].x;
+            atom_coord_tmp[3*iatom + 1] = special_atoms[iatom].y;
+            atom_coord_tmp[3*iatom + 2] = special_atoms[iatom].z;
             // send atom types to torch
             torch_set_atom_species(state->torch, iatom, (int*)&special_atoms[iatom].znuc);
         }
+        torch_set_coord(state->torch, atom_coord_tmp);
         free(special_atoms);
+        free(atom_coord_tmp);
+        torch_print(state->torch);
     }
 }
 
@@ -606,6 +616,7 @@ int main(int argc, char **argv)
 	msg("TOTAL RUN TIME IS %d SECONDS\n", (int)(difftime(end_time, start_time)));
 	efp_shutdown(state.efp);
 	ff_free(state.ff);
+    torch_free(state.torch);
 	sys_free(state.sys);
 	cfg_free(state.cfg);
 	free(state.grad);
