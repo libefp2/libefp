@@ -396,8 +396,10 @@ void generateSpeciesEnergyForcesWrapper(const void* model,
 // previously nnp_test7_wrapper
 
 void get_torch_energy_grad(float* coordinates_data, int* species_data, int num_atoms, float *atomic_energies, float *gradients, float *forces, int model_type) {
-	torch::Tensor speciesTensor = torch::from_blob(const_cast<int*>(species_data), {1, num_atoms}, torch::kInt32);
-        torch::Tensor coordinatesTensor = torch::from_blob(const_cast<float*>(coordinates_data), {1, num_atoms, 3}, torch::requires_grad(true));
+	// torch::Tensor speciesTensor = torch::from_blob(const_cast<int*>(species_data), {1, num_atoms}, torch::kInt32);
+    // torch::Tensor coordinatesTensor = torch::from_blob(const_cast<float*>(coordinates_data), {1, num_atoms, 3}, torch::requires_grad(true));
+	torch::Tensor speciesTensor = torch::from_blob(species_data, {1, num_atoms}, torch::kInt32);
+    torch::Tensor coordinatesTensor = torch::from_blob(coordinates_data, {1, num_atoms, 3}, torch::requires_grad(true));
 
 	if(model_type == 1) get_ANI1_energy_grad(coordinatesTensor, speciesTensor, atomic_energies, gradients, forces);
 	if(model_type == 2) get_ANI2_energy_grad(coordinatesTensor, speciesTensor, atomic_energies, gradients, forces);

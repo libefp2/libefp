@@ -337,8 +337,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
         .symm_frag = cfg_get_enum(cfg, "symm_frag"),
         .update_params = cfg_get_int(cfg, "update_params"),
         .update_params_cutoff = cfg_get_double(cfg, "update_params_cutoff"),
-        .print = cfg_get_int(cfg, "print"),
-	//.verbose = cfg_get_int(cfg, "verbose")
+        .print = cfg_get_int(cfg, "print")
 	};
 
 	if (opts.xr_cutoff == 0.0) {
@@ -412,7 +411,6 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 
 static void state_init(struct state *state, const struct cfg *cfg, const struct sys *sys)
 {
-	if (cfg_get_int(state->cfg, "verbose") == 5) printf("marker for coming inside state_init\n\n");
 	size_t ntotal, ifrag, nfrag, natom, spec_frag, n_special_atoms, iatom;
 
 	state->efp = create_efp(cfg, sys);
@@ -455,12 +453,12 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
         //if (!torch_load_nn(state->torch, cfg_get_string(cfg, "torch_nn")))
         //    printf("Could not load torch nn %s, continue testing\n", cfg_get_string(cfg, "torch_nn"));
             //error("cannot load torch NN");
-	//int torch_file_type;
-	//assign_file_type(cfg, torch_file_type);
+		//int torch_file_type;
+		//assign_file_type(cfg, torch_file_type);
         //printf("Assigned file type: %d\n", torch_file_type);
 
-	//int torch_model_type = get_torch_type(cfg_get_string(cfg, "torch_nn"));
-	//printf("torch_model_type %d\n",torch_model_type); 	
+	    get_torch_type(state->torch, cfg_get_string(cfg, "torch_nn"));
+		//printf("torch_model_type %d\n",torch_model_type); 	
  
         spec_frag = cfg_get_int(cfg, "special_fragment");
         check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
@@ -473,19 +471,23 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 
         //torch_print(state->torch);
         double *atom_coord_tmp = malloc(3 * n_special_atoms * sizeof(double));
+		int *atom_znuc = malloc(3 * n_special_atoms * sizeof(int));
         for (iatom = 0; iatom < n_special_atoms; iatom++) {
             // send atom coordinates to torch
             atom_coord_tmp[3*iatom] = special_atoms[iatom].x;
             atom_coord_tmp[3*iatom + 1] = special_atoms[iatom].y;
             atom_coord_tmp[3*iatom + 2] = special_atoms[iatom].z;
             // send atom types to torch
-            // torch_set_atom_species(state->torch, iatom, (int*)&special_atoms[iatom].znuc);
-	    torch_set_atom_species_double(state->torch, iatom, &special_atoms[iatom].znuc);
+			atom_znuc[iatom] = (int)special_atoms[iatom].znuc;
+ 	    	// torch_set_atom_species_double(state->torch, iatom, &special_atoms[iatom].znuc);
         }
 
         torch_set_coord(state->torch, atom_coord_tmp);
+		torch_set_atom_species(state->torch, atom_znuc);
+
         free(special_atoms);
         free(atom_coord_tmp);
+		free(atom_znuc);
         //torch_print(state->torch);
     }
 }

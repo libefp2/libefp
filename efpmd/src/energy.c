@@ -31,7 +31,6 @@
 /* current coordinates from efp struct are used */
 void compute_energy(struct state *state, bool do_grad)
 {
-	if (cfg_get_int(state->cfg, "verbose") == 5) printf("marker for entry in to compute_energy\n");
 	struct efp_atom *atoms;
 	struct efp_energy efp_energy;
 	double xyz[3], xyzabc[6], *grad;
@@ -51,7 +50,8 @@ void compute_energy(struct state *state, bool do_grad)
 	}
 
 	state->energy = efp_energy.total;
-	printf("\n State energy (state->energy) %lf \n", state->energy);	
+	print_energy(state);
+	// printf("\n State energy (state->energy) %lf \n", state->energy);	
  
 	/* constraints */
 	for (ifrag = 0; ifrag < nfrag; ifrag++) {
@@ -82,24 +82,23 @@ void compute_energy(struct state *state, bool do_grad)
     if (cfg_get_bool(state->cfg, "enable_torch")) {
         // prototype to compute energy and gradients with torch
         // torch_compute_energy(struct torch *, bool do_grad);
-	if (cfg_get_int(state->cfg, "verbose") == 5) printf("marker for enable_torch block in compute_energy\n");
-	int torch_model_type = get_torch_type(cfg_get_string(state->cfg, "torch_nn"));
-        if (cfg_get_int(state->cfg, "verbose") == 5) printf("torch_model_type %d\n",torch_model_type);
+				// if (cfg_get_int(state->cfg, "verbose") == 5) printf("marker for enable_torch block in compute_energy\n");
+				// int torch_model_type = get_torch_type(cfg_get_string(state->cfg, "torch_nn"));
  
-        torch_compute(state->torch, torch_model_type);
+        torch_compute(state->torch);
         state->torch_energy = torch_get_energy(state->torch);
 
-	if (cfg_get_int(state->cfg, "verbose") == 5) printf("\n State energy (state->energy) %lf \n", state->energy);
+	// if (cfg_get_int(state->cfg, "verbose") == 5) printf("\n State energy (state->energy) %lf \n", state->energy);
 
         state->energy += state->torch_energy;
 
-	if (cfg_get_int(state->cfg, "verbose") == 5) printf("\n Torch energy (state->torch_energy) %lf \n", state->torch_energy);
-	if (cfg_get_int(state->cfg, "verbose") == 5) printf("After addition of torch_energy, state->energy = %lf \n",state->energy);
+	// if (cfg_get_int(state->cfg, "verbose") == 5) printf("\n Torch energy (state->torch_energy) %lf \n", state->torch_energy);
+	// if (cfg_get_int(state->cfg, "verbose") == 5) printf("After addition of torch_energy, state->energy = %lf \n",state->energy);
 
         if (do_grad) {
             torch_get_gradient(state->torch, state->torch_grad);
         }
-        torch_print(state->torch);
+        // torch_print(state->torch);
     }
 
 	/* MM force field part */
