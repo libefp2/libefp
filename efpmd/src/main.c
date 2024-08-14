@@ -393,7 +393,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 		check_fail(efp_set_periodic_box(efp, box.x, box.y, box.z, box.a, box.b, box.c));
 	}
 
-	for (size_t i = 0; i < sys->n_frags; i++)
+    for (size_t i = 0; i < sys->n_frags; i++)
         check_fail(efp_set_frag_coordinates(efp, i, coord_type, sys->frags[i].coord));
 
 	/*
@@ -546,11 +546,15 @@ static void convert_units(struct cfg *cfg, struct sys *sys)
 		[EFP_COORD_TYPE_ATOMS] = 9}[cfg_get_enum(cfg, "coord")];
 
 	for (size_t i = 0; i < sys->n_frags; i++) {
-		vec_scale(&sys->frags[i].constraint_xyz, 1.0 / BOHR_RADIUS);
+        vec_scale(&sys->frags[i].constraint_xyz, 1.0 / BOHR_RADIUS);
 
-		for (size_t j = 0; j < n_convert; j++)
-			sys->frags[i].coord[j] /= BOHR_RADIUS;
-	}
+        if (cfg_get_enum(cfg, "coord") == EFP_COORD_TYPE_ATOMS)
+            for (size_t j = 0; j < 3 * sys->frags[i].n_atoms; j++)
+                sys->frags[i].coord[j] /= BOHR_RADIUS;
+        else
+            for (size_t j = 0; j < n_convert; j++)
+                sys->frags[i].coord[j] /= BOHR_RADIUS;
+    }
 
 	for (size_t i = 0; i < sys->n_charges; i++)
 		vec_scale(&sys->charges[i].pos, 1.0 / BOHR_RADIUS);
@@ -561,6 +565,7 @@ static void sys_free(struct sys *sys)
 	for (size_t i = 0; i < sys->n_frags; i++) {
         free(sys->frags[i].name);
         free(sys->frags[i].atoms);
+        free(sys->frags[i].coord);
 //	    for (size_t j = 0; j < sys->frags[i].n_atoms; j++)
 //	        free(sys->frags[i].atoms[j])
 	}
