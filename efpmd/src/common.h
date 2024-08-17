@@ -82,7 +82,7 @@ struct atom {
 
 struct frag {
 	char *name;
-	double coord[12];
+	double *coord;
 	size_t n_atoms;
 	struct efp_atom *atoms;
 	double vel[6];

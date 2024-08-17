@@ -109,6 +109,16 @@ set_coord_atoms(struct frag *frag, const double *coord)
 {
     int natoms = frag->n_atoms;
 
+    // printf("\nCOORDINATES IN set_coord_atoms\n");
+    // for (size_t i=0; i<natoms; i++) {
+    //    printf("%12.6lf    %12.6lf    %12.6lf\n", coord[3 * i], coord[3 * i + 1], coord[3 * i + 2]);
+    //}
+
+    double current_coord[3*natoms];
+    for (size_t i=0; i<3*natoms; i++) {
+        current_coord[i] = coord[i];
+    }
+
     double ref_coord[3*natoms];
     for (size_t i=0; i<natoms; i++) {
         ref_coord[3*i] = frag->lib->atoms[i].x;
@@ -121,7 +131,7 @@ set_coord_atoms(struct frag *frag, const double *coord)
 
     /* compute new rotation matrix */
     /* might need to change to a smarter algorithm later */
-    efp_points_to_matrix(coord, &rot1);
+    efp_points_to_matrix(current_coord, &rot1);
     efp_points_to_matrix(ref_coord, &rot2);
     rot2 = mat_transpose(&rot2);
     frag->rotmat = mat_mat(&rot1, &rot2);
@@ -130,9 +140,9 @@ set_coord_atoms(struct frag *frag, const double *coord)
     vec_t com = {0.0, 0.0, 0.0};
     for (size_t i=0; i<natoms; i++) {
         mass += frag->atoms[i].mass;
-        com.x += coord[3*i] * frag->atoms[i].mass;
-        com.y += coord[3*i+1] * frag->atoms[i].mass;
-        com.z += coord[3*i+2] * frag->atoms[i].mass;
+        com.x += current_coord[3*i] * frag->atoms[i].mass;
+        com.y += current_coord[3*i+1] * frag->atoms[i].mass;
+        com.z += current_coord[3*i+2] * frag->atoms[i].mass;
     }
     com.x /= mass;
     com.y /= mass;
@@ -145,9 +155,9 @@ set_coord_atoms(struct frag *frag, const double *coord)
 
     /* update atom positions */
     for (size_t i=0; i<natoms; i++) {
-        frag->atoms[i].x = coord[3*i];
-        frag->atoms[i].y = coord[3*i + 1];
-        frag->atoms[i].z = coord[3*i + 2];
+        frag->atoms[i].x = current_coord[3*i];
+        frag->atoms[i].y = current_coord[3*i + 1];
+        frag->atoms[i].z = current_coord[3*i + 2];
     }
 
     /* update positions of other parameters  */

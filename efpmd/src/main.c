@@ -86,7 +86,7 @@ static struct cfg *make_cfg(void)
 			   EFP_COORD_TYPE_ATOMS});
 
 	cfg_add_string(cfg, "terms", "elec pol disp xr");
-    	cfg_add_string(cfg, "special_terms", "elec pol disp xr");
+    cfg_add_string(cfg, "special_terms", "elec pol disp xr");
 
 	cfg_add_enum(cfg, "elec_damp", EFP_ELEC_DAMP_SCREEN,
 		"screen\n"
@@ -467,11 +467,11 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 
         struct efp_atom *special_atoms;
         special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
-        check_fail(efp_get_frag_atoms(state->efp, ifrag, n_special_atoms, special_atoms));
+        check_fail(efp_get_frag_atoms(state->efp, spec_frag, n_special_atoms, special_atoms));
 
         //torch_print(state->torch);
-        double *atom_coord_tmp = malloc(3 * n_special_atoms * sizeof(double));
-		int *atom_znuc = malloc(3 * n_special_atoms * sizeof(int));
+        double *atom_coord_tmp = (double*)malloc(3 * n_special_atoms * sizeof(double));
+		int *atom_znuc = (int*)malloc(3 * n_special_atoms * sizeof(int));
         for (iatom = 0; iatom < n_special_atoms; iatom++) {
             // send atom coordinates to torch
             atom_coord_tmp[3*iatom] = special_atoms[iatom].x;
@@ -558,9 +558,13 @@ static void convert_units(struct cfg *cfg, struct sys *sys)
 	for (size_t i = 0; i < sys->n_frags; i++) {
 		vec_scale(&sys->frags[i].constraint_xyz, 1.0 / BOHR_RADIUS);
 
-		for (size_t j = 0; j < n_convert; j++)
-			sys->frags[i].coord[j] /= BOHR_RADIUS;
-	}
+		if (cfg_get_enum(cfg, "coord") == EFP_COORD_TYPE_ATOMS)
+            for (size_t j = 0; j < 3 * sys->frags[i].n_atoms; j++)
+                sys->frags[i].coord[j] /= BOHR_RADIUS;
+        else
+            for (size_t j = 0; j < n_convert; j++)
+                sys->frags[i].coord[j] /= BOHR_RADIUS;
+    }
 
 	for (size_t i = 0; i < sys->n_charges; i++)
 		vec_scale(&sys->charges[i].pos, 1.0 / BOHR_RADIUS);
@@ -571,6 +575,7 @@ static void sys_free(struct sys *sys)
 	for (size_t i = 0; i < sys->n_frags; i++) {
         free(sys->frags[i].name);
         free(sys->frags[i].atoms);
+		free(sys->frags[i].coord);
 //	    for (size_t j = 0; j < sys->frags[i].n_atoms; j++)
 //	        free(sys->frags[i].atoms[j])
 	}

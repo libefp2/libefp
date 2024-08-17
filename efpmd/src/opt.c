@@ -51,14 +51,6 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
         switch(cfg_get_int(state->cfg, "opt_special_frag")) {
             // optimize only special fragment atoms
             case 0:
-                        // every time this block is reached, the counter variable is incremented
-                        // and we print the value of the counter variable below
-                        // state->init is to omit the printing of the Initial step,
-                        // which does not show this issue
-                        state->counter++;
-                        state->init++;
-                        // if(state->init > 1) printf("counter for no. of times compute_efp, case-0 is traversed at 1-time %4d\n",state->counter);
-                        // if(state->counter > 1 && state->init > 1) printf("This should not have happened!!! This is where 'compute_efp' has been evoked\n more than once for a particular optimization step\n");
                 assert(n == (3 * n_special_atoms));
 
                 // propagate special fragment coordinates to EFP and update fragment parameters
@@ -67,6 +59,7 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
                 torch_set_coord(state->torch, x);
                 // compute EFP and torch energies and gradients
                 compute_energy(state, true);
+
                 if (cfg_get_int(state->cfg, "print") > 1) {
                     printf("\nTorch gradient\n");
                     for (size_t i = 0; i < n; i++) {
@@ -75,8 +68,8 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
                 }
 
                 // combine EFP and torch (atomic) gradients on special fragments
-	                    // commenting this for now... trying to optimizing 1 fragment only with torch gradients	
-                check_fail(efp_get_frag_atomic_gradient(state->efp, spec_frag, state->torch_grad));
+	            // commenting this for now... trying to optimizing 1 fragment only with torch gradients	
+                // check_fail(efp_get_frag_atomic_gradient(state->efp, spec_frag, state->torch_grad));
 
                 if (cfg_get_int(state->cfg, "print") > 1) {
                     printf("\nTotal torch + EFP gradient\n");
@@ -87,6 +80,7 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
 
                 memcpy(gx, state->torch_grad, (3 * n_special_atoms) * sizeof(double));
                 break;
+
 
                 // optimize special fragment atoms and all fragments - the most general case
             case 1:
@@ -160,14 +154,12 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
     }
     else {
         // normal case - no special fragment to optimize
-	printf("marker for else block in compute_efp routine\n");
         assert(n == (6 * n_frags + 3 * n_charge));
 
         check_fail(efp_set_coordinates(state->efp, EFP_COORD_TYPE_XYZABC, x));
         check_fail(efp_set_point_charge_coordinates(state->efp, x + 6 * n_frags));
 
         compute_energy(state, true);
-	printf("marker for finishing compute_energy in else block of compute_efp\n");	
         memcpy(gx, state->grad, (6 * n_frags + 3 * n_charge) * sizeof(double));
 
         for (size_t i = 0; i < n_frags; i++) {
@@ -179,6 +171,7 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
     }
 	return (state->energy);
 }
+
 
 static void print_restart(struct efp *efp)
 {
@@ -343,6 +336,12 @@ void static opt_spec_frag_only(struct state *state)
     //check_fail(efp_get_coordinates(state->efp, coord));
     torch_get_coord(state->torch, coord);
 
+        printf("\n INITIAL STATE: COORDS AND GRADS\n");
+        for (size_t i=0; i<n_coord; i++) {
+            printf(" %12.6lf   %12.6lf\n", coord[i], grad[i]);
+        }
+
+
     if (opt_init(opt_state, n_coord, coord))
         error("unable to initialize an optimizer");
 
@@ -364,6 +363,8 @@ void static opt_spec_frag_only(struct state *state)
 	// routine is being evoked during 1 step of the opt-cycle.
 
         double e_new = opt_get_fx(opt_state);
+        // just checking coordinates
+        opt_get_x(opt_state, n_coord, coord);
         opt_get_gx(opt_state, n_coord, grad);
         get_grad_info(n_coord, grad, &rms_grad, &max_grad);
 	// compute_efp gets called here... this happens in normal optimization routine as well
@@ -376,6 +377,12 @@ void static opt_spec_frag_only(struct state *state)
 
         msg("    STATE AFTER %d STEPS\n\n", step);
         print_status(state, e_new - e_old, rms_grad, max_grad);
+
+        printf("\n COORDS AND GRADS\n");
+        for (size_t i=0; i<n_coord; i++) {
+            printf(" %12.6lf   %12.6lf\n", coord[i], grad[i]);
+        }
+
 
         e_old = e_new;
     }
@@ -444,6 +451,11 @@ void static opt_together(struct state *state)
 
         msg("    STATE AFTER %d STEPS\n\n", step);
         print_status(state, e_new - e_old, rms_grad, max_grad);
+        printf("\n COORDS AND GRADS\n");
+        for (size_t i=0; i<n_coord; i++) {
+            printf(" %12.6lf   %12.6lf\n", coord[i], grad[i]);
+        }
+
 
         e_old = e_new;
     }

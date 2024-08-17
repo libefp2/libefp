@@ -123,15 +123,15 @@ void torch_compute(struct torch *torch) {
     // flatten to 1D array
     float frag_coord_1D[n_atoms*3];
     for (size_t i=0; i<n_atoms; i++) {
-        frag_coord_1D[i*3] = (float)torch->atom_coords[i*3] * BOHR_RADIUS;
-        frag_coord_1D[i*3+1] = (float)torch->atom_coords[i*3+1] * BOHR_RADIUS;
-        frag_coord_1D[i*3+2] = (float)torch->atom_coords[i*3+2] * BOHR_RADIUS;
+        frag_coord_1D[i*3] = (float)(torch->atom_coords[i*3] * BOHR_RADIUS);
+        frag_coord_1D[i*3+1] = (float)(torch->atom_coords[i*3+1] * BOHR_RADIUS);
+        frag_coord_1D[i*3+2] = (float)(torch->atom_coords[i*3+2] * BOHR_RADIUS);
     }
 
     int frag_species[n_atoms];
         for (size_t i=0; i<n_atoms; i++) {
            frag_species[i] = torch->atom_types[i];
- 	   printf("atom_types in torch_compute %4d\n",torch->atom_types[i]);
+ 	    //printf("atom_types in torch_compute %4d\n",torch->atom_types[i]);
     }
 
     double total_energy = 0.0;

@@ -1,0 +1,24 @@
+run_type opt
+coord atoms
+terms elec pol disp xr
+disp_damp off
+fraglib_path ../fraglib
+special_fragment 0
+enable_torch true
+torch_nn ani1.pt
+opt_special_frag 0
+max_steps 50
+print 0
+
+fragment  ch3oh_l
+A01C1      -0.71711940     0.01344585    -0.00000058
+A02O2       0.67863452    -0.06304260    -0.00000071
+A03H3      -1.09413433     0.52039587     0.88322717
+A04H4      -1.09499323    -0.99859297    -0.00004768
+A05H5      -1.09415579     0.52048981    -0.88316298
+A06H6       1.05148208     0.79814142     0.00000165
+fragment h2o_l
+A01O1               -5.394000    -1.900000    -3.700000
+A02H2               -5.517419    -1.130057    -3.174996
+A03H3               -4.580284    -2.281411    -3.424198
+
