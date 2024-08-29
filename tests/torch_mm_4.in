@@ -1,0 +1,28 @@
+run_type opt
+coord atoms
+terms qq lj
+special_terms qq lj
+elec_damp off
+disp_damp off
+fraglib_path ../fraglib
+special_fragment 0
+enable_torch true
+torch_nn ani1.pt
+opt_special_frag 1
+atom_gradient frag
+max_steps 50
+print 0
+
+
+fragment tip3p_mm_l
+A01O  -1.815220   2.863988  -0.3
+A02H  -1.617480   1.725461   0.001936
+A03H  -2.476026   2.736906  -0.714908
+
+fragment tip3p_mm_l
+A01O  -1.815220   5.663988  -0.0
+A02H  -1.617480   4.725461   0.001936
+A03H  -2.476026   5.736906  -0.714908
+
+
+

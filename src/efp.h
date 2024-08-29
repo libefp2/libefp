@@ -194,12 +194,6 @@ struct efp_opts {
     int ligand;
     /** Index of a special (QM or ML) fragment */
     int special_fragment;
-    /** Enable interface to libtorch */
-    int enable_torch;
-    /** Instructions on how to optimize a special fragment */
-    int opt_special_frag;
-    /** Prints fragment coordinates rearranged around ligand. Applicable for periodic simulations only. */
-    int print_pbc;
     /** Is 1 for periodic symmetric system (ctystal lattice). Default is 0 */
     int symmetry;
      /** Specifies symmetric elements of the crystal lattice. Default each unique fragment.
@@ -1219,6 +1213,7 @@ enum efp_result efp_get_atomic_gradient(struct efp *efp, double *grad);
 /**
  * Get computed EFP energy gradient on individual atoms of fragment frag_id. The function is
  * adapted from efp_get_atomic_gradient(struct efp *efp, double *grad)
+ * It distributes gradients on atoms from the gradient and torque on fragment COM
  * @param efp The efp structure.
  * @param frag_id The index of fragment which atoms are analyzed here
  * @param[out] grad For each atom, \a x \a y \a z components of negative force
@@ -1231,6 +1226,14 @@ enum efp_result efp_get_atomic_gradient(struct efp *efp, double *grad);
  * @return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
 enum efp_result efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad);
+
+/**
+ * Get gradient on fragment atoms obtained during calculation of QQ and LJ terms. 
+ * @param efp The efp structure.
+ * @param frag_id The index of fragment which atoms are analyzed here
+ * @param[out] grad For each atom, \a x \a y \a z components of negative force
+ */
+enum efp_result efp_get_atom_gradient(struct efp *efp, size_t frag_id, double *grad); 
 
 /**
  * Get the number of fragments in this computation.

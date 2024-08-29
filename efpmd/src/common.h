@@ -71,14 +71,10 @@ enum ensemble_type {
 	ENSEMBLE_TYPE_NPT
 };
 
-/*
-struct atom {
-    char *name;
-    double x;
-    double y;
-    double z;
+enum atom_gradient{ 
+	ATOM_GRAD_MM,
+	ATOM_GRAD_FRAG 
 };
-*/
 
 struct frag {
 	char *name;

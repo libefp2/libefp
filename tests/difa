@@ -1,0 +1,2806 @@
+chosen nn_type: ani1.pt					      <
+EFPMD ver. 1.8.0						EFPMD ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman				Copyright (c) 2012-2017 Ilya Kaliman
+
+LIBEFP ver. 1.8.0						LIBEFP ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman				Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko			              2018-2022 Lyudmila Slipchenko
+
+Journal References:						Journal References:
+  - Kaliman and Slipchenko, JCC 2013.				  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375			    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.				  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772			    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/		Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH		RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
+WALL CLOCK TIME IS Tue Aug 27 10:27:02 2024		      |	WALL CLOCK TIME IS Sat Aug 24 16:26:48 2024
+
+SIMULATION SETTINGS						SIMULATION SETTINGS
+
+run_type opt							run_type opt
+coord atoms							coord atoms
+terms elec pol disp xr						terms elec pol disp xr
+special_terms elec pol disp xr					special_terms elec pol disp xr
+elec_damp off							elec_damp off
+disp_damp off							disp_damp off
+pol_damp tt							pol_damp tt
+pol_driver iterative						pol_driver iterative
+enable_ff false							enable_ff false
+enable_multistep false						enable_multistep false
+ff_geometry ff.xyz						ff_geometry ff.xyz
+ff_parameters /../fraglib/params/amber99.prm			ff_parameters /../fraglib/params/amber99.prm
+single_params_file false					single_params_file false
+efp_params_file params.efp					efp_params_file params.efp
+enable_cutoff false						enable_cutoff false
+swf_cutoff 10							swf_cutoff 10
+xr_cutoff 0							xr_cutoff 0
+max_steps 100							max_steps 100
+multistep_steps 1						multistep_steps 1
+fraglib_path ../fraglib						fraglib_path ../fraglib
+userlib_path .							userlib_path .
+enable_pbc false						enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0			periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0003							opt_tol 0.0003
+opt_energy_tol 1e-06						opt_energy_tol 1e-06
+gtest_tol 1e-06							gtest_tol 1e-06
+ref_energy 0							ref_energy 0
+hess_central false						hess_central false
+num_step_dist 0.001						num_step_dist 0.001
+num_step_angle 0.01						num_step_angle 0.01
+ensemble nve							ensemble nve
+time_step 1							time_step 1
+print_step 1							print_step 1
+velocitize false						velocitize false
+temperature 300							temperature 300
+pressure 1							pressure 1
+thermostat_tau 1000						thermostat_tau 1000
+barostat_tau 10000						barostat_tau 10000
+ligand -100							ligand -100
+enable_pairwise false						enable_pairwise false
+print_pbc false							print_pbc false
+symmetry false							symmetry false
+special_fragment 0						special_fragment 0
+enable_torch true					      |	enable_torch false
+opt_special_frag 1						opt_special_frag 1
+torch_nn ani1.pt						torch_nn ani1.pt
+atom_gradient frag						atom_gradient frag
+symm_frag frag							symm_frag frag
+update_params 0							update_params 0
+update_params_cutoff 0						update_params_cutoff 0
+print 1								print 1
+
+
+xr_cutoff is set to 10.000000 					xr_cutoff is set to 10.000000 
+
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      |	ENERGY MINIMIZATION JOB
+WARNING! Reading BO point BO31; bad atom numbers 3 and 1      <
+WARNING! Reading BO point BO31; bad atom numbers 3 and 1      <
+SPECIAL FRAGMENT ATOMS AND ALL FRAGMENTS ENERGY MINIMIZATION  <
+
+
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.000036 		      |	 ELECTROSTATIC ENERGY          -0.000038 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002153 			 DISPERSION ENERGY             -0.002153 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.003139 			 EXCHANGE-REPULSION ENERGY     0.003139 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    0.000951 		      |	 SUM ENERGY                    0.000948 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.011265 				      |	 IND DIPOLES NORM: 0.011280 
+ IND DIPOLES NORM: 0.000460 				      |	 IND DIPOLES NORM: 0.000461 
+ IND DIPOLES NORM: 0.000016 					 IND DIPOLES NORM: 0.000016 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.717119          0.013446        -0.000001     <
+   8          0.678635         -0.063043        -0.000001     <
+   1         -1.094134          0.520396         0.883227     <
+   1         -1.094993         -0.998593        -0.000048     <
+   1         -1.094156          0.520490        -0.883163     <
+   1          1.051482          0.798141         0.100000     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.717119     0.013446    -0.000001	      |	A01C1               -0.717119     0.013446     0.003146
+A02O2                0.678635    -0.063043    -0.000001	      |	A02O2                0.678634    -0.063043     0.003146
+A03H3               -1.094134     0.520396     0.883227	      |	A03H3               -1.094134     0.520396     0.886374
+A04H4               -1.094993    -0.998593    -0.000048	      |	A04H4               -1.094993    -0.998593     0.003099
+A05H5               -1.094156     0.520490    -0.883163	      |	A05H5               -1.094156     0.520490    -0.880016
+A06H6                1.051482     0.798141     0.100000	      |	A06H6                1.051482     0.798141     0.003148
+A01O1               -4.394000    -1.900000    -0.700000		A01O1               -4.394000    -1.900000    -0.700000
+A02H2               -4.517419    -1.130057    -0.174996		A02H2               -4.517419    -1.130057    -0.174996
+A03H3               -3.580284    -2.281411    -0.424198		A03H3               -3.580284    -2.281411    -0.424198
+A01O1               -4.394000    -1.900000    -3.700000		A01O1               -4.394000    -1.900000    -3.700000
+A02H2               -4.517419    -1.130057    -3.174996		A02H2               -4.517419    -1.130057    -3.174996
+A03H3               -3.580284    -2.281411    -3.424198		A03H3               -3.580284    -2.281411    -3.424198
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0000355419		      |	          ELECTROSTATIC ENERGY    -0.0000377805
+           POLARIZATION ENERGY    -0.0004660449		      |	           POLARIZATION ENERGY    -0.0004673024
+             DISPERSION ENERGY    -0.0021526637			             DISPERSION ENERGY    -0.0021526637
+     EXCHANGE REPULSION ENERGY     0.0031389115			     EXCHANGE REPULSION ENERGY     0.0031389115
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY     0.0004811649
+							      <
+                  TOTAL ENERGY     0.0004846609		      <
+
+
+    INITIAL STATE						    INITIAL STATE
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.717119     0.013446    -0.000001	      |	A01C1               -0.717119     0.013446     0.003146
+A02O2                0.678635    -0.063043    -0.000001	      |	A02O2                0.678634    -0.063043     0.003146
+A03H3               -1.094134     0.520396     0.883227	      |	A03H3               -1.094134     0.520396     0.886374
+A04H4               -1.094993    -0.998593    -0.000048	      |	A04H4               -1.094993    -0.998593     0.003099
+A05H5               -1.094156     0.520490    -0.883163	      |	A05H5               -1.094156     0.520490    -0.880016
+A06H6                1.051482     0.798141     0.100000	      |	A06H6                1.051482     0.798141     0.003148
+A01O1               -4.394000    -1.900000    -0.700000		A01O1               -4.394000    -1.900000    -0.700000
+A02H2               -4.517419    -1.130057    -0.174996		A02H2               -4.517419    -1.130057    -0.174996
+A03H3               -3.580284    -2.281411    -0.424198		A03H3               -3.580284    -2.281411    -0.424198
+A01O1               -4.394000    -1.900000    -3.700000		A01O1               -4.394000    -1.900000    -3.700000
+A02H2               -4.517419    -1.130057    -3.174996		A02H2               -4.517419    -1.130057    -3.174996
+A03H3               -3.580284    -2.281411    -3.424198		A03H3               -3.580284    -2.281411    -3.424198
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0000355419		      |	          ELECTROSTATIC ENERGY    -0.0000377805
+           POLARIZATION ENERGY    -0.0004660449		      |	           POLARIZATION ENERGY    -0.0004673024
+             DISPERSION ENERGY    -0.0021526637			             DISPERSION ENERGY    -0.0021526637
+     EXCHANGE REPULSION ENERGY     0.0031389115			     EXCHANGE REPULSION ENERGY     0.0031389115
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY     0.0004811649
+							      <
+                  TOTAL ENERGY     0.0004846609		      <
+
+
+                 ENERGY CHANGE     0.0000000000			                 ENERGY CHANGE     0.0000000000
+                  RMS GRADIENT     0.0020030056		      |	                  RMS GRADIENT     0.0025912008
+              MAXIMUM GRADIENT     0.0080963487		      |	              MAXIMUM GRADIENT     0.0081128705
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.001151						      |	    -0.000046
+    -0.001581						      |	    -0.000087
+    -0.003755						      |	     0.000033
+     0.001183						      |	     0.000121
+     0.003982						      |	     0.000207
+    -0.000907						      |	     0.000121
+     0.001197						      |	    -0.001154
+     0.001668						      |	    -0.001582
+     0.003727						      |	    -0.003758
+    -0.000753						      |	     0.001186
+     0.008096						      |	     0.003999
+    -0.000349						      |	    -0.000902
+    -0.000018						      |	     0.001199
+    -0.000060						      |	     0.001669
+     0.000015						      |	     0.003725
+    -0.000019						      |	    -0.000751
+    -0.000006						      |	     0.008113
+    -0.000017						      |	    -0.000347
+    -0.000003						      <
+    -0.000033						      <
+     0.000017						      <
+     0.000002						      <
+    -0.000006						      <
+    -0.000030						      <
+    -0.000003						      <
+     0.000021						      <
+     0.000017						      <
+    -0.000004						      <
+    -0.000002						      <
+     0.000025						      <
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.004064 		      |	 ELECTROSTATIC ENERGY          -0.004102 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.001391 		      |	 DISPERSION ENERGY             -0.001387 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.001150 		      |	 EXCHANGE-REPULSION ENERGY     0.001154 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.004305 		      |	 SUM ENERGY                    -0.004335 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.007652 				      |	 IND DIPOLES NORM: 0.007654 
+ IND DIPOLES NORM: 0.000148 				      |	 IND DIPOLES NORM: 0.000149 
+ IND DIPOLES NORM: 0.000001 					 IND DIPOLES NORM: 0.000001 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.716272          0.016338        -0.000737     <
+   8          0.679567         -0.062769         0.000811     <
+   1         -1.093981          0.522007         0.882415     <
+   1         -1.095086         -0.998289         0.001388     <
+   1         -1.094003          0.519487        -0.883975     <
+   1          1.051680          0.798246         0.098777     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.716272     0.016338    -0.000737	      |	A01C1               -0.714459     0.033421     0.001152
+A02O2                0.679567    -0.062769     0.000811	      |	A02O2                0.679273    -0.073758     0.002882
+A03H3               -1.093981     0.522007     0.882415	      |	A03H3               -1.080041     0.565091     0.874597
+A04H4               -1.095086    -0.998289     0.001388	      |	A04H4               -1.114518    -0.969877     0.020087
+A05H5               -1.094003     0.519487    -0.883975	      |	A05H5               -1.080427     0.531917    -0.891481
+A06H6                1.051680     0.798246     0.098777	      |	A06H6                1.070986     0.778858    -0.013258
+A01O1               -4.329687    -1.802900    -0.529565	      |	A01O1               -4.329631    -1.803002    -0.529810
+A02H2               -4.477334    -1.203909     0.179720	      |	A02H2               -4.478024    -1.204111     0.179403
+A03H3               -3.648501    -2.385820    -0.246965	      |	A03H3               -3.648610    -2.385843    -0.246649
+A01O1               -4.426466    -1.949427    -3.895876	      |	A01O1               -4.426456    -1.949343    -3.895406
+A02H2               -4.879369    -1.583519    -3.157862	      |	A02H2               -4.879355    -1.583157    -3.157527
+A03H3               -3.734796    -2.481028    -3.545636	      |	A03H3               -3.735039    -2.481139    -3.544965
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0040637329		      |	          ELECTROSTATIC ENERGY    -0.0041022127
+           POLARIZATION ENERGY    -0.0003641230		      |	           POLARIZATION ENERGY    -0.0003656790
+             DISPERSION ENERGY    -0.0013908029		      |	             DISPERSION ENERGY    -0.0013867669
+     EXCHANGE REPULSION ENERGY     0.0011497247		      |	     EXCHANGE REPULSION ENERGY     0.0011538626
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0047007961
+							      <
+                  TOTAL ENERGY    -0.0046689341		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 1 STEPS						    STATE AFTER 1 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.716272     0.016338    -0.000737	      |	A01C1               -0.714459     0.033421     0.001152
+A02O2                0.679567    -0.062769     0.000811	      |	A02O2                0.679273    -0.073758     0.002882
+A03H3               -1.093981     0.522007     0.882415	      |	A03H3               -1.080041     0.565091     0.874597
+A04H4               -1.095086    -0.998289     0.001388	      |	A04H4               -1.114518    -0.969877     0.020087
+A05H5               -1.094003     0.519487    -0.883975	      |	A05H5               -1.080427     0.531917    -0.891481
+A06H6                1.051680     0.798246     0.098777	      |	A06H6                1.070986     0.778858    -0.013258
+A01O1               -4.329687    -1.802900    -0.529565	      |	A01O1               -4.329631    -1.803002    -0.529810
+A02H2               -4.477334    -1.203909     0.179720	      |	A02H2               -4.478024    -1.204111     0.179403
+A03H3               -3.648501    -2.385820    -0.246965	      |	A03H3               -3.648610    -2.385843    -0.246649
+A01O1               -4.426466    -1.949427    -3.895876	      |	A01O1               -4.426456    -1.949343    -3.895406
+A02H2               -4.879369    -1.583519    -3.157862	      |	A02H2               -4.879355    -1.583157    -3.157527
+A03H3               -3.734796    -2.481028    -3.545636	      |	A03H3               -3.735039    -2.481139    -3.544965
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0040637329		      |	          ELECTROSTATIC ENERGY    -0.0041022127
+           POLARIZATION ENERGY    -0.0003641230		      |	           POLARIZATION ENERGY    -0.0003656790
+             DISPERSION ENERGY    -0.0013908029		      |	             DISPERSION ENERGY    -0.0013867669
+     EXCHANGE REPULSION ENERGY     0.0011497247		      |	     EXCHANGE REPULSION ENERGY     0.0011538626
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0047007961
+
+                  TOTAL ENERGY    -0.0046689341		      <
+
+							      |	                 ENERGY CHANGE    -0.0051819609
+                 ENERGY CHANGE    -0.0051535950		      |	                  RMS GRADIENT     0.0007491877
+                  RMS GRADIENT     0.0005785092		      |	              MAXIMUM GRADIENT     0.0021282964
+              MAXIMUM GRADIENT     0.0021326483		      <
+
+
+
+ GRADIENTS 							 GRADIENTS 
+     0.000123						      |	     0.000018
+     0.000102						      |	    -0.000043
+							      >	     0.000138
+							      >	     0.000084
+							      >	     0.000328
+							      >	     0.000094
+							      >	     0.000125
+							      >	     0.000106
+     0.001159							     0.001159
+     0.000453						      |	     0.000460
+     0.000890						      |	     0.000896
+     0.001162						      |	     0.001153
+    -0.000140						      |	    -0.000142
+    -0.000064						      |	    -0.000063
+    -0.001294						      |	    -0.001297
+    -0.000113						      |	    -0.000105
+    -0.000029						      |	    -0.000016
+    -0.002133						      |	    -0.002128
+     0.000005						      <
+    -0.000026						      <
+     0.000186						      <
+     0.000009						      <
+     0.000001						      <
+    -0.000140						      <
+     0.000013						      <
+    -0.000044						      <
+     0.000045						      <
+     0.000002						      <
+    -0.000003						      <
+    -0.000026						      <
+    -0.000013						      <
+     0.000039						      <
+     0.000045						      <
+     0.000001						      <
+    -0.000004						      <
+     0.000026						      <
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.005113 		      |	 ELECTROSTATIC ENERGY          -0.005160 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.001535 		      |	 DISPERSION ENERGY             -0.001529 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.001717 		      |	 EXCHANGE-REPULSION ENERGY     0.001723 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.004931 		      |	 SUM ENERGY                    -0.004966 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.001972 				      |	 IND DIPOLES NORM: 0.001976 
+ IND DIPOLES NORM: 0.000098 					 IND DIPOLES NORM: 0.000098 
+ IND DIPOLES NORM: 0.000003 					 IND DIPOLES NORM: 0.000003 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.716434          0.017562        -0.008356     <
+   8          0.679242         -0.062775         0.006541     <
+   1         -1.094490          0.523898         0.880539     <
+   1         -1.095178         -0.998153         0.002541     <
+   1         -1.093444          0.517858        -0.885846     <
+   1          1.051666          0.798413         0.097647     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.716434     0.017562    -0.008356	      |	A01C1               -0.714525     0.046172    -0.005393
+A02O2                0.679242    -0.062775     0.006541	      |	A02O2                0.677440    -0.081852    -0.000743
+A03H3               -1.094490     0.523898     0.880539	      |	A03H3               -1.071792     0.606126     0.853701
+A04H4               -1.095178    -0.998153     0.002541	      |	A04H4               -1.129603    -0.950153     0.039971
+A05H5               -1.093444     0.517858    -0.885846	      |	A05H5               -1.073257     0.526396    -0.910888
+A06H6                1.051666     0.798413     0.097647	      |	A06H6                1.081911     0.764060    -0.039339
+A01O1               -4.324553    -1.802247    -0.569130	      |	A01O1               -4.324482    -1.802384    -0.569285
+A02H2               -4.548458    -1.199949     0.117002	      |	A02H2               -4.548787    -1.200666     0.117226
+A03H3               -3.689581    -2.393070    -0.206620	      |	A03H3               -3.690389    -2.394066    -0.206638
+A01O1               -4.430687    -1.943892    -3.850341	      |	A01O1               -4.430554    -1.943834    -3.849853
+A02H2               -4.804651    -1.688592    -3.026540	      |	A02H2               -4.805314    -1.689051    -3.026253
+A03H3               -3.702114    -2.502756    -3.649027	      |	A03H3               -3.702754    -2.503586    -3.648213
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0051132348		      |	          ELECTROSTATIC ENERGY    -0.0051602786
+           POLARIZATION ENERGY    -0.0004616916		      |	           POLARIZATION ENERGY    -0.0004635846
+             DISPERSION ENERGY    -0.0015354334		      |	             DISPERSION ENERGY    -0.0015286337
+     EXCHANGE REPULSION ENERGY     0.0017174806		      |	     EXCHANGE REPULSION ENERGY     0.0017229227
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0054295741
+							      <
+                  TOTAL ENERGY    -0.0053928792		      <
+
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.008515 		      |	 ELECTROSTATIC ENERGY          -0.008511 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002494 		      |	 DISPERSION ENERGY             -0.002475 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.006478 		      |	 EXCHANGE-REPULSION ENERGY     0.006461 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.004531 		      |	 SUM ENERGY                    -0.004524 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.009489 				      |	 IND DIPOLES NORM: 0.009485 
+ IND DIPOLES NORM: 0.000488 				      |	 IND DIPOLES NORM: 0.000492 
+ IND DIPOLES NORM: 0.000015 					 IND DIPOLES NORM: 0.000015 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.717079          0.022459        -0.038833     <
+   8          0.677943         -0.062797         0.029463     <
+   1         -1.096525          0.531464         0.873036     <
+   1         -1.095545         -0.997611         0.007152     <
+   1         -1.091210          0.511344        -0.893331     <
+   1          1.051609          0.799080         0.093128     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.717079     0.022459    -0.038833	      |	A01C1               -0.713197     0.096623    -0.034537
+A02O2                0.677943    -0.062797     0.029463	      |	A02O2                0.668632    -0.113240    -0.012471
+A03H3               -1.096525     0.531464     0.873036	      |	A03H3               -1.033357     0.764281     0.759793
+A04H4               -1.095545    -0.997611     0.007152	      |	A04H4               -1.186941    -0.862763     0.114314
+A05H5               -1.091210     0.511344    -0.893331	      |	A05H5               -1.045720     0.499435    -0.986585
+A06H6                1.051609     0.799080     0.093128	      |	A06H6                1.122818     0.698187    -0.138783
+A01O1               -4.301642    -1.804149    -0.718534	      |	A01O1               -4.301481    -1.804542    -0.718292
+A02H2               -4.734093    -1.118206    -0.242990	      |	A02H2               -4.733263    -1.119522    -0.240814
+A03H3               -3.990430    -2.416373    -0.076659	      |	A03H3               -3.994271    -2.420848    -0.078398
+A01O1               -4.444849    -1.933516    -3.653566	      |	A01O1               -4.444337    -1.933660    -3.652987
+A02H2               -4.420147    -2.166393    -2.743163	      |	A02H2               -4.425198    -2.172192    -2.743915
+A03H3               -3.700190    -2.345394    -4.052957	      |	A03H3               -3.698947    -2.345561    -4.050989
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0085151847		      |	          ELECTROSTATIC ENERGY    -0.0085108172
+           POLARIZATION ENERGY    -0.0010921427		      |	           POLARIZATION ENERGY    -0.0010915030
+             DISPERSION ENERGY    -0.0024941498		      |	             DISPERSION ENERGY    -0.0024745899
+     EXCHANGE REPULSION ENERGY     0.0064784396		      |	     EXCHANGE REPULSION ENERGY     0.0064614780
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0056154321
+							      <
+                  TOTAL ENERGY    -0.0056230376		      <
+
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.007125 		      |	 ELECTROSTATIC ENERGY          -0.007141 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.001884 		      |	 DISPERSION ENERGY             -0.001865 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.003470 		      |	 EXCHANGE-REPULSION ENERGY     0.003439 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.005538 		      |	 SUM ENERGY                    -0.005567 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.005686 				      |	 IND DIPOLES NORM: 0.005741 
+ IND DIPOLES NORM: 0.000213 				      |	 IND DIPOLES NORM: 0.000214 
+ IND DIPOLES NORM: 0.000006 					 IND DIPOLES NORM: 0.000006 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.716720          0.019736        -0.021884     <
+   8          0.678665         -0.062785         0.016716     <
+   1         -1.095393          0.527256         0.877208     <
+   1         -1.095341         -0.997913         0.004588     <
+   1         -1.092453          0.514967        -0.889169     <
+   1          1.051641          0.798709         0.095641     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.716720     0.019736    -0.021884	      |	A01C1               -0.714255     0.068352    -0.017548
+A02O2                0.678665    -0.062785     0.016716	      |	A02O2                0.673878    -0.095785    -0.006408
+A03H3               -1.095393     0.527256     0.877208	      |	A03H3               -1.056044     0.676485     0.814669
+A04H4               -1.095341    -0.997913     0.004588	      |	A04H4               -1.155278    -0.913593     0.073517
+A05H5               -1.092453     0.514967    -0.889169	      |	A05H5               -1.060982     0.515574    -0.944370
+A06H6                1.051641     0.798709     0.095641	      |	A06H6                1.100359     0.736549    -0.083783
+A01O1               -4.314542    -1.802031    -0.637293	      |	A01O1               -4.314597    -1.802245    -0.636241
+A02H2               -4.654403    -1.175972    -0.023925	      |	A02H2               -4.652813    -1.177758    -0.020368
+A03H3               -3.797053    -2.407943    -0.138545	      |	A03H3               -3.797128    -2.410391    -0.140198
+A01O1               -4.437758    -1.936502    -3.765500	      |	A01O1               -4.437324    -1.936588    -3.766327
+A02H2               -4.648946    -1.898424    -2.850282	      |	A02H2               -4.653974    -1.897560    -2.852426
+A03H3               -3.673837    -2.479359    -3.839027	      |	A03H3               -3.674479    -2.481590    -3.834993
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0071245333		      |	          ELECTROSTATIC ENERGY    -0.0071411693
+           POLARIZATION ENERGY    -0.0007330172		      |	           POLARIZATION ENERGY    -0.0007301532
+             DISPERSION ENERGY    -0.0018837515		      |	             DISPERSION ENERGY    -0.0018654136
+     EXCHANGE REPULSION ENERGY     0.0034698307		      |	     EXCHANGE REPULSION ENERGY     0.0034394706
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0062972655
+							      <
+                  TOTAL ENERGY    -0.0062714713		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 2 STEPS						    STATE AFTER 2 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.716720     0.019736    -0.021884	      |	A01C1               -0.714255     0.068352    -0.017548
+A02O2                0.678665    -0.062785     0.016716	      |	A02O2                0.673878    -0.095785    -0.006408
+A03H3               -1.095393     0.527256     0.877208	      |	A03H3               -1.056044     0.676485     0.814669
+A04H4               -1.095341    -0.997913     0.004588	      |	A04H4               -1.155278    -0.913593     0.073517
+A05H5               -1.092453     0.514967    -0.889169	      |	A05H5               -1.060982     0.515574    -0.944370
+A06H6                1.051641     0.798709     0.095641	      |	A06H6                1.100359     0.736549    -0.083783
+A01O1               -4.314542    -1.802031    -0.637293	      |	A01O1               -4.314597    -1.802245    -0.636241
+A02H2               -4.654403    -1.175972    -0.023925	      |	A02H2               -4.652813    -1.177758    -0.020368
+A03H3               -3.797053    -2.407943    -0.138545	      |	A03H3               -3.797128    -2.410391    -0.140198
+A01O1               -4.437758    -1.936502    -3.765500	      |	A01O1               -4.437324    -1.936588    -3.766327
+A02H2               -4.648946    -1.898424    -2.850282	      |	A02H2               -4.653974    -1.897560    -2.852426
+A03H3               -3.673837    -2.479359    -3.839027	      |	A03H3               -3.674479    -2.481590    -3.834993
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0071245333		      |	          ELECTROSTATIC ENERGY    -0.0071411693
+           POLARIZATION ENERGY    -0.0007330172		      |	           POLARIZATION ENERGY    -0.0007301532
+             DISPERSION ENERGY    -0.0018837515		      |	             DISPERSION ENERGY    -0.0018654136
+     EXCHANGE REPULSION ENERGY     0.0034698307		      |	     EXCHANGE REPULSION ENERGY     0.0034394706
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0062972655
+
+                  TOTAL ENERGY    -0.0062714713		      <
+
+							      |	                 ENERGY CHANGE    -0.0015964694
+                 ENERGY CHANGE    -0.0016025372		      |	                  RMS GRADIENT     0.0007669587
+                  RMS GRADIENT     0.0005883221		      |	              MAXIMUM GRADIENT     0.0025596049
+              MAXIMUM GRADIENT     0.0025164477		      <
+
+
+
+ GRADIENTS 							 GRADIENTS 
+     0.000173						      |	     0.000074
+     0.000545						      |	     0.000005
+    -0.000070						      |	     0.000189
+     0.000249						      |	     0.000059
+     0.000671						      |	     0.000266
+     0.001446						      |	     0.000118
+    -0.000252						      |	     0.000194
+    -0.000563						      |	     0.000564
+    -0.000124						      |	    -0.000040
+    -0.000136						      |	     0.000243
+    -0.002516						      |	     0.000665
+    -0.000783						      |	     0.001409
+     0.000024						      |	    -0.000269
+     0.000016						      |	    -0.000569
+     0.000242						      |	    -0.000149
+     0.000043						      |	    -0.000112
+     0.000003						      |	    -0.002560
+    -0.000143						      |	    -0.000796
+     0.000019						      <
+    -0.000030						      <
+     0.000045						      <
+     0.000003						      <
+     0.000000						      <
+    -0.000008						      <
+    -0.000015						      <
+     0.000031						      <
+     0.000044						      <
+     0.000004						      <
+    -0.000002						      <
+     0.000014						      <
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.008376 		      |	 ELECTROSTATIC ENERGY          -0.008522 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002575 		      |	 DISPERSION ENERGY             -0.002554 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.006053 		      |	 EXCHANGE-REPULSION ENERGY     0.006156 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.004898 		      |	 SUM ENERGY                    -0.004919 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.009261 				      |	 IND DIPOLES NORM: 0.009060 
+ IND DIPOLES NORM: 0.000358 				      |	 IND DIPOLES NORM: 0.000356 
+ IND DIPOLES NORM: 0.000011 				      |	 IND DIPOLES NORM: 0.000010 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 				      <
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.719342          0.022219        -0.067578     <
+   8          0.673710         -0.063048         0.047459     <
+   1         -1.098689          0.535916         0.867250     <
+   1         -1.095873         -0.997508         0.008935     <
+   1         -1.089394          0.507021        -0.899068     <
+   1          1.051232          0.799457         0.090822     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.719342     0.022219    -0.067578	      |	A01C1               -0.715959     0.128561    -0.063895
+A02O2                0.673710    -0.063048     0.047459	      |	A02O2                0.655321    -0.139689    -0.023748
+A03H3               -1.098689     0.535916     0.867250	      |	A03H3               -1.006384     0.861864     0.682529
+A04H4               -1.095873    -0.997508     0.008935	      |	A04H4               -1.231365    -0.796855     0.148174
+A05H5               -1.089394     0.507021    -0.899068	      |	A05H5               -1.030591     0.480166    -1.041957
+A06H6                1.051232     0.799457     0.090822	      |	A06H6                1.144693     0.640634    -0.203373
+A01O1               -4.293263    -1.858123    -0.710503	      |	A01O1               -4.295323    -1.859057    -0.711064
+A02H2               -4.735681    -1.052028    -0.515179	      |	A02H2               -4.740488    -1.058658    -0.499253
+A03H3               -4.316307    -2.370865     0.077049	      |	A03H3               -4.307571    -2.383721     0.068842
+A01O1               -4.436676    -1.897000    -3.615641	      |	A01O1               -4.434933    -1.897220    -3.616509
+A02H2               -4.042010    -2.009675    -2.769935	      |	A02H2               -4.051834    -2.011032    -2.765654
+A03H3               -3.878650    -2.338830    -4.229699	      |	A03H3               -3.872455    -2.344405    -4.222577
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0083760347		      |	          ELECTROSTATIC ENERGY    -0.0085218413
+           POLARIZATION ENERGY    -0.0009731197		      |	           POLARIZATION ENERGY    -0.0009937079
+             DISPERSION ENERGY    -0.0025752688		      |	             DISPERSION ENERGY    -0.0025535366
+     EXCHANGE REPULSION ENERGY     0.0060529853		      |	     EXCHANGE REPULSION ENERGY     0.0061563917
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0059126941
+							      <
+                  TOTAL ENERGY    -0.0058714379		      <
+
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.008808 		      |	 ELECTROSTATIC ENERGY          -0.008860 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002177 		      |	 DISPERSION ENERGY             -0.002158 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.005159 		      |	 EXCHANGE-REPULSION ENERGY     0.005165 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.005826 		      |	 SUM ENERGY                    -0.005853 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.005962 				      |	 IND DIPOLES NORM: 0.005770 
+ IND DIPOLES NORM: 0.000254 				      |	 IND DIPOLES NORM: 0.000247 
+ IND DIPOLES NORM: 0.000007 				      |	 IND DIPOLES NORM: 0.000006 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.717840          0.020796        -0.041399     <
+   8          0.676549         -0.062897         0.029845     <
+   1         -1.096801          0.530955         0.872956     <
+   1         -1.095568         -0.997740         0.006444     <
+   1         -1.091146          0.511573        -0.893396     <
+   1          1.051466          0.799028         0.093583     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.717840     0.020796    -0.041399	      |	A01C1               -0.715501     0.094617    -0.036537
+A02O2                0.676549    -0.062897     0.029845	      |	A02O2                0.666349    -0.115141    -0.014791
+A03H3               -1.096801     0.530955     0.872956	      |	A03H3               -1.036140     0.758516     0.760745
+A04H4               -1.095568    -0.997740     0.006444	      |	A04H4               -1.189171    -0.865523     0.107612
+A05H5               -1.091146     0.511573    -0.893396	      |	A05H5               -1.047631     0.501815    -0.986855
+A06H6                1.051466     0.799028     0.093583	      |	A06H6                1.120473     0.696933    -0.137099
+A01O1               -4.304026    -1.824236    -0.671793	      |	A01O1               -4.304966    -1.825004    -0.671605
+A02H2               -4.745551    -1.130072    -0.216966	      |	A02H2               -4.744621    -1.134018    -0.210178
+A03H3               -3.985045    -2.412849    -0.011899	      |	A03H3               -3.984107    -2.418659    -0.017160
+A01O1               -4.440535    -1.919370    -3.703314	      |	A01O1               -4.439462    -1.919375    -3.703576
+A02H2               -4.389788    -1.955557    -2.765343	      |	A02H2               -4.394870    -1.955243    -2.765280
+A03H3               -3.709846    -2.413878    -4.027707	      |	A03H3               -3.709127    -2.417613    -4.023021
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0088075260		      |	          ELECTROSTATIC ENERGY    -0.0088601940
+           POLARIZATION ENERGY    -0.0009949321		      |	           POLARIZATION ENERGY    -0.0009993664
+             DISPERSION ENERGY    -0.0021771083		      |	             DISPERSION ENERGY    -0.0021579736
+     EXCHANGE REPULSION ENERGY     0.0051588474		      |	     EXCHANGE REPULSION ENERGY     0.0051647408
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0068527932
+							      <
+                  TOTAL ENERGY    -0.0068207190		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 3 STEPS						    STATE AFTER 3 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.717840     0.020796    -0.041399	      |	A01C1               -0.715501     0.094617    -0.036537
+A02O2                0.676549    -0.062897     0.029845	      |	A02O2                0.666349    -0.115141    -0.014791
+A03H3               -1.096801     0.530955     0.872956	      |	A03H3               -1.036140     0.758516     0.760745
+A04H4               -1.095568    -0.997740     0.006444	      |	A04H4               -1.189171    -0.865523     0.107612
+A05H5               -1.091146     0.511573    -0.893396	      |	A05H5               -1.047631     0.501815    -0.986855
+A06H6                1.051466     0.799028     0.093583	      |	A06H6                1.120473     0.696933    -0.137099
+A01O1               -4.304026    -1.824236    -0.671793	      |	A01O1               -4.304966    -1.825004    -0.671605
+A02H2               -4.745551    -1.130072    -0.216966	      |	A02H2               -4.744621    -1.134018    -0.210178
+A03H3               -3.985045    -2.412849    -0.011899	      |	A03H3               -3.984107    -2.418659    -0.017160
+A01O1               -4.440535    -1.919370    -3.703314	      |	A01O1               -4.439462    -1.919375    -3.703576
+A02H2               -4.389788    -1.955557    -2.765343	      |	A02H2               -4.394870    -1.955243    -2.765280
+A03H3               -3.709846    -2.413878    -4.027707	      |	A03H3               -3.709127    -2.417613    -4.023021
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0088075260		      |	          ELECTROSTATIC ENERGY    -0.0088601940
+           POLARIZATION ENERGY    -0.0009949321		      |	           POLARIZATION ENERGY    -0.0009993664
+             DISPERSION ENERGY    -0.0021771083		      |	             DISPERSION ENERGY    -0.0021579736
+     EXCHANGE REPULSION ENERGY     0.0051588474		      |	     EXCHANGE REPULSION ENERGY     0.0051647408
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0068527932
+							      <
+                  TOTAL ENERGY    -0.0068207190		      <
+
+
+                 ENERGY CHANGE    -0.0005492477		      |	                 ENERGY CHANGE    -0.0005555277
+                  RMS GRADIENT     0.0004801679		      |	                  RMS GRADIENT     0.0006198042
+              MAXIMUM GRADIENT     0.0013242105		      |	              MAXIMUM GRADIENT     0.0013139447
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000389						      |	     0.000109
+     0.000209						      |	     0.000046
+    -0.001324						      |	     0.000207
+     0.000108						      |	     0.000016
+     0.001134						      |	     0.000134
+     0.001058						      |	     0.000120
+     0.000268						      |	    -0.000361
+    -0.000272						      |	     0.000249
+     0.001113						      |	    -0.001314
+    -0.000246						      |	     0.000104
+    -0.000234						      |	     0.001127
+     0.000977						      |	     0.001045
+     0.000035						      |	     0.000252
+     0.000041						      |	    -0.000295
+     0.000255						      |	     0.001107
+     0.000068						      |	    -0.000227
+     0.000012						      |	    -0.000328
+    -0.000130						      |	     0.000999
+     0.000022						      <
+    -0.000012						      <
+     0.000038						      <
+     0.000003						      <
+     0.000003						      <
+     0.000011						      <
+    -0.000014						      <
+     0.000019						      <
+     0.000037						      <
+     0.000006						      <
+    -0.000001						      <
+    -0.000001						      <
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.008225 		      |	 ELECTROSTATIC ENERGY          -0.008292 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.001975 		      |	 DISPERSION ENERGY             -0.001953 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.003971 		      |	 EXCHANGE-REPULSION ENERGY     0.004001 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006228 		      |	 SUM ENERGY                    -0.006244 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.003404 				      |	 IND DIPOLES NORM: 0.003261 
+ IND DIPOLES NORM: 0.000132 					 IND DIPOLES NORM: 0.000132 
+ IND DIPOLES NORM: 0.000004 					 IND DIPOLES NORM: 0.000004 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.719816          0.019664        -0.061335     <
+   8          0.672728         -0.063459         0.041554     <
+   1         -1.098381          0.533272         0.869321     <
+   1         -1.095798         -0.997776         0.006908     <
+   1         -1.089948          0.509142        -0.896999     <
+   1          1.051118          0.799215         0.092593     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.719816     0.019664    -0.061335	      |	A01C1               -0.719200     0.112340    -0.056221
+A02O2                0.672728    -0.063459     0.041554	      |	A02O2                0.656636    -0.132708    -0.024499
+A03H3               -1.098381     0.533272     0.869321	      |	A03H3               -1.022907     0.812788     0.716025
+A04H4               -1.095798    -0.997776     0.006908	      |	A04H4               -1.218078    -0.829199     0.121645
+A05H5               -1.089948     0.509142    -0.896999	      |	A05H5               -1.039740     0.493534    -1.021193
+A06H6                1.051118     0.799215     0.092593	      |	A06H6                1.132062     0.662215    -0.175231
+A01O1               -4.275129    -1.844619    -0.625772	      |	A01O1               -4.277805    -1.846873    -0.626237
+A02H2               -4.757382    -1.091399    -0.336348	      |	A02H2               -4.760600    -1.099445    -0.323032
+A03H3               -4.176631    -2.401158     0.125385	      |	A03H3               -4.168418    -2.411420     0.117400
+A01O1               -4.451480    -1.904312    -3.726107	      |	A01O1               -4.449491    -1.903689    -3.727007
+A02H2               -4.330071    -1.927878    -2.794238	      |	A02H2               -4.338253    -1.918968    -2.793697
+A03H3               -3.730345    -2.377784    -4.099556	      |	A03H3               -3.728025    -2.386226    -4.088004
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0082248433		      |	          ELECTROSTATIC ENERGY    -0.0082917029
+           POLARIZATION ENERGY    -0.0008270434		      |	           POLARIZATION ENERGY    -0.0008326658
+             DISPERSION ENERGY    -0.0019746753		      |	             DISPERSION ENERGY    -0.0019527107
+     EXCHANGE REPULSION ENERGY     0.0039712006		      |	     EXCHANGE REPULSION ENERGY     0.0040005687
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0070765107
+							      <
+                  TOTAL ENERGY    -0.0070553613		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 4 STEPS						    STATE AFTER 4 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.719816     0.019664    -0.061335	      |	A01C1               -0.719200     0.112340    -0.056221
+A02O2                0.672728    -0.063459     0.041554	      |	A02O2                0.656636    -0.132708    -0.024499
+A03H3               -1.098381     0.533272     0.869321	      |	A03H3               -1.022907     0.812788     0.716025
+A04H4               -1.095798    -0.997776     0.006908	      |	A04H4               -1.218078    -0.829199     0.121645
+A05H5               -1.089948     0.509142    -0.896999	      |	A05H5               -1.039740     0.493534    -1.021193
+A06H6                1.051118     0.799215     0.092593	      |	A06H6                1.132062     0.662215    -0.175231
+A01O1               -4.275129    -1.844619    -0.625772	      |	A01O1               -4.277805    -1.846873    -0.626237
+A02H2               -4.757382    -1.091399    -0.336348	      |	A02H2               -4.760600    -1.099445    -0.323032
+A03H3               -4.176631    -2.401158     0.125385	      |	A03H3               -4.168418    -2.411420     0.117400
+A01O1               -4.451480    -1.904312    -3.726107	      |	A01O1               -4.449491    -1.903689    -3.727007
+A02H2               -4.330071    -1.927878    -2.794238	      |	A02H2               -4.338253    -1.918968    -2.793697
+A03H3               -3.730345    -2.377784    -4.099556	      |	A03H3               -3.728025    -2.386226    -4.088004
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0082248433		      |	          ELECTROSTATIC ENERGY    -0.0082917029
+           POLARIZATION ENERGY    -0.0008270434		      |	           POLARIZATION ENERGY    -0.0008326658
+             DISPERSION ENERGY    -0.0019746753		      |	             DISPERSION ENERGY    -0.0019527107
+     EXCHANGE REPULSION ENERGY     0.0039712006		      |	     EXCHANGE REPULSION ENERGY     0.0040005687
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0070765107
+
+                  TOTAL ENERGY    -0.0070553613		      <
+
+							      |	                 ENERGY CHANGE    -0.0002237175
+                 ENERGY CHANGE    -0.0002346423		      |	                  RMS GRADIENT     0.0006485915
+                  RMS GRADIENT     0.0005000921		      |	              MAXIMUM GRADIENT     0.0019076897
+              MAXIMUM GRADIENT     0.0019201729		      <
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000273						      |	     0.000131
+    -0.000547						      <
+     0.000022						      <
+    -0.000266						      <
+     0.001304						      <
+    -0.001129						      <
+     0.000119						      <
+     0.000443						      <
+    -0.000227						      <
+     0.000128						      <
+     0.001920						      <
+    -0.000165						      <
+     0.000044						      <
+     0.000062						      <
+     0.000245						      <
+     0.000087							     0.000087
+     0.000023						      |	     0.000211
+    -0.000113						      |	    -0.000056
+     0.000023						      |	     0.000001
+     0.000003						      |	     0.000081
+     0.000030						      |	    -0.000223
+     0.000003						      |	    -0.000535
+     0.000006						      |	     0.000002
+     0.000024						      |	    -0.000255
+    -0.000012						      |	     0.001301
+     0.000009						      |	    -0.001195
+     0.000030						      |	     0.000093
+     0.000009						      |	     0.000448
+     0.000000						      |	    -0.000213
+    -0.000011						      |	     0.000134
+							      >	     0.001908
+							      >	    -0.000242
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.008140 		      |	 ELECTROSTATIC ENERGY          -0.008234 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.001942 		      |	 DISPERSION ENERGY             -0.001918 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.003623 		      |	 EXCHANGE-REPULSION ENERGY     0.003687 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006459 		      |	 SUM ENERGY                    -0.006465 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.002680 				      |	 IND DIPOLES NORM: 0.002483 
+ IND DIPOLES NORM: 0.000055 				      |	 IND DIPOLES NORM: 0.000050 
+ IND DIPOLES NORM: 0.000001 					 IND DIPOLES NORM: 0.000001 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.721622          0.018451        -0.078216     <
+   8          0.669154         -0.064149         0.051299     <
+   1         -1.099750          0.535045         0.866331     <
+   1         -1.095992         -0.997846         0.007122     <
+   1         -1.088955          0.507200        -0.899967     <
+   1          1.050790          0.799358         0.091895     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.721622     0.018451    -0.078216	      |	A01C1               -0.722389     0.123612    -0.072187
+A02O2                0.669154    -0.064149     0.051299	      |	A02O2                0.648821    -0.145031    -0.032268
+A03H3               -1.099750     0.535045     0.866331	      |	A03H3               -1.014384     0.848408     0.681894
+A04H4               -1.095992    -0.997846     0.007122	      |	A04H4               -1.238177    -0.804162     0.128334
+A05H5               -1.088955     0.507200    -0.899967	      |	A05H5               -1.035034     0.486257    -1.046849
+A06H6                1.050790     0.799358     0.091895	      |	A06H6                1.138517     0.637291    -0.202044
+A01O1               -4.252323    -1.839462    -0.605867	      |	A01O1               -4.258179    -1.841893    -0.607708
+A02H2               -4.740789    -1.064816    -0.393737	      |	A02H2               -4.752525    -1.078917    -0.368619
+A03H3               -4.328683    -2.412433     0.135448	      |	A03H3               -4.303084    -2.427684     0.126123
+A01O1               -4.459533    -1.905353    -3.722353	      |	A01O1               -4.456129    -1.904824    -3.724345
+A02H2               -4.300258    -2.031964    -2.804597	      |	A02H2               -4.313176    -2.017362    -2.802079
+A03H3               -3.746610    -2.318603    -4.174726	      |	A03H3               -3.741300    -2.334620    -4.157898
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0081395358		      |	          ELECTROSTATIC ENERGY    -0.0082339081
+           POLARIZATION ENERGY    -0.0008156849		      |	           POLARIZATION ENERGY    -0.0008252114
+             DISPERSION ENERGY    -0.0019419995		      |	             DISPERSION ENERGY    -0.0019178561
+     EXCHANGE REPULSION ENERGY     0.0036228997		      |	     EXCHANGE REPULSION ENERGY     0.0036866427
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0072903329
+							      <
+                  TOTAL ENERGY    -0.0072743205		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 5 STEPS						    STATE AFTER 5 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.721622     0.018451    -0.078216	      |	A01C1               -0.722389     0.123612    -0.072187
+A02O2                0.669154    -0.064149     0.051299	      |	A02O2                0.648821    -0.145031    -0.032268
+A03H3               -1.099750     0.535045     0.866331	      |	A03H3               -1.014384     0.848408     0.681894
+A04H4               -1.095992    -0.997846     0.007122	      |	A04H4               -1.238177    -0.804162     0.128334
+A05H5               -1.088955     0.507200    -0.899967	      |	A05H5               -1.035034     0.486257    -1.046849
+A06H6                1.050790     0.799358     0.091895	      |	A06H6                1.138517     0.637291    -0.202044
+A01O1               -4.252323    -1.839462    -0.605867	      |	A01O1               -4.258179    -1.841893    -0.607708
+A02H2               -4.740789    -1.064816    -0.393737	      |	A02H2               -4.752525    -1.078917    -0.368619
+A03H3               -4.328683    -2.412433     0.135448	      |	A03H3               -4.303084    -2.427684     0.126123
+A01O1               -4.459533    -1.905353    -3.722353	      |	A01O1               -4.456129    -1.904824    -3.724345
+A02H2               -4.300258    -2.031964    -2.804597	      |	A02H2               -4.313176    -2.017362    -2.802079
+A03H3               -3.746610    -2.318603    -4.174726	      |	A03H3               -3.741300    -2.334620    -4.157898
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0081395358		      |	          ELECTROSTATIC ENERGY    -0.0082339081
+           POLARIZATION ENERGY    -0.0008156849		      |	           POLARIZATION ENERGY    -0.0008252114
+             DISPERSION ENERGY    -0.0019419995		      |	             DISPERSION ENERGY    -0.0019178561
+     EXCHANGE REPULSION ENERGY     0.0036228997		      |	     EXCHANGE REPULSION ENERGY     0.0036866427
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0072903329
+
+                  TOTAL ENERGY    -0.0072743205		      <
+
+							      |	                 ENERGY CHANGE    -0.0002138222
+                 ENERGY CHANGE    -0.0002189592		      |	                  RMS GRADIENT     0.0004452959
+                  RMS GRADIENT     0.0003608189		      |	              MAXIMUM GRADIENT     0.0010949925
+              MAXIMUM GRADIENT     0.0010777957		      <
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000344						      |	     0.000158
+    -0.000123						      |	     0.000121
+     0.000652						      |	     0.000210
+							      >	    -0.000137
+							      >	    -0.000047
+							      >	     0.000019
+    -0.000285							    -0.000285
+     0.001078						      |	    -0.000117
+    -0.000410						      |	     0.000592
+     0.000159						      |	    -0.000262
+    -0.000011						      |	     0.001095
+    -0.000849						      |	    -0.000450
+    -0.000053						      |	     0.000128
+     0.000447						      |	    -0.000004
+     0.000949						      |	    -0.000803
+     0.000053						      |	    -0.000059
+     0.000082						      |	     0.000421
+     0.000229						      |	     0.000841
+     0.000104						      <
+     0.000027						      <
+    -0.000098						      <
+     0.000024						      <
+     0.000007						      <
+     0.000027						      <
+     0.000002						      <
+     0.000008						      <
+     0.000025						      <
+    -0.000009						      <
+     0.000009						      <
+     0.000026						      <
+     0.000010						      <
+     0.000000						      <
+    -0.000012						      <
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.008399 		      |	 ELECTROSTATIC ENERGY          -0.008480 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002042 		      |	 DISPERSION ENERGY             -0.002009 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.003915 		      |	 EXCHANGE-REPULSION ENERGY     0.003952 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006526 		      |	 SUM ENERGY                    -0.006536 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.002729 				      |	 IND DIPOLES NORM: 0.002607 
+ IND DIPOLES NORM: 0.000048 				      |	 IND DIPOLES NORM: 0.000045 
+ IND DIPOLES NORM: 0.000001 					 IND DIPOLES NORM: 0.000001 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.725165          0.014546        -0.102495     <
+   8          0.662225         -0.065694         0.064216     <
+   1         -1.101881          0.536573         0.862485     <
+   1         -1.096261         -0.998183         0.006520     <
+   1         -1.087683          0.504969        -0.903785     <
+   1          1.050124          0.799492         0.091601     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.725165     0.014546    -0.102495	      |	A01C1               -0.731083     0.126290    -0.095213
+A02O2                0.662225    -0.065694     0.064216	      |	A02O2                0.636986    -0.156500    -0.046252
+A03H3               -1.101881     0.536573     0.862485	      |	A03H3               -1.016411     0.871413     0.641407
+A04H4               -1.096261    -0.998183     0.006520	      |	A04H4               -1.257503    -0.790873     0.125478
+A05H5               -1.087683     0.504969    -0.903785	      |	A05H5               -1.037884     0.469866    -1.078602
+A06H6                1.050124     0.799492     0.091601	      |	A06H6                1.135645     0.616253    -0.232922
+A01O1               -4.216732    -1.833860    -0.600231	      |	A01O1               -4.227643    -1.837121    -0.601859
+A02H2               -4.708646    -1.044286    -0.465074	      |	A02H2               -4.735796    -1.064890    -0.431226
+A03H3               -4.491797    -2.435314     0.067801	      |	A03H3               -4.453498    -2.456609     0.068140
+A01O1               -4.471724    -1.903195    -3.698547	      |	A01O1               -4.465960    -1.902711    -3.702589
+A02H2               -4.330369    -2.094484    -2.789095	      |	A02H2               -4.336636    -2.076111    -2.787776
+A03H3               -3.737725    -2.263301    -4.162490	      |	A03H3               -3.733689    -2.285177    -4.151112
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0083986514		      |	          ELECTROSTATIC ENERGY    -0.0084797849
+           POLARIZATION ENERGY    -0.0009142399		      |	           POLARIZATION ENERGY    -0.0009193600
+             DISPERSION ENERGY    -0.0020421075		      |	             DISPERSION ENERGY    -0.0020088970
+     EXCHANGE REPULSION ENERGY     0.0039148813		      |	     EXCHANGE REPULSION ENERGY     0.0039524953
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0074555466
+							      <
+                  TOTAL ENERGY    -0.0074401176		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 6 STEPS						    STATE AFTER 6 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.725165     0.014546    -0.102495	      |	A01C1               -0.731083     0.126290    -0.095213
+A02O2                0.662225    -0.065694     0.064216	      |	A02O2                0.636986    -0.156500    -0.046252
+A03H3               -1.101881     0.536573     0.862485	      |	A03H3               -1.016411     0.871413     0.641407
+A04H4               -1.096261    -0.998183     0.006520	      |	A04H4               -1.257503    -0.790873     0.125478
+A05H5               -1.087683     0.504969    -0.903785	      |	A05H5               -1.037884     0.469866    -1.078602
+A06H6                1.050124     0.799492     0.091601	      |	A06H6                1.135645     0.616253    -0.232922
+A01O1               -4.216732    -1.833860    -0.600231	      |	A01O1               -4.227643    -1.837121    -0.601859
+A02H2               -4.708646    -1.044286    -0.465074	      |	A02H2               -4.735796    -1.064890    -0.431226
+A03H3               -4.491797    -2.435314     0.067801	      |	A03H3               -4.453498    -2.456609     0.068140
+A01O1               -4.471724    -1.903195    -3.698547	      |	A01O1               -4.465960    -1.902711    -3.702589
+A02H2               -4.330369    -2.094484    -2.789095	      |	A02H2               -4.336636    -2.076111    -2.787776
+A03H3               -3.737725    -2.263301    -4.162490	      |	A03H3               -3.733689    -2.285177    -4.151112
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0083986514		      |	          ELECTROSTATIC ENERGY    -0.0084797849
+           POLARIZATION ENERGY    -0.0009142399		      |	           POLARIZATION ENERGY    -0.0009193600
+             DISPERSION ENERGY    -0.0020421075		      |	             DISPERSION ENERGY    -0.0020088970
+     EXCHANGE REPULSION ENERGY     0.0039148813		      |	     EXCHANGE REPULSION ENERGY     0.0039524953
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0074555466
+							      <
+                  TOTAL ENERGY    -0.0074401176		      <
+
+
+                 ENERGY CHANGE    -0.0001657972		      |	                 ENERGY CHANGE    -0.0001652137
+                  RMS GRADIENT     0.0003528959		      |	                  RMS GRADIENT     0.0004483815
+              MAXIMUM GRADIENT     0.0013487158		      |	              MAXIMUM GRADIENT     0.0012879840
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000055						      |	     0.000182
+     0.000197						      |	     0.000158
+     0.000643						      |	     0.000201
+     0.000040						      |	    -0.000235
+     0.000130						      |	    -0.000079
+     0.000104						      |	    -0.000071
+    -0.000154						      |	    -0.000039
+    -0.000361						      |	     0.000188
+    -0.000823						      |	     0.000602
+    -0.000517						      |	     0.000004
+    -0.001349						      |	     0.000257
+     0.000504						      |	     0.000056
+     0.000060						      |	    -0.000143
+     0.000106						      |	    -0.000346
+     0.000204						      |	    -0.000804
+     0.000116						      |	    -0.000472
+     0.000026						      |	    -0.001288
+    -0.000082						      |	     0.000564
+     0.000023						      <
+     0.000011						      <
+     0.000023						      <
+     0.000001						      <
+     0.000011						      <
+     0.000023						      <
+    -0.000005						      <
+     0.000011						      <
+     0.000023						      <
+     0.000012						      <
+    -0.000000						      <
+    -0.000011						      <
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.008874 		      |	 ELECTROSTATIC ENERGY          -0.008947 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002182 		      |	 DISPERSION ENERGY             -0.002152 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.004553 		      |	 EXCHANGE-REPULSION ENERGY     0.004576 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006504 		      |	 SUM ENERGY                    -0.006522 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.001105 				      |	 IND DIPOLES NORM: 0.001208 
+ IND DIPOLES NORM: 0.000048 				      |	 IND DIPOLES NORM: 0.000045 
+ IND DIPOLES NORM: 0.000001 					 IND DIPOLES NORM: 0.000001 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.727811          0.010572        -0.115508     <
+   8          0.657076         -0.066825         0.070473     <
+   1         -1.103161          0.536767         0.860665     <
+   1         -1.096381         -0.998570         0.005716     <
+   1         -1.087137          0.503992        -0.905589     <
+   1          1.049597          0.799547         0.091816     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.727811     0.010572    -0.115508	      |	A01C1               -0.741094     0.112475    -0.108838
+A02O2                0.657076    -0.066825     0.070473	      |	A02O2                0.629934    -0.155268    -0.058085
+A03H3               -1.103161     0.536767     0.860665	      |	A03H3               -1.034708     0.858104     0.624004
+A04H4               -1.096381    -0.998570     0.005716	      |	A04H4               -1.257648    -0.809221     0.116238
+A05H5               -1.087137     0.503992    -0.905589	      |	A05H5               -1.051254     0.447848    -1.094004
+A06H6                1.049597     0.799547     0.091816	      |	A06H6                1.120277     0.621896    -0.248433
+A01O1               -4.207010    -1.834264    -0.611341	      |	A01O1               -4.217147    -1.836804    -0.610594
+A02H2               -4.693368    -1.038369    -0.494376	      |	A02H2               -4.728212    -1.062369    -0.459801
+A03H3               -4.539626    -2.443859     0.022248	      |	A03H3               -4.508748    -2.473291     0.016724
+A01O1               -4.470857    -1.898697    -3.673192	      |	A01O1               -4.465219    -1.898195    -3.677361
+A02H2               -4.305954    -2.065817    -2.762943	      |	A02H2               -4.317207    -2.050476    -2.761622
+A03H3               -3.733640    -2.243155    -4.143866	      |	A03H3               -3.727296    -2.264821    -4.129832
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0088744599		      |	          ELECTROSTATIC ENERGY    -0.0089469792
+           POLARIZATION ENERGY    -0.0010293526		      |	           POLARIZATION ENERGY    -0.0010375014
+             DISPERSION ENERGY    -0.0021817745		      |	             DISPERSION ENERGY    -0.0021515798
+     EXCHANGE REPULSION ENERGY     0.0045527317		      |	     EXCHANGE REPULSION ENERGY     0.0045764175
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0075596428
+							      <
+                  TOTAL ENERGY    -0.0075328553		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 7 STEPS						    STATE AFTER 7 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.727811     0.010572    -0.115508	      |	A01C1               -0.741094     0.112475    -0.108838
+A02O2                0.657076    -0.066825     0.070473	      |	A02O2                0.629934    -0.155268    -0.058085
+A03H3               -1.103161     0.536767     0.860665	      |	A03H3               -1.034708     0.858104     0.624004
+A04H4               -1.096381    -0.998570     0.005716	      |	A04H4               -1.257648    -0.809221     0.116238
+A05H5               -1.087137     0.503992    -0.905589	      |	A05H5               -1.051254     0.447848    -1.094004
+A06H6                1.049597     0.799547     0.091816	      |	A06H6                1.120277     0.621896    -0.248433
+A01O1               -4.207010    -1.834264    -0.611341	      |	A01O1               -4.217147    -1.836804    -0.610594
+A02H2               -4.693368    -1.038369    -0.494376	      |	A02H2               -4.728212    -1.062369    -0.459801
+A03H3               -4.539626    -2.443859     0.022248	      |	A03H3               -4.508748    -2.473291     0.016724
+A01O1               -4.470857    -1.898697    -3.673192	      |	A01O1               -4.465219    -1.898195    -3.677361
+A02H2               -4.305954    -2.065817    -2.762943	      |	A02H2               -4.317207    -2.050476    -2.761622
+A03H3               -3.733640    -2.243155    -4.143866	      |	A03H3               -3.727296    -2.264821    -4.129832
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0088744599		      |	          ELECTROSTATIC ENERGY    -0.0089469792
+           POLARIZATION ENERGY    -0.0010293526		      |	           POLARIZATION ENERGY    -0.0010375014
+             DISPERSION ENERGY    -0.0021817745		      |	             DISPERSION ENERGY    -0.0021515798
+     EXCHANGE REPULSION ENERGY     0.0045527317		      |	     EXCHANGE REPULSION ENERGY     0.0045764175
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0075596428
+
+                  TOTAL ENERGY    -0.0075328553		      <
+
+							      |	                 ENERGY CHANGE    -0.0001040962
+                 ENERGY CHANGE    -0.0000927377		      |	                  RMS GRADIENT     0.0002846468
+                  RMS GRADIENT     0.0001863896		      |	              MAXIMUM GRADIENT     0.0009079169
+              MAXIMUM GRADIENT     0.0007360978		      <
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000057						      |	     0.000190
+     0.000008						      |	     0.000165
+     0.000146						      <
+    -0.000060						      <
+     0.000033						      <
+    -0.000219						      <
+    -0.000153						      <
+    -0.000177						      <
+    -0.000318						      <
+    -0.000378						      <
+    -0.000736						      <
+     0.000220						      <
+     0.000060						      <
+     0.000112						      <
+     0.000193							     0.000193
+     0.000117						      |	    -0.000254
+     0.000023						      |	    -0.000084
+    -0.000074						      |	    -0.000096
+     0.000023						      |	    -0.000002
+     0.000012						      |	     0.000051
+     0.000022						      |	     0.000136
+     0.000001						      |	    -0.000025
+     0.000012						      |	     0.000024
+     0.000022						      |	    -0.000152
+    -0.000004						      |	    -0.000188
+     0.000011						      |	    -0.000216
+     0.000021						      |	    -0.000329
+     0.000013						      |	    -0.000416
+    -0.000001						      |	    -0.000908
+    -0.000011						      |	     0.000210
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.009424 		      |	 ELECTROSTATIC ENERGY          -0.009539 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002317 		      |	 DISPERSION ENERGY             -0.002328 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.005318 		      |	 EXCHANGE-REPULSION ENERGY     0.005397 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006423 		      |	 SUM ENERGY                    -0.006469 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.001562 				      |	 IND DIPOLES NORM: 0.001671 
+ IND DIPOLES NORM: 0.000087 				      |	 IND DIPOLES NORM: 0.000081 
+ IND DIPOLES NORM: 0.000003 					 IND DIPOLES NORM: 0.000003 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.732258          0.002086        -0.129047     <
+   8          0.648370         -0.068643         0.075218     <
+   1         -1.104810          0.535426         0.859392     <
+   1         -1.096449         -0.999450         0.003657     <
+   1         -1.086888          0.503579        -0.906847     <
+   1          1.048652          0.799555         0.092983     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.732258     0.002086    -0.129047	      |	A01C1               -0.764858     0.057172    -0.125335
+A02O2                0.648370    -0.068643     0.075218	      |	A02O2                0.619123    -0.134384    -0.081952
+A03H3               -1.104810     0.535426     0.859392	      |	A03H3               -1.097377     0.773131     0.620363
+A04H4               -1.096449    -0.999450     0.003657	      |	A04H4               -1.228484    -0.895497     0.085578
+A05H5               -1.086888     0.503579    -0.906847	      |	A05H5               -1.096265     0.390801    -1.104154
+A06H6                1.048652     0.799555     0.092983	      |	A06H6                1.064750     0.671966    -0.260475
+A01O1               -4.201751    -1.822881    -0.621973	      |	A01O1               -4.211004    -1.824575    -0.617169
+A02H2               -4.739831    -1.070868    -0.452794	      |	A02H2               -4.775825    -1.099129    -0.421263
+A03H3               -4.473402    -2.485700    -0.013244	      |	A03H3               -4.462769    -2.520703    -0.037777
+A01O1               -4.461629    -1.895881    -3.655010	      |	A01O1               -4.453376    -1.893685    -3.653405
+A02H2               -4.310826    -1.985298    -2.731463	      |	A02H2               -4.306309    -1.958611    -2.727213
+A03H3               -3.700283    -2.243611    -4.082926	      |	A03H3               -3.691014    -2.254044    -4.068880
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0094238181		      |	          ELECTROSTATIC ENERGY    -0.0095390126
+           POLARIZATION ENERGY    -0.0011756545		      |	           POLARIZATION ENERGY    -0.0011945792
+             DISPERSION ENERGY    -0.0023170848		      |	             DISPERSION ENERGY    -0.0023275672
+     EXCHANGE REPULSION ENERGY     0.0053180699		      |	     EXCHANGE REPULSION ENERGY     0.0053973714
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0076637876
+							      <
+                  TOTAL ENERGY    -0.0075984876		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 8 STEPS						    STATE AFTER 8 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.732258     0.002086    -0.129047	      |	A01C1               -0.764858     0.057172    -0.125335
+A02O2                0.648370    -0.068643     0.075218	      |	A02O2                0.619123    -0.134384    -0.081952
+A03H3               -1.104810     0.535426     0.859392	      |	A03H3               -1.097377     0.773131     0.620363
+A04H4               -1.096449    -0.999450     0.003657	      |	A04H4               -1.228484    -0.895497     0.085578
+A05H5               -1.086888     0.503579    -0.906847	      |	A05H5               -1.096265     0.390801    -1.104154
+A06H6                1.048652     0.799555     0.092983	      |	A06H6                1.064750     0.671966    -0.260475
+A01O1               -4.201751    -1.822881    -0.621973	      |	A01O1               -4.211004    -1.824575    -0.617169
+A02H2               -4.739831    -1.070868    -0.452794	      |	A02H2               -4.775825    -1.099129    -0.421263
+A03H3               -4.473402    -2.485700    -0.013244	      |	A03H3               -4.462769    -2.520703    -0.037777
+A01O1               -4.461629    -1.895881    -3.655010	      |	A01O1               -4.453376    -1.893685    -3.653405
+A02H2               -4.310826    -1.985298    -2.731463	      |	A02H2               -4.306309    -1.958611    -2.727213
+A03H3               -3.700283    -2.243611    -4.082926	      |	A03H3               -3.691014    -2.254044    -4.068880
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0094238181		      |	          ELECTROSTATIC ENERGY    -0.0095390126
+           POLARIZATION ENERGY    -0.0011756545		      |	           POLARIZATION ENERGY    -0.0011945792
+             DISPERSION ENERGY    -0.0023170848		      |	             DISPERSION ENERGY    -0.0023275672
+     EXCHANGE REPULSION ENERGY     0.0053180699		      |	     EXCHANGE REPULSION ENERGY     0.0053973714
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0076637876
+							      <
+                  TOTAL ENERGY    -0.0075984876		      <
+
+
+                 ENERGY CHANGE    -0.0000656323		      |	                 ENERGY CHANGE    -0.0001041448
+                  RMS GRADIENT     0.0002068988		      |	                  RMS GRADIENT     0.0002722496
+              MAXIMUM GRADIENT     0.0006193020		      |	              MAXIMUM GRADIENT     0.0005735894
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000019						      |	     0.000199
+    -0.000283						      |	     0.000149
+    -0.000526						      |	     0.000188
+    -0.000017						      <
+     0.000110						      <
+    -0.000619						      <
+    -0.000188							    -0.000188
+     0.000123						      |	    -0.000042
+     0.000355						      |	    -0.000052
+    -0.000254						      |	     0.000012
+     0.000140						      |	    -0.000266
+    -0.000444						      |	    -0.000558
+     0.000057						      |	    -0.000024
+     0.000112						      |	     0.000045
+     0.000190						      |	    -0.000574
+     0.000118						      |	    -0.000212
+     0.000015						      |	     0.000117
+    -0.000075						      |	     0.000370
+     0.000023						      |	    -0.000224
+     0.000009						      |	     0.000208
+     0.000023						      |	    -0.000440
+     0.000001						      <
+     0.000011						      <
+     0.000019						      <
+    -0.000004						      <
+     0.000013						      <
+     0.000022						      <
+     0.000013						      <
+    -0.000001						      <
+    -0.000009						      <
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.009502 		      |	 ELECTROSTATIC ENERGY          -0.009576 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002334 		      |	 DISPERSION ENERGY             -0.002360 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.005393 		      |	 EXCHANGE-REPULSION ENERGY     0.005422 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006443 		      |	 SUM ENERGY                    -0.006514 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.000864 				      |	 IND DIPOLES NORM: 0.001014 
+ IND DIPOLES NORM: 0.000026 				      |	 IND DIPOLES NORM: 0.000031 
+ IND DIPOLES NORM: 0.000001 					 IND DIPOLES NORM: 0.000001 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.736606         -0.006022        -0.143932     <
+   8          0.639709         -0.070218         0.081054     <
+   1         -1.106531          0.534581         0.857711     <
+   1         -1.096539         -1.000273         0.001955     <
+   1         -1.086530          0.502775        -0.908507     <
+   1          1.047723          0.799610         0.093827     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.736606    -0.006022    -0.143932	      |	A01C1               -0.784485     0.011318    -0.140869
+A02O2                0.639709    -0.070218     0.081054	      |	A02O2                0.606823    -0.118156    -0.102446
+A03H3               -1.106531     0.534581     0.857711	      |	A03H3               -1.147026     0.703174     0.613538
+A04H4               -1.096539    -1.000273     0.001955	      |	A04H4               -1.204204    -0.963576     0.060204
+A05H5               -1.086530     0.502775    -0.908507	      |	A05H5               -1.133051     0.340610    -1.115186
+A06H6                1.047723     0.799610     0.093827	      |	A06H6                1.015232     0.709403    -0.272747
+A01O1               -4.195437    -1.809886    -0.614473	      |	A01O1               -4.205842    -1.809954    -0.605363
+A02H2               -4.769468    -1.093710    -0.411358	      |	A02H2               -4.814273    -1.131551    -0.374590
+A03H3               -4.437589    -2.514599    -0.041397	      |	A03H3               -4.422567    -2.553182    -0.072149
+A01O1               -4.453263    -1.895810    -3.649942	      |	A01O1               -4.442103    -1.893044    -3.647788
+A02H2               -4.296927    -1.941148    -2.724102	      |	A02H2               -4.293830    -1.909672    -2.719665
+A03H3               -3.678313    -2.227146    -4.066288	      |	A03H3               -3.662067    -2.233290    -4.047101
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0095018160		      |	          ELECTROSTATIC ENERGY    -0.0095763178
+           POLARIZATION ENERGY    -0.0012016095		      |	           POLARIZATION ENERGY    -0.0012109279
+             DISPERSION ENERGY    -0.0023342378		      |	             DISPERSION ENERGY    -0.0023598413
+     EXCHANGE REPULSION ENERGY     0.0053932699		      |	     EXCHANGE REPULSION ENERGY     0.0054216852
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0077254018
+							      <
+                  TOTAL ENERGY    -0.0076443935		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 9 STEPS						    STATE AFTER 9 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.736606    -0.006022    -0.143932	      |	A01C1               -0.784485     0.011318    -0.140869
+A02O2                0.639709    -0.070218     0.081054	      |	A02O2                0.606823    -0.118156    -0.102446
+A03H3               -1.106531     0.534581     0.857711	      |	A03H3               -1.147026     0.703174     0.613538
+A04H4               -1.096539    -1.000273     0.001955	      |	A04H4               -1.204204    -0.963576     0.060204
+A05H5               -1.086530     0.502775    -0.908507	      |	A05H5               -1.133051     0.340610    -1.115186
+A06H6                1.047723     0.799610     0.093827	      |	A06H6                1.015232     0.709403    -0.272747
+A01O1               -4.195437    -1.809886    -0.614473	      |	A01O1               -4.205842    -1.809954    -0.605363
+A02H2               -4.769468    -1.093710    -0.411358	      |	A02H2               -4.814273    -1.131551    -0.374590
+A03H3               -4.437589    -2.514599    -0.041397	      |	A03H3               -4.422567    -2.553182    -0.072149
+A01O1               -4.453263    -1.895810    -3.649942	      |	A01O1               -4.442103    -1.893044    -3.647788
+A02H2               -4.296927    -1.941148    -2.724102	      |	A02H2               -4.293830    -1.909672    -2.719665
+A03H3               -3.678313    -2.227146    -4.066288	      |	A03H3               -3.662067    -2.233290    -4.047101
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0095018160		      |	          ELECTROSTATIC ENERGY    -0.0095763178
+           POLARIZATION ENERGY    -0.0012016095		      |	           POLARIZATION ENERGY    -0.0012109279
+             DISPERSION ENERGY    -0.0023342378		      |	             DISPERSION ENERGY    -0.0023598413
+     EXCHANGE REPULSION ENERGY     0.0053932699		      |	     EXCHANGE REPULSION ENERGY     0.0054216852
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0077254018
+
+                  TOTAL ENERGY    -0.0076443935		      <
+
+							      |	                 ENERGY CHANGE    -0.0000616142
+                 ENERGY CHANGE    -0.0000459058		      |	                  RMS GRADIENT     0.0002802308
+                  RMS GRADIENT     0.0002224031		      |	              MAXIMUM GRADIENT     0.0005159737
+              MAXIMUM GRADIENT     0.0006153333		      <
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000033						      |	     0.000209
+    -0.000328						      |	     0.000141
+    -0.000536						      |	     0.000179
+    -0.000009						      |	    -0.000170
+     0.000037						      |	    -0.000011
+    -0.000615						      |	    -0.000054
+    -0.000179						      <
+     0.000171						      <
+     0.000372						      <
+    -0.000200						      <
+     0.000460						      <
+    -0.000432						      <
+     0.000058						      <
+     0.000115						      <
+     0.000178						      <
+     0.000120						      <
+     0.000010						      <
+    -0.000067						      <
+     0.000022						      <
+     0.000008						      <
+     0.000022						      <
+     0.000001						      <
+     0.000011						      <
+     0.000016						      <
+    -0.000003						      <
+     0.000015						      <
+     0.000022						      <
+     0.000013							     0.000013
+    -0.000002						      |	    -0.000288
+    -0.000006						      |	    -0.000516
+							      >	     0.000029
+							      >	    -0.000082
+							      >	    -0.000490
+							      >	    -0.000222
+							      >	     0.000147
+							      >	     0.000337
+							      >	    -0.000188
+							      >	     0.000487
+							      >	    -0.000482
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.009415 		      |	 ELECTROSTATIC ENERGY          -0.009556 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002351 		      |	 DISPERSION ENERGY             -0.002524 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.005201 		      |	 EXCHANGE-REPULSION ENERGY     0.005381 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006565 		      |	 SUM ENERGY                    -0.006699 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.003212 				      |	 IND DIPOLES NORM: 0.002654 
+ IND DIPOLES NORM: 0.000081 				      |	 IND DIPOLES NORM: 0.000068 
+ IND DIPOLES NORM: 0.000002 					 IND DIPOLES NORM: 0.000002 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      |	 IND DIPOLES NORM: 0.000000 
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.757083         -0.045137        -0.206205     <
+   8          0.598690         -0.075929         0.103960     <
+   1         -1.114101          0.530661         0.850644     <
+   1         -1.096928         -1.004158        -0.005054     <
+   1         -1.085483          0.498885        -0.915461     <
+   1          1.043341          0.799972         0.097198     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.757083    -0.045137    -0.206205	      |	A01C1               -0.856160    -0.175425    -0.204507
+A02O2                0.598690    -0.075929     0.103960	      |	A02O2                0.535832    -0.049602    -0.182012
+A03H3               -1.114101     0.530661     0.850644	      |	A03H3               -1.328439     0.420426     0.570827
+A04H4               -1.096928    -1.004158    -0.005054	      |	A04H4               -1.088370    -1.215073    -0.025001
+A05H5               -1.085483     0.498885    -0.915461	      |	A05H5               -1.272131     0.107839    -1.166772
+A06H6                1.043341     0.799972     0.097198	      |	A06H6                0.784198     0.842431    -0.334476
+A01O1               -4.175405    -1.747640    -0.576790	      |	A01O1               -4.191525    -1.759029    -0.563075
+A02H2               -4.863979    -1.215431    -0.221412	      |	A02H2               -4.878204    -1.205420    -0.238016
+A03H3               -4.221849    -2.573891    -0.130889	      |	A03H3               -4.292559    -2.588035    -0.131548
+A01O1               -4.406226    -1.898770    -3.636391	      |	A01O1               -4.384107    -1.889105    -3.621301
+A02H2               -4.301538    -1.805824    -2.706834	      |	A02H2               -4.274782    -1.818072    -2.690346
+A03H3               -3.558556    -2.118774    -3.978045	      |	A03H3               -3.536301    -2.091787    -3.973181
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0094150253		      |	          ELECTROSTATIC ENERGY    -0.0095562808
+           POLARIZATION ENERGY    -0.0011898433		      |	           POLARIZATION ENERGY    -0.0012146009
+             DISPERSION ENERGY    -0.0023506092		      |	             DISPERSION ENERGY    -0.0025241359
+     EXCHANGE REPULSION ENERGY     0.0052010828		      |	     EXCHANGE REPULSION ENERGY     0.0053812270
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0079137906
+							      <
+                  TOTAL ENERGY    -0.0077543950		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 10 STEPS					    STATE AFTER 10 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.757083    -0.045137    -0.206205	      |	A01C1               -0.856160    -0.175425    -0.204507
+A02O2                0.598690    -0.075929     0.103960	      |	A02O2                0.535832    -0.049602    -0.182012
+A03H3               -1.114101     0.530661     0.850644	      |	A03H3               -1.328439     0.420426     0.570827
+A04H4               -1.096928    -1.004158    -0.005054	      |	A04H4               -1.088370    -1.215073    -0.025001
+A05H5               -1.085483     0.498885    -0.915461	      |	A05H5               -1.272131     0.107839    -1.166772
+A06H6                1.043341     0.799972     0.097198	      |	A06H6                0.784198     0.842431    -0.334476
+A01O1               -4.175405    -1.747640    -0.576790	      |	A01O1               -4.191525    -1.759029    -0.563075
+A02H2               -4.863979    -1.215431    -0.221412	      |	A02H2               -4.878204    -1.205420    -0.238016
+A03H3               -4.221849    -2.573891    -0.130889	      |	A03H3               -4.292559    -2.588035    -0.131548
+A01O1               -4.406226    -1.898770    -3.636391	      |	A01O1               -4.384107    -1.889105    -3.621301
+A02H2               -4.301538    -1.805824    -2.706834	      |	A02H2               -4.274782    -1.818072    -2.690346
+A03H3               -3.558556    -2.118774    -3.978045	      |	A03H3               -3.536301    -2.091787    -3.973181
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0094150253		      |	          ELECTROSTATIC ENERGY    -0.0095562808
+           POLARIZATION ENERGY    -0.0011898433		      |	           POLARIZATION ENERGY    -0.0012146009
+             DISPERSION ENERGY    -0.0023506092		      |	             DISPERSION ENERGY    -0.0025241359
+     EXCHANGE REPULSION ENERGY     0.0052010828		      |	     EXCHANGE REPULSION ENERGY     0.0053812270
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0079137906
+							      <
+                  TOTAL ENERGY    -0.0077543950		      <
+
+
+                 ENERGY CHANGE    -0.0001100015		      |	                 ENERGY CHANGE    -0.0001883888
+                  RMS GRADIENT     0.0001858532		      |	                  RMS GRADIENT     0.0002337322
+              MAXIMUM GRADIENT     0.0006911168		      |	              MAXIMUM GRADIENT     0.0004691467
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000037						      |	     0.000246
+    -0.000213						      |	     0.000147
+    -0.000216						      |	     0.000155
+     0.000272						      |	    -0.000322
+    -0.000259						      |	     0.000035
+     0.000042						      |	    -0.000249
+    -0.000186						      |	    -0.000040
+     0.000075						      |	    -0.000176
+     0.000095						      |	    -0.000323
+    -0.000279						      |	     0.000223
+     0.000691						      |	    -0.000284
+    -0.000385						      |	     0.000085
+     0.000069						      |	    -0.000206
+     0.000126						      |	     0.000029
+     0.000097						      |	     0.000169
+     0.000121						      |	    -0.000203
+    -0.000015						      |	     0.000469
+    -0.000018						      |	    -0.000320
+     0.000016						      <
+    -0.000003						      <
+     0.000019						      <
+     0.000002						      <
+     0.000009						      <
+    -0.000003						      <
+     0.000004						      <
+     0.000022						      <
+     0.000018						      <
+     0.000012						      <
+    -0.000003						      <
+     0.000008						      <
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.009569 		      |	 ELECTROSTATIC ENERGY          -0.008508 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002462 		      |	 DISPERSION ENERGY             -0.003389 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.005399 		      |	 EXCHANGE-REPULSION ENERGY     0.006177 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006633 		      |	 SUM ENERGY                    -0.005720 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.000980 				      |	 IND DIPOLES NORM: 0.007989 
+ IND DIPOLES NORM: 0.000015 				      |	 IND DIPOLES NORM: 0.000262 
+ IND DIPOLES NORM: 0.000000 				      |	 IND DIPOLES NORM: 0.000012 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      >	    GEOMETRY (ANGSTROMS)
+
+ TORCH INFO 						      |	A01C1               -0.865601    -0.877995    -0.454120
+-----------						      |	A02O2               -0.003143     0.221810    -0.478091
+							      >	A03H3               -1.567096    -0.823583     0.373028
+							      >	A04H4               -0.257072    -1.761621    -0.327989
+							      >	A05H5               -1.423089    -0.974776    -1.380978
+							      >	A06H6               -0.491555     1.015737    -0.586665
+							      >	A01O1               -4.125701    -1.592087    -0.403472
+							      >	A02H2               -4.938706    -1.389300     0.022643
+							      >	A03H3               -3.976615    -2.510164    -0.267155
+							      >	A01O1               -4.143263    -1.858834    -3.503062
+							      >	A02H2               -4.246182    -1.699940    -2.582282
+							      >	A03H3               -3.344643    -1.433489    -3.757940
+
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.776894         -0.081105        -0.256431     <
+   8          0.561636         -0.077790         0.121596     <
+   1         -1.120418          0.529585         0.843618     <
+   1         -1.097458         -1.007355        -0.008232     <
+   1         -1.085050          0.493448        -0.922352     <
+   1          1.039490          0.800570         0.097665     <
+-----------------------------------------------------------   <
+
+ Special fragment atom gradients 			      |	    ENERGY COMPONENTS (ATOMIC UNITS)
+-----------------------------------------------------------   |
+  Atom            X                 Y                Z	      |	          ELECTROSTATIC ENERGY    -0.0085080434
+   1          0.000000          0.000000         0.000000     |	           POLARIZATION ENERGY    -0.0010734987
+   2          0.000000          0.000000         0.000000     |	             DISPERSION ENERGY    -0.0033890015
+   3          0.000000          0.000000         0.000000     |	     EXCHANGE REPULSION ENERGY     0.0061774802
+   4          0.000000          0.000000         0.000000     |	          POINT CHARGES ENERGY     0.0000000000
+   5          0.000000          0.000000         0.000000     |	     CHARGE PENETRATION ENERGY     0.0000000000
+   6          0.000000          0.000000         0.000000     |	                     QQ ENERGY     0.0000000000
+------------------------------------------------------------  |	                     LJ ENERGY     0.0000000000
+							      >
+							      >	                  TOTAL ENERGY    -0.0067930633
+
+ Torch energy 0.000000 					      <
+
+							      >
+							      >	--- OPTIMIZER FG STEP ---
+							      >	 In compute_two_body_range() 
+							      >	 EFP ENERGY COMPONENTS 
+							      >	 ELECTROSTATIC ENERGY          -0.009534 
+							      >	 AI ELECTROSTATIC ENERGY       0.000000 
+							      >	 CHARGE PENETRATION ENERGY     0.000000 
+							      >	 POINT CHARGES ENERGY          0.000000 
+							      >	 POLARIZATION ENERGY           0.000000 
+							      >	 EXC STATE POLARIZATION ENERGY 0.000000 
+							      >	 AI POLARIZATION ENERGY        0.000000 
+							      >	 DISPERSION ENERGY             -0.002637 
+							      >	 AI DISPERSION ENERGY          0.000000 
+							      >	 EXCHANGE-REPULSION ENERGY     0.005382 
+							      >	 COULOMB MM ENERGY             0.000000 
+							      >	 LENNARD-JONES MM ENERGY       0.000000 
+							      >	 SUM ENERGY                    -0.006789 
+							      >	 TOTAL ENERGY                  0.000000 
+							      >
+							      >	 IND DIPOLES NORM: 0.006955 
+							      >	 IND DIPOLES NORM: 0.000260 
+							      >	 IND DIPOLES NORM: 0.000010 
+							      >	 IND DIPOLES NORM: 0.000000 
+							      >	 IND DIPOLES NORM: 0.000000 
+							      >	 IND DIPOLES NORM: 0.000000 
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.776894    -0.081105    -0.256431	      |	A01C1               -0.882655    -0.282842    -0.237356
+A02O2                0.561636    -0.077790     0.121596	      |	A02O2                0.486915    -0.003439    -0.223584
+A03H3               -1.120418     0.529585     0.843618	      |	A03H3               -1.412120     0.251723     0.545675
+A04H4               -1.097458    -1.007355    -0.008232	      |	A04H4               -0.996693    -1.343013    -0.064028
+A05H5               -1.085050     0.493448    -0.922352	      |	A05H5               -1.334910    -0.041091    -1.194564
+A06H6                1.039490     0.800570     0.097665	      |	A06H6                0.633595     0.911646    -0.371089
+A01O1               -4.148406    -1.714968    -0.554237	      |	A01O1               -4.182144    -1.735921    -0.541831
+A02H2               -4.824741    -1.173109    -0.190049	      |	A02H2               -4.889025    -1.224549    -0.191841
+A03H3               -4.227856    -2.554032    -0.137904	      |	A03H3               -4.253086    -2.588341    -0.151931
+A01O1               -4.365782    -1.893540    -3.607872	      |	A01O1               -4.353270    -1.885555    -3.605210
+A02H2               -4.267112    -1.803296    -2.677391	      |	A02H2               -4.263806    -1.789098    -2.674422
+A03H3               -3.496923    -1.946132    -3.962827	      |	A03H3               -3.484684    -2.005496    -3.944099
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0095694896		      |	          ELECTROSTATIC ENERGY    -0.0095335277
+           POLARIZATION ENERGY    -0.0012290987		      |	           POLARIZATION ENERGY    -0.0012129877
+             DISPERSION ENERGY    -0.0024619196		      |	             DISPERSION ENERGY    -0.0026369341
+     EXCHANGE REPULSION ENERGY     0.0053988158		      |	     EXCHANGE REPULSION ENERGY     0.0053816870
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0080017625
+							      <
+                  TOTAL ENERGY    -0.0078616921		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 11 STEPS					    STATE AFTER 11 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.776894    -0.081105    -0.256431	      |	A01C1               -0.882655    -0.282842    -0.237356
+A02O2                0.561636    -0.077790     0.121596	      |	A02O2                0.486915    -0.003439    -0.223584
+A03H3               -1.120418     0.529585     0.843618	      |	A03H3               -1.412120     0.251723     0.545675
+A04H4               -1.097458    -1.007355    -0.008232	      |	A04H4               -0.996693    -1.343013    -0.064028
+A05H5               -1.085050     0.493448    -0.922352	      |	A05H5               -1.334910    -0.041091    -1.194564
+A06H6                1.039490     0.800570     0.097665	      |	A06H6                0.633595     0.911646    -0.371089
+A01O1               -4.148406    -1.714968    -0.554237	      |	A01O1               -4.182144    -1.735921    -0.541831
+A02H2               -4.824741    -1.173109    -0.190049	      |	A02H2               -4.889025    -1.224549    -0.191841
+A03H3               -4.227856    -2.554032    -0.137904	      |	A03H3               -4.253086    -2.588341    -0.151931
+A01O1               -4.365782    -1.893540    -3.607872	      |	A01O1               -4.353270    -1.885555    -3.605210
+A02H2               -4.267112    -1.803296    -2.677391	      |	A02H2               -4.263806    -1.789098    -2.674422
+A03H3               -3.496923    -1.946132    -3.962827	      |	A03H3               -3.484684    -2.005496    -3.944099
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0095694896		      |	          ELECTROSTATIC ENERGY    -0.0095335277
+           POLARIZATION ENERGY    -0.0012290987		      |	           POLARIZATION ENERGY    -0.0012129877
+             DISPERSION ENERGY    -0.0024619196		      |	             DISPERSION ENERGY    -0.0026369341
+     EXCHANGE REPULSION ENERGY     0.0053988158		      |	     EXCHANGE REPULSION ENERGY     0.0053816870
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0080017625
+
+                  TOTAL ENERGY    -0.0078616921		      <
+
+							      |	                 ENERGY CHANGE    -0.0000879719
+                 ENERGY CHANGE    -0.0001072971		      |	                  RMS GRADIENT     0.0002202452
+                  RMS GRADIENT     0.0001311622		      |	              MAXIMUM GRADIENT     0.0003606099
+              MAXIMUM GRADIENT     0.0004256679		      <
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000036						      |	     0.000286
+    -0.000087						      |	     0.000143
+    -0.000218						      |	     0.000143
+     0.000189						      |	    -0.000232
+    -0.000426						      <
+     0.000154						      <
+    -0.000176						      <
+    -0.000047						      <
+     0.000132						      <
+    -0.000183						      <
+     0.000229						      <
+    -0.000205						      <
+     0.000073						      <
+     0.000142						      <
+     0.000035						      <
+     0.000105						      <
+    -0.000035						      <
+     0.000022						      <
+     0.000011						      <
+    -0.000003						      <
+     0.000013						      <
+     0.000001						      <
+     0.000010						      <
+    -0.000011						      <
+     0.000009						      <
+     0.000024						      <
+     0.000012						      <
+     0.000012						      <
+    -0.000005							    -0.000005
+     0.000015						      |	    -0.000173
+							      >	    -0.000082
+							      >	    -0.000121
+							      >	    -0.000252
+							      >	     0.000255
+							      >	    -0.000347
+							      >	     0.000272
+							      >	    -0.000204
+							      >	    -0.000022
+							      >	     0.000110
+							      >	    -0.000180
+							      >	     0.000361
+							      >	    -0.000325
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.009431 		      |	 ELECTROSTATIC ENERGY          -0.009322 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002679 		      |	 DISPERSION ENERGY             -0.003781 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.005359 		      |	 EXCHANGE-REPULSION ENERGY     0.007105 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006751 		      |	 SUM ENERGY                    -0.005998 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.002433 				      |	 IND DIPOLES NORM: 0.005741 
+ IND DIPOLES NORM: 0.000040 				      |	 IND DIPOLES NORM: 0.000235 
+ IND DIPOLES NORM: 0.000002 				      |	 IND DIPOLES NORM: 0.000008 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.830211         -0.180890        -0.358784     <
+   8          0.468280         -0.075839         0.148834     <
+   1         -1.134894          0.526011         0.828709     <
+   1         -1.098519         -1.015860        -0.014045     <
+   1         -1.086198          0.479618        -0.936901     <
+   1          1.029500          0.802498         0.097241     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.830211    -0.180890    -0.358784	      |	A01C1               -1.000424    -0.740775    -0.443510
+A02O2                0.468280    -0.075839     0.148834	      |	A02O2                0.103769     0.116376    -0.448918
+A03H3               -1.134894     0.526011     0.828709	      |	A03H3               -1.664709    -0.538921     0.391481
+A04H4               -1.098519    -1.015860    -0.014045	      |	A04H4               -0.624921    -1.748888    -0.344944
+A05H5               -1.086198     0.479618    -0.936901	      |	A05H5               -1.567887    -0.674786    -1.367013
+A06H6                1.029500     0.802498     0.097241	      |	A06H6               -0.177011     1.007833    -0.533293
+A01O1               -4.096157    -1.633881    -0.498344	      |	A01O1               -4.092512    -1.624399    -0.425702
+A02H2               -4.686683    -1.093028    -0.005971	      |	A02H2               -4.854839    -1.201128    -0.074456
+A03H3               -4.130994    -2.488291    -0.107902	      |	A03H3               -4.161162    -2.532005    -0.190726
+A01O1               -4.245804    -1.872615    -3.560404	      |	A01O1               -4.169927    -1.852191    -3.494940
+A02H2               -4.206609    -1.790638    -2.624766	      |	A02H2               -4.103300    -1.661529    -2.576853
+A03H3               -3.427841    -1.546735    -3.889666	      |	A03H3               -3.375526    -1.540147    -3.888932
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0094306573		      |	          ELECTROSTATIC ENERGY    -0.0093223402
+           POLARIZATION ENERGY    -0.0011821996		      |	           POLARIZATION ENERGY    -0.0012654569
+             DISPERSION ENERGY    -0.0026793843		      |	             DISPERSION ENERGY    -0.0037805779
+     EXCHANGE REPULSION ENERGY     0.0053593270		      |	     EXCHANGE REPULSION ENERGY     0.0071045850
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0072637901
+							      <
+                  TOTAL ENERGY    -0.0079329142		      <
+							      <
+
+
+--- OPTIMIZER NEW_X STEP ---				      <
+    STATE AFTER 12 STEPS				      <
+							      <
+    GEOMETRY (ANGSTROMS)				      <
+							      <
+A01C1               -0.830211    -0.180890    -0.358784	      <
+A02O2                0.468280    -0.075839     0.148834	      <
+A03H3               -1.134894     0.526011     0.828709	      <
+A04H4               -1.098519    -1.015860    -0.014045	      <
+A05H5               -1.086198     0.479618    -0.936901	      <
+A06H6                1.029500     0.802498     0.097241	      <
+A01O1               -4.096157    -1.633881    -0.498344	      <
+A02H2               -4.686683    -1.093028    -0.005971	      <
+A03H3               -4.130994    -2.488291    -0.107902	      <
+A01O1               -4.245804    -1.872615    -3.560404	      <
+A02H2               -4.206609    -1.790638    -2.624766	      <
+A03H3               -3.427841    -1.546735    -3.889666	      <
+							      <
+							      <
+    ENERGY COMPONENTS (ATOMIC UNITS)			      <
+							      <
+          ELECTROSTATIC ENERGY    -0.0094306573		      <
+           POLARIZATION ENERGY    -0.0011821996		      <
+             DISPERSION ENERGY    -0.0026793843		      <
+     EXCHANGE REPULSION ENERGY     0.0053593270		      <
+          POINT CHARGES ENERGY     0.0000000000		      <
+     CHARGE PENETRATION ENERGY     0.0000000000		      <
+                     QQ ENERGY     0.0000000000		      <
+                     LJ ENERGY     0.0000000000		      <
+							      <
+                     ML ENERGY     0.0000000000		      <
+							      <
+                  TOTAL ENERGY    -0.0079329142		      <
+							      <
+							      <
+                 ENERGY CHANGE    -0.0000712221		      <
+                  RMS GRADIENT     0.0003088723		      <
+              MAXIMUM GRADIENT     0.0012905217		      <
+							      <
+							      <
+							      <
+ GRADIENTS 						      <
+    -0.000246						      <
+     0.000358						      <
+     0.000095						      <
+    -0.000004						      <
+     0.000053						      <
+     0.000843						      <
+     0.000125						      <
+    -0.000412						      <
+    -0.000047						      <
+     0.000039						      <
+    -0.001291						      <
+     0.000074						      <
+     0.000106						      <
+     0.000120						      <
+    -0.000190						      <
+     0.000007						      <
+    -0.000060						      <
+     0.000136						      <
+    -0.000012						      <
+    -0.000032						      <
+     0.000004						      <
+     0.000006						      <
+    -0.000003						      <
+    -0.000049						      <
+     0.000016						      <
+     0.000029						      <
+     0.000003						      <
+    -0.000001						      <
+    -0.000000						      <
+     0.000048						      <
+							      <
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.009303 		      |	 ELECTROSTATIC ENERGY          -0.009557 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002573 		      |	 DISPERSION ENERGY             -0.002859 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.005081 		      |	 EXCHANGE-REPULSION ENERGY     0.005546 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006795 		      |	 SUM ENERGY                    -0.006870 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.001815 				      |	 IND DIPOLES NORM: 0.004459 
+ IND DIPOLES NORM: 0.000056 				      |	 IND DIPOLES NORM: 0.000159 
+ IND DIPOLES NORM: 0.000002 				      |	 IND DIPOLES NORM: 0.000005 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.820168         -0.158681        -0.320786     <
+   8          0.493997         -0.071979         0.134749     <
+   1         -1.130232          0.529419         0.832287     <
+   1         -1.098473         -1.013314        -0.009011     <
+   1         -1.086754          0.481264        -0.933375     <
+   1          1.032313          0.802184         0.094226     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.820168    -0.158681    -0.320786	      |	A01C1               -0.925075    -0.403322    -0.287987
+A02O2                0.493997    -0.071979     0.134749	      |	A02O2                0.403541     0.031085    -0.281001
+A03H3               -1.130232     0.529419     0.832287	      |	A03H3               -1.503958     0.053739     0.509020
+A04H4               -1.098473    -1.013314    -0.009011	      |	A04H4               -0.915070    -1.472338    -0.132697
+A05H5               -1.086754     0.481264    -0.933375	      |	A05H5               -1.412171    -0.199000    -1.236784
+A06H6                1.032313     0.802184     0.094226	      |	A06H6                0.442855     0.959304    -0.413351
+A01O1               -4.093541    -1.673071    -0.504989	      |	A01O1               -4.159641    -1.707813    -0.512945
+A02H2               -4.673693    -1.039093    -0.123979	      |	A02H2               -4.878878    -1.218080    -0.157228
+A03H3               -4.244672    -2.479904    -0.046891	      |	A03H3               -4.232365    -2.577463    -0.163524
+A01O1               -4.289793    -1.868209    -3.581143	      |	A01O1               -4.308921    -1.877334    -3.577597
+A02H2               -4.185691    -1.779456    -2.651110	      |	A02H2               -4.218040    -1.759194    -2.649449
+A03H3               -3.454965    -1.664236    -3.962104	      |	A03H3               -3.437696    -1.884648    -3.930567
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0093025200		      |	          ELECTROSTATIC ENERGY    -0.0095565415
+           POLARIZATION ENERGY    -0.0011568358		      |	           POLARIZATION ENERGY    -0.0012228274
+             DISPERSION ENERGY    -0.0025734455		      |	             DISPERSION ENERGY    -0.0028590882
+     EXCHANGE REPULSION ENERGY     0.0050808365		      |	     EXCHANGE REPULSION ENERGY     0.0055456538
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0080928034
+							      <
+                  TOTAL ENERGY    -0.0079519647		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    STATE AFTER 13 STEPS				      |	    STATE AFTER 12 STEPS
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.820168    -0.158681    -0.320786	      |	A01C1               -0.925075    -0.403322    -0.287987
+A02O2                0.493997    -0.071979     0.134749	      |	A02O2                0.403541     0.031085    -0.281001
+A03H3               -1.130232     0.529419     0.832287	      |	A03H3               -1.503958     0.053739     0.509020
+A04H4               -1.098473    -1.013314    -0.009011	      |	A04H4               -0.915070    -1.472338    -0.132697
+A05H5               -1.086754     0.481264    -0.933375	      |	A05H5               -1.412171    -0.199000    -1.236784
+A06H6                1.032313     0.802184     0.094226	      |	A06H6                0.442855     0.959304    -0.413351
+A01O1               -4.093541    -1.673071    -0.504989	      |	A01O1               -4.159641    -1.707813    -0.512945
+A02H2               -4.673693    -1.039093    -0.123979	      |	A02H2               -4.878878    -1.218080    -0.157228
+A03H3               -4.244672    -2.479904    -0.046891	      |	A03H3               -4.232365    -2.577463    -0.163524
+A01O1               -4.289793    -1.868209    -3.581143	      |	A01O1               -4.308921    -1.877334    -3.577597
+A02H2               -4.185691    -1.779456    -2.651110	      |	A02H2               -4.218040    -1.759194    -2.649449
+A03H3               -3.454965    -1.664236    -3.962104	      |	A03H3               -3.437696    -1.884648    -3.930567
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0093025200		      |	          ELECTROSTATIC ENERGY    -0.0095565415
+           POLARIZATION ENERGY    -0.0011568358		      |	           POLARIZATION ENERGY    -0.0012228274
+             DISPERSION ENERGY    -0.0025734455		      |	             DISPERSION ENERGY    -0.0028590882
+     EXCHANGE REPULSION ENERGY     0.0050808365		      |	     EXCHANGE REPULSION ENERGY     0.0055456538
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0080928034
+							      <
+                  TOTAL ENERGY    -0.0079519647		      <
+
+
+                 ENERGY CHANGE    -0.0000190505		      |	                 ENERGY CHANGE    -0.0000910409
+                  RMS GRADIENT     0.0002596604		      |	                  RMS GRADIENT     0.0001936559
+              MAXIMUM GRADIENT     0.0007407690		      |	              MAXIMUM GRADIENT     0.0003706817
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000129						      |	     0.000244
+    -0.000298						      |	     0.000064
+     0.000367						      |	     0.000119
+    -0.000246						      |	     0.000170
+     0.000057						      |	    -0.000095
+    -0.000639						      |	     0.000213
+    -0.000017						      |	    -0.000075
+     0.000191						      |	    -0.000035
+    -0.000381						      |	    -0.000196
+     0.000313						      |	     0.000207
+     0.000741						      |	    -0.000371
+     0.000652						      |	     0.000317
+     0.000072						      |	    -0.000168
+     0.000165						      <
+    -0.000081						      <
+     0.000051						      <
+    -0.000077						      <
+     0.000080						      <
+     0.000002						      <
+    -0.000012						      <
+     0.000007						      <
+    -0.000001						      <
+     0.000008						      <
+    -0.000029							    -0.000029
+     0.000014						      |	     0.000078
+     0.000030						      |	    -0.000090
+     0.000007						      |	     0.000340
+     0.000009						      |	    -0.000170
+    -0.000007						      <
+     0.000030						      <
+
+
+--- OPTIMIZER FG STEP ---					--- OPTIMIZER FG STEP ---
+WARNING! Reading BO point BO62; bad atom numbers 6 and 2      <
+ In compute_two_body_range() 					 In compute_two_body_range() 
+ EFP ENERGY COMPONENTS 						 EFP ENERGY COMPONENTS 
+ ELECTROSTATIC ENERGY          -0.009476 		      |	 ELECTROSTATIC ENERGY          -0.009496 
+ AI ELECTROSTATIC ENERGY       0.000000 			 AI ELECTROSTATIC ENERGY       0.000000 
+ CHARGE PENETRATION ENERGY     0.000000 			 CHARGE PENETRATION ENERGY     0.000000 
+ POINT CHARGES ENERGY          0.000000 			 POINT CHARGES ENERGY          0.000000 
+ POLARIZATION ENERGY           0.000000 			 POLARIZATION ENERGY           0.000000 
+ EXC STATE POLARIZATION ENERGY 0.000000 			 EXC STATE POLARIZATION ENERGY 0.000000 
+ AI POLARIZATION ENERGY        0.000000 			 AI POLARIZATION ENERGY        0.000000 
+ DISPERSION ENERGY             -0.002588 		      |	 DISPERSION ENERGY             -0.003193 
+ AI DISPERSION ENERGY          0.000000 			 AI DISPERSION ENERGY          0.000000 
+ EXCHANGE-REPULSION ENERGY     0.005259 		      |	 EXCHANGE-REPULSION ENERGY     0.005721 
+ COULOMB MM ENERGY             0.000000 			 COULOMB MM ENERGY             0.000000 
+ LENNARD-JONES MM ENERGY       0.000000 			 LENNARD-JONES MM ENERGY       0.000000 
+ SUM ENERGY                    -0.006806 		      |	 SUM ENERGY                    -0.006968 
+ TOTAL ENERGY                  0.000000 			 TOTAL ENERGY                  0.000000 
+
+ IND DIPOLES NORM: 0.001285 				      |	 IND DIPOLES NORM: 0.001545 
+ IND DIPOLES NORM: 0.000044 				      |	 IND DIPOLES NORM: 0.000045 
+ IND DIPOLES NORM: 0.000001 					 IND DIPOLES NORM: 0.000001 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+ IND DIPOLES NORM: 0.000000 					 IND DIPOLES NORM: 0.000000 
+							      <
+ TORCH INFO 						      <
+-----------						      <
+							      <
+ Special fragment coordinates (Angstroms) 		      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   6         -0.815913         -0.152040        -0.312476     <
+   8          0.500919         -0.072459         0.131991     <
+   1         -1.129172          0.528773         0.833916     <
+   1         -1.098296         -1.012834        -0.009379     <
+   1         -1.086734          0.482914        -0.931779     <
+   1          1.032989          0.802003         0.094952     <
+-----------------------------------------------------------   <
+							      <
+ Special fragment atom gradients 			      <
+-----------------------------------------------------------   <
+  Atom            X                 Y                Z	      <
+   1          0.000000          0.000000         0.000000     <
+   2          0.000000          0.000000         0.000000     <
+   3          0.000000          0.000000         0.000000     <
+   4          0.000000          0.000000         0.000000     <
+   5          0.000000          0.000000         0.000000     <
+   6          0.000000          0.000000         0.000000     <
+------------------------------------------------------------  <
+							      <
+ Torch energy 0.000000 					      <
+							      <
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.815913    -0.152040    -0.312476	      |	A01C1               -1.025941    -0.442554    -0.366215
+A02O2                0.500919    -0.072459     0.131991	      |	A02O2                0.309869    -0.030913    -0.354233
+A03H3               -1.129172     0.528773     0.833916	      |	A03H3               -1.587563    -0.016634     0.459862
+A04H4               -1.098296    -1.012834    -0.009379	      |	A04H4               -1.032314    -1.518037    -0.264700
+A05H5               -1.086734     0.482914    -0.931779	      |	A05H5               -1.520593    -0.182897    -1.297410
+A06H6                1.032989     0.802003     0.094952	      |	A06H6                0.363423     0.902009    -0.440499
+A01O1               -4.103029    -1.668347    -0.516100	      |	A01O1               -4.129167    -1.681486    -0.469018
+A02H2               -4.720469    -1.102194    -0.089588	      |	A02H2               -4.817269    -1.155658    -0.103375
+A03H3               -4.170677    -2.503504    -0.089941	      |	A03H3               -4.242503    -2.546815    -0.119681
+A01O1               -4.294811    -1.873337    -3.582665	      |	A01O1               -4.240972    -1.863458    -3.546907
+A02H2               -4.238605    -1.780400    -2.648920	      |	A02H2               -4.150100    -1.755240    -2.617549
+A03H3               -3.433336    -1.703582    -3.918401	      |	A03H3               -3.389096    -1.715239    -3.915706
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0094762114		      |	          ELECTROSTATIC ENERGY    -0.0094958047
+           POLARIZATION ENERGY    -0.0011883305		      |	           POLARIZATION ENERGY    -0.0012072869
+             DISPERSION ENERGY    -0.0025884735		      |	             DISPERSION ENERGY    -0.0031931735
+     EXCHANGE REPULSION ENERGY     0.0052587257		      |	     EXCHANGE REPULSION ENERGY     0.0057208279
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0081754372
+							      <
+                  TOTAL ENERGY    -0.0079942898		      <
+
+
+
+--- OPTIMIZER NEW_X STEP ---					--- OPTIMIZER NEW_X STEP ---
+    FINAL STATE							    FINAL STATE
+
+    GEOMETRY (ANGSTROMS)					    GEOMETRY (ANGSTROMS)
+
+A01C1               -0.815913    -0.152040    -0.312476	      |	A01C1               -1.025941    -0.442554    -0.366215
+A02O2                0.500919    -0.072459     0.131991	      |	A02O2                0.309869    -0.030913    -0.354233
+A03H3               -1.129172     0.528773     0.833916	      |	A03H3               -1.587563    -0.016634     0.459862
+A04H4               -1.098296    -1.012834    -0.009379	      |	A04H4               -1.032314    -1.518037    -0.264700
+A05H5               -1.086734     0.482914    -0.931779	      |	A05H5               -1.520593    -0.182897    -1.297410
+A06H6                1.032989     0.802003     0.094952	      |	A06H6                0.363423     0.902009    -0.440499
+A01O1               -4.103029    -1.668347    -0.516100	      |	A01O1               -4.129167    -1.681486    -0.469018
+A02H2               -4.720469    -1.102194    -0.089588	      |	A02H2               -4.817269    -1.155658    -0.103375
+A03H3               -4.170677    -2.503504    -0.089941	      |	A03H3               -4.242503    -2.546815    -0.119681
+A01O1               -4.294811    -1.873337    -3.582665	      |	A01O1               -4.240972    -1.863458    -3.546907
+A02H2               -4.238605    -1.780400    -2.648920	      |	A02H2               -4.150100    -1.755240    -2.617549
+A03H3               -3.433336    -1.703582    -3.918401	      |	A03H3               -3.389096    -1.715239    -3.915706
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)				    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY    -0.0094762114		      |	          ELECTROSTATIC ENERGY    -0.0094958047
+           POLARIZATION ENERGY    -0.0011883305		      |	           POLARIZATION ENERGY    -0.0012072869
+             DISPERSION ENERGY    -0.0025884735		      |	             DISPERSION ENERGY    -0.0031931735
+     EXCHANGE REPULSION ENERGY     0.0052587257		      |	     EXCHANGE REPULSION ENERGY     0.0057208279
+          POINT CHARGES ENERGY     0.0000000000			          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000			     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000			                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000			                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY     0.0000000000		      |	                  TOTAL ENERGY    -0.0081754372
+							      <
+                  TOTAL ENERGY    -0.0079942898		      <
+
+
+                 ENERGY CHANGE    -0.0000423251		      |	                 ENERGY CHANGE    -0.0000826338
+                  RMS GRADIENT     0.0000800963		      |	                  RMS GRADIENT     0.0001258997
+              MAXIMUM GRADIENT     0.0001876448		      |	              MAXIMUM GRADIENT     0.0001972213
+
+
+
+ GRADIENTS 							 GRADIENTS 
+    -0.000066						      |	    -0.000056
+    -0.000067						      |	    -0.000051
+     0.000154						      |	     0.000093
+    -0.000011						      |	     0.000131
+    -0.000145						      |	    -0.000193
+     0.000008						      |	     0.000149
+    -0.000096						      |	     0.000128
+    -0.000039						      |	     0.000109
+    -0.000171						      |	     0.000102
+     0.000083						      |	    -0.000002
+     0.000188						      |	    -0.000143
+    -0.000009						      |	     0.000197
+     0.000080						      |	    -0.000072
+     0.000157						      |	    -0.000058
+    -0.000083						      |	    -0.000195
+     0.000058						      |	     0.000102
+    -0.000068						      |	     0.000044
+     0.000085						      |	     0.000193
+     0.000001						      <
+    -0.000014						      <
+     0.000008						      <
+     0.000000						      <
+     0.000007						      <
+    -0.000031						      <
+     0.000015						      <
+     0.000030						      <
+     0.000007						      <
+     0.000008						      <
+    -0.000006						      <
+     0.000031						      <
+
+OPTIMIZATION CONVERGED						OPTIMIZATION CONVERGED
+ENERGY MINIMIZATION JOB COMPLETED SUCCESSFULLY			ENERGY MINIMIZATION JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Tue Aug 27 10:27:17 2024		      |	WALL CLOCK TIME IS Sat Aug 24 16:26:48 2024
+TOTAL RUN TIME IS 15 SECONDS				      |	TOTAL RUN TIME IS 0 SECONDS

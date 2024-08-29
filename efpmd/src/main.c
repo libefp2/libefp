@@ -131,7 +131,8 @@ static struct cfg *make_cfg(void)
 	cfg_add_string(cfg, "userlib_path", ".");
 	cfg_add_bool(cfg, "enable_pbc", false);
 	cfg_add_string(cfg, "periodic_box", "30.0 30.0 30.0 90.0 90.0 90.0");
-	cfg_add_double(cfg, "opt_tol", 1.0e-4);
+	cfg_add_double(cfg, "opt_tol", 3.0e-4);
+	cfg_add_double(cfg, "opt_energy_tol", 1.0e-6);
 	cfg_add_double(cfg, "gtest_tol", 1.0e-6);
 	cfg_add_double(cfg, "ref_energy", 0.0);
 	cfg_add_bool(cfg, "hess_central", false);
@@ -164,6 +165,12 @@ static struct cfg *make_cfg(void)
     cfg_add_bool(cfg, "enable_torch", false);
     cfg_add_int(cfg, "opt_special_frag", -1);
     cfg_add_string(cfg, "torch_nn", "ani.pt");
+	
+	cfg_add_enum(cfg, "atom_gradient", ATOM_GRAD_MM,
+	"mm\n"
+	"frag\n",
+	(int []) { ATOM_GRAD_MM,
+			   ATOM_GRAD_FRAG });
 
     cfg_add_enum(cfg, "symm_frag", EFP_SYMM_FRAG_FRAG,
                  "frag\n"
@@ -175,7 +182,6 @@ static struct cfg *make_cfg(void)
     cfg_add_double(cfg, "update_params_cutoff", 0.0);
 
     cfg_add_int(cfg, "print", 0);
-    cfg_add_int(cfg, "verbose", 0);
     return cfg;
 }
 
@@ -318,7 +324,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 {
 	struct efp_opts opts = {
 		.terms = get_terms(cfg_get_string(cfg, "terms")),
-        	.special_terms = get_special_terms(cfg_get_string(cfg, "special_terms")),
+        .special_terms = get_special_terms(cfg_get_string(cfg, "special_terms")),
 		.elec_damp = cfg_get_enum(cfg, "elec_damp"),
 		.disp_damp = cfg_get_enum(cfg, "disp_damp"),
 		.pol_damp = cfg_get_enum(cfg, "pol_damp"),
@@ -330,9 +336,6 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
         .enable_pairwise = cfg_get_bool(cfg, "enable_pairwise"), 
         .ligand = cfg_get_int(cfg, "ligand"),
         .special_fragment = cfg_get_int(cfg, "special_fragment"),
-        .enable_torch = cfg_get_bool(cfg, "enable_torch"),
-        .opt_special_frag = cfg_get_int(cfg, "opt_special_frag"),
-        .print_pbc = cfg_get_bool(cfg, "print_pbc"),
         .symmetry = cfg_get_bool(cfg, "symmetry"),
         .symm_frag = cfg_get_enum(cfg, "symm_frag"),
         .update_params = cfg_get_int(cfg, "update_params"),
@@ -342,7 +345,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 
 	if (opts.xr_cutoff == 0.0) {
 	    opts.xr_cutoff = opts.swf_cutoff;
-	    printf("xr_cutoff is set to %lf \n\n", opts.xr_cutoff*0.52917721092);
+	    printf("xr_cutoff is set to %lf \n\n", opts.xr_cutoff * BOHR_RADIUS);
 	}
 
 	enum efp_coord_type coord_type = cfg_get_enum(cfg, "coord");
@@ -417,7 +420,8 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 	state->energy = 0;
 	state->grad = xcalloc(sys->n_frags * 6 + sys->n_charges * 3, sizeof(double));
 	state->ff = NULL;
-        state->torch = NULL;
+    state->torch = NULL;
+	state->torch_grad = NULL;
  
 	if (cfg_get_bool(cfg, "enable_ff")) {
 		if ((state->ff = ff_create()) == NULL)
@@ -638,6 +642,7 @@ int main(int argc, char **argv)
 	sys_free(state.sys);
 	cfg_free(state.cfg);
 	free(state.grad);
+	if (state.torch_grad) free(state.torch_grad);
 exit:
 #ifdef EFP_USE_MPI
 	MPI_Finalize();

@@ -488,31 +488,24 @@ void efp_update_elec_special(struct frag *frag)
         else {
             if (out->label[0] == 'B' && out->label[1] == 'O') {
                 int length = strlen(out->label) - 2;
-                //printf(" Analyzing label %s, length is %d\n", out->label, length);
+                // printf(" Analyzing label %s, length is %d\n", out->label, length);
                 size_t m1, m2;
                 if (length == 2) {
-                    char label1[1], label2[1];
-                    strncpy(label1,out->label+2,1);
-                    strncpy(label2,out->label+3,1);
-                    sscanf(label1, "%zu", &m1);
-                    sscanf(label2, "%zu", &m2);
+                    m1 = out->label[2] - 48;  // converting to char to size_t 1-digit number
+                    m2 = out->label[3] - 48;
                 }
                 else if (length == 3) {
-                    char label1[2], label2[1];
-                    strncpy(label1,out->label+2,2);
-                    strncpy(label2,out->label+4,1);
-                    sscanf(label1, "%zu", &m1);
-                    sscanf(label2, "%zu", &m2);
+                    m1 = (out->label[2] - 48)*10 + out->label[3] - 48;  // converting to char to size_t 2-digit number
+                    m2 = out->label[4] - 48;
                 }
                 else if (length == 4) {
-                    char label1[2], label2[2];
-                    strncpy(label1,out->label+2,2);
-                    strncpy(label2,out->label+4,2);
-                    sscanf(label1, "%zu", &m1);
-                    sscanf(label2, "%zu", &m2);
+                    m1 = (out->label[2] - 48)*10 + out->label[3] - 48;  // converting to char to size_t 2-digit number
+                    m2 = (out->label[4] - 48)*10 + out->label[5] - 48;
                 }
-                else printf("Reading BO point %s but do not know what to do with it!\n", out->label);
-
+                else printf("WARNING! Reading BO point %s but do not know what to do with it!\n", out->label);
+                if (m1 > natom || m2 > natom) 
+                     printf("WARNING! Reading BO point %s; bad atom numbers %zu and %zu\n", out->label, m1, m2);
+                // printf("m1, m2 are %zu  %zu\n", m1, m2);
                 out->x = (frag->atoms[m1-1].x + frag->atoms[m2-1].x)/2;
                 out->y = (frag->atoms[m1-1].y + frag->atoms[m2-1].y)/2;
                 out->z = (frag->atoms[m1-1].z + frag->atoms[m2-1].z)/2;
@@ -749,15 +742,20 @@ qq_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
     // charge - charge
     energy += efp_charge_charge_energy(pt_i->mm_charge, pt_j->mm_charge, &dr);
 
+    //if (efp->opts.print > 1) {
+    //    printf("\n Atomic gradient in qq_energy BEFORE\n");
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_i_idx, pt_i_idx, pt_i->gx, pt_i->gy, pt_i->gz); 
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_j_idx, pt_j_idx, pt_j->gx, pt_j->gy, pt_j->gz); 
+    //}
+
     // gradient
     if (efp->do_gradient) {
-        vec_t force_, add_i_, add_j_;
+        vec_t add_i, add_j;
         vec_t force = vec_zero;
 
         // charge-charge
         efp_charge_charge_grad(pt_i->mm_charge, pt_j->mm_charge, &dr,
-                               &force_, &add_i_, &add_j_);
-        vec_add(&force, &force_);
+                               &force, &add_i, &add_j);
         vec_scale(&force, swf->swf);
 
         efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x),
@@ -782,8 +780,15 @@ qq_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
         pt_j->gz -= force.z + force2.z;
     }
 
+    //if (efp->opts.print > 1) {
+    //    printf("\n Atomic gradient in qq_energy AFTER\n");
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_i_idx, pt_i_idx, pt_i->gx, pt_i->gy, pt_i->gz); 
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_j_idx, pt_j_idx, pt_j->gx, pt_j->gy, pt_j->gz); 
+    //}
+
     return energy;
 }
+
 
 static double
 lj_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,

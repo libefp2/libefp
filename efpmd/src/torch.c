@@ -28,7 +28,6 @@
 #include "common.h"
 #include "cfg.h"
 #include <stdio.h>
-//#include "../torch/c_libtorch.h"
 
 struct torch {
     double energy;
@@ -101,31 +100,24 @@ void torch_set_atom_species(struct torch *torch, const int *atom_z) {
 }
 
 // SKP's torch version
-void torch_compute(struct torch *torch) {
+void torch_compute(struct torch *torch, int print) {
 
     // prepare data arrays 
-    msg("\n TORCH CALL \n-------------------------\n");
-    // struct state *state;
+    // msg("\n TORCH CALL \n---------------------------------\n");
+
     size_t n_atoms = torch->natoms;
-    float frag_coordinates[n_atoms][3];
-    float *energies, *gradients, *forces;
+    float *energies, *gradients, *forces, *frag_coord;
 
     energies = malloc(n_atoms * sizeof(float));
     gradients = malloc(n_atoms * 3 * sizeof(float));
     forces = malloc(n_atoms * 3 * sizeof(float));
 
+    // copy from double to float
+    frag_coord = malloc(n_atoms*3* sizeof(float));
     for (size_t i=0; i<n_atoms; i++) {
-        frag_coordinates[i][0] = (float)torch->atom_coords[i*3] * BOHR_RADIUS;
-        frag_coordinates[i][1] = (float)torch->atom_coords[i*3+1] * BOHR_RADIUS;
-        frag_coordinates[i][2] = (float)torch->atom_coords[i*3+2] * BOHR_RADIUS;
-    }
-
-    // flatten to 1D array
-    float frag_coord_1D[n_atoms*3];
-    for (size_t i=0; i<n_atoms; i++) {
-        frag_coord_1D[i*3] = (float)(torch->atom_coords[i*3] * BOHR_RADIUS);
-        frag_coord_1D[i*3+1] = (float)(torch->atom_coords[i*3+1] * BOHR_RADIUS);
-        frag_coord_1D[i*3+2] = (float)(torch->atom_coords[i*3+2] * BOHR_RADIUS);
+        frag_coord[i*3] = (float)(torch->atom_coords[i*3] * BOHR_RADIUS);
+        frag_coord[i*3+1] = (float)(torch->atom_coords[i*3+1] * BOHR_RADIUS);
+        frag_coord[i*3+2] = (float)(torch->atom_coords[i*3+2] * BOHR_RADIUS);
     }
 
     int frag_species[n_atoms];
@@ -137,54 +129,58 @@ void torch_compute(struct torch *torch) {
     double total_energy = 0.0;
 
     // call function
-    // get_torch_energy_grad((float*)frag_coordinates, frag_species, n_atoms, energies, gradients, forces, model_type);
-    get_torch_energy_grad(frag_coord_1D, frag_species, n_atoms, energies, gradients, forces, torch->nn_type);
+    get_torch_energy_grad(frag_coord, frag_species, n_atoms, energies, gradients, forces, torch->nn_type);
 
-    // print torch data for verification
     
-    printf("\nSpecial fragment Atomic Energies, Coordinates, Gradients in H, A, H/A \n---------------------------\n");
+    // printf("   Special fragment Atomic Energies, Coordinates, Gradients in H, A, H/A \n----------------------------------\n");
     for (int i = 0; i < n_atoms; ++i) {
-        printf("%4d   %12.6f     %12.6f %12.6f %12.6f    %12.6f %12.6f %12.6f\n",
-            torch->atom_types[i],energies[i], 
-            frag_coord_1D[3*i], frag_coord_1D[3*i+1], frag_coord_1D[3*i+2],
-            gradients[3*i], gradients[3*i+1], gradients[3*i+2]);
+
+        // printf("%4d   %12.6f     %12.6f %12.6f %12.6f    %12.6f %12.6f %12.6f\n",
+        //     torch->atom_types[i],energies[i], 
+        //    frag_coord[3*i], frag_coord[3*i+1], frag_coord[3*i+2],
+        //    gradients[3*i], gradients[3*i+1], gradients[3*i+2]);
+        
         total_energy  += (double)energies[i];
     }
-    printf("   Total TORCH energy %12.6f\n", total_energy);
-    printf("--------------------------------\n");
+    //printf("   Total TORCH energy %12.6f\n", total_energy);
+    //printf("----------------------------------\n\n");
+    
     torch->energy = total_energy;
 
-    
-    // printf("Gradients:\n");
-    // for (int i = 0; i < n_atoms; ++i) {
-    //for (int j = 0; j < 3; ++j) {
-    //    printf("%f\t", gradients[i * 3 + j]);
-    //}
-    //printf("\n");
-    //}
+    if (print > 1) {
+        printf("Gradients:\n");
+        for (int i = 0; i < n_atoms; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                printf("%f\t", gradients[i * 3 + j]);
+            }
+            printf("\n");
+        }
 
-    //printf("Forces:\n");
-    //for (int i = 0; i < n_atoms; ++i) {
-    //        for (int j = 0; j < 3; ++j) {
-    //            printf("%f\t", forces[i * 3 + j]);
-    //        }
-    //        printf("\n");
-    //}
-    
-    // previous commented lines can be deleted later on
- 
+        printf("Forces:\n");
+        for (int i = 0; i < n_atoms; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                printf("%f\t", forces[i * 3 + j]);
+            }
+            printf("\n");
+        }
+    }
+
     // save data in energy and grad
     // convert the gradients from float to double and to Hartree/Bohr
-    double *tG_double = malloc(3 * n_atoms * sizeof(double));
+    double *tG_double = xcalloc(3 * n_atoms, sizeof(double));
+    
     for (int i = 0; i < 3 * n_atoms; i++) {
         tG_double[i] = (double)(gradients[i] * BOHR_RADIUS);
     }
 
     memcpy(torch->grad, tG_double, (3 * n_atoms) * sizeof(double)); // Atomistic gradient for the EFP-ML fragment
 
+    if (print> 0) torch_print(torch);
+
     free(energies);
     free(gradients);
     free(forces);
+    free(frag_coord);
     free(tG_double);
 }
 

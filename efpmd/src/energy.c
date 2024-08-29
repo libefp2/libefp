@@ -37,6 +37,10 @@ void compute_energy(struct state *state, bool do_grad)
 	size_t ifrag, nfrag, iatom, natom, spec_frag, n_special_atoms;
 	int itotal;
 
+    if (cfg_get_int(state->cfg, "print")>0) {
+        print_geometry(state->efp);
+    }
+
 	/* EFP part */
     // print_geometry(state->efp);
 	check_fail(efp_compute(state->efp, do_grad));
@@ -50,7 +54,7 @@ void compute_energy(struct state *state, bool do_grad)
 	}
 
 	state->energy = efp_energy.total;
-	print_energy(state);
+	// print_energy(state);
 	// printf("\n State energy (state->energy) %lf \n", state->energy);	
  
 	/* constraints */
@@ -80,20 +84,11 @@ void compute_energy(struct state *state, bool do_grad)
 
     /* Torch fragment part here */
     if (cfg_get_bool(state->cfg, "enable_torch")) {
-        // prototype to compute energy and gradients with torch
-        // torch_compute_energy(struct torch *, bool do_grad);
-				// if (cfg_get_int(state->cfg, "verbose") == 5) printf("marker for enable_torch block in compute_energy\n");
-				// int torch_model_type = get_torch_type(cfg_get_string(state->cfg, "torch_nn"));
- 
-        torch_compute(state->torch);
+
+        torch_compute(state->torch, cfg_get_int(state->cfg, "print"));
         state->torch_energy = torch_get_energy(state->torch);
-
-	// if (cfg_get_int(state->cfg, "verbose") == 5) printf("\n State energy (state->energy) %lf \n", state->energy);
-
         state->energy += state->torch_energy;
-
-	// if (cfg_get_int(state->cfg, "verbose") == 5) printf("\n Torch energy (state->torch_energy) %lf \n", state->torch_energy);
-	// if (cfg_get_int(state->cfg, "verbose") == 5) printf("After addition of torch_energy, state->energy = %lf \n",state->energy);
+		// print_energy(state);
 
         if (do_grad) {
             torch_get_gradient(state->torch, state->torch_grad);

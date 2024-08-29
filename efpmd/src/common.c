@@ -213,7 +213,15 @@ void print_energy(struct state *state)
 	    energy.electrostatic_point_charges);
 	msg("%30s %16.10lf\n", "CHARGE PENETRATION ENERGY",
 	    energy.charge_penetration);
+	msg("%30s %16.10lf\n", "QQ ENERGY", energy.qq);
+	msg("%30s %16.10lf\n", "LJ ENERGY", energy.lj);
+
 	msg("\n");
+
+	if (state->torch) {
+		msg("%30s %16.10lf\n", "ML ENERGY", state->torch_energy);
+		msg("\n");
+	}
 
 	if (state->ff) {
 		msg("%30s %16.10lf\n", "FORCE-FIELD ENERGY",
