@@ -18,6 +18,8 @@ project(
 
 #set(CMAKE_INSTALL_PREFIX "/depot/lslipche/data/skp/torch_branch_skp/libefp")
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(CMAKE_INSTALL_PREFIX "$ENV{LIBEFP_DIR}" CACHE PATH "Installation directory")
 
 set(libefp_AUTHORS "Ilya A. Kaliman, Lori A. Burns, Dmitry Morozov, Carlos H. Borca, Yen (Terri) Bui, Yongbin Kim, Lyudmila V. Slipchenko")
@@ -77,6 +79,28 @@ include(autocmake_safeguards)
 include(custom_static_library)
 
 if (LIBEFP_ENABLE_OPENMP)
+
+    #if(APPLE)
+    if(0)
+        if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+            set(OpenMP_C "${CMAKE_C_COMPILER}" CACHE STRING "" FORCE)
+            set(OpenMP_C_FLAGS "-fopenmp=libomp -Wno-unused-command-line-argument" CACHE STRING "" FORCE)
+            set(OpenMP_C_LIB_NAMES "libomp" "libgomp" "libiomp5" CACHE STRING "" FORCE)
+            set(OpenMP_libomp_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+            set(OpenMP_libgomp_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+            set(OpenMP_libiomp5_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+        endif()
+        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+            set(OpenMP_CXX "${CMAKE_CXX_COMPILER}" CACHE STRING "" FORCE)
+            set(OpenMP_CXX_FLAGS "-fopenmp=libomp -Wno-unused-command-line-argument" CACHE STRING "" FORCE)
+            set(OpenMP_CXX_LIB_NAMES "libomp" "libgomp" "libiomp5" CACHE STRING "" FORCE)
+            set(OpenMP_libomp_LIBRARY ${OpenMP_CXX_LIB_NAMES} CACHE STRING "" FORCE)
+            set(OpenMP_libgomp_LIBRARY ${OpenMP_CXX_LIB_NAMES} CACHE STRING "" FORCE)
+            set(OpenMP_libiomp5_LIBRARY ${OpenMP_CXX_LIB_NAMES} CACHE STRING "" FORCE)
+        endif()
+    endif()
+
+
     if (CMAKE_C_COMPILER_ID STREQUAL "IntelLLVM")
         message(WARNING "CMake v3.28 doesn't find OpenMP C language for IntelLLVM (icx), so configure will likely fail. Rerun with `-D LIBEFP_ENABLE_OPENMP=OFF` or pass flags in CMAKE_C_FLAGS.")
     endif()
@@ -87,6 +111,7 @@ endif()
 # for MKL serial, this is recommended:
 # set(BLA_VENDOR Intel10_64lp_seq)
 find_package(TargetLAPACK REQUIRED)
+
 
 ################################# Main Project #################################
 include(GNUInstallDirs)

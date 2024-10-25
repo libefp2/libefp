@@ -321,11 +321,21 @@ mult_mult_grad(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 	vec_scale(&torque_i, swf->swf);
 	vec_scale(&torque_j, swf->swf);
 
-	efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x),
-	    &force, &torque_i);
-	efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x),
-	    &force, &torque_j);
-	efp_add_stress(&swf->dr, &force, &efp->stress);
+    efp_add_stress(&swf->dr, &force, &efp->stress);
+
+    // a check for torch special model with elpot on special fragment
+    // gradient is not added to the special fragment in this case
+    // this assumes that we use ml/efp fragment that induces field to other fragments due to its efp nature (multipoles and ind dipoles)
+    // this might need to be changed if ml fragment uses ml-predicted charges instead
+
+    if (!efp->opts.enable_elpot || (efp->opts.special_fragment != fr_i_idx && efp->opts.special_fragment != fr_j_idx)) {
+        efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &torque_i);
+        efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x), &force, &torque_j);
+    }
+    else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_i_idx)
+        efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x), &force, &torque_j);
+    else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_j_idx)
+        efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &torque_i);
 }
 
 double
@@ -359,9 +369,16 @@ efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
                 swf.dswf.z * energy
         };
 
-        six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
-        six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
         efp_add_stress(&swf.dr, &force, &efp->stress);
+
+        // a check for torch special model with elpot on special fragment
+        // gradient is not added to the special fragment in this case
+        if (!efp->opts.enable_elpot || (efp->opts.special_fragment != fr_i_idx && efp->opts.special_fragment != fr_j_idx)) {
+            six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+            six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+        }
+        else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_i_idx) six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+        else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_j_idx) six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
 
         return energy * swf.swf;
     }
@@ -931,9 +948,16 @@ efp_frag_frag_qq(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
                     swf.dswf.z * energy
             };
 
-            six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
-            six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
             efp_add_stress(&swf.dr, &force, &efp->stress);
+
+            // a check for torch special model with elpot on special fragment
+            // gradient is not added to the special fragment in this case
+            if (!efp->opts.enable_elpot || (efp->opts.special_fragment != fr_i_idx && efp->opts.special_fragment != fr_j_idx)) {
+                six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+                six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+            }
+            else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_i_idx) six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+            else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_j_idx) six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
         }
 
         return energy * swf.swf;

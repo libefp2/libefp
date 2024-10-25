@@ -218,7 +218,7 @@ parse_monopoles(struct frag *frag, struct stream *stream)
 	for (size_t i = 0; i < frag->n_multipole_pts; i++) {
 
         if (tok_stop(stream)) {
-            printf(" Found %zu monopoles of %zu expected in fragment %s \n",
+            printf(" Found %d monopoles of %zu expected in fragment %s \n",
                     counter, frag->n_multipole_pts, frag->name);
             return EFP_RESULT_SUCCESS;
         }
@@ -267,7 +267,7 @@ parse_dipoles(struct frag *frag, struct stream *stream)
     for (size_t i = 0; i < frag->n_multipole_pts; i++) {
 
         if (tok_stop(stream)) {
-            printf(" Found %zu dipoles of %zu expected in fragment %s \n",
+            printf(" Found %d dipoles of %zu expected in fragment %s \n",
                    counter, frag->n_multipole_pts, frag->name);
             return EFP_RESULT_SUCCESS;
         }
@@ -328,7 +328,7 @@ parse_quadrupoles(struct frag *frag, struct stream *stream)
     for (size_t i = 0; i < frag->n_multipole_pts; i++) {
 
         if (tok_stop(stream)) {
-            printf(" Found %zu quadrupoles of %zu expected in fragment %s \n",
+            printf(" Found %d quadrupoles of %zu expected in fragment %s \n",
                    counter, frag->n_multipole_pts, frag->name);
             return EFP_RESULT_SUCCESS;
         }
@@ -397,7 +397,7 @@ parse_octupoles(struct frag *frag, struct stream *stream)
     for (size_t i = 0; i < frag->n_multipole_pts; i++) {
 
         if (tok_stop(stream)) {
-            printf(" Found %zu octupoles of %zu expected in fragment %s \n",
+            printf(" Found %d octupoles of %zu expected in fragment %s \n",
                    counter, frag->n_multipole_pts, frag->name);
             return EFP_RESULT_SUCCESS;
         }
@@ -1321,7 +1321,7 @@ parse_mm_atom_charge(struct frag *frag, struct stream *stream)
     for (size_t i = 0; i < frag->n_atoms; i++) {
 
         if (tok_stop(stream)) {
-            printf(" Found %zu mm_atoms of %zu expected in fragment %s \n",
+            printf(" Found %d mm_atoms of %zu expected in fragment %s \n",
                    counter, frag->n_atoms, frag->name);
             return EFP_RESULT_SUCCESS;
         }
@@ -1374,7 +1374,7 @@ parse_mm_lj(struct frag *frag, struct stream *stream)
     for (size_t i = 0; i < frag->n_atoms; i++) {
 
         if (tok_stop(stream)) {
-            printf(" Found %zu mm_atoms of %zu expected in fragment %s \n",
+            printf(" Found %d mm_atoms of %zu expected in fragment %s \n",
                    counter, frag->n_atoms, frag->name);
             return EFP_RESULT_SUCCESS;
         }
@@ -1423,7 +1423,7 @@ parse_mm_atomtype(struct frag *frag, struct stream *stream)
     for (size_t i = 0; i < frag->n_atoms; i++) {
 
         if (tok_stop(stream)) {
-            printf(" Found %zu mm_atoms of %zu expected in fragment %s \n",
+            printf(" Found %d mm_atoms of %zu expected in fragment %s \n",
                    counter, frag->n_atoms, frag->name);
             return EFP_RESULT_SUCCESS;
         }

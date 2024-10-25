@@ -1,0 +1,17 @@
+{
+	"bmi-installation" : null,
+	"compiler-id" : "GNU",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"dir-cur-bld" : "/Users/lyuda/LIBEFP/libefp_torch_skp_Oct20/cmake-build-debug/efpmd",
+	"dir-cur-src" : "/Users/lyuda/LIBEFP/libefp_torch_skp_Oct20/efpmd",
+	"dir-top-bld" : "/Users/lyuda/LIBEFP/libefp_torch_skp_Oct20/cmake-build-debug",
+	"dir-top-src" : "/Users/lyuda/LIBEFP/libefp_torch_skp_Oct20",
+	"exports" : [],
+	"include-dirs" : [],
+	"language" : "Fortran",
+	"linked-target-dirs" : [],
+	"module-dir" : "/Users/lyuda/LIBEFP/libefp_torch_skp_Oct20/cmake-build-debug/efpmd",
+	"submodule-ext" : ".smod",
+	"submodule-sep" : "@"
+}

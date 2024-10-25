@@ -1,10 +1,9 @@
-# water tetramer
-
 run_type opt
 coord xyzabc
 fraglib_path ../fraglib
 enable_torch false
 max_steps 200
+print 1
 
 fragment h2o_l
    0.000   0.000   0.000   0.000   0.000   0.000

@@ -385,6 +385,8 @@ void sim_opt(struct state *state)
         check_fail(efp_get_point_charge_coordinates(state->efp, coord + 6 * n_frags));
     }
 
+//////////////////////
+    bool if_converged = false;
 
     if (opt_init(opt_state, n_coord, coord))
         error("unable to initialize an optimizer");
@@ -405,8 +407,11 @@ void sim_opt(struct state *state)
     }
 
     for (int step = 1; step <= cfg_get_int(state->cfg, "max_steps"); step++) {
-        if (opt_step(opt_state))
-            error("unable to make an optimization step");
+        if (opt_step(opt_state)) {
+            msg("\nL-BFGS-B is unable to make an optimization step\n");
+            break;
+            // error("unable to make an optimization step");
+        }
 
         double e_new = opt_get_fx(opt_state);
         // just checking coordinates
@@ -426,7 +431,8 @@ void sim_opt(struct state *state)
                 printf("\n");
             }
 
-            msg("OPTIMIZATION CONVERGED\n");
+            msg("\nOPTIMIZATION CONVERGED\n");
+            if_converged = true;
             break;
         }
 
@@ -443,6 +449,8 @@ void sim_opt(struct state *state)
 
         e_old = e_new;
     }
+
+    if (!if_converged) msg("\nOPTIMIZATION HAS NOT CONVERGED\n");
 
     opt_shutdown(opt_state);
 

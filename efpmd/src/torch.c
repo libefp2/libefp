@@ -114,7 +114,7 @@ void torch_custom_compute(struct torch *torch, int print) {
         frag_coord[i*3+1] = (float)(torch->atom_coords[i*3+1] * BOHR_RADIUS);
         frag_coord[i*3+2] = (float)(torch->atom_coords[i*3+2] * BOHR_RADIUS);
 	
-	elecpots_data[i] = (float) torch->elpot[i];
+	    elecpots_data[i] = (float) torch->elpot[i];
     }
 
     int atomic_num[n_atoms];
@@ -169,6 +169,7 @@ void torch_custom_compute(struct torch *torch, int print) {
     free(forces);
     free(frag_coord);
     free(tG_double);
+    free(elecpots_data);
  
 }
 
@@ -308,30 +309,30 @@ void torch_free(struct torch *torch) {
         free(torch->atom_coords);
         free(torch->atom_types);
         free(torch);
-	ANIModel_delete(torch->ani_model);
+	    ANIModel_delete(torch->ani_model);
     }
 }
 
 void torch_print(struct torch *torch) {
     if (torch) {
         printf("\n TORCH INFO \n");
-	printf("-----------\n");
-        printf("\n Special fragment coordinates (Angstroms) \n", torch->natoms);
-	printf("-----------------------------------------------------------\n");
-	printf("  Atom            X                 Y                Z\n");
+	    printf("-----------\n");
+        printf("\n Special fragment coordinates (Angstroms) \n");
+	    printf("-----------------------------------------------------------\n");
+	    printf("  Atom            X                 Y                Z\n");
         for (size_t i=0; i< torch->natoms; i++) {
             printf("%4d      %12.6f      %12.6f     %12.6f\n", torch->atom_types[i], torch->atom_coords[i*3] * BOHR_RADIUS,
                    torch->atom_coords[i*3+1] * BOHR_RADIUS, torch->atom_coords[i*3+2] * BOHR_RADIUS);	    
         }
-	printf("-----------------------------------------------------------\n");
-        printf("\n Special fragment atom gradients \n", torch->natoms);
-	printf("-----------------------------------------------------------\n");
-            printf("  Atom            X                 Y                Z\n");
+	    printf("-----------------------------------------------------------\n");
+        printf("\n Special fragment atom gradients \n");
+	    printf("-----------------------------------------------------------\n");
+        printf("  Atom            X                 Y                Z\n");
         for (size_t i=0; i< torch->natoms; i++) {
-            printf("%4d      %12.6f      %12.6f     %12.6f\n",i+1,torch->grad[i*3],
+            printf("%4zu      %12.6f      %12.6f     %12.6f\n",i+1,torch->grad[i*3],
                    torch->grad[i*3+1], torch->grad[i*3+2]);
         }
-	printf("------------------------------------------------------------\n");
+	    printf("------------------------------------------------------------\n");
         printf("\n Torch energy %lf \n\n", torch->energy);
     }
 }

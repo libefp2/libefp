@@ -1,5 +1,5 @@
 check:
-	@EFPMD=../efpmd/src/efpmd ./run.sh
+	@EFPMD=../build4/efpmd/efpmd ./run.sh
 
 checkomp:
 	@for thr in 1 2 3; do \

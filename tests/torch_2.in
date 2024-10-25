@@ -7,6 +7,7 @@ special_fragment 0
 enable_torch true
 torch_nn ani2.pt
 opt_special_frag 1
+print 0
 
 
 fragment h2o_l

@@ -5,6 +5,7 @@ disp_damp off
 fraglib_path ../fraglib
 special_fragment 0
 enable_torch true
+print 2
 
 
 fragment h2o_l

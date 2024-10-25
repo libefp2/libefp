@@ -133,6 +133,7 @@ sim_elpot(struct state *state)
     msg("ELECTROSTATIC POTENTIAL JOB COMPLETED SUCCESSFULLY\n");
 }
 
+/*
 void get_frag_elpot(struct state *state) {
     size_t spec_frag;
     spec_frag = cfg_get_int(state->cfg, "special_fragment");
@@ -157,6 +158,7 @@ void get_frag_elpot(struct state *state) {
     
     free(atoms);
 }
+*/
 
 void sim_frag_elpot(struct state *state) {
 

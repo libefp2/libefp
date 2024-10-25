@@ -61,6 +61,7 @@ enum run_type {
 	RUN_TYPE_MD,
 	RUN_TYPE_EFIELD,
 	RUN_TYPE_ELPOT,
+    RUN_TYPE_FRAG_ELPOT,
 	RUN_TYPE_GTEST,
 	RUN_TYPE_ETEST
 };
@@ -102,17 +103,15 @@ struct sys {
 struct state {
 	struct efp *efp;
 	struct ff *ff;
-    	struct torch *torch;
-	struct torch_state *torch_state;
+    struct torch *torch;
 	struct cfg *cfg;
 	struct sys *sys;
 	double energy;
-	double *spec_elpot;
-    	double torch_energy;
+	// double *spec_elpot;
+    double torch_energy;
 	double *grad;
-    	double *torch_grad;
-	int counter;
-	int init;
+    double *torch_grad;
+	// int init;
 };
 
 

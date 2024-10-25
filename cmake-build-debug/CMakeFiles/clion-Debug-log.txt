@@ -1,0 +1,61 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/lyuda/LIBEFP/libefp_torch_skp_Oct20 -B /Users/lyuda/LIBEFP/libefp_torch_skp_Oct20/cmake-build-debug
+CMake Warning at CMakeLists.txt:52 (message):
+  Using FRAGLIB_UNDERSCORE_L=OFF is deprecated and may be removed as soon as
+  v1.10.  Please adapt your fragment search to handle name and name_L.
+
+
+CMake Warning at CMakeLists.txt:55 (message):
+  Using FRAGLIB_DEEP=OFF is deprecated and may be removed as soon as v1.10.
+  Please adapt your fraglib library usage to handle a list of paths.
+
+
+-- Setting option CMAKE_BUILD_TYPE: Debug
+-- Setting option BUILD_SHARED_LIBS: OFF
+-- Setting option BUILD_FPIC: ON
+-- Setting option LIBEFP_ENABLE_OPENMP: OFF
+-- Setting option ENABLE_GENERIC: OFF
+-- Setting option ENABLE_XHOST: ON
+-- Performing Test CMAKE_C_FLAGS [-march=native] - Success, Appending
+-- Performing Test CMAKE_CXX_FLAGS [-march=native] - Success, Appending
+-- Setting option FRAGLIB_UNDERSCORE_L: ON
+-- Setting option FRAGLIB_DEEP: ON
+-- Setting option INSTALL_DEVEL_HEADERS: OFF
+-- Setting option LIBEFP_CMAKECONFIG_INSTALL_DIR: share/cmake/libefp
+-- Setting option LIBEFP_ENABLE_EFPMD: ON
+-- Setting option PYMOD_INSTALL_LIBDIR: /
+-- Setting option LIBEFP_ENABLE_PYTHON: OFF
+-- LAPACK detected.
+-- Caffe2: Found protobuf with new-style protobuf targets.
+-- Caffe2: Protobuf version 28.1.0
+CMake Warning at /opt/homebrew/share/cmake/Torch/TorchConfig.cmake:22 (message):
+  static library kineto_LIBRARY-NOTFOUND not found.
+Call Stack (most recent call first):
+  /opt/homebrew/share/cmake/Torch/TorchConfig.cmake:127 (append_torchlib_if_found)
+  efpmd/CMakeLists.txt:17 (find_package)
+
+
+TORCH_INSTALL_PREFIX =  /opt/homebrew
+TORCH_LIBRARIES =  torch;torch_library;/opt/homebrew/lib/libc10.dylib
+TORCH_INCLUDE_DIRS =  /opt/homebrew/include;/opt/homebrew/include/torch/csrc/api/include
+-- Configuring done
+CMake Error at /opt/homebrew/lib/cmake/protobuf/protobuf-targets.cmake:71 (set_target_properties):
+  The link interface of target "protobuf::libprotobuf" contains:
+
+    absl::absl_check
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+Call Stack (most recent call first):
+  /opt/homebrew/lib/cmake/protobuf/protobuf-config.cmake:16 (include)
+  /opt/homebrew/share/cmake/Caffe2/public/protobuf.cmake:4 (find_package)
+  /opt/homebrew/share/cmake/Caffe2/Caffe2Config.cmake:48 (include)
+  /opt/homebrew/share/cmake/Torch/TorchConfig.cmake:68 (find_package)
+  efpmd/CMakeLists.txt:17 (find_package)
+
+
+-- Generating done
+CMake Generate step failed.  Build files cannot be regenerated correctly.

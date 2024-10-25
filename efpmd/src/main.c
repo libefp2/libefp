@@ -66,6 +66,7 @@ static struct cfg *make_cfg(void)
 		"md\n"
 		"efield\n"
         "elpot\n"
+        "frag_elpot\n"
 		"gtest\n"
         "etest\n",
 		(int []) { RUN_TYPE_SP,
@@ -75,6 +76,7 @@ static struct cfg *make_cfg(void)
 			   RUN_TYPE_MD,
 			   RUN_TYPE_EFIELD,
 			   RUN_TYPE_ELPOT,
+               RUN_TYPE_FRAG_ELPOT,
 			   RUN_TYPE_GTEST,
 			   RUN_TYPE_ETEST});
 
@@ -173,11 +175,10 @@ static struct cfg *make_cfg(void)
 
     cfg_add_bool(cfg, "enable_torch", false);
     cfg_add_bool(cfg, "enable_elpot", false);
-    //cfg_add_bool(cfg, "apply_elpot", false);
     cfg_add_int(cfg, "opt_special_frag", -1);
     cfg_add_string(cfg, "torch_nn", "ani.pt");
 	
-	cfg_add_enum(cfg, "atom_gradient", ATOM_GRAD_MM,
+	cfg_add_enum(cfg, "atom_gradient", ATOM_GRAD_FRAG,
 	"mm\n"
 	"frag\n",
 	(int []) { ATOM_GRAD_MM,
@@ -211,8 +212,10 @@ static sim_fn_t get_sim_fn(enum run_type run_type)
 		    return sim_md;
 	    case RUN_TYPE_EFIELD:
 		    return sim_efield;
-		case RUN_TYPE_ELPOT:
+        case RUN_TYPE_ELPOT:
             return sim_elpot;
+        case RUN_TYPE_FRAG_ELPOT:
+            return sim_frag_elpot;
 	    case RUN_TYPE_GTEST:
 		    return sim_gtest;
 		case RUN_TYPE_ETEST:
@@ -304,7 +307,7 @@ static unsigned get_special_terms(const char *str)
 {
     static const struct {
         const char *name;
-        enum efp_term value;
+        enum efp_special_term value;
     } list[] = {
             { "elec", EFP_SPEC_TERM_ELEC },
             { "pol",  EFP_SPEC_TERM_POL  },
@@ -467,14 +470,6 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
         if ((state->torch = torch_create()) == NULL)
             error("cannot create torch object");
 
-        // load torch NN
-        //if (!torch_load_nn(state->torch, cfg_get_string(cfg, "torch_nn")))
-        //    printf("Could not load torch nn %s, continue testing\n", cfg_get_string(cfg, "torch_nn"));
-            //error("cannot load torch NN");
-		//int torch_file_type;
-		//assign_file_type(cfg, torch_file_type);
-        //printf("Assigned file type: %d\n", torch_file_type);
-
 // Default is ../nnlib/aev_scripted.pt and ../nnlib/custom_model_script.pt
 // custom_nn and aev_nn has been initiated as such.
 // If the user wants to use some other model/aev, they should name it along
@@ -482,30 +477,30 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 // Similarly ml_path is set to ../nnlib/
 // Any user given path has to be named along userml_path rem. 
 
-	if (cfg_get_bool(cfg, "enable_elpot")) {
-	     state->torch->nn_type = 3;
-	     state->torch->custom_model = cfg_get_string(state->cfg, "custom_nn");
-	     state->torch->aev = cfg_get_string(state->cfg, "aev_nn"); 
-	     fprintf(stderr, "chosen nn_type: Custom model using AEV + elecpots\n");
-	} else {
-	     get_torch_type(state->torch, cfg_get_string(cfg, "torch_nn"));
-	}
-  
-	const char* ml_location;
-	const char* userml_path = cfg_get_string(state->cfg, "userml_path");
-	const char* ml_path = cfg_get_string(state->cfg, "ml_path"); 
+        if (cfg_get_bool(cfg, "enable_elpot")) {
+             state->torch->nn_type = 3;
+             state->torch->custom_model = cfg_get_string(state->cfg, "custom_nn");
+             state->torch->aev = cfg_get_string(state->cfg, "aev_nn");
+             fprintf(stderr, "chosen nn_type: Custom model using AEV + elecpots\n");
+        } else {
+             get_torch_type(state->torch, cfg_get_string(cfg, "torch_nn"));
+        }
 
-	if (strcmp(userml_path, "./") == 0) {
-	    ml_location = userml_path;
-	} else {
-	    ml_location = ml_path; 
-	} 
+        const char* ml_location;
+        const char* userml_path = cfg_get_string(state->cfg, "userml_path");
+        const char* ml_path = cfg_get_string(state->cfg, "ml_path");
 
-	printf("The location of NN potential is: %s\n", ml_location);
+        if (strcmp(userml_path, "./") == 0) {
+            ml_location = userml_path;
+        } else {
+            ml_location = ml_path;
+        }
 
-	state->torch->ani_model = ANIModel_new();
-	if (state->torch->nn_type  != 3) load_ani_model(state->torch->ani_model, state->torch->nn_type, cfg_get_string(state->cfg, "ml_path"));
-	if (state->torch->nn_type  == 3) load_custom_ani_model(state->torch->ani_model, state->torch->aev, state->torch->custom_model, ml_location);	
+        printf("The location of NN potential is: %s\n", ml_location);
+
+        state->torch->ani_model = ANIModel_new();
+        if (state->torch->nn_type  != 3) load_ani_model(state->torch->ani_model, state->torch->nn_type, cfg_get_string(state->cfg, "ml_path"));
+        if (state->torch->nn_type  == 3) load_custom_ani_model(state->torch->ani_model, state->torch->aev, state->torch->custom_model, ml_location);
  
         spec_frag = cfg_get_int(cfg, "special_fragment");
 	
@@ -520,7 +515,7 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
         //torch_print(state->torch);
         // atomic coordinates extraction
         double *atom_coord_tmp = (double*)malloc(3 * n_special_atoms * sizeof(double));
-	int *atom_znuc = (int*)malloc(3 * n_special_atoms * sizeof(int));
+	    int *atom_znuc = (int*)malloc(3 * n_special_atoms * sizeof(int));
 
         for (iatom = 0; iatom < n_special_atoms; iatom++) {
             // send atom coordinates to torch
@@ -528,16 +523,15 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
             atom_coord_tmp[3*iatom + 1] = special_atoms[iatom].y;
             atom_coord_tmp[3*iatom + 2] = special_atoms[iatom].z;
             // send atom types to torch
-	    atom_znuc[iatom] = (int)special_atoms[iatom].znuc;
- 	    	// torch_set_atom_species_double(state->torch, iatom, &special_atoms[iatom].znuc);
-	}
+	        atom_znuc[iatom] = (int)special_atoms[iatom].znuc;
+	    }
 
         torch_set_coord(state->torch, atom_coord_tmp);
-	torch_set_atom_species(state->torch, atom_znuc);
+	    torch_set_atom_species(state->torch, atom_znuc);
 	
         free(special_atoms);
         free(atom_coord_tmp);
-	free(atom_znuc);
+	    free(atom_znuc);
     }
 }
 
