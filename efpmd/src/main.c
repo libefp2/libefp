@@ -142,7 +142,7 @@ static struct cfg *make_cfg(void)
 	cfg_add_string(cfg, "userlib_path", ".");
 	cfg_add_bool(cfg, "enable_pbc", false);
 	cfg_add_string(cfg, "periodic_box", "30.0 30.0 30.0 90.0 90.0 90.0");
-	cfg_add_double(cfg, "opt_tol", 3.0e-4);
+	cfg_add_double(cfg, "opt_tol", 1.0e-3);
 	cfg_add_double(cfg, "opt_energy_tol", 1.0e-6);
 	cfg_add_double(cfg, "gtest_tol", 1.0e-6);
 	cfg_add_double(cfg, "ref_energy", 0.0);

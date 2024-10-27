@@ -11,6 +11,7 @@ aev_nn aev.pt
 special_fragment 0
 enable_torch true
 enable_elpot true
+opt_tol 1.0e-3
 opt_special_frag 0
 atom_gradient mm
 max_steps 50

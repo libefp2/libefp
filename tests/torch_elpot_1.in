@@ -8,7 +8,7 @@ fraglib_path ../fraglib
 userml_path ./
 custom_nn cust.pt
 aev_nn aev.pt
-special_fragment 0
+special_fragment 1
 enable_torch true
 enable_elpot true
 opt_special_frag 0

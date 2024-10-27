@@ -78,7 +78,57 @@ void ANIModel::get_energy_grad(const torch::Tensor& coordinates,
     coordinates.grad().zero_();
 }
 
+void ANIModel::get_custom_energy_grad(float* coordinates_data, int64_t* species_data, float* elecpots_data, int num_atoms, float* custom_energy, float* cus_grads, float* cus_forces) {
 
+
+    torch::Tensor coordinates = torch::from_blob(coordinates_data, {1, num_atoms, 3}, torch::kFloat32).clone().set_requires_grad(true);
+    torch::Tensor species = torch::from_blob(species_data, {1, num_atoms}, torch::kInt64).clone();
+    torch::Tensor elecpots = torch::from_blob(elecpots_data, {1, num_atoms}, torch::kFloat32).clone();
+
+    coordinates = coordinates.contiguous();
+
+
+    std::map<int, double> ani1x_sae_dict_byIdx = {
+                {0, -0.60095298}, // H
+                {1, -38.08316124}, // C
+                {2, -54.7077577}, // N
+                {3, -75.19446356} // O
+        };
+
+    double shift = 0.0;
+    for (int i = 0; i < species.size(1); ++i) {
+        int atom_type = species[0][i].item<int>();
+        shift += ani1x_sae_dict_byIdx[atom_type];
+    }
+
+    auto aev_input = std::make_tuple(species, coordinates);
+    auto aev_output = aev_computer.forward({aev_input}).toTuple();
+    torch::Tensor aevs = aev_output->elements()[1].toTensor();  // Get AEV output
+
+    torch::Tensor aep = torch::cat({aevs, elecpots.unsqueeze(-1)}, -1);
+
+    auto model_input = std::make_tuple(species, aep);
+    auto energy_output = module.forward({model_input}).toTuple();
+
+    torch::Tensor energy_unshifted = energy_output->elements()[1].toTensor(); //c
+    torch::Tensor energy_shifted = energy_unshifted + shift; //c
+
+    std::cout << "Energy (unshifted): " << energy_unshifted.item<float>() << std::endl; //c
+    std::cout << "Energy (shifted): " << energy_shifted.item<float>() << std::endl; //c
+
+    std::vector<torch::Tensor> gradients = torch::autograd::grad({energy_shifted}, {coordinates}); //c
+    torch::Tensor derivative = gradients[0];
+
+    torch::Tensor force = -derivative;
+
+    std::cout << "Force: " << force << std::endl; //c
+
+    memcpy(cus_grads, derivative.data_ptr<float>(), derivative.numel() * sizeof(float));
+    memcpy(cus_forces, force.data_ptr<float>(), force.numel() * sizeof(float));
+    memcpy(custom_energy, energy_shifted.data_ptr<float>(), sizeof(float));
+
+}
+/*
 void ANIModel::get_custom_energy_grad(float* coordinates_data, int64_t* species_data, float* elecpots_data, int num_atoms, float* custom_energy, float* cus_grads, float* cus_forces) {
 
     torch::Tensor coordinates = torch::from_blob(coordinates_data, {1, num_atoms, 3}, torch::kFloat32).clone().set_requires_grad(true);
@@ -107,7 +157,7 @@ void ANIModel::get_custom_energy_grad(float* coordinates_data, int64_t* species_
     memcpy(custom_energy, energy.data_ptr<float>(), sizeof(float));
 
 }
-
+*/
 // Hardcoded custom model routine 
 void engrad_custom_model(float* coordinates_data, int64_t* species_data, float* elecpots_data, int num_atoms, float* custom_energy, float* cus_grads, float* cus_forces) {
 
