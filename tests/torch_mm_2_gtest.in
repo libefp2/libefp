@@ -1,0 +1,29 @@
+run_type gtest
+ref_energy -76.3938952213
+gtest_tol 5.0e-6
+coord atoms
+terms qq lj
+special_terms qq lj
+elec_damp off
+disp_damp off
+fraglib_path ../fraglib
+special_fragment 0
+enable_torch true
+torch_nn ani1.pt
+opt_special_frag 0
+atom_gradient mm
+print 0
+
+fragment tip3p_mm_l
+A01O                -1.815220     2.663988     0.000000
+A02H                -1.616905     1.722730     0.001942
+A03H                -2.465495     2.770431    -0.695494
+
+fragment tip3p_mm_l
+A01O                -1.815220     5.663988     0.000000
+A02H                -1.616905     4.722730     0.001942
+A03H                -2.465495     5.770431    -0.695494
+
+
+
+
