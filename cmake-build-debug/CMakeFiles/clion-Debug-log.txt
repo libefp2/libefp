@@ -26,11 +26,11 @@ CMake Warning at CMakeLists.txt:55 (message):
 -- Setting option LIBEFP_ENABLE_PYTHON: OFF
 -- LAPACK detected.
 -- Caffe2: Found protobuf with new-style protobuf targets.
--- Caffe2: Protobuf version 28.1.0
+-- Caffe2: Protobuf version 28.2.0
 CMake Warning at /opt/homebrew/share/cmake/Torch/TorchConfig.cmake:22 (message):
   static library kineto_LIBRARY-NOTFOUND not found.
 Call Stack (most recent call first):
-  /opt/homebrew/share/cmake/Torch/TorchConfig.cmake:127 (append_torchlib_if_found)
+  /opt/homebrew/share/cmake/Torch/TorchConfig.cmake:120 (append_torchlib_if_found)
   efpmd/CMakeLists.txt:17 (find_package)
 
 

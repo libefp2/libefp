@@ -707,6 +707,16 @@ enum efp_result efp_get_frag_atom_coord(struct efp *efp, size_t frag_idx, double
 enum efp_result efp_set_frag_atom_coord(struct efp *efp, size_t frag_idx, const double *coord);
 
 /**
+ *
+ * @param efp The efp structure.
+ * @param frag_idx Index of a fragment. Must be a value between zero and
+ * the total number of fragments minus one.
+ * @param charges Values of the atomic charges znuc
+ * @return
+ */
+enum efp_result efp_get_frag_atom_znuc(struct efp *efp, size_t frag_idx, int *charges);
+
+/**
  * Setup periodic box size.
  *
  * \param[in] efp The efp structure.

@@ -41,10 +41,10 @@ void get_torch_type(struct torch *torch, const char *str) {
     int file_type;
     if (strcmp(str, "ani1.pt") == 0) {
         file_type = 1;
-        fprintf(stderr, "chosen nn_type: %s\n", str);
+        printf("chosen nn_type: %s\n", str);
     } else if (strcmp(str, "ani2.pt") == 0) {
         file_type = 2;
-        fprintf(stderr, "chosen nn_type: %s\n", str);
+        printf("chosen nn_type: %s\n", str);
     } else {
         file_type = -1; // or any other default/error value
         fprintf(stderr, "Unknown filetype: %s\n", str);
@@ -125,16 +125,18 @@ void torch_custom_compute(struct torch *torch, int print) {
     int64_t frag_species[n_atoms];
     atomic_number_to_species(atomic_num, frag_species, n_atoms);    
 
-    printf("=============TORCH ELPOT=============\n");
-    for (size_t j = 0; j < n_atoms; j++) {
-        printf("%2d %12.6f\n",torch->atom_types[j], elecpots_data[j]);
+    if (print > 0) {
+        printf("=============TORCH ELPOT=============\n");
+        for (size_t j = 0; j < n_atoms; j++) {
+            printf("%2d %12.6f\n", torch->atom_types[j], elecpots_data[j]);
+        }
+        printf("====================================\n");
     }
-    printf("====================================\n");
 
     // Hardcoded custom model routine
     // engrad_custom_model_wrapper(frag_coord, frag_species, elecpots_data, n_atoms, &custom_energy, gradients, forces);
   
-    get_custom_energy_grad_wrapper(torch->ani_model, frag_coord, frag_species, elecpots_data, n_atoms, &custom_energy, gradients, forces);
+    get_custom_energy_grad_wrapper(torch->ani_model, frag_coord, frag_species, elecpots_data, n_atoms, &custom_energy, gradients, forces, print);
 
     torch->energy = custom_energy;
 
@@ -230,7 +232,7 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
     // Hardcoded ANI1/ANI2 routine
     // get_torch_energy_grad(frag_coord, frag_species, n_atoms, energies, gradients, forces, torch->nn_type);
  
-    get_ani_energy_grad(torch->ani_model, frag_coord, frag_species, energies, gradients, forces, n_atoms);
+    get_ani_energy_grad(torch->ani_model, frag_coord, frag_species, energies, gradients, forces, n_atoms, print);
 
     for (int i = 0; i < n_atoms; ++i) {
         total_energy  += (double)energies[i];
@@ -256,17 +258,16 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
         }
     }
 
+    if (print > 0)
+        torch_print(torch);
+
     // save data in energy and grad
     double *tG_double = xcalloc(3 * n_atoms, sizeof(double));
-    
     for (int i = 0; i < 3 * n_atoms; i++) {
         tG_double[i] = (double)(gradients[i] * BOHR_RADIUS);
     }
-
     memcpy(torch->grad, tG_double, (3 * n_atoms) * sizeof(double)); 
 
-    //ANIModel_delete(torch->ani_model);
-    torch_print(torch);
     free(energies);
     free(gradients);
     free(forces);

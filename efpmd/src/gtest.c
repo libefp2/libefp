@@ -25,6 +25,7 @@
  */
 
 #include "common.h"
+#include "torch.h"
 
 void sim_gtest(struct state *state);
 
@@ -90,13 +91,20 @@ static void test_fgrad(struct state *state, const double *fgrad)
 	double dstep = cfg_get_double(state->cfg, "num_step_dist");
 	double astep = cfg_get_double(state->cfg, "num_step_angle");
 
-	size_t n_frags;
+	size_t n_frags, spec_frag;
 	check_fail(efp_get_frag_count(state->efp, &n_frags));
+
+    spec_frag = n_frags + 1; // make in inactive if torch model is off
+    if (cfg_get_bool(state->cfg, "enable_torch") &&  cfg_get_int(state->cfg, "special_fragment") > -1)
+        spec_frag = cfg_get_int(state->cfg, "special_fragment");
 
 	double xyzabc[6 * n_frags];
 	check_fail(efp_get_coordinates(state->efp, xyzabc));
 
-	for (size_t i = 0; i < n_frags; i++) {
+	for (size_t i = 0, k=0; i < n_frags; i++) {
+
+        if (i == spec_frag) continue;
+
 		double deriv[3], ngrad[6];
 
 		for (size_t j = 0; j < 6; j++) {
@@ -118,30 +126,147 @@ static void test_fgrad(struct state *state, const double *fgrad)
 			ngrad[j] = (e2 - e1) / (2.0 * step);
 		}
 
-		test_vec('F', i + 1, tol, fgrad + 6 * i, ngrad);
-		efp_torque_to_derivative(xyzabc + 6 * i + 3, fgrad + 6 * i + 3, deriv);
+		test_vec('F', i + 1, tol, fgrad + 6 * k, ngrad);
+		efp_torque_to_derivative(xyzabc + 6 * i + 3, fgrad + 6 * k + 3, deriv);
 		test_vec('D', i + 1, tol, deriv, ngrad + 3);
+
+        k++;
 	}
 
 	check_fail(efp_set_coordinates(state->efp, EFP_COORD_TYPE_XYZABC, xyzabc));
 }
 
+static void test_agrad(struct state *state, const double *agrad)
+{
+    double tol = cfg_get_double(state->cfg, "gtest_tol");
+    double dstep = cfg_get_double(state->cfg, "num_step_dist");
+
+    size_t spec_frag, n_special_atoms;
+
+    spec_frag = cfg_get_int(state->cfg, "special_fragment");
+    check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
+
+    double atom_coord[3 * n_special_atoms]; // = (double*)malloc(3 * n_special_atoms * sizeof(double));
+    check_fail(efp_get_frag_atom_coord(state->efp, spec_frag, atom_coord));
+
+    for (size_t i = 0; i < n_special_atoms; i++) {
+        double ngrad[3];
+
+        for (size_t j = 0; j < 3; j++) {
+
+            double e1, e2;
+            double coord = atom_coord[3 * i + j];
+
+            atom_coord[3 * i + j] = coord - dstep;
+            // propagate special fragment coordinates to EFP and update fragment parameters
+            check_fail(update_special_fragment(state->efp, atom_coord));
+            // propagate special fragment coordinates to torch
+            torch_set_coord(state->torch, atom_coord);
+
+            compute_energy(state, 0);
+            e1 = state->energy;
+
+            atom_coord[3 * i + j] = coord + dstep;
+            // propagate special fragment coordinates to EFP and update fragment parameters
+            check_fail(update_special_fragment(state->efp, atom_coord));
+            // propagate special fragment coordinates to torch
+            torch_set_coord(state->torch, atom_coord);
+
+            compute_energy(state, 0);
+            e2 = state->energy;
+
+            // return to the original coordinates?
+            atom_coord[3 * i + j] = coord;
+            // propagate special fragment coordinates to EFP and update fragment parameters
+            check_fail(update_special_fragment(state->efp, atom_coord));
+            // propagate special fragment coordinates to torch
+            torch_set_coord(state->torch, atom_coord);
+
+            ngrad[j] = (e2 - e1) / (2.0 * dstep);
+        }
+
+        test_vec('A', i + 1, tol, agrad + 3 * i, ngrad);
+    }
+
+    // propagate special fragment coordinates to EFP and update fragment parameters
+    check_fail(update_special_fragment(state->efp, atom_coord));
+    // propagate special fragment coordinates to torch
+    torch_set_coord(state->torch, atom_coord);
+
+}
+
 static void test_grad(struct state *state)
 {
 	size_t n_frags, n_charges;
+    size_t spec_frag, n_special_atoms;
 	check_fail(efp_get_frag_count(state->efp, &n_frags));
 	check_fail(efp_get_point_charge_count(state->efp, &n_charges));
 
-	double fgrad[6 * n_frags];
-	memcpy(fgrad, state->grad, n_frags * 6 * sizeof(double));
+    // models with libtorch optimized fragment
+    if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
+        spec_frag = cfg_get_int(state->cfg, "special_fragment");
+        check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
-	if (n_charges > 0) {
-		double cgrad[3 * n_charges];
-		check_fail(efp_get_point_charge_gradient(state->efp, cgrad));
-		test_cgrad(state, cgrad);
-	}
+        // check efp and charges gradient on non-special fragment
+        double fgrad[6 * (n_frags-1)];
+        double agrad[3 * n_special_atoms];
 
-	test_fgrad(state, fgrad);
+        // skips gradient of special fragment
+        for (size_t i=0, k=0; i<n_frags; i++) {
+            if (i == spec_frag) continue;
+            memcpy(fgrad+6*k, state->grad+6*i, 6 * sizeof(double));
+            k++;
+        }
+        // memcpy(fgrad, state->grad, n_frags * 6 * sizeof(double));
+
+        /*
+        // do not add EFP contribution on a special fragment if it is the only fragment in the system
+        if (n_frags > 1) {
+
+            double *tmp_grad = xcalloc(n_special_atoms*3, sizeof (double));
+
+            // get gradient from fragment atoms directly if QQ and LJ terms are computed
+            if (cfg_get_enum(state->cfg, "atom_gradient") == ATOM_GRAD_MM) {
+                check_fail(efp_get_atom_gradient(state->efp, spec_frag, tmp_grad));
+            }
+            else
+                check_fail(efp_get_frag_atomic_gradient(state->efp, spec_frag, tmp_grad));
+
+            // add EFP and torch gradients
+            for (size_t i = 0; i < n_special_atoms*3; i++)
+                state->torch_grad[i] += tmp_grad[i];
+
+            free(tmp_grad);
+        }
+        */
+
+        memcpy(agrad, state->torch_grad, (3 * n_special_atoms) * sizeof(double));
+
+        if (n_charges > 0) {
+            double cgrad[3 * n_charges];
+            check_fail(efp_get_point_charge_gradient(state->efp, cgrad));
+            test_cgrad(state, cgrad);   // test point charge gradient
+        }
+
+        msg("TESTING GRADIENTS ON EFP FRAGMENTS\n");
+        test_fgrad(state, fgrad);  // test efp fragment gradient
+        msg("TESTING GRADIENTS ON SPECIAL FRAGMENT ATOMS\n");
+        test_agrad(state, agrad); // test gradient on special fragment atoms
+    }
+
+    // original "normal efp only" case
+    else {
+        double fgrad[6 * n_frags];
+        memcpy(fgrad, state->grad, n_frags * 6 * sizeof(double));
+
+        if (n_charges > 0) {
+            double cgrad[3 * n_charges];
+            check_fail(efp_get_point_charge_gradient(state->efp, cgrad));
+            test_cgrad(state, cgrad);
+        }
+
+        test_fgrad(state, fgrad);
+    }
 }
 
 static void test_energy(struct state *state)

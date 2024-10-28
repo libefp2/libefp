@@ -481,7 +481,7 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
              state->torch->nn_type = 3;
              state->torch->custom_model = cfg_get_string(state->cfg, "custom_nn");
              state->torch->aev = cfg_get_string(state->cfg, "aev_nn");
-             fprintf(stderr, "chosen nn_type: Custom model using AEV + elecpots\n");
+             printf("chosen nn_type: Custom model using AEV + elecpots\n");
         } else {
              get_torch_type(state->torch, cfg_get_string(cfg, "torch_nn"));
         }
@@ -508,29 +508,17 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
         torch_init(state->torch, n_special_atoms);
         state->torch_grad = xcalloc(n_special_atoms * 3, sizeof(double));
 
-        struct efp_atom *special_atoms;
-        special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
-        check_fail(efp_get_frag_atoms(state->efp, spec_frag, n_special_atoms, special_atoms));
+        // special fragment atomic coordinates
+        double *atom_coord = (double*)malloc(3 * n_special_atoms * sizeof(double));
+        check_fail(efp_get_frag_atom_coord(state->efp, spec_frag, atom_coord));
 
-        //torch_print(state->torch);
-        // atomic coordinates extraction
-        double *atom_coord_tmp = (double*)malloc(3 * n_special_atoms * sizeof(double));
-	    int *atom_znuc = (int*)malloc(3 * n_special_atoms * sizeof(int));
+        int *atom_znuc = (int*)malloc(3 * n_special_atoms * sizeof(int));
+        check_fail(efp_get_frag_atom_znuc(state->efp, spec_frag, atom_znuc));
 
-        for (iatom = 0; iatom < n_special_atoms; iatom++) {
-            // send atom coordinates to torch
-            atom_coord_tmp[3*iatom] = special_atoms[iatom].x;
-            atom_coord_tmp[3*iatom + 1] = special_atoms[iatom].y;
-            atom_coord_tmp[3*iatom + 2] = special_atoms[iatom].z;
-            // send atom types to torch
-	        atom_znuc[iatom] = (int)special_atoms[iatom].znuc;
-	    }
-
-        torch_set_coord(state->torch, atom_coord_tmp);
+        torch_set_coord(state->torch, atom_coord);
 	    torch_set_atom_species(state->torch, atom_znuc);
 	
-        free(special_atoms);
-        free(atom_coord_tmp);
+        free(atom_coord);
 	    free(atom_znuc);
     }
 }

@@ -48,7 +48,8 @@ void ANIModel::get_energy_grad(const torch::Tensor& coordinates,
                                float* atomic_energies, 
                                float* gradients, 
                                float* forces, 
-                               int num_atoms) {
+                               int num_atoms,
+                               int print) {
     std::vector<torch::jit::IValue> inputs;
     inputs.push_back(std::make_tuple(species, coordinates));
 
@@ -68,17 +69,18 @@ void ANIModel::get_energy_grad(const torch::Tensor& coordinates,
     auto force = -gradient;
     auto atomic_energies_tensor = module.get_method("atomic_energies")(inputs).toTuple()->elements()[1].toTensor();
 
-    std::cout << "=========TESTING FOR OBJECT BASED MODEL LOADING ===============" << std::endl;
-    std::cout << " Energy: " << energy << std::endl;
-    std::cout << " Force: " << force << std::endl;
-
+    if (print > 0) {
+        std::cout << "=========TESTING FOR OBJECT BASED MODEL LOADING ===============" << std::endl;
+        std::cout << " Energy: " << energy << std::endl;
+        std::cout << " Force: " << force << std::endl;
+    }
     memcpy(atomic_energies, atomic_energies_tensor.data_ptr<float>(), atomic_energies_tensor.numel() * sizeof(float));
     memcpy(gradients, gradient.data_ptr<float>(), gradient.numel() * sizeof(float));
     memcpy(forces, force.data_ptr<float>(), force.numel() * sizeof(float));
     coordinates.grad().zero_();
 }
 
-void ANIModel::get_custom_energy_grad(float* coordinates_data, int64_t* species_data, float* elecpots_data, int num_atoms, float* custom_energy, float* cus_grads, float* cus_forces) {
+void ANIModel::get_custom_energy_grad(float* coordinates_data, int64_t* species_data, float* elecpots_data, int num_atoms, float* custom_energy, float* cus_grads, float* cus_forces, int print) {
 
 
     torch::Tensor coordinates = torch::from_blob(coordinates_data, {1, num_atoms, 3}, torch::kFloat32).clone().set_requires_grad(true);
@@ -113,15 +115,17 @@ void ANIModel::get_custom_energy_grad(float* coordinates_data, int64_t* species_
     torch::Tensor energy_unshifted = energy_output->elements()[1].toTensor(); //c
     torch::Tensor energy_shifted = energy_unshifted + shift; //c
 
-    std::cout << "Energy (unshifted): " << energy_unshifted.item<float>() << std::endl; //c
-    std::cout << "Energy (shifted): " << energy_shifted.item<float>() << std::endl; //c
-
+    if (print > 0) {
+        std::cout << "Energy (unshifted): " << energy_unshifted.item<float>() << std::endl; //c
+        std::cout << "Energy (shifted): " << energy_shifted.item<float>() << std::endl; //c
+    }
     std::vector<torch::Tensor> gradients = torch::autograd::grad({energy_shifted}, {coordinates}); //c
     torch::Tensor derivative = gradients[0];
 
     torch::Tensor force = -derivative;
 
-    std::cout << "Force: " << force << std::endl; //c
+    if (print > 0)
+        std::cout << "Force: " << force << std::endl; //c
 
     memcpy(cus_grads, derivative.data_ptr<float>(), derivative.numel() * sizeof(float));
     memcpy(cus_forces, force.data_ptr<float>(), force.numel() * sizeof(float));
@@ -577,6 +581,7 @@ void generateSpeciesEnergyForcesWrapper(const void* model,
 // and probably get_ANI1_energy_grad and get_ANI2_energy_grad will boil down to just get_ANI_energy_grad(.., .., ..., module)
 // load NNP and its wrapper.. call that wrapper in opt.c/main.c...
 
+/*
 void get_torch_energy_grad(float* coordinates_data, int* species_data, int num_atoms, float *atomic_energies, float *gradients, float *forces, int model_type) {
 
 	torch::Tensor speciesTensor = torch::from_blob(const_cast<int*>(species_data), {1, num_atoms}, torch::kInt32);
@@ -586,14 +591,14 @@ void get_torch_energy_grad(float* coordinates_data, int* species_data, int num_a
 	if(model_type == 2) get_ANI2_energy_grad(coordinatesTensor, speciesTensor, atomic_energies, gradients, forces);
 
 }
-
-
+*/
+/*
 void engrad_custom_model_wrapper(float* coordinates_data, int64_t* species_data, float* elecpots_data, int num_atoms, float* custom_energy, float* gradients, float* forces) {
 
     engrad_custom_model(coordinates_data, species_data, elecpots_data, num_atoms, custom_energy, gradients, forces);
 //    std::cout << "Custom energy in wrapper " << *custom_energy << std::endl;
 }
-
+*/
 //=================================================
 
 
@@ -616,18 +621,18 @@ void load_custom_ani_model(ANIModel* model, const char* aev_name, const char* mo
 }
 
 
-void get_ani_energy_grad(ANIModel* model, float* coordinates, int* species, float* atomic_energies, float* gradients, float* forces, int num_atoms) {
+void get_ani_energy_grad(ANIModel* model, float* coordinates, int* species, float* atomic_energies, float* gradients, float* forces, int num_atoms, int print) {
     auto coordinates_tensor = torch::from_blob((float*)coordinates, {1, num_atoms, 3}, torch::requires_grad(true));
     auto species_tensor = torch::from_blob((int*)species, {1, num_atoms}, torch::kInt32);
 
-    model->get_energy_grad(coordinates_tensor, species_tensor, atomic_energies, gradients, forces, num_atoms);
+    model->get_energy_grad(coordinates_tensor, species_tensor, atomic_energies, gradients, forces, num_atoms, print);
 
-    std::cout << "==========END OF TEST OBJECT BASED MODEL LOADING=============" << std::endl; 
+    // std::cout << "==========END OF TEST OBJECT BASED MODEL LOADING=============" << std::endl;
 }
  
-void get_custom_energy_grad_wrapper(ANIModel* model, float* coordinates, int64_t* species, float* elecpots, int num_atoms, float* custom_energy, float* gradients, float* forces) {
+void get_custom_energy_grad_wrapper(ANIModel* model, float* coordinates, int64_t* species, float* elecpots, int num_atoms, float* custom_energy, float* gradients, float* forces, int print) {
 
-    model->get_custom_energy_grad(coordinates, species, elecpots, num_atoms, custom_energy, gradients, forces); 
+    model->get_custom_energy_grad(coordinates, species, elecpots, num_atoms, custom_energy, gradients, forces, print);
 
 }
 

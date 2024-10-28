@@ -624,3 +624,23 @@ Run Build Command(s):/Applications/CLion.app/Contents/bin/ninja/mac/ninja cmTC_1
 Source file was:
 int main() { return 0; }
 
+Performing C SOURCE FILE Test test_option succeeded with the following output:
+Change Dir: /Users/lyuda/LIBEFP/libefp_torch_skp_Oct20/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Amzw46
+
+Run Build Command(s):/Applications/CLion.app/Contents/bin/ninja/mac/ninja cmTC_c82bb && [1/2] Building C object CMakeFiles/cmTC_c82bb.dir/src.c.o
+[2/2] Linking C executable cmTC_c82bb
+
+
+Source file was:
+int main(void) { return 0; }
+
+Performing C++ SOURCE FILE Test test_option succeeded with the following output:
+Change Dir: /Users/lyuda/LIBEFP/libefp_torch_skp_Oct20/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iM2Yep
+
+Run Build Command(s):/Applications/CLion.app/Contents/bin/ninja/mac/ninja cmTC_54c78 && [1/2] Building CXX object CMakeFiles/cmTC_54c78.dir/src.cxx.o
+[2/2] Linking CXX executable cmTC_54c78
+
+
+Source file was:
+int main() { return 0; }
+
