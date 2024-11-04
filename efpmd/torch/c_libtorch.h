@@ -51,7 +51,8 @@ typedef struct ANIModel ANIModel;
 ANIModel* ANIModel_new();
 void load_ani_model(ANIModel* model, int model_type, const char* nn_path);
 void load_custom_ani_model(ANIModel* model, const char* aev_name, const char* model_name, const char* nn_path);
-void get_ani_energy_grad(ANIModel* model, float* coordinates, int* species, float* atomic_energies, float* gradients, float* forces, int num_atoms, int print);
+void get_ani_energy_grad(ANIModel* model, float* coordinates, int* species, double* atomic_energies, float* gradients, float* forces, int num_atoms, int print);
+//void get_ani_energy_grad(ANIModel* model, double* coordinates, int* species, double* atomic_energies, double* gradients, double* forces, int num_atoms, int print);
 void get_custom_energy_grad_wrapper(ANIModel* model, float* coordinates, int64_t* species, float* elecpots, int num_atoms, float* custom_energy, float* gradients, float* forces, int print);
 
 void ANIModel_delete(ANIModel* model);

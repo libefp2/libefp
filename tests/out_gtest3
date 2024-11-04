@@ -1,0 +1,655 @@
+EFPMD ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+
+LIBEFP ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
+WALL CLOCK TIME IS Sun Nov  3 02:11:40 2024
+
+SIMULATION SETTINGS
+
+run_type gtest
+coord atoms
+terms qq lj
+special_terms qq lj
+elec_damp off
+disp_damp off
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /../fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 0
+max_steps 100
+multistep_steps 1
+fraglib_path ../fraglib
+ml_path ../nnlib/
+userml_path .
+custom_nn custom_model_script.pt
+aev_nn aev_scripted.pt
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.001
+opt_energy_tol 1e-06
+gtest_tol 5e-06
+ref_energy -76.3939
+hess_central false
+num_step_dist 0.0001
+num_step_angle 0.01
+ensemble nve
+time_step 1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+enable_pairwise false
+print_pbc false
+symmetry false
+special_fragment 0
+enable_torch true
+enable_elpot false
+opt_special_frag 0
+torch_nn ani1.pt
+atom_gradient mm
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+xr_cutoff is set to 10.000000 
+
+chosen nn_type: ani1.pt
+The location of NN potential is: ../nnlib/
+
+ANIModel() Constructor
+Model loaded from: ../nnlib/ANI1x_saved2.pt
+GRADIENT TEST JOB
+
+
+    GEOMETRY (ANGSTROMS)
+
+A01O                -1.815220     2.663988     0.000000
+A02H                -1.616905     1.722730     0.001942
+A03H                -2.465495     2.770431    -0.695494
+
+
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0635  0.8845  1.3822
+  -0.0580 -0.7396 -0.2352
+  -1.0055 -0.1449 -1.1470
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38842976
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010635	-0.008845	-0.013822	
+0.000580	0.007396	0.002352	
+0.010055	0.001449	0.011470	
+Forces:
+0.010635	0.008845	0.013822	
+-0.000580	-0.007396	-0.002352	
+-0.010055	-0.001449	-0.011470	
+Time taken by energy_compute() is: 1.000000 seconds
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.3884297609
+
+                  TOTAL ENERGY   -76.3884297609
+
+
+              REFERENCE ENERGY   -76.3938952213
+               COMPUTED ENERGY   -76.3884297609  DOES NOT MATCH
+
+
+    COMPUTING NUMERICAL GRADIENT
+
+TESTING GRADIENTS ON EFP FRAGMENTS
+TESTING GRADIENTS ON SPECIAL FRAGMENT ATOMS
+
+
+STARTING TEST_AGRAD()
+
+Atom Coordinates in test_agrad:
+-3.430269	5.034208	0.000000	
+-3.055507	3.255487	0.003670	
+-4.659110	5.235355	-1.314294	
+Analytical Gradients in test_agrad:
+-0.005628	-0.004681	-0.007314	
+0.000307	0.003914	0.001245	
+0.005321	0.000767	0.006070	
+dstep =     0.000189
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0741  0.8797  1.3932
+  -0.0595 -0.7353 -0.2361
+  -1.0146 -0.1444 -1.1572
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38842893
+Coordinates:
+-1.815320	2.663988	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010741	-0.008797	-0.013932	
+0.000595	0.007353	0.002361	
+0.010146	0.001444	0.011572	
+Forces:
+0.010741	0.008797	0.013932	
+-0.000595	-0.007353	-0.002361	
+-0.010146	-0.001444	-0.011572	
+Time taken by energy_compute() is: 5.650000 seconds
+e_minus =   -76.388429
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0529  0.8891  1.3712
+  -0.0565 -0.7438 -0.2344
+  -0.9964 -0.1453 -1.1368
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38843066
+Coordinates:
+-1.815120	2.663988	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010529	-0.008891	-0.013712	
+0.000565	0.007438	0.002344	
+0.009964	0.001453	0.011368	
+Forces:
+0.010529	0.008891	0.013712	
+-0.000565	-0.007438	-0.002344	
+-0.009964	-0.001453	-0.011368	
+Time taken by energy_compute() is: 6.310000 seconds
+e_plus =   -76.388431
+del_e =    -0.000002
+ngrad[j] =    -0.004574
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0588  0.9041  1.3817
+  -0.0556 -0.7571 -0.2367
+  -1.0031 -0.1471 -1.1449
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38842928
+Coordinates:
+-1.815220	2.663888	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010588	-0.009041	-0.013817	
+0.000556	0.007571	0.002367	
+0.010031	0.001471	0.011449	
+Forces:
+0.010588	0.009041	0.013817	
+-0.000556	-0.007571	-0.002367	
+-0.010031	-0.001471	-0.011449	
+Time taken by energy_compute() is: 4.810000 seconds
+e_minus =   -76.388429
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0682  0.8648  1.3828
+  -0.0603 -0.7221 -0.2337
+  -1.0078 -0.1427 -1.1490
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38843024
+Coordinates:
+-1.815220	2.664088	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010682	-0.008648	-0.013828	
+0.000603	0.007221	0.002337	
+0.010078	0.001427	0.011490	
+Forces:
+0.010682	0.008648	0.013828	
+-0.000603	-0.007221	-0.002337	
+-0.010078	-0.001427	-0.011490	
+Time taken by energy_compute() is: 4.920000 seconds
+e_plus =   -76.388430
+del_e =    -0.000001
+ngrad[j] =    -0.002523
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0745  0.8839  1.3940
+  -0.0592 -0.7389 -0.2364
+  -1.0153 -0.1449 -1.1576
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38842869
+Coordinates:
+-1.815220	2.663988	-0.000100	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010745	-0.008839	-0.013940	
+0.000592	0.007389	0.002364	
+0.010153	0.001449	0.011576	
+Forces:
+0.010745	0.008839	0.013940	
+-0.000592	-0.007389	-0.002364	
+-0.010153	-0.001449	-0.011576	
+Time taken by energy_compute() is: 4.880000 seconds
+e_minus =   -76.388429
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0525  0.8850  1.3705
+  -0.0567 -0.7402 -0.2341
+  -0.9958 -0.1448 -1.1364
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38843083
+Coordinates:
+-1.815220	2.663988	0.000100	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010525	-0.008850	-0.013705	
+0.000567	0.007402	0.002341	
+0.009958	0.001448	0.011364	
+Forces:
+0.010525	0.008850	0.013705	
+-0.000567	-0.007402	-0.002341	
+-0.009958	-0.001448	-0.011364	
+Time taken by energy_compute() is: 5.040000 seconds
+e_plus =   -76.388431
+del_e =    -0.000002
+ngrad[j] =    -0.005677
+A A0001   -5.62771029E-03  -4.68051653E-03  -7.31447444E-03
+N A0001   -4.57350585E-03  -2.52331357E-03  -5.67745554E-03  DOES NOT MATCH
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0620  0.8868  1.3810
+  -0.0562 -0.7435 -0.2340
+  -1.0058 -0.1433 -1.1469
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38842881
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.617005	1.722730	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010620	-0.008868	-0.013810	
+0.000562	0.007435	0.002340	
+0.010058	0.001433	0.011469	
+Forces:
+0.010620	0.008868	0.013810	
+-0.000562	-0.007435	-0.002340	
+-0.010058	-0.001433	-0.011469	
+Time taken by energy_compute() is: 4.590000 seconds
+e_minus =   -76.388429
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0650  0.8821  1.3835
+  -0.0598 -0.7356 -0.2364
+  -1.0052 -0.1465 -1.1471
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38843066
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616805	1.722730	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010650	-0.008821	-0.013835	
+0.000598	0.007356	0.002364	
+0.010052	0.001465	0.011471	
+Forces:
+0.010650	0.008821	0.013835	
+-0.000598	-0.007356	-0.002364	
+-0.010052	-0.001465	-0.011471	
+Time taken by energy_compute() is: 4.030000 seconds
+e_plus =   -76.388431
+del_e =    -0.000002
+ngrad[j] =    -0.004889
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0677  0.8669  1.3828
+  -0.0619 -0.7218 -0.2354
+  -1.0058 -0.1451 -1.1474
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38843137
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722630	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010677	-0.008669	-0.013828	
+0.000619	0.007218	0.002354	
+0.010058	0.001451	0.011474	
+Forces:
+0.010677	0.008669	0.013828	
+-0.000619	-0.007218	-0.002354	
+-0.010058	-0.001451	-0.011474	
+Time taken by energy_compute() is: 4.750000 seconds
+e_minus =   -76.388431
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0593  0.9019  1.3816
+  -0.0541 -0.7572 -0.2350
+  -1.0052 -0.1447 -1.1466
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38842815
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722830	0.001942	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010593	-0.009019	-0.013816	
+0.000541	0.007572	0.002350	
+0.010052	0.001447	0.011466	
+Forces:
+0.010593	0.009019	0.013816	
+-0.000541	-0.007572	-0.002350	
+-0.010052	-0.001447	-0.011466	
+Time taken by energy_compute() is: 5.190000 seconds
+e_plus =   -76.388428
+del_e =     0.000003
+ngrad[j] =     0.008516
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0627  0.8829  1.3811
+  -0.0568 -0.7398 -0.2340
+  -1.0059 -0.1432 -1.1470
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38842911
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722730	0.001842	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010627	-0.008829	-0.013811	
+0.000568	0.007398	0.002340	
+0.010059	0.001432	0.011470	
+Forces:
+0.010627	0.008829	0.013811	
+-0.000568	-0.007398	-0.002340	
+-0.010059	-0.001432	-0.011470	
+Time taken by energy_compute() is: 4.840000 seconds
+e_minus =   -76.388429
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0643  0.8859  1.3834
+  -0.0592 -0.7393 -0.2364
+  -1.0051 -0.1466 -1.1470
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38843042
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722730	0.002042	
+-2.465495	2.770431	-0.695494	
+Gradients:
+-0.010643	-0.008859	-0.013834	
+0.000592	0.007393	0.002364	
+0.010051	0.001466	0.011470	
+Forces:
+0.010643	0.008859	0.013834	
+-0.000592	-0.007393	-0.002364	
+-0.010051	-0.001466	-0.011470	
+Time taken by energy_compute() is: 4.930000 seconds
+e_plus =   -76.388430
+del_e =    -0.000001
+ngrad[j] =    -0.003470
+A A0002    3.06777762E-04   3.91383431E-03   1.24481761E-03
+N A0002   -4.88892005E-03   8.51618331E-03  -3.46955616E-03  DOES NOT MATCH
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0544  0.8868  1.3725
+  -0.0583 -0.7399 -0.2356
+  -0.9961 -0.1469 -1.1369
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38843149
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465595	2.770431	-0.695494	
+Gradients:
+-0.010544	-0.008868	-0.013725	
+0.000583	0.007399	0.002356	
+0.009961	0.001469	0.011369	
+Forces:
+0.010544	0.008868	0.013725	
+-0.000583	-0.007399	-0.002356	
+-0.009961	-0.001469	-0.011369	
+Time taken by energy_compute() is: 4.730000 seconds
+e_minus =   -76.388431
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0726  0.8821  1.3920
+  -0.0577 -0.7392 -0.2349
+  -1.0149 -0.1428 -1.1571
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38842809
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465395	2.770431	-0.695494	
+Gradients:
+-0.010726	-0.008821	-0.013920	
+0.000577	0.007392	0.002349	
+0.010149	0.001428	0.011571	
+Forces:
+0.010726	0.008821	0.013920	
+-0.000577	-0.007392	-0.002349	
+-0.010149	-0.001428	-0.011571	
+Time taken by energy_compute() is: 5.190000 seconds
+e_plus =   -76.388428
+del_e =     0.000003
+ngrad[j] =     0.008989
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0639  0.8822  1.3822
+  -0.0564 -0.7398 -0.2335
+  -1.0075 -0.1425 -1.1486
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38842863
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770331	-0.695494	
+Gradients:
+-0.010639	-0.008822	-0.013822	
+0.000564	0.007398	0.002335	
+0.010075	0.001425	0.011486	
+Forces:
+0.010639	0.008822	0.013822	
+-0.000564	-0.007398	-0.002335	
+-0.010075	-0.001425	-0.011486	
+Time taken by energy_compute() is: 5.030000 seconds
+e_minus =   -76.388429
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0630  0.8866  1.3823
+  -0.0596 -0.7393 -0.2369
+  -1.0035 -0.1473 -1.1453
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38843089
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770531	-0.695494	
+Gradients:
+-0.010630	-0.008866	-0.013823	
+0.000596	0.007393	0.002369	
+0.010035	0.001473	0.011453	
+Forces:
+0.010630	0.008866	0.013823	
+-0.000596	-0.007393	-0.002369	
+-0.010035	-0.001473	-0.011453	
+Time taken by energy_compute() is: 4.070000 seconds
+e_plus =   -76.388431
+del_e =    -0.000002
+ngrad[j] =    -0.005993
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0533  0.8865  1.3716
+  -0.0579 -0.7399 -0.2353
+  -0.9954 -0.1465 -1.1363
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38843143
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770431	-0.695594	
+Gradients:
+-0.010533	-0.008865	-0.013716	
+0.000579	0.007399	0.002353	
+0.009954	0.001465	0.011363	
+Forces:
+0.010533	0.008865	0.013716	
+-0.000579	-0.007399	-0.002353	
+-0.009954	-0.001465	-0.011363	
+Time taken by energy_compute() is: 4.670000 seconds
+e_minus =   -76.388431
+
+
+=================REGULAR ANI-MODEL=====================
+=========TESTING FOR OBJECT BASED MODEL LOADING ===============
+ Energy: -76.3884
+ Force: (1,.,.) = 
+ 0.01 *
+  1.0737  0.8823  1.3928
+  -0.0581 -0.7391 -0.2352
+  -1.0156 -0.1432 -1.1576
+[ CPUFloatType{1,3,3} ]
+Torch_energy -76.38842809
+Coordinates:
+-1.815220	2.663988	0.000000	
+-1.616905	1.722730	0.001942	
+-2.465495	2.770431	-0.695394	
+Gradients:
+-0.010737	-0.008823	-0.013928	
+0.000581	0.007391	0.002352	
+0.010156	0.001432	0.011576	
+Forces:
+0.010737	0.008823	0.013928	
+-0.000581	-0.007391	-0.002352	
+-0.010156	-0.001432	-0.011576	
+Time taken by energy_compute() is: 4.600000 seconds
+e_plus =   -76.388428
+del_e =     0.000003
+ngrad[j] =     0.008832
+A A0003    5.32093253E-03   7.66682217E-04   6.06965683E-03
+N A0003    8.98930461E-03  -5.99286974E-03   8.83159751E-03  DOES NOT MATCH
+
+GRADIENT TEST JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Sun Nov  3 02:12:26 2024
+TOTAL RUN TIME IS 46 SECONDS
+
+ANIModel() Destructor

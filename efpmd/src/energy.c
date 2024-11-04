@@ -124,7 +124,7 @@ void compute_energy(struct state *state, bool do_grad)
             torch_custom_compute(state->torch, cfg_get_int(state->cfg, "print"));
             clock_t end_time = clock();
             double time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-            printf("Time taken by energy_compute() is: %f seconds\n", time_taken);
+            if (cfg_get_int(state->cfg, "print")>0) printf("Time taken by energy_compute() is: %f seconds\n", time_taken);
             // printf("=======================================================\n\n");
 	    }
 	    else {
@@ -133,7 +133,7 @@ void compute_energy(struct state *state, bool do_grad)
             torch_compute(state->torch, cfg_get_string(state->cfg, "ml_path"), cfg_get_int(state->cfg, "print"));
             clock_t end_time = clock();
             double time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-            printf("Time taken by energy_compute() is: %f seconds\n", time_taken);
+            if (cfg_get_int(state->cfg, "print")>0)  printf("Time taken by energy_compute() is: %f seconds\n", time_taken);
             // printf("\n\n========================================================\n");
 	    }
 
@@ -145,7 +145,7 @@ void compute_energy(struct state *state, bool do_grad)
             torch_get_gradient(state->torch, state->torch_grad);
 
             if (cfg_get_int(state->cfg, "print") > 1) {
-                printf("\nTorch gradient\n");
+                printf("\nTorch gradient in energy.c\n");
                 for (size_t i = 0; i < 3*n_special_atoms; i++)
                     printf("%lf ", state->torch_grad[i]);
             }
@@ -169,6 +169,7 @@ void compute_energy(struct state *state, bool do_grad)
                 }
 
                 // add EFP and torch gradients
+// uncomment the bottom two lines later SKP changes
                 for (size_t i = 0; i < 3 * n_special_atoms; i++)
                     state->torch_grad[i] += tmp_grad[i];
 

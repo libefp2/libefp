@@ -208,10 +208,9 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
     //load_ani_model(torch->ani_model, torch->nn_type, nn_path);
 
     size_t n_atoms = torch->natoms;
-    float  *gradients, *forces, *frag_coord;
-    double ani_energy; 
+    float *energies, *gradients, *forces, *frag_coord;
 
-    //energies = malloc(n_atoms * sizeof(double));
+    energies = malloc(n_atoms * sizeof(float));
     gradients = malloc(n_atoms * 3 * sizeof(float));
     forces = malloc(n_atoms * 3 * sizeof(float));
 
@@ -233,24 +232,26 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
     // Hardcoded ANI1/ANI2 routine
     // get_torch_energy_grad(frag_coord, frag_species, n_atoms, energies, gradients, forces, torch->nn_type);
  
-    get_ani_energy_grad(torch->ani_model, frag_coord, frag_species, &ani_energy, gradients, forces, n_atoms, print);
+    get_ani_energy_grad(torch->ani_model, frag_coord, frag_species, energies, gradients, forces, n_atoms, print);
 
-    printf("Torch_energy %12.8f\n",ani_energy); 
-    
-    torch->energy = ani_energy;
+    for (int i = 0; i < n_atoms; ++i) {
+        total_energy  += (double)energies[i];
+    }
+    printf("Torch_energy %12.8f\n",total_energy); 
+    torch->energy = total_energy;
 
-    if (print > 1) {
+//    if (print > 1) {
 	printf("Coordinates:\n");
         for (int i = 0; i < n_atoms; ++i) {
             for (int j = 0; j < 3; ++j) {
-                printf("%12.8f\t", frag_coord[i * 3 + j]);
+                printf("%f\t", frag_coord[i * 3 + j]);
             }
             printf("\n");
         }
         printf("Gradients:\n");
         for (int i = 0; i < n_atoms; ++i) {
             for (int j = 0; j < 3; ++j) {
-                printf("%12.8f\t", gradients[i * 3 + j]);
+                printf("%f\t", gradients[i * 3 + j]);
             }
             printf("\n");
         }
@@ -258,16 +259,17 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
         printf("Forces:\n");
         for (int i = 0; i < n_atoms; ++i) {
             for (int j = 0; j < 3; ++j) {
-                printf("%12.8ff\t", forces[i * 3 + j]);
+                printf("%f\t", forces[i * 3 + j]);
             }
             printf("\n");
         }
-    }
+//    }
 
     if (print > 0)
         torch_print(torch);
 
     // save data in energy and grad
+    //printf("BOHR_RAD = %12.6f\n",BOHR_RADIUS);
     double *tG_double = xcalloc(3 * n_atoms, sizeof(double));
     for (int i = 0; i < 3 * n_atoms; i++) {
         tG_double[i] = (double)(gradients[i] * BOHR_RADIUS);
@@ -277,14 +279,14 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
     printf("tG_double Gradients:\n");
         for (int i = 0; i < n_atoms; ++i) {
             for (int j = 0; j < 3; ++j) {
-                printf("%12.8f\t", tG_double[i * 3 + j]);
+                printf("%f\t", tG_double[i * 3 + j]);
             }
             printf("\n");
         }
     }
     memcpy(torch->grad, tG_double, (3 * n_atoms) * sizeof(double)); 
 
-    //free(energies);
+    free(energies);
     free(gradients);
     free(forces);
     free(frag_coord);

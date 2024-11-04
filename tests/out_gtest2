@@ -1,0 +1,372 @@
+EFPMD ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+
+LIBEFP ver. 1.8.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
+WALL CLOCK TIME IS Fri Nov  1 05:24:35 2024
+
+SIMULATION SETTINGS
+
+run_type gtest
+coord atoms
+terms qq lj
+special_terms qq lj
+elec_damp off
+disp_damp off
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /../fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 0
+max_steps 100
+multistep_steps 1
+fraglib_path ../fraglib
+ml_path ../nnlib/
+userml_path .
+custom_nn custom_model_script.pt
+aev_nn aev_scripted.pt
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.001
+opt_energy_tol 1e-06
+gtest_tol 5e-06
+ref_energy -76.3939
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+ensemble nve
+time_step 1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+enable_pairwise false
+print_pbc false
+symmetry false
+special_fragment 0
+enable_torch true
+enable_elpot false
+opt_special_frag 0
+torch_nn ani1.pt
+atom_gradient mm
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+xr_cutoff is set to 10.000000 
+
+chosen nn_type: ani1.pt
+The location of NN potential is: ../nnlib/
+
+ANIModel() Constructor
+Model loaded from: ../nnlib/ANI1x_saved2.pt
+GRADIENT TEST JOB
+
+
+    GEOMETRY (ANGSTROMS)
+
+A01O                -1.815220     2.663988    -0.000000
+A02H                -1.617480     1.725461     0.001936
+A03H                -2.476026     2.736906    -0.714908
+A01O                -1.815220     5.663988    -0.000000
+A02H                -1.617480     4.725461     0.001936
+A03H                -2.476026     5.736906    -0.714908
+
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 1.110000 seconds
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY    -0.0058237165
+                     LJ ENERGY     0.0002791012
+
+                     ML ENERGY   -76.3883506060
+
+                  TOTAL ENERGY   -76.3938952213
+
+
+              REFERENCE ENERGY   -76.3938952213
+               COMPUTED ENERGY   -76.3938952213  MATCH
+
+
+    COMPUTING NUMERICAL GRADIENT
+
+Entering test_grad()
+TESTING GRADIENTS ON EFP FRAGMENTS
+Entering test_fgrad()
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 3.160000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 4.770000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.420000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.380000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.380000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.380000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.380000 seconds
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+Entering test_vec
+A F0002   -8.08799236E-04   1.96818173E-03  -2.14322927E-03
+N F0002   -8.45441985E-04   1.88866042E-03  -2.11929690E-03  DOES NOT MATCH
+Entering test_vec
+A D0002    3.31744766E-04  -2.34883257E-04   4.10829447E-03
+N D0002    1.76316964E-04  -1.90171199E-04   4.18507684E-03  DOES NOT MATCH
+TESTING GRADIENTS ON SPECIAL FRAGMENT ATOMS
+Entering test_agrad()
+
+Analytical Gradients in test_agrad:
+0.009376	-0.006394	0.008905	
+-0.003143	0.007827	-0.001670	
+-0.006234	-0.001433	-0.007235	
+dstep =     0.001890
+
+
+Going to compute_energy for e1
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+Going to compute_energy for e2
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+Going to compute_energy for e1
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+Going to compute_energy for e2
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.380000 seconds
+
+
+Going to compute_energy for e1
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+Going to compute_energy for e2
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.380000 seconds
+
+Numerical Gradients before calling test_vec:
+-0.008872	-0.012095	-0.003595	
+
+
+Analytical Gradients before calling test_vec:
+0.009376	-0.006394	0.008905	
+
+Entering test_vec
+A A0001    9.37645976E-03  -6.39373901E-03   8.90481993E-03
+N A0001   -8.87215960E-03  -1.20952137E-02  -3.59515370E-03  DOES NOT MATCH
+
+
+Going to compute_energy for e1
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+Going to compute_energy for e2
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.380000 seconds
+
+
+Going to compute_energy for e1
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+Going to compute_energy for e2
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.380000 seconds
+
+
+Going to compute_energy for e1
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+Going to compute_energy for e2
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.440000 seconds
+
+Numerical Gradients before calling test_vec:
+-0.001034	0.006201	0.000189	
+
+
+Analytical Gradients before calling test_vec:
+-0.003143	0.007827	-0.001670	
+
+Entering test_vec
+A A0002   -3.14255789E-03   7.82699393E-03  -1.67000630E-03
+N A0002   -1.03417700E-03   6.20122211E-03   1.89352709E-04  DOES NOT MATCH
+
+
+Going to compute_energy for e1
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 6.640000 seconds
+
+
+Going to compute_energy for e2
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 6.590000 seconds
+
+
+Going to compute_energy for e1
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 6.730000 seconds
+
+
+Going to compute_energy for e2
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 5.440000 seconds
+
+
+Going to compute_energy for e1
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+
+Going to compute_energy for e2
+
+
+
+=================REGULAR ANI-MODEL=====================
+Time taken by energy_compute() is: 0.370000 seconds
+
+Numerical Gradients before calling test_vec:
+0.006667	0.002034	0.005509	
+
+
+Analytical Gradients before calling test_vec:
+-0.006234	-0.001433	-0.007235	
+
+Entering test_vec
+A A0003   -6.23390188E-03  -1.43325492E-03  -7.23481363E-03
+N A0003    6.66716473E-03   2.03399249E-03   5.50932717E-03  DOES NOT MATCH
+
+GRADIENT TEST JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Fri Nov  1 05:24:39 2024
+TOTAL RUN TIME IS 4 SECONDS
+
+ANIModel() Destructor

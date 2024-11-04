@@ -46,18 +46,28 @@ void ANIModel::load_custom_model(const std::string &aev_name, const std::string 
 
 void ANIModel::get_energy_grad(const torch::Tensor& coordinates, 
                                const torch::Tensor& species, 
-                               double* total_energy, 
+                               double* atomic_energies, 
                                float* gradients, 
                                float* forces, 
                                int num_atoms,
                                int print) {
+    //std::vector<torch::jit::IValue> inputs;
+    //inputs.push_back(std::make_tuple(species, coordinates));
+ 
+    //auto output = module.forward(inputs).toTuple();
+    //at::Tensor energy_tensor = output->elements()[1].toTensor();
+ 
+    //auto energy = energy_tensor.item<float>();
+    //auto energy = output->elements()[1].toTensor().item<double>();
 
     std::vector<torch::jit::IValue> inputs = {std::make_tuple(species, coordinates)};
     auto output = module.forward(inputs).toTuple();
-    at::Tensor energy_tensor = output->elements()[1].toTensor();
-    auto energy = energy_tensor.item<double>();
-    energy_tensor.backward(torch::ones_like(energy_tensor));
+    auto energy = output->elements()[1].toTensor().item<double>();
 
+    at::Tensor energy_tensor = output->elements()[1].toTensor();
+    energy_tensor.backward(torch::ones_like(energy_tensor));
+    auto energy1 = energy_tensor.item<double>();
+ 
     auto gradient = coordinates.grad();
 
     if (!gradient.defined() || gradient.numel() == 0) {
@@ -66,28 +76,90 @@ void ANIModel::get_energy_grad(const torch::Tensor& coordinates,
     }
 
     auto force = -gradient;
+    //auto atomic_energies_tensor = module.get_method("atomic_energies")(inputs).toTuple()->elements()[1].toTensor();
 
-    //auto atomic_energies_tensor = module.get_method("atomic_energies")(inputs).toTuple()->elements()[1].toTensor().to(torch::kDouble);
-    //auto aten_array = atomic_energies_tensor.accessor<double, 2>();
+    auto atomic_energies_tensor = module.get_method("atomic_energies")(inputs).toTuple()->elements()[1].toTensor().to(torch::kDouble);
+    auto aten_array = atomic_energies_tensor.accessor<double, 2>();
 
-    if (print > 0) {
+    //if (print > 0) {
         std::cout << "=========TESTING FOR OBJECT BASED MODEL LOADING ===============" << std::endl;
+	std::cout << " Energy double: " << energy << std::endl;
 	std::cout << std::fixed << std::setprecision(12) << "C++ (LibTorch) Energy: " << energy << std::endl;
-        std::cout << " Force: " << force << std::endl;  
+	std::cout << std::fixed << std::setprecision(12) << "C++ (LibTorch) Energy1: " << energy1 << std::endl;
+        std::cout << " Force: " << force << std::endl; 
+	std::cout << std::fixed << std::setprecision(12) << "Force: " << force << std::endl;
+    //} 
 
-	//for (int i = 0; i < aten_array.size(1); i++) {
-        //   double atomic_energy_value = aten_array[0][i]; // Access the first batch
-        //   std::cout << "Atom " << i << ": " << std::fixed << std::setprecision(12) << atomic_energy_value << std::endl; // Print the value
-        //}
-    }       
+	for (int i = 0; i < atomic_energies.size(1); i++) {
+           double atomic_energy_value = aten_array[0][i]; // Access the first batch
+           std::cout << "Atom " << i << ": " << std::fixed << std::setprecision(12) << atomic_energy_value << std::endl; // Print the value
+        }
+
  
-    memcpy(total_energy, energy_tensor.data_ptr<double>(), sizeof(double));
+//    memcpy(atomic_energies, atomic_energies_tensor.data_ptr<float>(), atomic_energies_tensor.numel() * sizeof(float));
+    memcpy(atomic_energies, atomic_energies_tensor.data_ptr<double>(), atomic_energies_tensor.numel() * sizeof(double));
     memcpy(gradients, gradient.data_ptr<float>(), gradient.numel() * sizeof(float));
     memcpy(forces, force.data_ptr<float>(), force.numel() * sizeof(float));
     coordinates.grad().zero_();
 }
 
 
+/*
+void ANIModel::get_energy_grad(const torch::Tensor& coordinates,
+                               const torch::Tensor& species,
+                               double* atomic_energies,
+                               double* gradients,
+                               double* forces,
+                               int num_atoms,
+                               int print) {
+    auto coords_float = coordinates.to(torch::kFloat).detach().clone().requires_grad_(true);
+    auto species_long = species.to(torch::kInt64);  // Ensure species is in integer format
+
+    std::vector<torch::jit::IValue> inputs;
+    inputs.push_back(std::make_tuple(species_long, coords_float));
+
+    auto output = module.forward(inputs).toTuple();
+    at::Tensor energy_tensor = output->elements()[1].toTensor();
+
+    float energy = energy_tensor.item<float>();
+
+    energy_tensor.backward(torch::ones_like(energy_tensor));
+
+    auto gradient = coords_float.grad();
+    if (!gradient.defined() || gradient.numel() == 0) {
+        std::cerr << "Error: Gradient is not defined or empty." << std::endl;
+        return;
+    }
+
+    auto force = -gradient;
+
+    auto atomic_energies_tensor = module.get_method("atomic_energies")(inputs)
+                                  .toTuple()->elements()[1].toTensor();
+
+    if (print > 0) {
+        std::cout << "=========TESTING FOR OBJECT BASED MODEL LOADING ===============" << std::endl;
+        std::cout << " Energy: " << static_cast<double>(energy) << std::endl;
+        std::cout << " Force: " << force << std::endl;
+    }
+
+    auto atomic_energies_float = atomic_energies_tensor.data_ptr<float>();
+    for (int i = 0; i < atomic_energies_tensor.numel(); ++i) {
+        atomic_energies[i] = static_cast<double>(atomic_energies_float[i]);
+    }
+
+    auto gradients_float = gradient.data_ptr<float>();
+    for (int i = 0; i < gradient.numel(); ++i) {
+        gradients[i] = static_cast<double>(gradients_float[i]);
+    }
+
+    auto forces_float = force.data_ptr<float>();
+    for (int i = 0; i < force.numel(); ++i) {
+        forces[i] = static_cast<double>(forces_float[i]);
+    }
+
+    coords_float.grad().zero_();
+}
+*/
 
 void ANIModel::get_custom_energy_grad(float* coordinates_data, int64_t* species_data, float* elecpots_data, int num_atoms, float* custom_energy, float* cus_grads, float* cus_forces, int print) {
 
