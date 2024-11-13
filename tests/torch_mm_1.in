@@ -5,13 +5,14 @@ special_terms qq lj
 elec_damp off
 disp_damp off
 fraglib_path ../fraglib
-special_fragment 0
+special_fragment 1
 enable_torch true
 torch_nn ani1.pt
 opt_special_frag 0
 atom_gradient mm
 max_steps 50
 print 0
+opt_tol 1.0e-3
 
 
 fragment tip3p_mm_l

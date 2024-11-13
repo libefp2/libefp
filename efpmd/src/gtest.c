@@ -169,6 +169,7 @@ static void test_agrad(struct state *state, const double *agrad)
             double coord = atom_coord[3 * i + j];
 
 	    printf("\nAtom %2d, Coord %2d - dstep\n",i,j);
+	    printf("\nPRINTING COORD-DTSEP		E1-------------------------------\n");
             atom_coord[3 * i + j] = coord - dstep;
             // propagate special fragment coordinates to EFP and update fragment parameters
             check_fail(update_special_fragment(state->efp, atom_coord));
@@ -179,6 +180,7 @@ static void test_agrad(struct state *state, const double *agrad)
 	    //printf("e_minus = %12.8f\n",e1);
 	   
             printf("\nAtom %2d, Coord %2d + dstep\n",i,j);
+	    printf("\nPRINTING COORD+DTSEP		E2--------------------------------\n");
             atom_coord[3 * i + j] = coord + dstep;
             // propagate special fragment coordinates to EFP and update fragment parameters
             check_fail(update_special_fragment(state->efp, atom_coord));

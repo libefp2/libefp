@@ -13,6 +13,7 @@ enable_torch true
 enable_elpot true
 opt_special_frag 0
 atom_gradient mm
+opt_tol 1.0e-3
 max_steps 20
 print 0
 
@@ -26,6 +27,5 @@ fragment tip3p_mm_l
 A01O  -1.815220   5.663988  -0.0
 A02H  -1.617480   4.725461   0.001936
 A03H  -2.476026   5.736906  -0.714908
-
 
 

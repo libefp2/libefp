@@ -101,8 +101,9 @@ void torch_custom_compute(struct torch *torch, int print) {
     float *gradients, *forces; 
     float *frag_coord;
     float *elecpots_data;
-    float custom_energy;
-
+//    float custom_energy;
+    double custom_energy;
+ 
     elecpots_data = malloc(n_atoms * sizeof(float));
     gradients = malloc(n_atoms * 3 * sizeof(float));
     forces = malloc(n_atoms * 3 * sizeof(float));

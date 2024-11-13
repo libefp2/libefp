@@ -86,6 +86,7 @@ void compute_energy(struct state *state, bool do_grad)
 	}
 
     /* Torch fragment part here */
+
     if (cfg_get_bool(state->cfg, "enable_torch")  && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
 
         spec_frag = cfg_get_int(state->cfg, "special_fragment");
@@ -107,13 +108,13 @@ void compute_energy(struct state *state, bool do_grad)
 
             free(atoms);
 
-            //if (cfg_get_int(state->cfg, "print") > 1) {
+            if (cfg_get_int(state->cfg, "print") > 1) {
                 printf("\nTesting elpot printing\n");
                 for (iatom = 0; iatom < n_special_atoms; iatom++) {
                   printf("%12.6f\n", *(elpot + iatom));
                 }
                 printf("Done testing elpot\n\n");
-	    //	    }
+		    }
 
             torch_set_elpot(state->torch, elpot);
 
@@ -140,6 +141,13 @@ void compute_energy(struct state *state, bool do_grad)
         state->torch_energy = torch_get_energy(state->torch);
         state->energy += state->torch_energy;
         //state->energy = state->torch_energy;
+
+
+
+        if (do_grad) {
+            torch_get_gradient(state->torch, state->torch_grad);
+        }
+    }
 
         if (do_grad) {
             torch_get_gradient(state->torch, state->torch_grad);
