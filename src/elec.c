@@ -759,10 +759,10 @@ qq_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
     // charge - charge
     energy += efp_charge_charge_energy(pt_i->mm_charge, pt_j->mm_charge, &dr);
 
-    //if (efp->opts.print > 1) {
+    //if (efp->opts.print > 2) {
     //    printf("\n Atomic gradient in qq_energy BEFORE\n");
-    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_i_idx, pt_i_idx, pt_i->gx, pt_i->gy, pt_i->gz); 
-    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_j_idx, pt_j_idx, pt_j->gx, pt_j->gy, pt_j->gz); 
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_i_idx, pt_i_idx, pt_i->gx, pt_i->gy, pt_i->gz);
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_j_idx, pt_j_idx, pt_j->gx, pt_j->gy, pt_j->gz);
     //}
 
     // gradient
@@ -797,10 +797,10 @@ qq_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
         pt_j->gz -= force.z + force2.z;
     }
 
-    //if (efp->opts.print > 1) {
+    //if (efp->opts.print > 2) {
     //    printf("\n Atomic gradient in qq_energy AFTER\n");
-    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_i_idx, pt_i_idx, pt_i->gx, pt_i->gy, pt_i->gz); 
-    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_j_idx, pt_j_idx, pt_j->gx, pt_j->gy, pt_j->gz); 
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_i_idx, pt_i_idx, pt_i->gx, pt_i->gy, pt_i->gz);
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_j_idx, pt_j_idx, pt_j->gx, pt_j->gy, pt_j->gz);
     //}
 
     return energy;

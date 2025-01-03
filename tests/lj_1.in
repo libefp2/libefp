@@ -1,17 +1,10 @@
 run_type gtest
-ref_energy -76.3937716824
+ref_energy -0.0053421148
 gtest_tol 5.0e-6
 coord atoms
 terms qq lj
 special_terms qq lj
-elec_damp off
-disp_damp off
 fraglib_path ../fraglib
-special_fragment 0
-enable_torch true
-torch_nn ani1.pt
-opt_special_frag 0
-atom_gradient mm
 print 0
 
 fragment tip3p_mm_l

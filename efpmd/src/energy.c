@@ -158,7 +158,7 @@ void compute_energy(struct state *state, bool do_grad)
                 } else
                     check_fail(efp_get_frag_atomic_gradient(state->efp, spec_frag, tmp_grad));
 
-                if (cfg_get_int(state->cfg, "print") > 0) {
+                if (cfg_get_int(state->cfg, "print") > 2) {
                     printf("\nEFP fragment atomic gradient\n");
                     for (size_t i = 0; i < 3 * n_special_atoms; i++)
                         printf("%lf ", tmp_grad[i]);
@@ -170,7 +170,7 @@ void compute_energy(struct state *state, bool do_grad)
                     state->torch_grad[i] += tmp_grad[i];
 
                 // print total EFP and torch gradients
-                if (cfg_get_int(state->cfg, "print") > 0) {
+                if (cfg_get_int(state->cfg, "print") > 2) {
                     printf("\n TOTAL GRADIENTS on ML fragment atoms\n\n");
                     for (size_t i = 0; i < n_special_atoms; i++)
                         printf("%s      %12.6f      %12.6f     %12.6f\n", state->sys->frags[spec_frag].atoms[i].label,

@@ -1,15 +1,18 @@
+# this tests fails: gradaients are not exact with atom_gradient=frag
+
 run_type gtest
 ref_energy -76.3937716824
 gtest_tol 5.0e-6
 coord atoms
 terms qq lj
+special_terms qq lj
 fraglib_path ../fraglib
 special_fragment 0
 enable_torch true
 torch_nn ani1.pt
 opt_special_frag 0
-atom_gradient mm
-print 1
+atom_gradient frag
+print 0
 
 fragment tip3p_mm_l
 A01O                -1.815220     2.663988     0.000000
