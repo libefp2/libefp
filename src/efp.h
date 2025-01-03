@@ -41,7 +41,7 @@ extern "C" {
 #endif
 
 /** Version string. */
-#define LIBEFP_VERSION_STRING "1.8.0"
+#define LIBEFP_VERSION_STRING "2.0.0"
 
 /** Result of an operation. */
 enum efp_result {
@@ -182,9 +182,7 @@ struct efp_opts {
 	/** Enable periodic boundary conditions if nonzero. */
 	int enable_pbc;
 	/** Enable switching off elpot contribution for custom torch gradient*/
-#ifdef TORCH_SWITCH
-        int enable_elpot;
-#endif
+    int enable_elpot;
 	/** Enable fragment-fragment interaction cutoff if nonzero. */
 	int enable_cutoff;
 	/** Cutoff distance for fragment-fragment interactions. */

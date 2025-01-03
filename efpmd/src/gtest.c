@@ -105,20 +105,16 @@ static void test_fgrad(struct state *state, const double *fgrad)
 
 	size_t n_frags, spec_frag;
 	check_fail(efp_get_frag_count(state->efp, &n_frags));
-#ifdef TORCH_SWITCH
     spec_frag = n_frags + 1; // make in inactive if torch model is off
 
-    if (cfg_get_bool(state->cfg, "enable_torch") &&  cfg_get_int(state->cfg, "special_fragment") > -1)
+    if (cfg_get_bool(state->cfg, "enable_torch") )
         spec_frag = cfg_get_int(state->cfg, "special_fragment");
-#endif
 	double xyzabc[6 * n_frags];
 	check_fail(efp_get_coordinates(state->efp, xyzabc));
 
 	for (size_t i = 0, k=0; i < n_frags; i++) {
 
-#ifdef TORCH_SWITCH
         if (i == spec_frag) continue;
-#endif
 		double deriv[3], ngrad[6];
 
 		for (size_t j = 0; j < 6; j++) {
@@ -153,7 +149,7 @@ static void test_fgrad(struct state *state, const double *fgrad)
 #ifdef TORCH_SWITCH
 static void test_agrad(struct state *state, const double *agrad)
 {
-    printf("\n\nSTARTING TEST_AGRAD()\n\n");
+    //printf("\n\nSTARTING TEST_AGRAD()\n\n");
     double tol = cfg_get_double(state->cfg, "gtest_tol");
     double dstep = cfg_get_double(state->cfg, "num_step_dist");
 
@@ -165,7 +161,6 @@ static void test_agrad(struct state *state, const double *agrad)
     double atom_coord[3 * n_special_atoms]; // = (double*)malloc(3 * n_special_atoms * sizeof(double));
     check_fail(efp_get_frag_atom_coord(state->efp, spec_frag, atom_coord));
 
-    
     for (size_t i = 0; i < n_special_atoms; i++) {
         double ngrad[3];
         for (size_t j = 0; j < 3; j++) {
@@ -173,8 +168,6 @@ static void test_agrad(struct state *state, const double *agrad)
             double e1, e2;
             double coord = atom_coord[3 * i + j];
 
-	    printf("\nAtom %2d, Coord %2d - dstep\n",i,j);
-	    printf("\nPRINTING COORD-DTSEP		E1-------------------------------\n");
             atom_coord[3 * i + j] = coord - dstep;
             // propagate special fragment coordinates to EFP and update fragment parameters
             check_fail(update_special_fragment(state->efp, atom_coord));
@@ -182,10 +175,7 @@ static void test_agrad(struct state *state, const double *agrad)
             torch_set_coord(state->torch, atom_coord);
             compute_energy(state, 0);
             e1 = state->energy;
-	    //printf("e_minus = %12.8f\n",e1);
-	   
-            printf("\nAtom %2d, Coord %2d + dstep\n",i,j);
-	    printf("\nPRINTING COORD+DTSEP		E2--------------------------------\n");
+
             atom_coord[3 * i + j] = coord + dstep;
             // propagate special fragment coordinates to EFP and update fragment parameters
             check_fail(update_special_fragment(state->efp, atom_coord));
@@ -193,7 +183,7 @@ static void test_agrad(struct state *state, const double *agrad)
             torch_set_coord(state->torch, atom_coord);
             compute_energy(state, 0);
             e2 = state->energy;
-	    //printf("e_plus = %12.8f\n",e2);
+
             // return to the original coordinates?
             atom_coord[3 * i + j] = coord;
             // propagate special fragment coordinates to EFP and update fragment parameters
@@ -201,15 +191,14 @@ static void test_agrad(struct state *state, const double *agrad)
             // propagate special fragment coordinates to torch
             torch_set_coord(state->torch, atom_coord);
 
-	    //printf("del_e = %12.6f\n",e2 - e1);
-            ngrad[j] = ((e2 - e1) / (2.0 * dstep));
-	    //printf("ngrad[j] = %12.6f\n",ngrad[j]);
+            if (cfg_get_int(state->cfg, "print") > 0)
+                printf("\nAtom %2zu, coord %2zu displacement, energies: %12.8f   %12.8f\n",i,j,e1,e2);
 
+            ngrad[j] = ((e2 - e1) / (2.0 * dstep));
         }
-	printf("\n");	
+        printf("\n");
         test_vec('A', i + 1, tol, agrad + 3 * i, ngrad);
     }
-
 
     // propagate special fragment coordinates to EFP and update fragment parameters
     check_fail(update_special_fragment(state->efp, atom_coord));
@@ -310,7 +299,7 @@ static void test_grad(struct state *state)
 
 #ifdef TORCH_SWITCH
     // models with libtorch optimized fragment
-    if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
+    if (cfg_get_bool(state->cfg, "enable_torch")) {
         spec_frag = cfg_get_int(state->cfg, "special_fragment");
         check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
@@ -325,27 +314,6 @@ static void test_grad(struct state *state)
             k++;
         }
         // memcpy(fgrad, state->grad, n_frags * 6 * sizeof(double));
-
-        /*
-        // do not add EFP contribution on a special fragment if it is the only fragment in the system
-        if (n_frags > 1) {
-
-            double *tmp_grad = xcalloc(n_special_atoms*3, sizeof (double));
-
-            // get gradient from fragment atoms directly if QQ and LJ terms are computed
-            if (cfg_get_enum(state->cfg, "atom_gradient") == ATOM_GRAD_MM) {
-                check_fail(efp_get_atom_gradient(state->efp, spec_frag, tmp_grad));
-            }
-            else
-                check_fail(efp_get_frag_atomic_gradient(state->efp, spec_frag, tmp_grad));
-
-            // add EFP and torch gradients
-            for (size_t i = 0; i < n_special_atoms*3; i++)
-                state->torch_grad[i] += tmp_grad[i];
-
-            free(tmp_grad);
-        }
-        */
 
         memcpy(agrad, state->torch_grad, (3 * n_special_atoms) * sizeof(double));
 	
@@ -364,15 +332,15 @@ static void test_grad(struct state *state)
             test_cgrad(state, cgrad);   // test point charge gradient
         }
 
-        msg("TESTING GRADIENTS ON EFP FRAGMENTS\n");
+        msg("\nTESTING GRADIENTS ON EFP FRAGMENTS\n");
         test_fgrad(state, fgrad);  // test efp fragment gradient
-        msg("TESTING GRADIENTS ON SPECIAL FRAGMENT ATOMS\n");
+        msg("\nTESTING GRADIENTS ON SPECIAL FRAGMENT ATOMS\n");
         test_agrad(state, agrad); // test gradient on special fragment atoms
     }
 #endif
 
     // original "normal efp only" case
-    if (!cfg_get_bool(state->cfg, "enable_torch") && !cfg_get_int(state->cfg, "opt_special_frag") > -1) {
+    if (!cfg_get_bool(state->cfg, "enable_torch")) {
         double fgrad[6 * n_frags];
         memcpy(fgrad, state->grad, n_frags * 6 * sizeof(double));
 

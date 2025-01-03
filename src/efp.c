@@ -35,6 +35,7 @@
 #include "stream.h"
 #include "util.h"
 
+#define DEBUG_GRAD 0
 
 static void
 update_fragment(struct frag *frag)
@@ -607,9 +608,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 				    efp->frags[fr_j].n_multipole_pts > 0) {
 					e_elec_tmp = efp_frag_frag_elec(efp, i, fr_j);
                     // zeroing the energy contribution on the special fragment in torch custom models
-#ifdef TORCH_SWITCH
                     if (efp->opts.enable_elpot && if_special_fragment) e_elec_tmp = 0.0;
-#endif
                         //e_elec_tmp = efp_frag_frag_elec(efp, i, fr_j);
 					e_elec += e_elec_tmp;
 					/* */
@@ -642,9 +641,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                     e_qq_tmp = efp_frag_frag_qq(efp, i, fr_j);
 
                     // zeroing the energy contribution on the special fragment in torch custom models
-#ifdef TORCH_SWITCH
                     if (efp->opts.enable_elpot && if_special_fragment) e_qq_tmp = 0.0;
-#endif
                     e_qq += e_qq_tmp;
                 }
 
@@ -662,10 +659,10 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
     efp->energy.qq += e_qq;
     efp->energy.lj += e_lj;
 
-    if (efp->opts.print > 0) {
+    if (efp->opts.print > 1) {
         printf(" In compute_two_body_range() \n");
         print_ene(&efp->energy);
-        if (efp->opts.print > 1 && efp->opts.enable_pairwise)
+        if (efp->opts.enable_pairwise)
             print_energies(efp);
     }
 }
@@ -999,9 +996,9 @@ efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad)
     if ((Ia = (double *)malloc(nr * sizeof(*Ia))) == NULL)
         goto error;
 
-     for (size_t i=0; i<efp->n_frag; i++) {
-        printf(" %12.6lf  %12.6lf  %12.6lf \n", efp->grad[i].x, efp->grad[i].y, efp->grad[i].z); 
-    }
+    //for (size_t i=0; i<efp->n_frag; i++) {
+    //    printf(" %12.6lf  %12.6lf  %12.6lf \n", efp->grad[i].x, efp->grad[i].y, efp->grad[i].z);
+    //}
 
 
     /* Copy computed efp->grad */
@@ -1009,12 +1006,13 @@ efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad)
         goto error;
     memcpy(efpgrad, efp->grad + frag_id, sizeof(*efpgrad));
 
-    // printf("\nGradient in efp_get_frag_atomic_gradient 0\n");
-    // for (size_t i=0; i<nr; i++) {
-    //     printf(" %12.6lf  %12.6lf  %12.6lf \n", pgrad[i].x, pgrad[i].y, pgrad[i].z); 
-    // }
-    // printf(" efpgrad  %12.6lf  %12.6lf  %12.6lf \n", efpgrad->x,  efpgrad->y, efpgrad->z);
-
+    if (DEBUG_GRAD) {
+        printf("\nGradient in efp_get_frag_atomic_gradient 0\n");
+        for (size_t i = 0; i < nr; i++) {
+            printf(" %12.6lf  %12.6lf  %12.6lf \n", pgrad[i].x, pgrad[i].y, pgrad[i].z);
+        }
+        printf(" efpgrad  %12.6lf  %12.6lf  %12.6lf \n", efpgrad->x, efpgrad->y, efpgrad->z);
+    }
 
     memset(r, 0, nr * sizeof(*r));
     memset(m, 0, nr * sizeof(*m));
@@ -1072,11 +1070,13 @@ efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad)
         vec_scale(&pgrad[i], m[i] / mm);
     }
 
-    // printf("\nGradient in efp_get_frag_atomic_gradient 1\n");
-    // for (size_t i=0; i<nr; i++) {
-    //     printf(" %12.6lf  %12.6lf  %12.6lf \n", pgrad[i].x, pgrad[i].y, pgrad[i].z); 
-    // }
-    // printf(" efpgrad  %12.6lf  %12.6lf  %12.6lf \n", efpgrad->x,  efpgrad->y, efpgrad->z);
+    if (DEBUG_GRAD) {
+        printf("\nGradient in efp_get_frag_atomic_gradient 1\n");
+        for (size_t i = 0; i < nr; i++) {
+            printf(" %12.6lf  %12.6lf  %12.6lf \n", pgrad[i].x, pgrad[i].y, pgrad[i].z);
+        }
+        printf(" efpgrad  %12.6lf  %12.6lf  %12.6lf \n", efpgrad->x, efpgrad->y, efpgrad->z);
+    }
 
     /* Redistribution of torque should be done over 3 principal
         axes computed previously */
@@ -1123,15 +1123,24 @@ efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad)
         }
     }
 
-    // these gradients should match only for qq & lj atoms
-    if (efp->opts.print > 1) {
-        printf("\n Atomic gradient: efp atoms vs distributed\n");
-        for (i = 0; i < nr; i++) {
-            printf(" %12.6lf  %12.6lf  %12.6lf       %12.6lf  %12.6lf  %12.6lf\n", 
-            efp->frags[frag_id].atoms[i].gx, efp->frags[frag_id].atoms[i].gy, efp->frags[frag_id].atoms[i].gz,
-            pgrad[i].x, pgrad[i].y, pgrad[i].z); 
+    if (DEBUG_GRAD) {
+        printf("\nGradient in efp_get_frag_atomic_gradient 2\n");
+        for (size_t i = 0; i < nr; i++) {
+            printf(" %12.6lf  %12.6lf  %12.6lf \n", pgrad[i].x, pgrad[i].y, pgrad[i].z);
         }
+        printf(" efpgrad  %12.6lf  %12.6lf  %12.6lf \n", efpgrad->x, efpgrad->y, efpgrad->z);
     }
+
+    // these gradients should match only for qq & lj atoms
+    //if (efp->opts.print > 1) {
+    if (DEBUG_GRAD) {
+            printf("\n Atomic gradient: efp atoms vs distributed\n");
+            for (i = 0; i < nr; i++) {
+                printf(" %12.6lf  %12.6lf  %12.6lf       %12.6lf  %12.6lf  %12.6lf\n",
+                       efp->frags[frag_id].atoms[i].gx, efp->frags[frag_id].atoms[i].gy, efp->frags[frag_id].atoms[i].gz,
+                       pgrad[i].x, pgrad[i].y, pgrad[i].z);
+            }
+        }
 
     res = EFP_RESULT_SUCCESS;
     error:

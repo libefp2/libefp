@@ -30,7 +30,6 @@
 #ifdef TORCH_SWITCH
 #include "torch.h"
 #endif
-//#include "../torch/c_libtorch.h"
 
 void sim_opt(struct state *state);
 
@@ -74,6 +73,8 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
                 // skips coordinates of special fragment
                 for (size_t i = 0, k=0; i < n_frags; i++) {
                     if (i==spec_frag) continue;
+                    // note that xyzabc coordiantes are used for optimization, i.e. initial fragment coordinates
+                    // will be changed if atom cooridnates were used in input
                     check_fail(efp_set_frag_coordinates(state->efp, i, EFP_COORD_TYPE_XYZABC, x+6*k));
                     k++;
                 }
@@ -332,8 +333,8 @@ void sim_opt(struct state *state)
     msg("    INITIAL STATE\n\n");
     print_status(state, 0.0, rms_grad, max_grad);
 
-    if (cfg_get_int(state->cfg, "print")>0) {
-        printf("\n GRADIENTS \n");
+    if (cfg_get_int(state->cfg, "print")>2) {
+        printf("\n GRADIENTS in opt.c\n");
         for (size_t i=0; i<n_coord; i++) {
             printf(" %12.6lf\n", grad[i]);
         }
@@ -357,7 +358,7 @@ void sim_opt(struct state *state)
             msg("    FINAL STATE\n\n");
             print_status(state, e_new - e_old, rms_grad, max_grad);
 
-            if (cfg_get_int(state->cfg, "print")>0) {
+            if (cfg_get_int(state->cfg, "print")>2) {
                 printf("\n GRADIENTS \n");
                 for (size_t i=0; i<n_coord; i++) {
                     printf(" %12.6lf\n", grad[i]);
@@ -365,7 +366,7 @@ void sim_opt(struct state *state)
                 printf("\n");
             }
 
-            msg("\nOPTIMIZATION CONVERGED\n");
+            msg("\nOPTIMIZATION CONVERGED IN %d STEPS\n", step);
             if_converged = true;
             break;
         }
@@ -373,7 +374,7 @@ void sim_opt(struct state *state)
         msg("    STATE AFTER %d STEPS\n\n", step);
         print_status(state, e_new - e_old, rms_grad, max_grad);
 
-        if (cfg_get_int(state->cfg, "print")>0) {
+        if (cfg_get_int(state->cfg, "print")>2) {
             printf("\n GRADIENTS \n");
             for (size_t i=0; i<n_coord; i++) {
                 printf(" %12.6lf\n", grad[i]);

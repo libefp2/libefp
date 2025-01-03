@@ -35,7 +35,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-//#include "state.h"
 
 typedef void (*sim_fn_t)(struct state *);
 
@@ -47,10 +46,9 @@ void sim_md(struct state *);
 void sim_efield(struct state *);
 void sim_elpot(struct state *);
 void sim_frag_elpot(struct state *);
-//void get_frag_elpot(struct state *);
 void sim_gtest(struct state *);
 void sim_etest(struct state *);
-void test_nnp7();
+// void test_nnp7();
 
 #define USAGE_STRING \
 	"usage: efpmd [-d | -v | -h | input]\n" \
@@ -94,8 +92,10 @@ static struct cfg *make_cfg(void)
 			   EFP_COORD_TYPE_ROTMAT,
 			   EFP_COORD_TYPE_ATOMS});
 
+    // default terms - all efp terms
 	cfg_add_string(cfg, "terms", "elec pol disp xr");
-    cfg_add_string(cfg, "special_terms", "elec pol disp xr");
+    // default special terms are the same as normal terms - redefined in parse_input
+    cfg_add_string(cfg, "special_terms", "");
 
 	cfg_add_enum(cfg, "elec_damp", EFP_ELEC_DAMP_SCREEN,
 		"screen\n"
@@ -133,20 +133,14 @@ static struct cfg *make_cfg(void)
 	cfg_add_string(cfg, "efp_params_file", "params.efp");
 	cfg_add_bool(cfg, "enable_cutoff", false);
 	cfg_add_double(cfg, "swf_cutoff", 10.0);
-    	cfg_add_double(cfg, "xr_cutoff", 0.0);
+    cfg_add_double(cfg, "xr_cutoff", 0.0);
 	cfg_add_int(cfg, "max_steps", 100);
 	cfg_add_int(cfg, "multistep_steps", 1);
 	cfg_add_string(cfg, "fraglib_path", FRAGLIB_PATH);
-//========= ML variables added by SKP =======================//
-	cfg_add_string(cfg, "ml_path", ML_PATH);
-	cfg_add_string(cfg, "userml_path", ".");
-	cfg_add_string(cfg, "custom_nn", "custom_model_script.pt");
-	cfg_add_string(cfg, "aev_nn", "aev_scripted.pt");
-//============================================================//
 	cfg_add_string(cfg, "userlib_path", ".");
 	cfg_add_bool(cfg, "enable_pbc", false);
 	cfg_add_string(cfg, "periodic_box", "30.0 30.0 30.0 90.0 90.0 90.0");
-	cfg_add_double(cfg, "opt_tol", 1.0e-3);
+	cfg_add_double(cfg, "opt_tol", 3.0e-4);
 	cfg_add_double(cfg, "opt_energy_tol", 1.0e-6);
 	cfg_add_double(cfg, "gtest_tol", 1.0e-6);
 	cfg_add_double(cfg, "ref_energy", 0.0);
@@ -177,11 +171,19 @@ static struct cfg *make_cfg(void)
 
     cfg_add_int(cfg, "special_fragment", -100);
 
+    ///// LIBTORCH-related options
     cfg_add_bool(cfg, "enable_torch", false);
     cfg_add_bool(cfg, "enable_elpot", false);
-    cfg_add_int(cfg, "opt_special_frag", -1);
+    cfg_add_int(cfg, "opt_special_frag", 0);
     cfg_add_string(cfg, "torch_nn", "ani.pt");
-	
+    cfg_add_string(cfg, "ml_path", ML_PATH);
+    cfg_add_string(cfg, "userml_path", ".");
+    cfg_add_string(cfg, "custom_nn", "custom_model_script.pt");
+    cfg_add_string(cfg, "aev_nn", "aev_scripted.pt");
+	/////
+
+    // gradient on atoms computed by distributing the COM force/torque gradient (ATOM_GRAD_FRAG)
+    // or using direct atomic gradients from MM model
 	cfg_add_enum(cfg, "atom_gradient", ATOM_GRAD_FRAG,
 	"mm\n"
 	"frag\n",
@@ -198,6 +200,7 @@ static struct cfg *make_cfg(void)
     cfg_add_double(cfg, "update_params_cutoff", 0.0);
 
     cfg_add_int(cfg, "print", 0);
+
     return cfg;
 }
 
@@ -350,9 +353,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 		.pol_damp = cfg_get_enum(cfg, "pol_damp"),
 		.pol_driver = cfg_get_enum(cfg, "pol_driver"),
 		.enable_pbc = cfg_get_bool(cfg, "enable_pbc"),
-#ifdef TORCH_SWITCH
 		.enable_elpot = cfg_get_bool(cfg, "enable_elpot"),
-#endif
 		.enable_cutoff = cfg_get_bool(cfg, "enable_cutoff"),
 		.swf_cutoff = cfg_get_double(cfg, "swf_cutoff"),
 		.xr_cutoff = cfg_get_double(cfg, "xr_cutoff"),
@@ -366,10 +367,8 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
         .print = cfg_get_int(cfg, "print")
 	};
 
-	if (opts.xr_cutoff == 0.0) {
-	    opts.xr_cutoff = opts.swf_cutoff;
-	    printf("xr_cutoff is set to %lf \n\n", opts.xr_cutoff * BOHR_RADIUS);
-	}
+    // adjustoing special terms
+    if (opts.special_terms == 0) opts.special_terms = opts.terms;
 
 	enum efp_coord_type coord_type = cfg_get_enum(cfg, "coord");
 	struct efp *efp = efp_create();
@@ -446,13 +445,6 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
     	state->torch = NULL;
 	state->torch_grad = NULL;
  
-//#ifndef TORCH_SWITCH
-//    if (cfg_get_bool(cfg, "enable_torch")) {
-//	printf("Please compile with LibTorch for running this function\n");
-//        exit:
-//	return (EXIT_SUCCESS);
-//    } 
-//#endif
 	if (cfg_get_bool(cfg, "enable_ff")) {
 		if ((state->ff = ff_create()) == NULL)
 			error("cannot create ff object");
@@ -492,12 +484,13 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 // Any user given path has to be named along userml_path rem. 
 
         if (cfg_get_bool(cfg, "enable_elpot")) {
-             state->torch->nn_type = 3;
-             state->torch->custom_model = cfg_get_string(state->cfg, "custom_nn");
-             state->torch->aev = cfg_get_string(state->cfg, "aev_nn");
-	     printf("chosen nn_type: Custom model using AEV + elecpots\n");
-        } else {
-             get_torch_type(state->torch, cfg_get_string(cfg, "torch_nn"));
+            state->torch->nn_type = 3;
+            state->torch->custom_model = cfg_get_string(state->cfg, "custom_nn");
+            state->torch->aev = cfg_get_string(state->cfg, "aev_nn");
+	        printf("Chosen nn_type: Custom model using AEV + electrostatic potential\n");
+        }
+        else {
+            get_torch_type(state->torch, cfg_get_string(cfg, "torch_nn"));
         }
 
         const char* ml_location;
@@ -522,46 +515,18 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
         torch_init(state->torch, n_special_atoms);
         state->torch_grad = xcalloc(n_special_atoms * 3, sizeof(double));
 
-        //struct efp_atom *special_atoms;
-        //special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
-        //check_fail(efp_get_frag_atoms(state->efp, spec_frag, n_special_atoms, special_atoms));
-
-        //torch_print(state->torch);
-        //atomic coordinates extraction
-
-	// special fragment atomic coordinates
-	double *atom_coord = (double*)malloc(3 * n_special_atoms * sizeof(double));
+	    // special fragment atomic coordinates
+	    double *atom_coord = (double*)malloc(3 * n_special_atoms * sizeof(double));
         check_fail(efp_get_frag_atom_coord(state->efp, spec_frag, atom_coord));
 
         int *atom_znuc = (int*)malloc(3 * n_special_atoms * sizeof(int));
         check_fail(efp_get_frag_atom_znuc(state->efp, spec_frag, atom_znuc));
 
         torch_set_coord(state->torch, atom_coord);
-            torch_set_atom_species(state->torch, atom_znuc);
+        torch_set_atom_species(state->torch, atom_znuc);
 
         free(atom_coord);
-            free(atom_znuc);
-	
-
-
-        //double *atom_coord_tmp = (double*)malloc(3 * n_special_atoms * sizeof(double));
-	//    int *atom_znuc = (int*)malloc(3 * n_special_atoms * sizeof(int));
-
-        //for (iatom = 0; iatom < n_special_atoms; iatom++) {
-            // send atom coordinates to torch
-        //    atom_coord_tmp[3*iatom] = special_atoms[iatom].x;
-        //    atom_coord_tmp[3*iatom + 1] = special_atoms[iatom].y;
-        //    atom_coord_tmp[3*iatom + 2] = special_atoms[iatom].z;
-            // send atom types to torch
-	//        atom_znuc[iatom] = (int)special_atoms[iatom].znuc;
-	//    }
-
-        //torch_set_coord(state->torch, atom_coord_tmp);
-	//    torch_set_atom_species(state->torch, atom_znuc);
-	
-        //free(special_atoms);
-        //free(atom_coord_tmp);
-	//    free(atom_znuc);
+        free(atom_znuc);
     }
 #endif
 }
@@ -569,7 +534,7 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 static void print_banner(void)
 {
 	msg("EFPMD ver. " LIBEFP_VERSION_STRING "\n");
-	msg("Copyright (c) 2012-2017 Ilya Kaliman\n\n");
+	msg("Copyright (c) 2012-2017 Ilya Kaliman, 2017-2024 Lyudmila Slipchenko\n\n");
 	msg("%s", efp_banner());
 }
 
@@ -695,14 +660,16 @@ int main(int argc, char **argv)
 	print_time(&start_time);
 	msg("\n");
 	state.cfg = make_cfg();
-	state.sys = parse_input(state.cfg, argv[1]);
-	msg("SIMULATION SETTINGS\n\n");
+    state.sys = parse_input(state.cfg, argv[1]);
+
+    msg("SIMULATION SETTINGS\n\n");
 	print_config(state.cfg);
 	msg("\n\n");
-	convert_units(state.cfg, state.sys);
+    convert_units(state.cfg, state.sys);
+
 #ifndef TORCH_SWITCH
     if (cfg_get_bool(state.cfg, "enable_torch")) {
-	printf("\n\nJOB TERMINATED\n");
+	    printf("\n\nJOB TERMINATED\n");
         printf("PLEASE COMPILE WITH LIBTORCH FOR RUNNING ENABLE_TORCH FUNCTION\n");
         goto exit;
     }
@@ -716,13 +683,12 @@ int main(int argc, char **argv)
 	efp_shutdown(state.efp);
 	ff_free(state.ff);
 #ifdef TORCH_SWITCH
-    	torch_free(state.torch);
+    torch_free(state.torch);
 	if (state.torch_grad) free(state.torch_grad);
 #endif
 	sys_free(state.sys);
 	cfg_free(state.cfg);
 	free(state.grad);
-	//if (state.torch_grad) free(state.torch_grad);
 exit:
 #ifdef EFP_USE_MPI
 	MPI_Finalize();

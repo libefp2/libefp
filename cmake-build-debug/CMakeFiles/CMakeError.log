@@ -1,0 +1,16 @@
+Determining if the function sgemm_ exists failed with the following output:
+Change Dir: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-I81b6x
+
+Run Build Command(s):/Applications/CLion.app/Contents/bin/ninja/mac/ninja cmTC_97d51 && [1/2] Building C object CMakeFiles/cmTC_97d51.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_97d51
+FAILED: cmTC_97d51 
+: && /Library/Developer/CommandLineTools/usr/bin/cc -march=native -DCHECK_FUNCTION_EXISTS=sgemm_ -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTC_97d51.dir/CheckFunctionExists.c.o -o cmTC_97d51   && :
+Undefined symbols for architecture arm64:
+  "_sgemm_", referenced from:
+      _main in CheckFunctionExists.c.o
+ld: symbol(s) not found for architecture arm64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+

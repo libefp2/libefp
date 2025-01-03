@@ -1,0 +1,407 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "efpmd/efpmd"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"install",
+			"target_link_libraries",
+			"set_property",
+			"find_package",
+			"target_compile_definitions",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"efpmd/CMakeLists.txt",
+			"cmake/FindTargetLAPACK.cmake",
+			"CMakeLists.txt",
+			"/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/FindOpenMP.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 58,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 181,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 140,
+				"parent" : 0
+			},
+			{
+				"file" : 2
+			},
+			{
+				"command" : 4,
+				"file" : 2,
+				"line" : 110,
+				"parent" : 4
+			},
+			{
+				"file" : 1,
+				"parent" : 5
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 57,
+				"parent" : 6
+			},
+			{
+				"command" : 4,
+				"file" : 2,
+				"line" : 105,
+				"parent" : 4
+			},
+			{
+				"file" : 3,
+				"parent" : 8
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 621,
+				"parent" : 9
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 151,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 111,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : " -march=native -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -fcolor-diagnostics"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-Xclang"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-fopenmp"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 11,
+					"define" : "FRAGLIB_PATH=\"/../fraglib\""
+				},
+				{
+					"backtrace" : 11,
+					"define" : "ML_PATH=\"../nnlib/\""
+				},
+				{
+					"backtrace" : 3,
+					"define" : "USING_libefp"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 12,
+					"path" : "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/opt/libomp/include"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "libff::@d982eabe9d5c3e291290"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "libopt::@d982eabe9d5c3e291290"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "efp::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "efpmd::@d982eabe9d5c3e291290",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 2,
+				"path" : "bin"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : ""
+		}
+	},
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "libefp.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-Wl,-framework,Accelerate",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-lm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-ldl",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 10,
+				"fragment" : "/opt/homebrew/opt/libomp/lib/libomp.dylib",
+				"role" : "libraries"
+			}
+		],
+		"language" : "Fortran"
+	},
+	"name" : "efpmd",
+	"nameOnDisk" : "efpmd",
+	"paths" : 
+	{
+		"build" : "efpmd",
+		"source" : "efpmd"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13
+			]
+		},
+		{
+			"name" : "Object Libraries",
+			"sourceIndexes" : 
+			[
+				14,
+				15,
+				16,
+				17,
+				18,
+				19
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/cfg.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/common.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/efield.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/energy.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/grad.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/gtest.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/hess.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/main.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/md.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/msg.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/opt.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/parse.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/rand.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "efpmd/src/sp.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"isGenerated" : true,
+			"path" : "cmake-build-debug/efpmd/CMakeFiles/libff.dir/libff/ff.c.o",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"isGenerated" : true,
+			"path" : "cmake-build-debug/efpmd/CMakeFiles/libopt.dir/libopt/opt.c.o",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"isGenerated" : true,
+			"path" : "cmake-build-debug/efpmd/CMakeFiles/libopt.dir/libopt/blas.f.o",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"isGenerated" : true,
+			"path" : "cmake-build-debug/efpmd/CMakeFiles/libopt.dir/libopt/lbfgsb.f.o",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"isGenerated" : true,
+			"path" : "cmake-build-debug/efpmd/CMakeFiles/libopt.dir/libopt/linpack.f.o",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"isGenerated" : true,
+			"path" : "cmake-build-debug/efpmd/CMakeFiles/libopt.dir/libopt/timer.f.o",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "EXECUTABLE"
+}

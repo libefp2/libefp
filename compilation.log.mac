@@ -1,0 +1,226 @@
+Building without Torch integration...
+-- The C compiler identification is AppleClang 14.0.3.14030022
+-- The CXX compiler identification is AppleClang 14.0.3.14030022
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Library/Developer/CommandLineTools/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Library/Developer/CommandLineTools/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Setting (unspecified) option CMAKE_BUILD_TYPE: Release
+-- Setting (unspecified) option BUILD_SHARED_LIBS: OFF
+-- Setting (unspecified) option BUILD_FPIC: ON
+-- Setting (unspecified) option LIBEFP_ENABLE_OPENMP: OFF
+-- Setting (unspecified) option ENABLE_GENERIC: OFF
+-- Setting (unspecified) option ENABLE_XHOST: ON
+-- Performing Test CMAKE_C_FLAGS [-march=native] - Success, Appending
+-- Performing Test CMAKE_CXX_FLAGS [-march=native] - Success, Appending
+-- Setting (unspecified) option FRAGLIB_UNDERSCORE_L: ON
+-- Setting (unspecified) option FRAGLIB_DEEP: ON
+-- Setting (unspecified) option INSTALL_DEVEL_HEADERS: OFF
+-- Setting (unspecified) option LIBEFP_CMAKECONFIG_INSTALL_DIR: share/cmake/libefp
+-- Setting (unspecified) option LIBEFP_ENABLE_EFPMD: ON
+-- Setting (unspecified) option PYMOD_INSTALL_LIBDIR: /
+-- Setting (unspecified) option LIBEFP_ENABLE_PYTHON: OFF
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- LAPACK detected.
+-- Found TargetLAPACK: Found LAPACK: /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Accelerate.framework;-lm;-ldl  
+-- The Fortran compiler identification is GNU 14.2.0
+-- Checking whether Fortran compiler has -isysroot
+-- Checking whether Fortran compiler has -isysroot - yes
+-- Checking whether Fortran compiler supports OSX deployment target flag
+-- Checking whether Fortran compiler supports OSX deployment target flag - yes
+-- Detecting Fortran compiler ABI info
+-- Detecting Fortran compiler ABI info - done
+-- Check for working Fortran compiler: /opt/homebrew/bin/gfortran - skipped
+-- Torch integration disabled.
+-- Configuring done (1.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build
+/opt/homebrew/Cellar/cmake/3.28.0/bin/cmake -S/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp -B/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build --check-build-system CMakeFiles/Makefile.cmake 0
+/opt/homebrew/Cellar/cmake/3.28.0/bin/cmake -E cmake_progress_start /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/CMakeFiles /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build//CMakeFiles/progress.marks
+/Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/Makefile2 all
+/Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/efp.dir/build.make CMakeFiles/efp.dir/depend
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build && /opt/homebrew/Cellar/cmake/3.28.0/bin/cmake -E cmake_depends "Unix Makefiles" /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/CMakeFiles/efp.dir/DependInfo.cmake "--color="
+/Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/efp.dir/build.make CMakeFiles/efp.dir/build
+[  2%] Building C object CMakeFiles/efp.dir/src/aidisp.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/aidisp.c.o -MF CMakeFiles/efp.dir/src/aidisp.c.o.d -o CMakeFiles/efp.dir/src/aidisp.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/aidisp.c
+[  5%] Building C object CMakeFiles/efp.dir/src/balance.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/balance.c.o -MF CMakeFiles/efp.dir/src/balance.c.o.d -o CMakeFiles/efp.dir/src/balance.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/balance.c
+[  7%] Building C object CMakeFiles/efp.dir/src/clapack.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/clapack.c.o -MF CMakeFiles/efp.dir/src/clapack.c.o.d -o CMakeFiles/efp.dir/src/clapack.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/clapack.c
+[ 10%] Building C object CMakeFiles/efp.dir/src/disp.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/disp.c.o -MF CMakeFiles/efp.dir/src/disp.c.o.d -o CMakeFiles/efp.dir/src/disp.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/disp.c
+[ 13%] Building C object CMakeFiles/efp.dir/src/efp.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/efp.c.o -MF CMakeFiles/efp.dir/src/efp.c.o.d -o CMakeFiles/efp.dir/src/efp.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/efp.c
+[ 15%] Building C object CMakeFiles/efp.dir/src/elec.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/elec.c.o -MF CMakeFiles/efp.dir/src/elec.c.o.d -o CMakeFiles/efp.dir/src/elec.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/elec.c
+[ 18%] Building C object CMakeFiles/efp.dir/src/electerms.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/electerms.c.o -MF CMakeFiles/efp.dir/src/electerms.c.o.d -o CMakeFiles/efp.dir/src/electerms.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/electerms.c
+[ 21%] Building C object CMakeFiles/efp.dir/src/int.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/int.c.o -MF CMakeFiles/efp.dir/src/int.c.o.d -o CMakeFiles/efp.dir/src/int.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/int.c
+[ 23%] Building C object CMakeFiles/efp.dir/src/log.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/log.c.o -MF CMakeFiles/efp.dir/src/log.c.o.d -o CMakeFiles/efp.dir/src/log.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/log.c
+[ 26%] Building C object CMakeFiles/efp.dir/src/parse.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/parse.c.o -MF CMakeFiles/efp.dir/src/parse.c.o.d -o CMakeFiles/efp.dir/src/parse.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/parse.c
+[ 28%] Building C object CMakeFiles/efp.dir/src/pol.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/pol.c.o -MF CMakeFiles/efp.dir/src/pol.c.o.d -o CMakeFiles/efp.dir/src/pol.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/pol.c
+[ 31%] Building C object CMakeFiles/efp.dir/src/poldirect.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/poldirect.c.o -MF CMakeFiles/efp.dir/src/poldirect.c.o.d -o CMakeFiles/efp.dir/src/poldirect.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/poldirect.c
+[ 34%] Building C object CMakeFiles/efp.dir/src/stream.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/stream.c.o -MF CMakeFiles/efp.dir/src/stream.c.o.d -o CMakeFiles/efp.dir/src/stream.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/stream.c
+[ 36%] Building C object CMakeFiles/efp.dir/src/swf.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/swf.c.o -MF CMakeFiles/efp.dir/src/swf.c.o.d -o CMakeFiles/efp.dir/src/swf.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/swf.c
+[ 39%] Building C object CMakeFiles/efp.dir/src/util.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/util.c.o -MF CMakeFiles/efp.dir/src/util.c.o.d -o CMakeFiles/efp.dir/src/util.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/util.c
+[ 42%] Building C object CMakeFiles/efp.dir/src/xr.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT CMakeFiles/efp.dir/src/xr.c.o -MF CMakeFiles/efp.dir/src/xr.c.o.d -o CMakeFiles/efp.dir/src/xr.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/src/xr.c
+[ 44%] Linking C static library libefp.a
+/opt/homebrew/Cellar/cmake/3.28.0/bin/cmake -P CMakeFiles/efp.dir/cmake_clean_target.cmake
+/opt/homebrew/Cellar/cmake/3.28.0/bin/cmake -E cmake_link_script CMakeFiles/efp.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/ar qc libefp.a CMakeFiles/efp.dir/src/aidisp.c.o CMakeFiles/efp.dir/src/balance.c.o CMakeFiles/efp.dir/src/clapack.c.o CMakeFiles/efp.dir/src/disp.c.o CMakeFiles/efp.dir/src/efp.c.o CMakeFiles/efp.dir/src/elec.c.o CMakeFiles/efp.dir/src/electerms.c.o CMakeFiles/efp.dir/src/int.c.o CMakeFiles/efp.dir/src/log.c.o CMakeFiles/efp.dir/src/parse.c.o CMakeFiles/efp.dir/src/pol.c.o CMakeFiles/efp.dir/src/poldirect.c.o CMakeFiles/efp.dir/src/stream.c.o CMakeFiles/efp.dir/src/swf.c.o CMakeFiles/efp.dir/src/util.c.o CMakeFiles/efp.dir/src/xr.c.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libefp.a
+[ 44%] Built target efp
+/Library/Developer/CommandLineTools/usr/bin/make  -f efpmd/CMakeFiles/libff.dir/build.make efpmd/CMakeFiles/libff.dir/depend
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build && /opt/homebrew/Cellar/cmake/3.28.0/bin/cmake -E cmake_depends "Unix Makefiles" /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/libff.dir/DependInfo.cmake "--color="
+/Library/Developer/CommandLineTools/usr/bin/make  -f efpmd/CMakeFiles/libff.dir/build.make efpmd/CMakeFiles/libff.dir/build
+[ 47%] Building C object efpmd/CMakeFiles/libff.dir/libff/ff.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT efpmd/CMakeFiles/libff.dir/libff/ff.c.o -MF CMakeFiles/libff.dir/libff/ff.c.o.d -o CMakeFiles/libff.dir/libff/ff.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff/ff.c
+[ 47%] Built target libff
+/Library/Developer/CommandLineTools/usr/bin/make  -f efpmd/CMakeFiles/libopt.dir/build.make efpmd/CMakeFiles/libopt.dir/depend
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build && /opt/homebrew/Cellar/cmake/3.28.0/bin/cmake -E cmake_depends "Unix Makefiles" /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/libopt.dir/DependInfo.cmake "--color="
+Dependee "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/libopt.dir/DependInfo.cmake" is newer than depender "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/libopt.dir/depend.internal".
+Dependee "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/CMakeDirectoryInformation.cmake" is newer than depender "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/libopt.dir/depend.internal".
+Scanning dependencies of target libopt
+/Library/Developer/CommandLineTools/usr/bin/make  -f efpmd/CMakeFiles/libopt.dir/build.make efpmd/CMakeFiles/libopt.dir/build
+[ 50%] Building C object efpmd/CMakeFiles/libopt.dir/libopt/opt.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc   -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -MD -MT efpmd/CMakeFiles/libopt.dir/libopt/opt.c.o -MF CMakeFiles/libopt.dir/libopt/opt.c.o.d -o CMakeFiles/libopt.dir/libopt/opt.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt/opt.c
+[ 52%] Building Fortran object efpmd/CMakeFiles/libopt.dir/libopt/blas.f.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /opt/homebrew/bin/gfortran   -O3 -DNDEBUG -O3 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt/blas.f -o CMakeFiles/libopt.dir/libopt/blas.f.o
+[ 55%] Building Fortran object efpmd/CMakeFiles/libopt.dir/libopt/lbfgsb.f.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /opt/homebrew/bin/gfortran   -O3 -DNDEBUG -O3 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt/lbfgsb.f -o CMakeFiles/libopt.dir/libopt/lbfgsb.f.o
+[ 57%] Building Fortran object efpmd/CMakeFiles/libopt.dir/libopt/linpack.f.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /opt/homebrew/bin/gfortran   -O3 -DNDEBUG -O3 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt/linpack.f -o CMakeFiles/libopt.dir/libopt/linpack.f.o
+[ 60%] Building Fortran object efpmd/CMakeFiles/libopt.dir/libopt/timer.f.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /opt/homebrew/bin/gfortran   -O3 -DNDEBUG -O3 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIC -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt/timer.f -o CMakeFiles/libopt.dir/libopt/timer.f.o
+[ 60%] Built target libopt
+/Library/Developer/CommandLineTools/usr/bin/make  -f efpmd/CMakeFiles/efpmd.dir/build.make efpmd/CMakeFiles/efpmd.dir/depend
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build && /opt/homebrew/Cellar/cmake/3.28.0/bin/cmake -E cmake_depends "Unix Makefiles" /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/efpmd.dir/DependInfo.cmake "--color="
+Dependee "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/efpmd.dir/DependInfo.cmake" is newer than depender "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/efpmd.dir/depend.internal".
+Dependee "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/CMakeDirectoryInformation.cmake" is newer than depender "/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd/CMakeFiles/efpmd.dir/depend.internal".
+Scanning dependencies of target efpmd
+/Library/Developer/CommandLineTools/usr/bin/make  -f efpmd/CMakeFiles/efpmd.dir/build.make efpmd/CMakeFiles/efpmd.dir/build
+[ 63%] Building C object efpmd/CMakeFiles/efpmd.dir/src/cfg.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/cfg.c.o -MF CMakeFiles/efpmd.dir/src/cfg.c.o.d -o CMakeFiles/efpmd.dir/src/cfg.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/cfg.c
+[ 65%] Building C object efpmd/CMakeFiles/efpmd.dir/src/common.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/common.c.o -MF CMakeFiles/efpmd.dir/src/common.c.o.d -o CMakeFiles/efpmd.dir/src/common.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/common.c
+[ 68%] Building C object efpmd/CMakeFiles/efpmd.dir/src/efield.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/efield.c.o -MF CMakeFiles/efpmd.dir/src/efield.c.o.d -o CMakeFiles/efpmd.dir/src/efield.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/efield.c
+[ 71%] Building C object efpmd/CMakeFiles/efpmd.dir/src/energy.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/energy.c.o -MF CMakeFiles/efpmd.dir/src/energy.c.o.d -o CMakeFiles/efpmd.dir/src/energy.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/energy.c
+[ 73%] Building C object efpmd/CMakeFiles/efpmd.dir/src/grad.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/grad.c.o -MF CMakeFiles/efpmd.dir/src/grad.c.o.d -o CMakeFiles/efpmd.dir/src/grad.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/grad.c
+[ 76%] Building C object efpmd/CMakeFiles/efpmd.dir/src/gtest.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/gtest.c.o -MF CMakeFiles/efpmd.dir/src/gtest.c.o.d -o CMakeFiles/efpmd.dir/src/gtest.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/gtest.c
+[ 78%] Building C object efpmd/CMakeFiles/efpmd.dir/src/hess.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/hess.c.o -MF CMakeFiles/efpmd.dir/src/hess.c.o.d -o CMakeFiles/efpmd.dir/src/hess.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/hess.c
+[ 81%] Building C object efpmd/CMakeFiles/efpmd.dir/src/main.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/main.c.o -MF CMakeFiles/efpmd.dir/src/main.c.o.d -o CMakeFiles/efpmd.dir/src/main.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/main.c
+[ 84%] Building C object efpmd/CMakeFiles/efpmd.dir/src/md.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/md.c.o -MF CMakeFiles/efpmd.dir/src/md.c.o.d -o CMakeFiles/efpmd.dir/src/md.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/md.c
+[ 86%] Building C object efpmd/CMakeFiles/efpmd.dir/src/msg.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/msg.c.o -MF CMakeFiles/efpmd.dir/src/msg.c.o.d -o CMakeFiles/efpmd.dir/src/msg.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/msg.c
+[ 89%] Building C object efpmd/CMakeFiles/efpmd.dir/src/opt.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/opt.c.o -MF CMakeFiles/efpmd.dir/src/opt.c.o.d -o CMakeFiles/efpmd.dir/src/opt.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/opt.c
+[ 92%] Building C object efpmd/CMakeFiles/efpmd.dir/src/parse.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/parse.c.o -MF CMakeFiles/efpmd.dir/src/parse.c.o.d -o CMakeFiles/efpmd.dir/src/parse.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/parse.c
+[ 94%] Building C object efpmd/CMakeFiles/efpmd.dir/src/rand.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/rand.c.o -MF CMakeFiles/efpmd.dir/src/rand.c.o.d -o CMakeFiles/efpmd.dir/src/rand.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/rand.c
+[ 97%] Building C object efpmd/CMakeFiles/efpmd.dir/src/sp.c.o
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /Library/Developer/CommandLineTools/usr/bin/cc -DFRAGLIB_PATH=\"/../fraglib\" -DML_PATH=\"../nnlib/\" -DUSING_libefp -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libff -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/libopt -I/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/../src -march=native -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -fPIE -MD -MT efpmd/CMakeFiles/efpmd.dir/src/sp.c.o -MF CMakeFiles/efpmd.dir/src/sp.c.o.d -o CMakeFiles/efpmd.dir/src/sp.c.o -c /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/efpmd/src/sp.c
+[100%] Linking Fortran executable efpmd
+cd /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/efpmd && /opt/homebrew/Cellar/cmake/3.28.0/bin/cmake -E cmake_link_script CMakeFiles/efpmd.dir/link.txt --verbose=1
+/opt/homebrew/bin/gfortran -O3 -DNDEBUG -O3 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 CMakeFiles/efpmd.dir/src/cfg.c.o CMakeFiles/efpmd.dir/src/common.c.o CMakeFiles/efpmd.dir/src/efield.c.o CMakeFiles/efpmd.dir/src/energy.c.o CMakeFiles/efpmd.dir/src/grad.c.o CMakeFiles/efpmd.dir/src/gtest.c.o CMakeFiles/efpmd.dir/src/hess.c.o CMakeFiles/efpmd.dir/src/main.c.o CMakeFiles/efpmd.dir/src/md.c.o CMakeFiles/efpmd.dir/src/msg.c.o CMakeFiles/efpmd.dir/src/opt.c.o CMakeFiles/efpmd.dir/src/parse.c.o CMakeFiles/efpmd.dir/src/rand.c.o CMakeFiles/efpmd.dir/src/sp.c.o CMakeFiles/libff.dir/libff/ff.c.o CMakeFiles/libopt.dir/libopt/opt.c.o CMakeFiles/libopt.dir/libopt/blas.f.o CMakeFiles/libopt.dir/libopt/lbfgsb.f.o CMakeFiles/libopt.dir/libopt/linpack.f.o CMakeFiles/libopt.dir/libopt/timer.f.o -o efpmd  ../libefp.a -framework Accelerate -lm -ldl 
+[100%] Built target efpmd
+/opt/homebrew/Cellar/cmake/3.28.0/bin/cmake -E cmake_progress_start /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/build/CMakeFiles 0
+[ 44%] Built target efp
+[ 47%] Built target libff
+[ 60%] Built target libopt
+[100%] Built target efpmd
+Install the project...
+-- Install configuration: "Release"
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/bin/efpmd
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/cmake/libefp/libefpTargets-exe.cmake
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/cmake/libefp/libefpTargets-exe-release.cmake
+-- Up-to-date: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/makefp.inp
+-- Up-to-date: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/ch2o_lj.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/c6h6.efp
+-- Up-to-date: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/pyrazine.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/methanol.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/phenol.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/indole.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/benzene.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/cyclopentane.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/aceticacid-gp.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/thymine-stack.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/pentane.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/pyridone.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/ammonia.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/methane.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/pyridine.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/acetamide-hb.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/adenine-wc.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/neopentane.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/ethyne.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/2aminopyridine.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/methylamine.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/uracil-gp.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/water.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/nmethylacetamide.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/thymine-wc.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/acetamide-gp.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/formicacid.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/uracil.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/hydrogencyanide.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/formamide.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/aceticacid-hb.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/ethene.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/databases/adenine-stack.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/acetone.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/ch4.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/xxii_exp_n2_1.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/ccl4.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/xxii_exp_n2_2.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/h2o.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/tip3p_mm.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/h2o_reduced.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/tetracene.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/cl2.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/ch3oh.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/nh3.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/h2.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/c2h5oh.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/dcm.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/ethane.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/oxalicb.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/dmso.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/nh3-mm.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/tba_mm.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/h2o-mm.efp
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/libefp/fraglib/pentacene.efp
+-- Up-to-date: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/include/efp.h
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/lib/libefp.a
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/cmake/libefp/libefpConfig.cmake
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/cmake/libefp/libefpConfigVersion.cmake
+-- Up-to-date: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/cmake/libefp/FindTargetLAPACK.cmake
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/cmake/libefp/libefpTargets-C.cmake
+-- Installing: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/share/cmake/libefp/libefpTargets-C-release.cmake
+Compilation complete. You can now run test files as '../build/efpmd/efpmd input.in' from the tests directory.

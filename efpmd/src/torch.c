@@ -26,9 +26,8 @@
 
 #include "torch.h"
 #include "common.h"
-#include "cfg.h"
+//#include "cfg.h"
 #include <stdio.h>
-//#include "state.h"
 
 
 struct torch *torch_create(void) {
@@ -41,13 +40,13 @@ void get_torch_type(struct torch *torch, const char *str) {
     int file_type;
     if (strcmp(str, "ani1.pt") == 0) {
         file_type = 1;
-	printf("chosen nn_type: %s\n", str);
+	    printf("Chosen nn_type: %s\n", str);
     } else if (strcmp(str, "ani2.pt") == 0) {
         file_type = 2;
-	printf("chosen nn_type: %s\n", str);
+	    printf("Chosen nn_type: %s\n", str);
     } else {
         file_type = -1; // or any other default/error value
-        fprintf(stderr, "Unknown filetype: %s\n", str);
+        fprintf(stderr, "Unknown nn_type: %s\n", str);
     }
     torch->nn_type = file_type;
 }
@@ -126,7 +125,7 @@ void torch_custom_compute(struct torch *torch, int print) {
     int64_t frag_species[n_atoms];
     atomic_number_to_species(atomic_num, frag_species, n_atoms);    
 
-    if (print > 0) {
+    if (print > 2) {
        printf("=============TORCH ELPOT=============\n");
        for (size_t j = 0; j < n_atoms; j++) {
            printf("%2d %12.6f\n",torch->atom_types[j], elecpots_data[j]);
@@ -141,7 +140,7 @@ void torch_custom_compute(struct torch *torch, int print) {
 
     torch->energy = custom_energy;
 
-    if (print > 1) {
+    if (print > 2) {
         printf("Gradients:\n");
         for (int i = 0; i < n_atoms; ++i) {
             for (int j = 0; j < 3; ++j) {
@@ -167,7 +166,9 @@ void torch_custom_compute(struct torch *torch, int print) {
 
     memcpy(torch->grad, tG_double, (3 * n_atoms) * sizeof(double)); // Atomistic gradient for the EFP-ML fragment
 
-    torch_print(torch);
+    if (print > 0)
+        torch_print(torch);
+
     free(gradients);
     free(forces);
     free(frag_coord);
@@ -205,17 +206,12 @@ void atomic_number_to_species(const int* atomic_num, int64_t* frag_species, size
 // SKP's torch version
 void torch_compute(struct torch *torch, const char* nn_path, int print) {
 
-    //torch->ani_model = ANIModel_new();
-    //load_ani_model(torch->ani_model, torch->nn_type, nn_path);
-
     size_t n_atoms = torch->natoms;
     float *gradients, *forces, *frag_coord;
     double ani_energy;    
 
-    //energies = malloc(n_atoms * sizeof(float));
     gradients = malloc(n_atoms * 3 * sizeof(float));
     forces = malloc(n_atoms * 3 * sizeof(float));
-    
 
     frag_coord = malloc(n_atoms*3* sizeof(float));
     for (size_t i=0; i<n_atoms; i++) {
@@ -230,19 +226,12 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
  	    //printf("atom_types in torch_compute %4d\n",torch->atom_types[i]);
     }
 
-    double total_energy = 0.0;
-
-    // Hardcoded ANI1/ANI2 routine
-    // get_torch_energy_grad(frag_coord, frag_species, n_atoms, energies, gradients, forces, torch->nn_type);
-
     get_ani_energy_grad(torch->ani_model, frag_coord, frag_species,  &ani_energy, gradients, forces, n_atoms, print);
-
-    printf("Torch_energy %12.8f\n",ani_energy);
-    
+    // printf("Torch_energy %12.8f\n",ani_energy);
     torch->energy = ani_energy;
 
-    if (print > 1) {
-	printf("Coordinates:\n");
+    if (print > 2) {
+	    printf("Coordinates:\n");
         for (int i = 0; i < n_atoms; ++i) {
             for (int j = 0; j < 3; ++j) {
                 printf("%12.8f\t", frag_coord[i * 3 + j]);
@@ -266,17 +255,14 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
         }
     }
 
-    if (print > 0)
-        torch_print(torch);
-
     // save data in energy and grad
     double *tG_double = xcalloc(3 * n_atoms, sizeof(double));    
     for (int i = 0; i < 3 * n_atoms; i++) {
         tG_double[i] = (double)(gradients[i] * BOHR_RADIUS);
     }
 
-    if (print > 1) {
-    printf("tG_double Gradients:\n");
+    if (print > 2) {
+        printf("tG_double Gradients:\n");
         for (int i = 0; i < n_atoms; ++i) {
             for (int j = 0; j < 3; ++j) {
                 printf("%12.8f\t", tG_double[i * 3 + j]);
@@ -285,15 +271,15 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
         }
     }
 
-    memcpy(torch->grad, tG_double, (3 * n_atoms) * sizeof(double)); 
+    memcpy(torch->grad, tG_double, (3 * n_atoms) * sizeof(double));
+    if (print > 0)
+        torch_print(torch);
 
-    //free(energies);
     free(gradients);
     free(forces);
     free(frag_coord);
     free(tG_double);
 }
-
 
 // LS's version
 /*
@@ -328,8 +314,8 @@ void torch_free(struct torch *torch) {
         free(torch->grad);
         free(torch->atom_coords);
         free(torch->atom_types);
-        free(torch);
 	    ANIModel_delete(torch->ani_model);
+        free(torch);
     }
 }
 
@@ -349,7 +335,7 @@ void torch_print(struct torch *torch) {
 	    printf("-----------------------------------------------------------\n");
         printf("  Atom            X                 Y                Z\n");
         for (size_t i=0; i< torch->natoms; i++) {
-            printf("%4zu      %12.6f      %12.6f     %12.6f\n",i+1,torch->grad[i*3],
+            printf("%4d      %12.6f      %12.6f     %12.6f\n",torch->atom_types[i],torch->grad[i*3],
                    torch->grad[i*3+1], torch->grad[i*3+2]);
         }
 	    printf("------------------------------------------------------------\n");

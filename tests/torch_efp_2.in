@@ -1,3 +1,7 @@
+#                   TOTAL ENERGY   -56.5371197028
+#                  OPTIMIZATION CONVERGED IN 124 STEPS
+
+
 run_type opt
 coord atoms
 elec_damp screen

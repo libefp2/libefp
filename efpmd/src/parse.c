@@ -256,7 +256,30 @@ next:
 	if (cfg_get_int(cfg, "ligand") == -100 && cfg_get_bool(cfg, "enable_pairwise") == true)
 	    error("Specify ligand for pairwise calculations");
 
-	check_cfg(cfg);
+
+    if (cfg_get_bool(cfg, "enable_torch")) {
+        if (cfg_get_int(cfg, "special_fragment") < 0)
+            error("Specify special fragment  for calculations with TORCH models");
+    }
+    else {
+        cfg_set_bool(cfg, "enable_elpot", false);
+        cfg_set_int(cfg, "opt_special_frag", -1);
+        cfg_set_string(cfg, "torch_nn", "none");
+        cfg_set_string(cfg, "ml_path", "none");
+        cfg_set_string(cfg, "userml_path", "none");
+        cfg_set_string(cfg, "custom_nn", "none");
+        cfg_set_string(cfg, "aev_nn", "none");
+    }
+
+    // set xr cutoff distance if it is not set
+    if (cfg_get_double(cfg, "xr_cutoff") == 0.0)
+        cfg_set_double(cfg, "xr_cutoff", cfg_get_double(cfg, "swf_cutoff"));
+
+    // set special terms to terms if not given
+    if (strcmp(cfg_get_string(cfg,"special_terms"),"") == 0)
+        cfg_set_string(cfg, "special_terms", cfg_get_string(cfg, "terms"));
+
+    check_cfg(cfg);
 	efp_stream_close(stream);
 
 	return sys;

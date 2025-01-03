@@ -1,0 +1,31 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp -B /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/cmake-build-debug
+CMake Warning at CMakeLists.txt:68 (message):
+  Using FRAGLIB_UNDERSCORE_L=OFF is deprecated and may be removed as soon as
+  v1.10.  Please adapt your fragment search to handle name and name_L.
+
+
+CMake Warning at CMakeLists.txt:71 (message):
+  Using FRAGLIB_DEEP=OFF is deprecated and may be removed as soon as v1.10.
+  Please adapt your fraglib library usage to handle a list of paths.
+
+
+-- Setting option CMAKE_BUILD_TYPE: Debug
+-- Setting option BUILD_SHARED_LIBS: OFF
+-- Setting option BUILD_FPIC: ON
+-- Setting option LIBEFP_ENABLE_OPENMP: ON
+-- Setting option ENABLE_GENERIC: OFF
+-- Setting option ENABLE_XHOST: ON
+-- Performing Test CMAKE_C_FLAGS [-march=native] - Success, Appending
+-- Performing Test CMAKE_CXX_FLAGS [-march=native] - Success, Appending
+-- Setting option FRAGLIB_UNDERSCORE_L: ON
+-- Setting option FRAGLIB_DEEP: ON
+-- Setting option INSTALL_DEVEL_HEADERS: OFF
+-- Setting option LIBEFP_CMAKECONFIG_INSTALL_DIR: share/cmake/libefp
+-- Setting option LIBEFP_ENABLE_EFPMD: ON
+-- Setting option PYMOD_INSTALL_LIBDIR: /
+-- Setting option LIBEFP_ENABLE_PYTHON: OFF
+-- LAPACK detected.
+-- Torch integration disabled.
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/cmake-build-debug

@@ -29,12 +29,8 @@
 #include <assert.h>
 #include <string.h>
 #include "../torch/c_libtorch.h"
-//#include "state.h"
-//#include "common.h"
 
 /* calculations with torch ani */
-//struct torch;
-
 
 struct torch {
     double energy;

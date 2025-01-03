@@ -27,6 +27,10 @@ The latest release can be downloaded
 
 ## Installation
 
+**See [README-cmake.md](README-cmake.md) for the up-to-date installation instructions!
+For additional CMake instructions, see [README-cmake.md](README-cmake.md).
+The section below is outdated.**
+
 To build LIBEFP from source you need the following:
 
 - C compiler (with C99 standard and OpenMP support)
@@ -64,8 +68,6 @@ To run the test suite (optional) issue:
 Finally, to install everything issue:
 
     make install
-
-For CMake instructions, see [README-cmake.md](README-cmake.md).
 
 ## Documentation
 

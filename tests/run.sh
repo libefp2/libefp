@@ -19,7 +19,7 @@ print_failure()
 
 for TEST in *.in; do
 	TEST=`basename ${TEST} .in`
-	${EFPMD} ${TEST}.in > ${TEST}.out
+	../bin/efpmd ${TEST}.in > ${TEST}.out
 
 	if grep -q "${OUTPUT_COMPLETED}" ${TEST}.out; then
 		if grep -q "${OUTPUT_MATCH}" ${TEST}.out; then

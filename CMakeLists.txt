@@ -32,11 +32,13 @@ project(
   LANGUAGES C CXX
   )
 
-#set(CMAKE_INSTALL_PREFIX "/depot/lslipche/data/skp/torch_skp_branch/seltor/libefp")
 set(CMAKE_INSTALL_PREFIX "$ENV{LIBEFP_DIR}" CACHE PATH "Installation directory" FORCE)
 #set(CMAKE_INSTALL_PREFIX "${LIBEFP_DIR}" CACHE PATH "Installation directory")
 
-set(libefp_AUTHORS "Ilya A. Kaliman, Lori A. Burns, Dmitry Morozov, Carlos H. Borca, Yen (Terri) Bui, Yongbin Kim, Lyudmila V. Slipchenko")
+### LVS needs this on MacOS silicon
+set(CMAKE_CXX_STANDARD 17)
+
+set(libefp_AUTHORS "Ilya A. Kaliman, Lori A. Burns, Suranjan Paul, Dmitry Morozov, Carlos H. Borca, Yen (Terri) Bui, Yongbin Kim, Lyudmila V. Slipchenko")
 set(libefp_DESCRIPTION "Parallel implementation of the Effective Fragment Potential method")
 set(libefp_URL "https://github.com/libefp2/libefp")
 set(libefp_LICENSE "BSD 2-clause")
@@ -76,7 +78,10 @@ option_with_default(BUILD_FPIC "Libraries will be compiled with position indepen
 if((${BUILD_SHARED_LIBS}) AND NOT ${BUILD_FPIC})
     message(FATAL_ERROR "BUILD_SHARED_LIBS ON and BUILD_FPIC OFF are incompatible, as shared library requires position independent code")
 endif()
-option_with_print(LIBEFP_ENABLE_OPENMP "Enable OpenMP parallelization. Psi4 wants OFF" ON)
+
+### This option turns OPENMP ON and OFF!
+option_with_print(LIBEFP_ENABLE_OPENMP "Enable OpenMP parallelization. Psi4 wants OFF" OFF)
+
 option_with_print(ENABLE_GENERIC "Enable mostly static linking in shared library" OFF)
 include(xhost)  # defines: option(ENABLE_XHOST "Enable processor-specific optimization" ON)
 option_with_print(FRAGLIB_UNDERSCORE_L "DEPRECATED: Installed fragment library has names ending in _L. Psi4 wants OFF" ON)

@@ -1,14 +1,14 @@
-#!/bin/csh
+#!/bin/zsh
 
-setenv TORCH_SWITCH ON
+export TORCH_SWITCH=ON
 
-setenv LIBEFP_DIR "/depot/lslipche/data/skp/torch_skp_branch/libefp"
+export LIBEFP_DIR="/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp"
 
-if ("$TORCH_SWITCH" == "ON") then
+if [[ "$TORCH_SWITCH" == "ON" ]] then
     # Set the installation directory for LibTorch
-    setenv TORCH_INSTALLED_DIR "/depot/lslipche/data/skp/libtorch"
-    setenv LIBTORCH_INCLUDE_DIRS "$TORCH_INSTALLED_DIR/include/;$TORCH_INSTALLED_DIR/include/torch/csrc/api/include"
-    setenv TORCHANI_DIR "$LIBEFP_DIR/efpmd/torch"
+    export TORCH_INSTALLED_DIR="/Users/lyuda/LIBEFP/LIBTORCH/libtorch"
+    export LIBTORCH_INCLUDE_DIRS="$TORCH_INSTALLED_DIR/include/;$TORCH_INSTALLED_DIR/include/torch/csrc/api/include"
+    export TORCHANI_DIR="$LIBEFP_DIR/efpmd/torch"
 
     echo "Environment variables set for Torch integration:"
     echo "LIBEFP_DIR=$LIBEFP_DIR"
@@ -16,13 +16,12 @@ if ("$TORCH_SWITCH" == "ON") then
     echo "LIBTORCH_INCLUDE_DIRS=$LIBTORCH_INCLUDE_DIRS"
     echo "TORCHANI_DIR=$TORCHANI_DIR"
 else
-    unsetenv LIBTORCH_INCLUDE_DIRS
-    unsetenv TORCH_INSTALLED_DIR
-    unsetenv TORCHANI_DIR
+    unset LIBTORCH_INCLUDE_DIRS
+    unset TORCH_INSTALLED_DIR
+    unset TORCHANI_DIR
 
     echo "Torch integration is disabled. Only basic environment variables are set:"
     echo "LIBEFP_DIR=$LIBEFP_DIR"
-endif
+fi
 
 echo "TORCH_SWITCH=$TORCH_SWITCH"
-
