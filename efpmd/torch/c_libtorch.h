@@ -10,9 +10,6 @@ extern "C" {
 
 struct TensorData;  // Opaque
 
-// TODO: Remove
-// SKP-==========//
-
 struct Tensor{
     void* data;
     int64_t* sizes;

@@ -54,4 +54,8 @@ This will run all the test jobs and report `SUCCESS/FAILURE`. Examine any failed
 ### TODO:
 Installation path: need to add this variable into setup.sh/csh
 
+added the -DCMAKE_INSTALL_PREFIX=$LIBEFP_DIR/installed option in compile.sh
+ 
 nnlib: need to add to shared dirs
+
+added the install option in CMakeLists.txt 
