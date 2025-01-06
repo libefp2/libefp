@@ -7,6 +7,7 @@ export LIBEFP_DIR="/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp"
 if [[ "$TORCH_SWITCH" == "ON" ]] then
     # Set the installation directory for LibTorch
     export TORCH_INSTALLED_DIR="/Users/lyuda/LIBEFP/LIBTORCH/libtorch"
+    export INSTALLATION_DIR="$LIBEFP_DIR/installed"
     export LIBTORCH_INCLUDE_DIRS="$TORCH_INSTALLED_DIR/include/;$TORCH_INSTALLED_DIR/include/torch/csrc/api/include"
     export TORCHANI_DIR="$LIBEFP_DIR/efpmd/torch"
 
