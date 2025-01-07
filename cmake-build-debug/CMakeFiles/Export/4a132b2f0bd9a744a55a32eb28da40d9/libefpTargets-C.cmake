@@ -63,7 +63,7 @@ set_target_properties(libefp::efp PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
   INTERFACE_LINK_LIBRARIES "tgt::lapack;\$<\$<TARGET_EXISTS:OpenMP::OpenMP_C>:OpenMP::OpenMP_C>"
   libefp_FRAGLIB_DIRS "fraglib;fraglib/databases"
-  libefp_VERSION "1.8.0"
+  libefp_VERSION "2.0.0"
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.12)

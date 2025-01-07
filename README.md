@@ -27,7 +27,7 @@ The latest release can be downloaded
 
 ## Installation
 
-**See [README-cmake.md](README-cmake.md) for the up-to-date installation instructions!
+**See [README-torch.md](README-torch.md) for the up-to-date installation instructions!
 For additional CMake instructions, see [README-cmake.md](README-cmake.md).
 The section below is outdated.**
 
@@ -87,7 +87,7 @@ Fortran bindings to LIBEFP are available in
 The EFPMD program is a molecular simulation package based on LIBEFP.
 It supports EFP-only molecular simulations such as geometry optimization
 and molecular dynamics. EFPMD is a part of the LIBEFP distribution.
-See [this](efpmd/README.md) file for more information.
+See [EFPMD manual](https://libefp2.github.io/efpmd.html) for more information.
 
 ## Parallel scaling
 
@@ -144,36 +144,4 @@ More information can be found in [How to create EFP parameters](https://libefp2.
 
 ## References
 
-1. Fragmentation Methods: A Route to Accurate Calculations on Large Systems.
-   M.S.Gordon, D.G.Fedorov, S.R.Pruitt, L.V.Slipchenko. Chem. Rev. 112, 632-672
-   (2012).
-
-2. Effective fragment method for modeling intermolecular hydrogen bonding
-   effects on quantum mechanical calculations. J.H.Jensen, P.N.Day, M.S.Gordon,
-   H.Basch, D.Cohen, D.R.Garmer, M.Krauss, W.J.Stevens in "Modeling the
-   Hydrogen Bond" (D.A. Smith, ed.) ACS Symposium Series 569, 1994, pp
-   139-151.
-
-3. An effective fragment method for modeling solvent effects in quantum
-   mechanical calculations. P.N.Day, J.H.Jensen, M.S.Gordon, S.P.Webb,
-   W.J.Stevens, M.Krauss, D.Garmer, H.Basch, D.Cohen. J.Chem.Phys. 105,
-   1968-1986 (1996).
-
-4. Solvation of the Menshutkin Reaction: A Rigorous test of the Effective
-   Fragment Model. S.P.Webb, M.S.Gordon. J.Phys.Chem.A 103, 1265-73 (1999).
-
-5. The Effective Fragment Potential Method: a QM-based MM approach to modeling
-   environmental effects in chemistry. M.S.Gordon, M.A.Freitag,
-   P.Bandyopadhyay, J.H.Jensen, V.Kairys, W.J.Stevens. J.Phys.Chem.A 105,
-   293-307 (2001).
-
-6. The Effective Fragment Potential: a general method for predicting
-   intermolecular interactions. M.S.Gordon, L.V.Slipchenko, H.Li, J.H.Jensen.
-   Annual Reports in Computational Chemistry, Volume 3, pp 177-193 (2007).
-
-7. Water-benzene interactions: An effective fragment potential and correlated
-   quantum chemistry study. L.V.Slipchenko, M.S.Gordon. J.Phys.Chem.A 113,
-   2092-2102 (2009).
-
-8. Damping functions in the effective fragment potential method. L.V.Slipchenko,
-   M.S.Gordon. Mol.Phys. 107, 999-1016 (2009).
+A complete list of references to the EFP method can be found [here](https://libefp2.github.io/papers.html#).

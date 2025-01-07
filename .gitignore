@@ -24,3 +24,5 @@
 /include/
 tags
 build*/
+/installed/
+/cmake-build-debug/

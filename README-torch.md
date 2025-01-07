@@ -5,11 +5,12 @@
 
 - cmake
 - lapack math library
-- C/C++ compiler
+- C/C++ compiler (GCC 9 or newer)
 - Fortran 77 compiler 
 
 An example of working setup at Purdue supercomputers 
-can be foound in *module.sh* script. gcc-10 works well. 
+can be foound in *module.sh* script. 
+
 AppleClang 14 works on M2 MacOS Ventura.   
 
 ## LibTorch library
@@ -18,7 +19,7 @@ For ML/EFP models, one needs to use LibTorch library.
 Install LibTorch (C++ frontend) of PyTorch. Consult Libtorch/Pytorch 
 webpages for detail: https://pytorch.org/cppdocs/
 
-You can opt out and continure with EFP-only installation - see the next section.
+You can opt out and configure with EFP-only installation - see the next section.
 
 ## Setup environmental variables
 
@@ -29,6 +30,8 @@ variables. The first two are mandatory:
 with or without LibTorch.
 
 `LIBEFP_DIR` is a path to LibEFP directory with source codes. 
+
+`INSTALLATION_DIR` is the installation directory. 
 
 `TORCH_INSTALLED_DIR` and `LIBTORCH_INCLUDE_DIRS` are paths to the LibTorch 
 installation and included directories. 
@@ -51,11 +54,3 @@ do
 
 This will run all the test jobs and report `SUCCESS/FAILURE`. Examine any failed jobs carefully.
 
-### TODO:
-Installation path: need to add this variable into setup.sh/csh
-
-added the -DCMAKE_INSTALL_PREFIX=$LIBEFP_DIR/installed option in compile.sh
- 
-nnlib: need to add to shared dirs
-
-added the install option in CMakeLists.txt 

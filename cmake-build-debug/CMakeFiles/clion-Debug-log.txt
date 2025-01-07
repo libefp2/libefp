@@ -1,31 +1,47 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp -B /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/cmake-build-debug
-CMake Warning at CMakeLists.txt:68 (message):
-  Using FRAGLIB_UNDERSCORE_L=OFF is deprecated and may be removed as soon as
-  v1.10.  Please adapt your fragment search to handle name and name_L.
-
-
-CMake Warning at CMakeLists.txt:71 (message):
-  Using FRAGLIB_DEEP=OFF is deprecated and may be removed as soon as v1.10.
-  Please adapt your fraglib library usage to handle a list of paths.
-
-
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/lyuda/LIBEFP/libefp_torch_Jan5/libefp -B /Users/lyuda/LIBEFP/libefp_torch_Jan5/libefp/cmake-build-debug
+-- The C compiler identification is AppleClang 14.0.3.14030022
+-- The CXX compiler identification is AppleClang 14.0.3.14030022
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Library/Developer/CommandLineTools/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Library/Developer/CommandLineTools/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
 -- Setting option CMAKE_BUILD_TYPE: Debug
--- Setting option BUILD_SHARED_LIBS: OFF
--- Setting option BUILD_FPIC: ON
--- Setting option LIBEFP_ENABLE_OPENMP: ON
--- Setting option ENABLE_GENERIC: OFF
--- Setting option ENABLE_XHOST: ON
+-- Setting (unspecified) option BUILD_SHARED_LIBS: OFF
+-- Setting (unspecified) option BUILD_FPIC: ON
+-- Setting (unspecified) option LIBEFP_ENABLE_OPENMP: ON
+-- Setting (unspecified) option ENABLE_GENERIC: OFF
+-- Setting (unspecified) option ENABLE_XHOST: ON
 -- Performing Test CMAKE_C_FLAGS [-march=native] - Success, Appending
 -- Performing Test CMAKE_CXX_FLAGS [-march=native] - Success, Appending
--- Setting option FRAGLIB_UNDERSCORE_L: ON
--- Setting option FRAGLIB_DEEP: ON
--- Setting option INSTALL_DEVEL_HEADERS: OFF
--- Setting option LIBEFP_CMAKECONFIG_INSTALL_DIR: share/cmake/libefp
--- Setting option LIBEFP_ENABLE_EFPMD: ON
--- Setting option PYMOD_INSTALL_LIBDIR: /
--- Setting option LIBEFP_ENABLE_PYTHON: OFF
+-- Setting (unspecified) option FRAGLIB_UNDERSCORE_L: ON
+-- Setting (unspecified) option FRAGLIB_DEEP: ON
+-- Setting (unspecified) option INSTALL_DEVEL_HEADERS: OFF
+-- Setting (unspecified) option LIBEFP_CMAKECONFIG_INSTALL_DIR: share/cmake/libefp
+-- Setting (unspecified) option LIBEFP_ENABLE_EFPMD: ON
+-- Setting (unspecified) option PYMOD_INSTALL_LIBDIR: /
+-- Setting (unspecified) option LIBEFP_ENABLE_PYTHON: OFF
+-- Found OpenMP_C: -Xclang -fopenmp (found version "5.0") 
+-- Found OpenMP: TRUE (found version "5.0") found components: C 
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
 -- LAPACK detected.
+-- Found TargetLAPACK: Found LAPACK: /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Accelerate.framework;-lm;-ldl  
+-- The Fortran compiler identification is GNU 14.2.0
+-- Checking whether Fortran compiler has -isysroot
+-- Checking whether Fortran compiler has -isysroot - yes
+-- Checking whether Fortran compiler supports OSX deployment target flag
+-- Checking whether Fortran compiler supports OSX deployment target flag - yes
+-- Detecting Fortran compiler ABI info
+-- Detecting Fortran compiler ABI info - done
+-- Check for working Fortran compiler: /opt/homebrew/bin/gfortran - skipped
 -- Torch integration disabled.
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/cmake-build-debug
+-- Build files have been written to: /Users/lyuda/LIBEFP/libefp_torch_Jan5/libefp/cmake-build-debug

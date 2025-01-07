@@ -117,7 +117,7 @@ rule Fortran_EXECUTABLE_LINKER__efpmd_Debug
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp -B/Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/cmake-build-debug
+  command = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/lyuda/LIBEFP/libefp_torch_Jan5/libefp -B/Users/lyuda/LIBEFP/libefp_torch_Jan5/libefp/cmake-build-debug
   description = Re-running CMake...
   generator = 1
 

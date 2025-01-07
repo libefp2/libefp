@@ -1,8 +1,8 @@
-# Install script for directory: /Users/lyuda/LIBEFP/libefp_torch_Nov29/libefp/tests
+# Install script for directory: /Users/lyuda/LIBEFP/libefp_torch_Jan5/libefp/tests
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "")
+  set(CMAKE_INSTALL_PREFIX "/usr/local")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
