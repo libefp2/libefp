@@ -1,0 +1,40 @@
+#                   TOTAL ENERGY  -115.6884424223
+# L-BFGS-B is unable to make an optimization step
+# OPTIMIZATION HAS NOT CONVERGED
+
+
+run_type opt
+coord atoms
+terms elec pol disp xr
+elec_damp overlap
+disp_damp tt
+pol_damp tt
+fraglib_path ../fraglib
+special_fragment 0
+enable_torch true
+enable_elpot true
+opt_special_frag 1
+atom_gradient frag
+max_steps 50
+opt_tol 5.0e-4
+print 0
+
+
+fragment  ch3oh_l
+A01C1      -0.71711940     0.01344585    -0.00000058
+A02O2       0.67863452    -0.06304260    -0.00000071
+A03H3      -1.09413433     0.52039587     0.88322717
+A04H4      -1.09499323    -0.99859297    -0.00004768
+A05H5      -1.09415579     0.52048981    -0.88316298
+A06H6       1.05148208     0.79814142     0.1
+fragment h2o_l
+A01O1               3.394000    -0.900000    -0.700000
+A02H2               3.517419    -0.130057    -0.174996
+A03H3               3.580284    -1.281411    -0.424198
+fragment h2o_l
+A01O1               4.394000    -3.900000    -0.700000
+A02H2               4.517419    -3.130057    -0.174996
+A03H3               3.580284    -4.281411    -0.424198
+
+
+

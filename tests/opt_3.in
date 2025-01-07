@@ -1,0 +1,24 @@
+# the starting geometry is the last "normal" geometry from opt_2 optimization
+# this job converges normally
+
+run_type opt
+coord atoms
+fraglib_path ../fraglib
+enable_torch false
+max_steps 200
+print 1
+
+fragment h2o_l
+A01O1                0.601572     0.104050     0.096435
+A02H2               -0.317017     0.239412    -0.050350
+A03H3                0.803251    -0.745809    -0.251042
+fragment h2o_l
+A01O1                4.188583     0.118985    -0.018670
+A02H2                4.919659     0.709567    -0.039049
+A03H3                3.416304     0.650481    -0.087761
+fragment nh3_l
+A01N1                0.235191     4.772273    -0.103166
+A02H2               -0.523189     4.322511     0.366654
+A03H3                0.517310     5.557741     0.446020
+A04H4                0.999952     4.130518    -0.141193
+

@@ -86,7 +86,6 @@ static void parse_frag(struct stream *stream, enum efp_coord_type coord_type,
 		[EFP_COORD_TYPE_ATOMS] = 4 }[coord_type];
 
 	if (coord_type == EFP_COORD_TYPE_ATOMS) {
-	    int counter = 0;
 	    while (true) {
             struct efp_atom atom_i;
             memset(&atom_i, 0, sizeof(struct efp_atom));
@@ -109,19 +108,17 @@ static void parse_frag(struct stream *stream, enum efp_coord_type coord_type,
             efp_stream_skip_space(stream);
             if (!efp_stream_parse_double(stream, &atom_i.x) || !efp_stream_parse_double(stream, &atom_i.y)
                 || !efp_stream_parse_double(stream, &atom_i.z))
-                error("incorrect fragment coordinates format: reading efp atom coordinates");
-
-            // LVS: temporary fix not to break the code; probably need to be rewritten later on
-            if (counter < 3) {
-                frag->coord[counter*3] = atom_i.x;
-                frag->coord[counter*3+1] = atom_i.y;
-                frag->coord[counter*3+2] = atom_i.z;
-            }
+                error("incorrect fragment coordinates format: reading efp atom coordinates");	
 
             frag->n_atoms++;
             frag->atoms = xrealloc(frag->atoms, frag->n_atoms * sizeof(struct efp_atom));
             frag->atoms[frag->n_atoms - 1] = atom_i;
-            counter++;
+            
+			frag->coord = xrealloc(frag->coord, frag->n_atoms * 3* sizeof(double));
+            frag->coord[(frag->n_atoms-1)*3] = atom_i.x;
+            frag->coord[(frag->n_atoms-1)*3+1] = atom_i.y;
+            frag->coord[(frag->n_atoms-1)*3+2] = atom_i.z;
+
             //printf("n_atoms = %d",frag->n_atoms);
 
             efp_stream_next_line(stream);
@@ -130,9 +127,11 @@ static void parse_frag(struct stream *stream, enum efp_coord_type coord_type,
         }
     }
 	else {
+		frag->coord = (double*)malloc(n_rows * n_cols * sizeof(double));
         for (int i = 0, idx = 0; i < n_rows; i++) {
             for (int j = 0; j < n_cols; j++, idx++) {
                 if (!efp_stream_parse_double(stream, frag->coord + idx))
+//		    printf("We are at line 140\n");
                     error("incorrect fragment coordinates format");
             }
 
@@ -257,7 +256,30 @@ next:
 	if (cfg_get_int(cfg, "ligand") == -100 && cfg_get_bool(cfg, "enable_pairwise") == true)
 	    error("Specify ligand for pairwise calculations");
 
-	check_cfg(cfg);
+
+    if (cfg_get_bool(cfg, "enable_torch")) {
+        if (cfg_get_int(cfg, "special_fragment") < 0)
+            error("Specify special fragment  for calculations with TORCH models");
+    }
+    else {
+        cfg_set_bool(cfg, "enable_elpot", false);
+        cfg_set_int(cfg, "opt_special_frag", -1);
+        cfg_set_string(cfg, "torch_nn", "none");
+        cfg_set_string(cfg, "ml_path", "none");
+        cfg_set_string(cfg, "userml_path", "none");
+        cfg_set_string(cfg, "custom_nn", "none");
+        cfg_set_string(cfg, "aev_nn", "none");
+    }
+
+    // set xr cutoff distance if it is not set
+    if (cfg_get_double(cfg, "xr_cutoff") == 0.0)
+        cfg_set_double(cfg, "xr_cutoff", cfg_get_double(cfg, "swf_cutoff"));
+
+    // set special terms to terms if not given
+    if (strcmp(cfg_get_string(cfg,"special_terms"),"") == 0)
+        cfg_set_string(cfg, "special_terms", cfg_get_string(cfg, "terms"));
+
+    check_cfg(cfg);
 	efp_stream_close(stream);
 
 	return sys;

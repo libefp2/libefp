@@ -25,6 +25,8 @@
  */
 
 #include "common.h"
+#include "cfg.h"
+
 
 void sim_efield(struct state *state);
 void sim_elpot(struct state *state);
@@ -129,4 +131,65 @@ sim_elpot(struct state *state)
     }
 
     msg("ELECTROSTATIC POTENTIAL JOB COMPLETED SUCCESSFULLY\n");
+}
+
+/*
+void get_frag_elpot(struct state *state) {
+    size_t spec_frag;
+    spec_frag = cfg_get_int(state->cfg, "special_fragment");
+
+    double elpot;
+    struct efp_atom *atoms;
+    size_t n_atoms;
+
+ 
+    check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_atoms));  // SKP
+    atoms = xmalloc(n_atoms * sizeof(struct efp_atom));
+    check_fail(efp_get_frag_atoms(state->efp, spec_frag, n_atoms, atoms));
+    //state->spec_elpot = malloc(n_atoms * sizeof(double));
+    state->spec_elpot = xcalloc(n_atoms, sizeof(double)); 
+  
+
+    for (size_t j = 0; j < n_atoms; j++) {
+         check_fail(efp_get_elec_potential(state->efp, spec_frag, &atoms[j].x, &elpot));
+	 state->spec_elpot[j] = elpot;
+	 print_elpot(atoms + j, elpot);
+    }
+    
+    free(atoms);
+}
+*/
+
+void sim_frag_elpot(struct state *state) {
+
+   // size_t chosen_frag = cfg_get_int(state->cfg, "frag_num");
+    size_t spec_frag;
+    spec_frag = cfg_get_int(state->cfg, "special_fragment");
+
+    msg("\n=============FRAG-ELECTROSTATIC POTENTIAL JOB======================\n\n");
+
+ 
+    msg("\nCOORDINATES IN ANGSTROMS, ELECTROSTATIC POTENTIAL IN ATOMIC UNITS\n");
+    msg("     ATOM            X            Y            Z        ELPOT \n\n");
+
+      double elpot;
+      struct efp_atom *atoms;
+      size_t n_atoms;
+
+
+      check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_atoms));  // SKP
+      atoms = xmalloc(n_atoms * sizeof(struct efp_atom));
+      check_fail(efp_get_frag_atoms(state->efp, spec_frag, n_atoms, atoms));
+
+      msg("ELECTROSTATIC POTENTIAL ON FRAGMENT %zu\n", spec_frag);
+
+      for (size_t j = 0; j < n_atoms; j++) {
+            check_fail(efp_get_elec_potential(state->efp, spec_frag, &atoms[j].x, &elpot));
+            print_elpot(atoms + j, elpot);
+      }
+
+      msg("\n");
+      free(atoms);
+
+    msg("============FRAG-ELECTROSTATIC POTENTIAL JOB COMPLETED SUCCESSFULLY===========\n\n");
 }

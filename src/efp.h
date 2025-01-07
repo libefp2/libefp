@@ -41,7 +41,7 @@ extern "C" {
 #endif
 
 /** Version string. */
-#define LIBEFP_VERSION_STRING "1.8.0"
+#define LIBEFP_VERSION_STRING "2.0.0"
 
 /** Result of an operation. */
 enum efp_result {
@@ -82,7 +82,31 @@ enum efp_term {
 	/** Ab initio/EFP exchange repulsion, reserved for future use. */
 	EFP_TERM_AI_XR = 1 << 8,
 	/** Ab initio/EFP charge transfer, reserved for future use. */
-	EFP_TERM_AI_CHTR = 1 << 9
+	EFP_TERM_AI_CHTR = 1 << 9,
+    /** MM-like charge-charge coulomb interaction */
+    EFP_TERM_QQ = 1 << 10,
+    /** MM-like Lennard-Jones interaction */
+    EFP_TERM_LJ = 1 << 11,
+    /** QM/MM coulomb interaction with MM charges */
+    EFP_TERM_AI_QQ = 1 << 12
+};
+
+/** Flags to specify EFP energy terms for a special fragment. */
+enum efp_special_term {
+    /** EFP/EFP electrostatics. */
+    EFP_SPEC_TERM_ELEC = 1 << 0,
+    /** EFP/EFP polarization. */
+    EFP_SPEC_TERM_POL = 1 << 1,
+    /** EFP/EFP dispersion. */
+    EFP_SPEC_TERM_DISP = 1 << 2,
+    /** EFP/EFP exchange repulsion. */
+    EFP_SPEC_TERM_XR = 1 << 3,
+    /** EFP/EFP charge transfer, reserved for future use. */
+    EFP_SPEC_TERM_CHTR = 1 << 4,
+    /** MM-like charge-charge coulomb interaction */
+    EFP_SPEC_TERM_QQ = 1 << 5,
+    /** MM-like Lennard-Jones interaction */
+    EFP_SPEC_TERM_LJ = 1 << 6
 };
 
 /** Fragment-fragment dispersion damping type. */
@@ -144,7 +168,9 @@ struct efp_opts {
 	 * set to 0). To enable the term, use bitwise OR with the corresponding
 	 * efp_term constant (e.g., terms |= EFP_TERM_ELEC). To disable the
 	 * term, use bitwise AND NOT (e.g., terms &= ~EFP_TERM_POL). */
-	unsigned terms;
+    unsigned terms;
+    /** Terms for a special fragment - typically QM or ML fragment*/
+    unsigned special_terms;
 	/** Dispersion damping type (see #efp_disp_damp). */
 	enum efp_disp_damp disp_damp;
 	/** Electrostatic damping type (see #efp_elec_damp). */
@@ -155,6 +181,8 @@ struct efp_opts {
 	enum efp_pol_driver pol_driver;
 	/** Enable periodic boundary conditions if nonzero. */
 	int enable_pbc;
+	/** Enable switching off elpot contribution for custom torch gradient*/
+    int enable_elpot;
 	/** Enable fragment-fragment interaction cutoff if nonzero. */
 	int enable_cutoff;
 	/** Cutoff distance for fragment-fragment interactions. */
@@ -166,8 +194,8 @@ struct efp_opts {
     /** Index of ligand for enable_pairwise.
      * default = 0 (ie the first fragment); -1 defines the ligand to be a QM region. */
     int ligand;
-    /** Prints fragment coordinates rearranged around ligand. Applicable for periodic simulations only. */
-    int print_pbc;
+    /** Index of a special (QM or ML) fragment */
+    int special_fragment;
     /** Is 1 for periodic symmetric system (ctystal lattice). Default is 0 */
     int symmetry;
      /** Specifies symmetric elements of the crystal lattice. Default each unique fragment.
@@ -195,9 +223,16 @@ struct efp_energy {
 	 * damping. Zero if overlap-based damping is turned off. */
 	double charge_penetration;
 	/**
-	 * Interaction energy of EFP electrostatics with point charges. */
+	 * Interaction energy of EFP electrostatics with point charges.
+	 * This is obsolete parameter; not tested properly*/
 	double electrostatic_point_charges;
-	/**
+    /**
+    * MM-like charge-charge interaction energy. */
+    double qq;
+    /**
+    * MM-like Lennard-Jones interaction energy. */
+    double lj;
+    /**
 	 * All polarization energy goes here. Polarization is computed
 	 * self-consistently so it can't be separated into EFP/EFP and AI/EFP
 	 * parts. */
@@ -231,8 +266,15 @@ struct efp_atom {
     double x;         /**< X coordinate of atom position. */
     double y;         /**< Y coordinate of atom position. */
     double z;         /**< Z coordinate of atom position. */
+    double gx;        /**< X component of gradient.  */
+    double gy;        /**< Y component of gradient.  */
+    double gz;        /**< Z component of gradient.  */
     double mass;      /**< Atom mass. */
     double znuc;      /**< Nuclear charge. */
+    double mm_charge;    /**< Classical charge. */
+    double sigma;     /**< vdW parameter. */
+    double epsilon;   /**< vdW parameter. */
+    char ff_label[32];  /**< Force field atom type. */
 };
 
 /** Multipole point for working with external programs */
@@ -615,6 +657,19 @@ enum efp_result efp_set_frag_coordinates(struct efp *efp, size_t frag_idx,
 enum efp_result efp_get_coordinates(struct efp *efp, double *xyzabc);
 
 /**
+ * Update coordinates of a special fragment following QM geom optimization
+ * @param[in] efp The efp structure.
+ * @param[in] coord Coordinates of the QM region -> become new coordiantes of a special fragment
+ * @return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result update_special_fragment(struct efp *efp, const double *coord);
+
+/**
+ * Update gradient on special fragment and on ptc (QM nuclei) points
+ */
+enum efp_result update_gradient_special_fragment(struct efp *efp);
+
+/**
  * Get center of mass position and Euler angles of a fragment.
  *
  * \param[in] efp The efp structure.
@@ -630,6 +685,36 @@ enum efp_result efp_get_coordinates(struct efp *efp, double *xyzabc);
  */
 enum efp_result efp_get_frag_xyzabc(struct efp *efp, size_t frag_idx,
     double *xyzabc);
+
+/**
+ * Get coordinates of all fragment atoms
+ * @param efp The efp structure.
+ * @param frag_idx ndex of a fragment. Must be a value between zero and
+ * the total number of fragments minus one.
+ * @param coord Upon return the coordinates of fragment atoms
+ * @return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_frag_atom_coord(struct efp *efp, size_t frag_idx, double *coord);
+
+/**
+ * 
+ * @param efp The efp structure.
+ * @param frag_idx Index of a fragment. Must be a value between zero and
+ * the total number of fragments minus one.
+ * @param charges Values of the atomic charges znuc
+ * @return
+ */
+enum efp_result efp_get_frag_atom_znuc(struct efp *efp, size_t frag_idx, int *charges);
+
+/**
+ * Set coordinates of all fragment atoms
+ * @param efp The efp structure.
+ * @param frag_idx ndex of a fragment. Must be a value between zero and
+ * the total number of fragments minus one.
+ * @param coord Values of the atoms coordinates
+ * @return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_set_frag_atom_coord(struct efp *efp, size_t frag_idx, const double *coord);
 
 /**
  * Setup periodic box size.
@@ -1138,6 +1223,31 @@ enum efp_result efp_get_gradient(struct efp *efp, double *grad);
 enum efp_result efp_get_atomic_gradient(struct efp *efp, double *grad);
 
 /**
+ * Get computed EFP energy gradient on individual atoms of fragment frag_id. The function is
+ * adapted from efp_get_atomic_gradient(struct efp *efp, double *grad)
+ * It distributes gradients on atoms from the gradient and torque on fragment COM
+ * @param efp The efp structure.
+ * @param frag_id The index of fragment which atoms are analyzed here
+ * @param[out] grad For each atom, \a x \a y \a z components of negative force
+ * will be added to this array. The size of this array must be
+ * [3 * \a n] elements, where \a n is the number of atoms in fragment frag_id.
+ * An atom is a point with non-zero mass inside a fragment.
+ * Any initial gradient from this array will be gathered on fragments at the
+ * beginning and then redistributed back to the atoms. This can be used to
+ * account for other interactions, e.g., bonded forces from MM forcefield.
+ * @return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad);
+
+/**
+ * Get gradient on fragment atoms obtained during calculation of QQ and LJ terms. 
+ * @param efp The efp structure.
+ * @param frag_id The index of fragment which atoms are analyzed here
+ * @param[out] grad For each atom, \a x \a y \a z components of negative force
+ */
+enum efp_result efp_get_atom_gradient(struct efp *efp, size_t frag_id, double *grad); 
+
+/**
  * Get the number of fragments in this computation.
  *
  * \param[in] efp The efp structure.
@@ -1246,6 +1356,15 @@ enum efp_result efp_get_frag_atoms(struct efp *efp, size_t frag_idx,
  */
 enum efp_result efp_set_frag_atoms(struct efp *efp, size_t frag_idx, size_t n_atoms,
                    struct efp_atom *atoms);
+
+/**
+ * Get coordinates and mm charges of all efp atoms
+ * \param [in] efp he efp structure.
+ * \param [out] charges - array of atom mm charges
+ * \param [out] coords - array of atom xyz positions
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_atom_mm_info(struct efp *efp, double *charges, double *coords);
 
 /** Copies information about multipole point pt_idx at fragment frag_idx into
  * efp_mult_pt structure mult_pt

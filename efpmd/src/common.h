@@ -43,6 +43,7 @@
 
 #include <efp.h>
 #include <ff.h>
+//#include "../torch/c_libtorch.h"
 #include <mathutil.h>
 
 #include "cfg.h"
@@ -60,6 +61,7 @@ enum run_type {
 	RUN_TYPE_MD,
 	RUN_TYPE_EFIELD,
 	RUN_TYPE_ELPOT,
+    RUN_TYPE_FRAG_ELPOT,
 	RUN_TYPE_GTEST,
 	RUN_TYPE_ETEST
 };
@@ -70,18 +72,14 @@ enum ensemble_type {
 	ENSEMBLE_TYPE_NPT
 };
 
-/*
-struct atom {
-    char *name;
-    double x;
-    double y;
-    double z;
+enum atom_gradient{ 
+	ATOM_GRAD_MM,
+	ATOM_GRAD_FRAG 
 };
-*/
 
 struct frag {
 	char *name;
-	double coord[12];
+	double *coord;
 	size_t n_atoms;
 	struct efp_atom *atoms;
 	double vel[6];
@@ -105,11 +103,15 @@ struct sys {
 struct state {
 	struct efp *efp;
 	struct ff *ff;
+    struct torch *torch;
 	struct cfg *cfg;
 	struct sys *sys;
 	double energy;
+    double torch_energy;
 	double *grad;
+    double *torch_grad;
 };
+
 
 void NORETURN die(const char *, ...);
 void NORETURN error(const char *, ...);

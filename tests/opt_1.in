@@ -1,7 +1,7 @@
 # water tetramer
 
 run_type opt
-max_steps 10
+max_steps 100
 coord points
 fraglib_path ../fraglib
 

@@ -98,6 +98,7 @@ void print_vec(const double *vec)
 
 void print_geometry(struct efp *efp)
 {
+//	printf("Inside print_geometry\n");
 	size_t n_frags;
 	check_fail(efp_get_frag_count(efp, &n_frags));
 
@@ -197,6 +198,7 @@ void print_geometry_pbc(struct efp *efp, int ligand)
 
 void print_energy(struct state *state)
 {
+//	printf("Inside print_energy\n");
 	struct efp_energy energy;
 
 	check_fail(efp_get_energy(state->efp, &energy));
@@ -211,7 +213,17 @@ void print_energy(struct state *state)
 	    energy.electrostatic_point_charges);
 	msg("%30s %16.10lf\n", "CHARGE PENETRATION ENERGY",
 	    energy.charge_penetration);
+	msg("%30s %16.10lf\n", "QQ ENERGY", energy.qq);
+	msg("%30s %16.10lf\n", "LJ ENERGY", energy.lj);
+
 	msg("\n");
+
+#ifdef TORCH_SWITCH
+	if (state->torch) {
+		msg("%30s %16.10lf\n", "ML ENERGY", state->torch_energy);
+		msg("\n");
+	}
+#endif
 
 	if (state->ff) {
 		msg("%30s %16.10lf\n", "FORCE-FIELD ENERGY",

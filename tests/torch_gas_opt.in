@@ -1,0 +1,19 @@
+# single fragment job is effectively a pure ML calculation of water molecule
+
+run_type opt
+coord atoms
+terms qq lj
+special_terms qq lj
+fraglib_path ../fraglib
+special_fragment 0
+enable_torch true
+torch_nn ani1.pt
+opt_special_frag 0
+atom_gradient mm
+print 0
+
+fragment tip3p_mm_l
+A01O                -1.815220     2.663988     0.000000
+A02H                -1.616905     1.722730     0.001942
+A03H                -2.465495     2.770431    -0.695494
+

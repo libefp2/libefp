@@ -560,3 +560,4 @@ void cfg_free(struct cfg *cfg)
 		free(cfg);
 	}
 }
+

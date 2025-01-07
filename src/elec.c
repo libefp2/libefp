@@ -321,11 +321,21 @@ mult_mult_grad(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 	vec_scale(&torque_i, swf->swf);
 	vec_scale(&torque_j, swf->swf);
 
-	efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x),
-	    &force, &torque_i);
-	efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x),
-	    &force, &torque_j);
-	efp_add_stress(&swf->dr, &force, &efp->stress);
+    efp_add_stress(&swf->dr, &force, &efp->stress);
+
+    // a check for torch special model with elpot on special fragment
+    // gradient is not added to the special fragment in this case
+    // this assumes that we use ml/efp fragment that induces field to other fragments due to its efp nature (multipoles and ind dipoles)
+    // this might need to be changed if ml fragment uses ml-predicted charges instead
+
+    if (!efp->opts.enable_elpot || (efp->opts.special_fragment != fr_i_idx && efp->opts.special_fragment != fr_j_idx)) {
+        efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &torque_i);
+        efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x), &force, &torque_j);
+    }
+    else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_i_idx)
+        efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x), &force, &torque_j);
+    else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_j_idx)
+        efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &torque_i);
 }
 
 double
@@ -359,9 +369,16 @@ efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
                 swf.dswf.z * energy
         };
 
-        six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
-        six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
         efp_add_stress(&swf.dr, &force, &efp->stress);
+
+        // a check for torch special model with elpot on special fragment
+        // gradient is not added to the special fragment in this case
+        if (!efp->opts.enable_elpot || (efp->opts.special_fragment != fr_i_idx && efp->opts.special_fragment != fr_j_idx)) {
+            six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+            six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+        }
+        else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_i_idx) six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+        else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_j_idx) six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
 
         return energy * swf.swf;
     }
@@ -468,6 +485,102 @@ efp_update_elec(struct frag *frag)
             oct[9] = 2.5 * oct[9];
         }
 	}
+}
+
+void efp_update_elec_special(struct frag *frag)
+{
+    size_t natom = frag->n_atoms;
+
+    for (size_t i = 0; i < frag->n_multipole_pts; i++) {
+        const struct multipole_pt *in = frag->lib->multipole_pts + i;
+        struct multipole_pt *out = frag->multipole_pts + i;
+
+        /* copy atom coordinates into multipole points */
+        if (i < natom) {
+            out->x = frag->atoms[i].x;
+            out->y = frag->atoms[i].y;
+            out->z = frag->atoms[i].z;
+        }
+        /* recomputing positions of mid-points using atom positions */
+        else {
+            if (out->label[0] == 'B' && out->label[1] == 'O') {
+                int length = strlen(out->label) - 2;
+                // printf(" Analyzing label %s, length is %d\n", out->label, length);
+                size_t m1, m2;
+                if (length == 2) {
+                    m1 = out->label[2] - 48;  // converting to char to size_t 1-digit number
+                    m2 = out->label[3] - 48;
+                }
+                else if (length == 3) {
+                    m1 = (out->label[2] - 48)*10 + out->label[3] - 48;  // converting to char to size_t 2-digit number
+                    m2 = out->label[4] - 48;
+                }
+                else if (length == 4) {
+                    m1 = (out->label[2] - 48)*10 + out->label[3] - 48;  // converting to char to size_t 2-digit number
+                    m2 = (out->label[4] - 48)*10 + out->label[5] - 48;
+                }
+                else printf("WARNING! Reading BO point %s but do not know what to do with it!\n", out->label);
+                if (m1 > natom || m2 > natom) 
+                     printf("WARNING! Reading BO point %s; bad atom numbers %zu and %zu\n", out->label, m1, m2);
+                // printf("m1, m2 are %zu  %zu\n", m1, m2);
+                out->x = (frag->atoms[m1-1].x + frag->atoms[m2-1].x)/2;
+                out->y = (frag->atoms[m1-1].y + frag->atoms[m2-1].y)/2;
+                out->z = (frag->atoms[m1-1].z + frag->atoms[m2-1].z)/2;
+            }
+        }
+
+        /* rotate dipole */
+        if (out->if_dip)
+            out->dipole = mat_vec(&frag->rotmat, &in->dipole);
+
+        /* rotate quadrupole */
+        if (out->if_quad) {
+            rotate_quadrupole(&frag->rotmat, in->quadrupole, out->quadrupole);
+
+            /* correction for Buckingham quadrupoles */
+            double *quad = out->quadrupole;
+
+            double qtr = quad[quad_idx(0, 0)] +
+                         quad[quad_idx(1, 1)] +
+                         quad[quad_idx(2, 2)];
+
+            quad[0] = 1.5 * quad[0] - 0.5 * qtr;
+            quad[1] = 1.5 * quad[1] - 0.5 * qtr;
+            quad[2] = 1.5 * quad[2] - 0.5 * qtr;
+            quad[3] = 1.5 * quad[3];
+            quad[4] = 1.5 * quad[4];
+            quad[5] = 1.5 * quad[5];
+        }
+
+        /* rotate octupole */
+        if (out->if_oct) {
+            rotate_octupole(&frag->rotmat, in->octupole, out->octupole);
+
+            /* correction for Buckingham octupoles */
+            double *oct = out->octupole;
+
+            double otrx = oct[oct_idx(0, 0, 0)] +
+                          oct[oct_idx(0, 1, 1)] +
+                          oct[oct_idx(0, 2, 2)];
+            double otry = oct[oct_idx(0, 0, 1)] +
+                          oct[oct_idx(1, 1, 1)] +
+                          oct[oct_idx(1, 2, 2)];
+            double otrz = oct[oct_idx(0, 0, 2)] +
+                          oct[oct_idx(1, 1, 2)] +
+                          oct[oct_idx(2, 2, 2)];
+
+            oct[0] = 2.5 * oct[0] - 1.5 * otrx;
+            oct[1] = 2.5 * oct[1] - 1.5 * otry;
+            oct[2] = 2.5 * oct[2] - 1.5 * otrz;
+            oct[3] = 2.5 * oct[3] - 0.5 * otry;
+            oct[4] = 2.5 * oct[4] - 0.5 * otrz;
+            oct[5] = 2.5 * oct[5] - 0.5 * otrx;
+            oct[6] = 2.5 * oct[6] - 0.5 * otrz;
+            oct[7] = 2.5 * oct[7] - 0.5 * otrx;
+            oct[8] = 2.5 * oct[8] - 0.5 * otry;
+            oct[9] = 2.5 * oct[9];
+        }
+    }
 }
 
 static double
@@ -599,6 +712,10 @@ compute_ai_elec_range(struct efp *efp, size_t from, size_t to, void *data)
 #pragma omp parallel for schedule(dynamic) reduction(+:energy)
 #endif
 	for (size_t i = from; i < to; i++) {
+        // skip special fragment
+        if (i == efp->opts.special_fragment)
+            continue;
+
 		energy_tmp = compute_ai_elec_frag(efp, i);
 		energy += energy_tmp;
         if (efp->opts.enable_pairwise && efp->opts.ligand == -1) {
@@ -620,4 +737,352 @@ efp_compute_ai_elec(struct efp *efp)
 	efp_allreduce(&efp->energy.electrostatic_point_charges, 1);
 
 	return EFP_RESULT_SUCCESS;
+}
+
+static double
+qq_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
+                 size_t pt_i_idx, size_t pt_j_idx, const struct swf *swf)
+{
+    struct frag *fr_i = efp->frags + fr_i_idx;
+    struct frag *fr_j = efp->frags + fr_j_idx;
+    struct efp_atom *pt_i = fr_i->atoms + pt_i_idx;
+    struct efp_atom *pt_j = fr_j->atoms + pt_j_idx;
+
+    vec_t dr = {
+            pt_j->x - pt_i->x - swf->cell.x,
+            pt_j->y - pt_i->y - swf->cell.y,
+            pt_j->z - pt_i->z - swf->cell.z
+    };
+
+    double energy = 0.0;
+
+    // charge - charge
+    energy += efp_charge_charge_energy(pt_i->mm_charge, pt_j->mm_charge, &dr);
+
+    //if (efp->opts.print > 2) {
+    //    printf("\n Atomic gradient in qq_energy BEFORE\n");
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_i_idx, pt_i_idx, pt_i->gx, pt_i->gy, pt_i->gz);
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_j_idx, pt_j_idx, pt_j->gx, pt_j->gy, pt_j->gz);
+    //}
+
+    // gradient
+    if (efp->do_gradient) {
+        vec_t add_i, add_j;
+        vec_t force = vec_zero;
+
+        // charge-charge
+        efp_charge_charge_grad(pt_i->mm_charge, pt_j->mm_charge, &dr,
+                               &force, &add_i, &add_j);
+        vec_scale(&force, swf->swf);
+
+        efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x),
+                      &force, &vec_zero);
+        efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x),
+                      &force, &vec_zero);
+        efp_add_stress(&swf->dr, &force, &efp->stress);
+
+        // adding forces to atoms as well - clean this place later
+        vec_t force2 = {
+                swf->dswf.x * energy,
+                swf->dswf.y * energy,
+                swf->dswf.z * energy
+        };
+
+        pt_i->gx += force.x + force2.x;
+        pt_i->gy += force.y + force2.y;
+        pt_i->gz += force.z + force2.z;
+
+        pt_j->gx -= force.x + force2.x;
+        pt_j->gy -= force.y + force2.y;
+        pt_j->gz -= force.z + force2.z;
+    }
+
+    //if (efp->opts.print > 2) {
+    //    printf("\n Atomic gradient in qq_energy AFTER\n");
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_i_idx, pt_i_idx, pt_i->gx, pt_i->gy, pt_i->gz);
+    //    printf("%zu  %zu  %12.6lf  %12.6lf  %12.6lf \n", fr_j_idx, pt_j_idx, pt_j->gx, pt_j->gy, pt_j->gz);
+    //}
+
+    return energy;
+}
+
+
+static double
+lj_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
+          size_t pt_i_idx, size_t pt_j_idx, const struct swf *swf)
+{
+    int combination_rule = 2; // need to add keyword!
+
+    struct frag *fr_i = efp->frags + fr_i_idx;
+    struct frag *fr_j = efp->frags + fr_j_idx;
+    struct efp_atom *pt_i = fr_i->atoms + pt_i_idx;
+    struct efp_atom *pt_j = fr_j->atoms + pt_j_idx;
+
+    vec_t dr = {
+            pt_j->x - pt_i->x - swf->cell.x,
+            pt_j->y - pt_i->y - swf->cell.y,
+            pt_j->z - pt_i->z - swf->cell.z
+    };
+    double r = vec_len(&dr);
+
+    double energy = 0.0;
+    double g = 0.0, g1 = 0.0, g2 = 0.0;
+    double r2, sr6 = 0.0;
+
+    if (combination_rule == 1) {
+        // E_lj = (C_12/r^12 - C_6/r^6)
+        // sigma_ij = sqrt(C_6_i*C_6_j)
+        // eps_ij = sqrt(C_12_i * C_12_j)
+        double C6 = sqrt(pt_i->sigma * pt_j->sigma); // C_6
+        double C12 = sqrt(pt_i->epsilon * pt_j->epsilon); //C_12
+        r2 = r*r;
+        sr6 = 1/(r2*r2*r2);
+        energy += (C12*sr6 * sr6 - C6*sr6);
+
+        if (efp->do_gradient) {
+            r2 = r * r;
+            g1 = 6.0 * C6 * sr6 / r2;
+            g2 = -12.0 * C12 * sr6 * sr6 / r2;
+            g = -(g1 + g2);
+        }
+    }
+    else if (combination_rule == 2) {
+        // E_lj = 4*epsilon*((sigma/r)^12 - (sigma/r)^6)
+        // sigma_ij = 0.5 * (sigma_i + sigma_j)
+        // eps_ij = sqrt(eps_i * eps_j)
+        double sigma_ij = 0.5*(pt_i->sigma + pt_j->sigma);
+        sr6 = pow(sigma_ij / r, 6);
+        double epsilon_ij = sqrt(pt_i->epsilon * pt_j->epsilon);
+        energy += 4 * epsilon_ij * (sr6 * sr6 - sr6);
+
+        if (efp->do_gradient) {
+            r2 = r * r;
+            g1 = 6.0 * sr6 / r2;
+            g2 = -12.0 * sr6 * sr6 / r2;
+            // force is opposite of gradient!
+            g = -4 * epsilon_ij * (g1 + g2);
+        }
+    }
+    else if (combination_rule == 3) {
+        // used in OPLS
+        // E_lj = 4*epsilon*((sigma/r)^12 - (sigma/r)^6)
+        // sigma_ij = sqrt(sigma_i * sigma_j)
+        // eps_ij = sqrt(eps_i * eps_j)
+        double sigma_ij = sqrt(pt_i->sigma * pt_j->sigma);
+        sr6 = pow(sigma_ij / r, 6);
+        double epsilon_ij = sqrt(pt_i->epsilon * pt_j->epsilon);
+        energy += 4 * epsilon_ij * (sr6 * sr6 - sr6);
+
+        if (efp->do_gradient) {
+            r2 = r*r;
+            g1 = 6.0 * sr6 / r2;
+            g2 = -12.0 * sr6*sr6 / r2;
+            g = -4*epsilon_ij * (g1+g2);
+        }
+    }
+    else {
+        printf("WARNING: Unknown combination rule for LJ; LJ energy is not computed!");
+    }
+
+    if (efp->do_gradient) {
+        vec_t force = {
+                g * dr.x * swf->swf,
+                g * dr.y * swf->swf,
+                g * dr.z * swf->swf
+        };
+
+        // careful: adding force both to atoms and fragments...
+        // clean this place later
+
+        // this force contribution is added only to atoms here
+        // it is added to fragments in frag_frag routine
+        vec_t force2 = {
+                swf->dswf.x * energy,
+                swf->dswf.y * energy,
+                swf->dswf.z * energy
+        };
+
+        pt_i->gx += force.x + force2.x;
+        pt_i->gy += force.y + force2.y;
+        pt_i->gz += force.z + force2.z;
+
+        pt_j->gx -= force.x + force2.x;
+        pt_j->gy -= force.y + force2.y;
+        pt_j->gz -= force.z + force2.z;
+
+        // adding force to fragments
+        efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x),
+                      &force, &vec_zero);
+        efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x),
+                      &force, &vec_zero);
+        efp_add_stress(&swf->dr, &force, &efp->stress);
+    }
+
+    return energy;
+}
+
+double
+efp_frag_frag_qq(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
+{
+    struct frag *fr_i = efp->frags + fr_i_idx;
+    struct frag *fr_j = efp->frags + fr_j_idx;
+    // might need to change this switching function treatment
+    struct swf swf = efp_make_swf(efp, fr_i, fr_j, 0);
+    double energy = 0.0;
+
+    // skip calculations if distance between fragments is too big...
+    if (swf.swf == 0.0) {
+        return 0.0;
+    }
+    else {
+        for (size_t ii = 0; ii < fr_i->n_atoms; ii++) {
+            for (size_t jj = 0; jj < fr_j->n_atoms; jj++) {
+                energy += qq_energy(efp, fr_i_idx, fr_j_idx, ii, jj, &swf);
+            }
+        }
+
+        if (efp->do_gradient) {
+            vec_t force = {
+                    swf.dswf.x * energy,
+                    swf.dswf.y * energy,
+                    swf.dswf.z * energy
+            };
+
+            efp_add_stress(&swf.dr, &force, &efp->stress);
+
+            // a check for torch special model with elpot on special fragment
+            // gradient is not added to the special fragment in this case
+            if (!efp->opts.enable_elpot || (efp->opts.special_fragment != fr_i_idx && efp->opts.special_fragment != fr_j_idx)) {
+                six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+                six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+            }
+            else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_i_idx) six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+            else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_j_idx) six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+        }
+
+        return energy * swf.swf;
+    }
+}
+
+double
+efp_frag_frag_lj(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
+{
+    struct frag *fr_i = efp->frags + fr_i_idx;
+    struct frag *fr_j = efp->frags + fr_j_idx;
+    // might need to change this switching function treatment
+    struct swf swf = efp_make_swf(efp, fr_i, fr_j, 0);
+    double energy = 0.0;
+
+    // skip calculations if distance between fragments is too big...
+    if (swf.swf == 0.0) {
+        return 0.0;
+    }
+    else {
+        for (size_t ii = 0; ii < fr_i->n_atoms; ii++) {
+            for (size_t jj = 0; jj < fr_j->n_atoms; jj++) {
+                energy += lj_energy(efp, fr_i_idx, fr_j_idx, ii, jj, &swf);
+            }
+        }
+
+        if (efp->do_gradient) {
+            vec_t force = {
+                    swf.dswf.x * energy,
+                    swf.dswf.y * energy,
+                    swf.dswf.z * energy
+            };
+
+            six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+            six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+            efp_add_stress(&swf.dr, &force, &efp->stress);
+        }
+        return energy * swf.swf;
+    }
+}
+
+static double
+compute_ai_qq_frag(struct efp *efp, size_t frag_idx)
+{
+    struct frag *fr_i = efp->frags + frag_idx;
+    double energy = 0.0;
+
+    for (size_t i = 0; i < fr_i->n_atoms; i++) {
+        for (size_t j = 0; j < efp->n_ptc; j++) {
+            struct efp_atom *at_i = fr_i->atoms + i;
+            vec_t dr = vec_sub(CVEC(at_i->x), efp->ptc_xyz + j);
+
+            energy += efp_charge_charge_energy(at_i->mm_charge,
+                efp->ptc[j], &dr);
+        }
+    }
+    return energy;
+}
+
+static void
+compute_ai_qq_frag_grad(struct efp *efp, size_t frag_idx)
+{
+    struct frag *fr_i = efp->frags + frag_idx;
+
+    for (size_t i = 0; i < fr_i->n_atoms; i++) {
+        for (size_t j = 0; j < efp->n_ptc; j++) {
+            struct efp_atom *at_i = fr_i->atoms + i;
+
+            vec_t force, add1, add2;
+            vec_t dr = vec_sub(CVEC(at_i->x), efp->ptc_xyz + j);
+
+            efp_charge_charge_grad(efp->ptc[j], at_i->mm_charge, &dr,
+                                   &force, &add1, &add2);
+            vec_atomic_add(efp->ptc_grad + j, &force);
+            efp_sub_force(efp->grad + frag_idx, CVEC(fr_i->x),
+                          CVEC(at_i->x), &force, &vec_zero);
+
+            // add forces to atoms as well - clean this later
+            at_i->gx -= force.x;
+            at_i->gy -= force.y;
+            at_i->gz -= force.z;
+        }
+    }
+}
+
+static void
+compute_ai_qq_range(struct efp *efp, size_t from, size_t to, void *data)
+{
+    double energy = 0.0;
+    double energy_tmp = 0.0;
+
+    (void)data;
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic) reduction(+:energy)
+#endif
+    for (size_t i = from; i < to; i++) {
+        // skip special fragment
+        if (i == efp->opts.special_fragment)
+            continue;
+
+        // where are switching functions???
+
+        energy_tmp = compute_ai_qq_frag(efp, i);
+        energy += energy_tmp;
+        // no pairwise interactions so far
+        //if (efp->opts.enable_pairwise && efp->opts.ligand == -1) {
+        //    efp->pair_energies[i].electrostatic += energy_tmp;
+        //}
+        if (efp->do_gradient) {
+            compute_ai_qq_frag_grad(efp, i);
+        }
+    }
+    // ??? where to store this energy?
+    efp->energy.electrostatic_point_charges += energy;
+}
+
+enum efp_result
+efp_compute_ai_qq(struct efp *efp)
+{
+    if (!(efp->opts.terms & EFP_TERM_AI_QQ))
+        return EFP_RESULT_SUCCESS;
+
+    efp_balance_work(efp, compute_ai_qq_range, NULL);
+    efp_allreduce(&efp->energy.electrostatic_point_charges, 1);
+
+    return EFP_RESULT_SUCCESS;
 }

@@ -78,9 +78,12 @@ if (APPLE)
 else()
     set(base "$ORIGIN")
 endif()
+
+set(CMAKE_INSTALL_LIBDIR "lib")
 file(RELATIVE_PATH relDir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}${PYMOD_INSTALL_LIBDIR}/pylibefp
                           ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_INSTALL_RPATH ${base} ${base}/${relDir} ${_dloc})
+
 
 message(STATUS "pylibefp rpath: ${CMAKE_INSTALL_RPATH}")
 

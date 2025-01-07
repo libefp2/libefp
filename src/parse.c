@@ -151,7 +151,7 @@ parse_coordinates(struct frag *frag, struct stream *stream)
 	while (!efp_stream_eof(stream)) {
 		if (tok_stop(stream)) {
 			if (frag->n_atoms < 1) {
-                efp_log("parse_coordinates(): n_atoms < 1");
+                efp_log("parse_coordinates() for fragment %s: n_atoms < 1", frag->name);
                 return EFP_RESULT_SYNTAX_ERROR;
             }
 
@@ -167,7 +167,7 @@ parse_coordinates(struct frag *frag, struct stream *stream)
 		    !tok_double(stream, &atom.z) ||
 		    !tok_double(stream, &atom.mass) ||
 		    !tok_double(stream, &atom.znuc)) {
-            efp_log("parse_coordinates(): reading atom info failure");
+            efp_log("parse_coordinates(): reading atom info failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
@@ -196,8 +196,9 @@ parse_coordinates(struct frag *frag, struct stream *stream)
 		last_pt->x = atom.x;
 		last_pt->y = atom.y;
 		last_pt->z = atom.z;
-		last_pt->znuc = atom.znuc;
-        last_pt->if_znuc = true;
+        // LVS: let's not use znuc from coordiante section; read it from monopole section instead!
+		//last_pt->znuc = atom.znuc;
+        //last_pt->if_znuc = true;
 
 		efp_stream_next_line(stream);
 	}
@@ -208,7 +209,7 @@ static enum efp_result
 parse_monopoles(struct frag *frag, struct stream *stream)
 {
 	if (!frag->multipole_pts){
-        efp_log("parse_monopoles() failure: no multipole_pts");
+        efp_log("parse_monopoles() failure for fragment %s: no multipole_pts", frag->name);
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
@@ -226,7 +227,7 @@ parse_monopoles(struct frag *frag, struct stream *stream)
         if (!tok_label(stream, sizeof(tmp_pt.label), tmp_pt.label) ||
 		    !tok_double(stream, &tmp_pt.monopole) ||
 		    !tok_double(stream, &tmp_pt.znuc)){
-            efp_log("parse_monopoles() failure");
+            efp_log("parse_monopoles() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
         for (size_t j = 0; j < frag->n_multipole_pts; j++) {
@@ -234,6 +235,9 @@ parse_monopoles(struct frag *frag, struct stream *stream)
                 // found a match
                 frag->multipole_pts[j].monopole = tmp_pt.monopole;
                 frag->multipole_pts[j].if_mon = true;
+                // LVS: use znuc from monopole section now!
+                frag->multipole_pts[j].znuc = tmp_pt.znuc;
+                frag->multipole_pts[j].if_znuc = true;
                 counter++;
                 break;
             }
@@ -242,7 +246,7 @@ parse_monopoles(struct frag *frag, struct stream *stream)
 	}
 
 	if (!tok_stop(stream)){
-        efp_log("parse_monopoles() failure");
+        efp_log("parse_monopoles() failure for fragment %s", frag->name);
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
@@ -253,7 +257,7 @@ static enum efp_result
 parse_dipoles(struct frag *frag, struct stream *stream)
 {
 	if (!frag->multipole_pts){
-        efp_log("parse_dipoles() failure: no multipole_pts");
+        efp_log("parse_dipoles() failure for fragment %s: no multipole_pts", frag->name);
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
@@ -273,7 +277,7 @@ parse_dipoles(struct frag *frag, struct stream *stream)
             !tok_double(stream, &tmp_pt.dipole.x) ||
             !tok_double(stream, &tmp_pt.dipole.y) ||
             !tok_double(stream, &tmp_pt.dipole.z)){
-            efp_log("parse_dipoles() failure");
+            efp_log("parse_dipoles() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
         for (size_t j = 0; j < frag->n_multipole_pts; j++) {
@@ -303,7 +307,7 @@ parse_dipoles(struct frag *frag, struct stream *stream)
 	}
 */
 	if (!tok_stop(stream)){
-        efp_log("parse_dipoles() failure");
+        efp_log("parse_dipoles() failure for fragment %s", frag->name);
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
@@ -314,7 +318,7 @@ static enum efp_result
 parse_quadrupoles(struct frag *frag, struct stream *stream)
 {
 	if (!frag->multipole_pts){
-        efp_log("quadrupoles() failure: no multipole_pts");
+        efp_log("quadrupoles() failure: no multipole_pts  for fragment %s", frag->name);
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
@@ -337,7 +341,7 @@ parse_quadrupoles(struct frag *frag, struct stream *stream)
             !tok_double(stream, &tmp_pt.quadrupole[3]) ||
             !tok_double(stream, &tmp_pt.quadrupole[4]) ||
             !tok_double(stream, &tmp_pt.quadrupole[5]) ){
-            efp_log("parse_quadrupoles() failure");
+            efp_log("parse_quadrupoles() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
         for (size_t j = 0; j < frag->n_multipole_pts; j++) {
@@ -372,7 +376,7 @@ parse_quadrupoles(struct frag *frag, struct stream *stream)
 	}
 */
 	if (!tok_stop(stream)){
-        efp_log("quadrupoles() failure");
+        efp_log("quadrupoles() failure for fragment %s", frag->name);
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
@@ -383,7 +387,7 @@ static enum efp_result
 parse_octupoles(struct frag *frag, struct stream *stream)
 {
 	if (!frag->multipole_pts){
-        efp_log("parse_octupoles() failure: no multipole_pts");
+        efp_log("parse_octupoles() failure: no multipole_pts for fragment %s", frag->name);
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
@@ -401,13 +405,13 @@ parse_octupoles(struct frag *frag, struct stream *stream)
         memset(&tmp_pt, 0, sizeof(tmp_pt));
 
         if (!tok_label(stream, sizeof(tmp_pt.label), tmp_pt.label)){
-            efp_log("parse_octupoles() failure");
+            efp_log("parse_octupoles() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
         for (size_t k = 0; k < 10; k++)
             if (!tok_double(stream, &tmp_pt.octupole[k])){
-                efp_log("parse_octupoles() failure");
+                efp_log("parse_octupoles() failure for fragment %s", frag->name);
                 return EFP_RESULT_SYNTAX_ERROR;
             }
 
@@ -443,7 +447,7 @@ parse_octupoles(struct frag *frag, struct stream *stream)
 	}
 */
 	if (!tok_stop(stream)){
-        efp_log("parse_octupoles() failure");
+        efp_log("parse_octupoles() failure for fragment %s", frag->name);
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
@@ -472,14 +476,14 @@ parse_polarizable_pts(struct frag *frag, struct stream *stream)
         init_pol_pt(pt);
 
 		if (!efp_stream_advance(stream, 4)){
-            efp_log("parse_polarizable_pts() failure");
+            efp_log("parse_polarizable_pts() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
 		if (!tok_double(stream, &pt->x) ||
 		    !tok_double(stream, &pt->y) ||
 		    !tok_double(stream, &pt->z)){
-            efp_log("parse_polarizable_pts() failure");
+            efp_log("parse_polarizable_pts() coordinate reading failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
@@ -488,7 +492,7 @@ parse_polarizable_pts(struct frag *frag, struct stream *stream)
 
 		for (size_t i = 0; i < 9; i++)
 			if (!tok_double(stream, m + i)){
-                efp_log("parse_polarizable_pts() failure");
+                efp_log("parse_polarizable_pts() polarizability reading failure for fragment %s", frag->name);
                 return EFP_RESULT_SYNTAX_ERROR;
             }
 
@@ -505,7 +509,7 @@ parse_polarizable_pts(struct frag *frag, struct stream *stream)
 		efp_stream_next_line(stream);
 	}
 
-	efp_log("parse_polarizable_pts() failure");
+	efp_log("parse_polarizable_pts() failure for fragment %s", frag->name);
 	return EFP_RESULT_SYNTAX_ERROR;
 }
 
@@ -532,14 +536,14 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 		    frag->n_dynamic_polarizable_pts - 1;
 
 		if (!efp_stream_advance(stream, 5)){
-            efp_log("parse_dynamic_polarizable_pts() failure");
+            efp_log("parse_dynamic_polarizable_pts() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
 		if (!tok_double(stream, &pt->x) ||
 		    !tok_double(stream, &pt->y) ||
 		    !tok_double(stream, &pt->z)){
-            efp_log("parse_dynamic_polarizable_pts() failure");
+            efp_log("parse_dynamic_polarizable_pts() coordinates reading failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
@@ -547,7 +551,7 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 
 		for (size_t j = 0; j < 9; j++)
 			if (!tok_double(stream, m + j)){
-                efp_log("parse_dynamic_polarizable_pts() failure");
+                efp_log("parse_dynamic_polarizable_pts() polarizability reading failure for fragment %s", frag->name);
                 return EFP_RESULT_SYNTAX_ERROR;
             }
 
@@ -564,7 +568,7 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 		efp_stream_next_line(stream);
 
 		if (efp_stream_eof(stream)){
-            efp_log("parse_dynamic_polarizable_pts() failure");
+            efp_log("parse_dynamic_polarizable_pts() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
@@ -573,7 +577,7 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 	}
 
 	if (efp_stream_eof(stream)){
-        efp_log("parse_dynamic_polarizable_pts() failure");
+        efp_log("parse_dynamic_polarizable_pts() failure for fragment %s", frag->name);
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
@@ -583,14 +587,14 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 			    frag->dynamic_polarizable_pts + i;
 
 			if (!efp_stream_advance(stream, 5)){
-                efp_log("parse_dynamic_polarizable_pts() failure");
+                efp_log("parse_dynamic_polarizable_pts() failure for fragment %s", frag->name);
                 return EFP_RESULT_SYNTAX_ERROR;
             }
 
 			if (!tok_double(stream, &pt->x) ||
 			    !tok_double(stream, &pt->y) ||
 			    !tok_double(stream, &pt->z)){
-                efp_log("parse_dynamic_polarizable_pts() failure");
+                efp_log("parse_dynamic_polarizable_pts() coordinate reading failure for fragment %s", frag->name);
                 return EFP_RESULT_SYNTAX_ERROR;
             }
 
@@ -598,7 +602,7 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 
 			for (size_t j = 0; j < 9; j++)
 				if (!tok_double(stream, m + j)){
-                    efp_log("parse_dynamic_polarizable_pts() failure");
+                    efp_log("parse_dynamic_polarizable_pts() polarizability reading failure for fragment %s", frag->name);
                     return EFP_RESULT_SYNTAX_ERROR;
                 }
 
@@ -617,7 +621,7 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 	}
 
 	if (!tok_stop(stream)){
-        efp_log("parse_dynamic_polarizable_pts() failure");
+        efp_log("parse_dynamic_polarizable_pts() failure for fragment %s", frag->name);
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
@@ -634,6 +638,7 @@ parse_projection_basis(struct frag *frag, struct stream *stream)
 			return EFP_RESULT_SUCCESS;
 
 		if (!efp_stream_advance(stream, 8)){
+            printf("problem with fragment %s", frag->name);
             efp_log("parse_projection_basis() failure");
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -651,6 +656,7 @@ parse_projection_basis(struct frag *frag, struct stream *stream)
 		    !tok_double(stream, &atom->y) ||
 		    !tok_double(stream, &atom->z) ||
 		    !tok_double(stream, &atom->znuc)){
+            printf("problem with fragment %s, xr atom %zu", frag->name, frag->n_xr_atoms);
             efp_log("parse_projection_basis() failure: cannot read atom coordinates");
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -658,6 +664,7 @@ parse_projection_basis(struct frag *frag, struct stream *stream)
 		efp_stream_next_line(stream);
 shell:
 		if (efp_stream_eof(stream)){
+            printf("problem with fragment %s", frag->name);
             efp_log("parse_projection_basis() failure");
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -682,11 +689,13 @@ shell:
         //printf("\n shell->type %c", shell->type);
 
 		if (!strchr("SLPDF", shell->type)){
+            printf("problem with fragment %s", frag->name);
             efp_log("parse_projection_basis() failure: error in basis function names");
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
 		if (!tok_uint(stream, &shell->n_funcs)){
+            printf("problem with fragment %s", frag->name);
             efp_log("parse_projection_basis() failure: error in the number of basis functions");
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -703,12 +712,14 @@ shell:
 			if (!tok_int(stream, NULL) ||
 			    !tok_double(stream, ptr++) ||
 			    !tok_double(stream, ptr++)){
+                printf("problem with fragment %s", frag->name);
                 efp_log("parse_projection_basis() failure: error in reading basis exponents");
                 return EFP_RESULT_SYNTAX_ERROR;
             }
 
 			if (shell->type == 'L')
 				if (!tok_double(stream, ptr++)){
+                    printf("problem with fragment %s", frag->name);
                     efp_log("parse_projection_basis() failure: error in reading basis exponent for L function");
                     return EFP_RESULT_SYNTAX_ERROR;
                 }
@@ -717,6 +728,7 @@ shell:
 		}
 		goto shell;
 	}
+    printf("problem with fragment %s", frag->name);
     efp_log("parse_projection_basis() failure");
 	return EFP_RESULT_SYNTAX_ERROR;
 }
@@ -725,6 +737,7 @@ static enum efp_result
 parse_multiplicity(struct frag *frag, struct stream *stream)
 {
 	if (!tok_int(stream, &frag->multiplicity)){
+        printf("problem with fragment %s", frag->name);
         efp_log("parse_multiplicity() failure");
         return EFP_RESULT_SYNTAX_ERROR;
     }
@@ -732,6 +745,7 @@ parse_multiplicity(struct frag *frag, struct stream *stream)
 	efp_stream_next_line(stream);
 
 	if (!tok_stop(stream)){
+        printf("problem with fragment %s", frag->name);
         efp_log("parse_multiplicity() failure");
         return EFP_RESULT_SYNTAX_ERROR;
     }
@@ -744,6 +758,7 @@ parse_projection_wf(struct frag *frag, struct stream *stream)
 {
 	if (!tok_uint(stream, &frag->n_lmo) ||
 	    !tok_uint(stream, &frag->xr_wf_size)){
+        printf("problem with fragment %s, reading n_lmo and wf_size", frag->name);
         efp_log("parse_projection_wf() failure");
         return EFP_RESULT_SYNTAX_ERROR;
     }
@@ -759,12 +774,14 @@ parse_projection_wf(struct frag *frag, struct stream *stream)
 	for (size_t j = 0; j < frag->n_lmo; j++) {
 		for (size_t i = 0; i < frag->xr_wf_size / 5; i++) {
 			if (!efp_stream_advance(stream, 5)){
+                printf("problem with fragment %s, reading wf coefficients", frag->name);
                 efp_log("parse_projection_wf() failure");
                 return EFP_RESULT_SYNTAX_ERROR;
             }
 
 			for (size_t k = 0; k < 5; k++)
 				if (!tok_double(stream, ptr++)){
+                    printf("problem with fragment %s, reading wf coefficients", frag->name);
                     efp_log("parse_projection_wf() failure");
                     return EFP_RESULT_SYNTAX_ERROR;
                 }
@@ -776,12 +793,14 @@ parse_projection_wf(struct frag *frag, struct stream *stream)
 			continue;
 
 		if (!efp_stream_advance(stream, 5)){
+            printf("problem with fragment %s", frag->name);
             efp_log("parse_projection_wf() failure");
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
 		for (size_t k = 0; k < frag->xr_wf_size % 5; k++)
 			if (!tok_double(stream, ptr++)){
+                printf("problem with fragment %s", frag->name);
                 efp_log("parse_projection_wf() failure");
                 return EFP_RESULT_SYNTAX_ERROR;
             }
@@ -804,6 +823,7 @@ parse_fock_mat(struct frag *frag, struct stream *stream)
 
 	for (size_t i = 0; i < size; i++)
 		if (!tok_double(stream, frag->xr_fock_mat + i)){
+            printf("problem with fragment %s", frag->name);
             efp_log("parse_fock_mat() failure");
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -826,7 +846,8 @@ parse_lmo_centroids(struct frag *frag, struct stream *stream)
 	efp_stream_next_line(stream);
 
 	if (frag->n_lmo == 0) {
-		efp_log("number of LMO centroids is zero");
+        printf("problem with fragment %s", frag->name);
+        efp_log("number of LMO centroids is zero");
 		return EFP_RESULT_SYNTAX_ERROR;
 	}
 	frag->lmo_centroids = (vec_t *)malloc(frag->n_lmo * sizeof(vec_t));
@@ -840,6 +861,7 @@ parse_lmo_centroids(struct frag *frag, struct stream *stream)
 		    !tok_double(stream, &ct->x) ||
 		    !tok_double(stream, &ct->y) ||
 		    !tok_double(stream, &ct->z)){
+            printf("problem with fragment %s, coordinates of lmo %zu", frag->name, i+1);
             efp_log("parse_lmo_centroids() failure");
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -848,6 +870,7 @@ parse_lmo_centroids(struct frag *frag, struct stream *stream)
 	}
 
 	if (!tok_stop(stream)){
+        printf("problem with fragment %s", frag->name);
         efp_log("parse_lmo_centroids() failure");
         return EFP_RESULT_SYNTAX_ERROR;
     }
@@ -864,6 +887,7 @@ skip_canonvec(struct frag *frag, struct stream *stream)
 
 	if (!tok_uint(stream, NULL) ||
 	    !tok_uint(stream, &wf_size)){
+        printf("problem with fragment %s", frag->name);
         efp_log("skip_canonvec() failure");
         return EFP_RESULT_SYNTAX_ERROR;
     }
@@ -905,6 +929,7 @@ skip_ctvec(struct frag *frag, struct stream *stream)
 
 	if (!tok_uint(stream, NULL) ||
 	    !tok_uint(stream, &wf_size)){
+        printf("problem with fragment %s", frag->name);
         efp_log("skip_ctvec() failure");
         return EFP_RESULT_SYNTAX_ERROR;
     }
@@ -959,6 +984,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
                 frag->n_dynamic_polarizable_pts - 1;
 
         if (!efp_stream_advance(stream, 5)){
+            printf("problem with fragment %s", frag->name);
             efp_log("parse_dipquad_polarizable_pts() failure");
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -966,6 +992,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
         if (!tok_double(stream, &pt->x) ||
             !tok_double(stream, &pt->y) ||
             !tok_double(stream, &pt->z)){
+            printf("problem with fragment %s", frag->name);
             efp_log("parse_dipquad_polarizable_pts() failure");
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -974,6 +1001,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
 
         for (size_t j = 0; j < 27; j++)
             if (!tok_double(stream, m + j)){
+                printf("problem with fragment %s", frag->name);
                 efp_log("parse_dipquad_polarizable_pts() failure");
                 return EFP_RESULT_SYNTAX_ERROR;
             }
@@ -1010,6 +1038,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
         efp_stream_next_line(stream);
 
         if (efp_stream_eof(stream)){
+            printf("problem with fragment %s", frag->name);
             efp_log("parse_dipquad_polarizable_pts() failure");
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -1018,6 +1047,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
             break;
     }
     if (efp_stream_eof(stream)){
+        printf("problem with fragment %s", frag->name);
         efp_log("parse_dipquad_polarizable_pts() failure");
         return EFP_RESULT_SYNTAX_ERROR;
     }
@@ -1028,6 +1058,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
                     frag->dipquad_polarizable_pts + i;
 
             if (!efp_stream_advance(stream, 5)){
+                printf("problem with fragment %s", frag->name);
                 efp_log("parse_dipquad_polarizable_pts() failure");
                 return EFP_RESULT_SYNTAX_ERROR;
             }
@@ -1035,6 +1066,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
             if (!tok_double(stream, &pt->x) ||
                 !tok_double(stream, &pt->y) ||
                 !tok_double(stream, &pt->z)){
+                printf("problem with fragment %s", frag->name);
                 efp_log("parse_dipquad_polarizable_pts() failure");
                 return EFP_RESULT_SYNTAX_ERROR;
             }
@@ -1043,6 +1075,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
             //printf("\n in dipquad 9");
             for (size_t j = 0; j < 27; j++)
                 if (!tok_double(stream, m + j)){
+                    printf("problem with fragment %s", frag->name);
                     efp_log("parse_dipquad_polarizable_pts() failure");
                     return EFP_RESULT_SYNTAX_ERROR;
                 }
@@ -1079,6 +1112,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
         }
     }
     if (!tok_stop(stream)){
+        printf("problem with fragment %s", frag->name);
         efp_log("parse_dipquad_polarizable_pts() failure");
         return EFP_RESULT_SYNTAX_ERROR;
     }
@@ -1140,6 +1174,7 @@ static enum efp_result
 parse_screen(struct frag *frag, struct stream *stream)
 {
     if (!frag->multipole_pts){
+        printf("problem with fragment %s", frag->name);
         efp_log("parse_screen() failure: no multipole_pts");
         return EFP_RESULT_SYNTAX_ERROR;
     }
@@ -1153,8 +1188,13 @@ parse_screen(struct frag *frag, struct stream *stream)
     else if (type == '2') {
         screen_type = 2;
     }
+    else if (type == '3') {
+        screen_type = 3;
+    }
     else {
         printf(" Unknown SCREEN type found for fragment %s \n", frag->name);
+        efp_log("parse_screen() failure");
+        return EFP_RESULT_SYNTAX_ERROR;
     }
 
     efp_stream_next_line(stream);
@@ -1173,6 +1213,7 @@ parse_screen(struct frag *frag, struct stream *stream)
         if (!tok_label(stream, sizeof(tmp_pt.label), tmp_pt.label) ||
             !tok_double(stream, NULL) ||
             !tok_double(stream, &tmp_screen)){
+            printf("problem with fragment %s", frag->name);
             efp_log("parse_screen() failure");
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -1190,6 +1231,10 @@ parse_screen(struct frag *frag, struct stream *stream)
                     frag->multipole_pts[j].if_scr0 = true;
                     //printf(" SCREEN0 param %lf \n", frag->multipole_pts[j].screen0);
                 }
+                if (screen_type == 3) {
+                    // do nothing with screen3
+                    continue;
+                }
                 counter++;
                 break;
             }
@@ -1198,6 +1243,7 @@ parse_screen(struct frag *frag, struct stream *stream)
     }
 
     if (!tok_stop(stream)){
+        printf("problem with fragment %s", frag->name);
         efp_log("parse_screen() failure");
         return EFP_RESULT_SYNTAX_ERROR;
     }
@@ -1209,7 +1255,8 @@ static enum efp_result
 parse_xrfit(struct frag *frag, struct stream *stream)
 {
 	if (frag->n_lmo == 0) {
-		efp_log("no LMO centroids found before XRFIT group");
+        printf("problem with fragment %s", frag->name);
+        efp_log("no LMO centroids found before XRFIT group");
 		return EFP_RESULT_SYNTAX_ERROR;
 	}
 
@@ -1221,7 +1268,8 @@ parse_xrfit(struct frag *frag, struct stream *stream)
 	for (size_t i = 0; i < frag->n_lmo; i++) {
 		for (int k = 0; k < 4; k++) {
 			if (!tok_double(stream, frag->xrfit + 4 * i + k)) {
-				efp_log("four parameters are expected for "
+                printf("problem with fragment %s", frag->name);
+                efp_log("four parameters are expected for "
 				    "each LMO in XRFIT group");
 				return EFP_RESULT_SYNTAX_ERROR;
 			}
@@ -1230,6 +1278,7 @@ parse_xrfit(struct frag *frag, struct stream *stream)
 	}
 
 	if (!tok_stop(stream)) {
+        printf("problem with fragment %s", frag->name);
         efp_log("parse_xrfit() failure");
         return EFP_RESULT_SYNTAX_ERROR;
 	}
@@ -1241,7 +1290,8 @@ static enum efp_result
 parse_polab(struct frag *frag, struct stream *stream)
 {
 	if (!tok_double(stream, &frag->pol_damp)) {
-		efp_log("error parsing fragment polarization damping "
+        printf("problem with fragment %s", frag->name);
+        efp_log("error parsing fragment polarization damping "
 		    "parameters");
 		return EFP_RESULT_SYNTAX_ERROR;
 	}
@@ -1249,11 +1299,160 @@ parse_polab(struct frag *frag, struct stream *stream)
 	efp_stream_next_line(stream);
 
 	if (!tok_stop(stream)) {
+        printf("problem with fragment %s", frag->name);
         efp_log("parse_polab() failure");
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
 	return EFP_RESULT_SUCCESS;
+}
+
+static enum efp_result
+parse_mm_atom_charge(struct frag *frag, struct stream *stream)
+{
+    if (!frag->atoms){
+        printf("problem with fragment %s", frag->name);
+        efp_log("parse_mm_atom_charge() failure: no atoms");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    efp_stream_next_line(stream);
+    int counter = 0;
+    for (size_t i = 0; i < frag->n_atoms; i++) {
+
+        if (tok_stop(stream)) {
+            printf(" Found %d mm_atoms of %zu expected in fragment %s \n",
+                   counter, frag->n_atoms, frag->name);
+            return EFP_RESULT_SUCCESS;
+        }
+        struct efp_atom atom;
+        memset(&atom, 0, sizeof(atom));
+        if (!tok_label(stream, sizeof(atom.label), atom.label) ||
+            !tok_double(stream, &atom.mm_charge)){
+            printf("problem with fragment %s", frag->name);
+            efp_log("parse_mm_atom_charge() failure");
+            return EFP_RESULT_SYNTAX_ERROR;
+        }
+        for (size_t j = 0; j < frag->n_atoms; j++) {
+            if (!strcmp(atom.label, frag->atoms[j].label)) {
+                // found a match
+                frag->atoms[j].mm_charge = atom.mm_charge;
+                counter++;
+                break;
+            }
+        }
+        efp_stream_next_line(stream);
+    }
+
+    if (!tok_stop(stream)){
+        printf("problem with fragment %s", frag->name);
+        efp_log("parse_mm_atom_charge() failure");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    return EFP_RESULT_SUCCESS;
+}
+
+static enum efp_result
+parse_mm_lj(struct frag *frag, struct stream *stream)
+{
+    if (!frag->atoms){
+        printf("problem with fragment %s", frag->name);
+        efp_log("parse_mm_lj() failure: no atoms");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    // conversion of LJ params to a.u.
+    // assuming sigma-epsilon form (combination rules 2 and 3)
+    // epsilon has dimension of energy; sigma has dimension of length
+    // in Gromacs energies are in kJ/mol, lengths are in nm
+    double nm2bohr = 10.0/0.52917721092;
+    double kJmol2H = 1.0/2625.5002;
+
+    efp_stream_next_line(stream);
+    int counter = 0;
+    for (size_t i = 0; i < frag->n_atoms; i++) {
+
+        if (tok_stop(stream)) {
+            printf(" Found %d mm_atoms of %zu expected in fragment %s \n",
+                   counter, frag->n_atoms, frag->name);
+            return EFP_RESULT_SUCCESS;
+        }
+        struct efp_atom atom;
+        memset(&atom, 0, sizeof(atom));
+        if (!tok_label(stream, sizeof(atom.label), atom.label) ||
+            !tok_double(stream, &atom.sigma) ||
+            !tok_double(stream, &atom.epsilon)){
+            printf("problem with fragment %s", frag->name);
+            efp_log("parse_mm_lj() failure");
+            return EFP_RESULT_SYNTAX_ERROR;
+        }
+        for (size_t j = 0; j < frag->n_atoms; j++) {
+            if (!strcmp(atom.label, frag->atoms[j].label)) {
+                // found a match
+                // convert to a.u.
+                frag->atoms[j].sigma = atom.sigma * nm2bohr;
+                frag->atoms[j].epsilon = atom.epsilon * kJmol2H;
+                counter++;
+                break;
+            }
+        }
+        efp_stream_next_line(stream);
+    }
+
+    if (!tok_stop(stream)){
+        printf("problem with fragment %s", frag->name);
+        efp_log("parse_mm_lj() failure");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    return EFP_RESULT_SUCCESS;
+}
+
+static enum efp_result
+parse_mm_atomtype(struct frag *frag, struct stream *stream)
+{
+    if (!frag->atoms){
+        printf("problem with fragment %s", frag->name);
+        efp_log("parse_mm_atomtype() failure: no atoms");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    efp_stream_next_line(stream);
+    int counter = 0;
+    for (size_t i = 0; i < frag->n_atoms; i++) {
+
+        if (tok_stop(stream)) {
+            printf(" Found %d mm_atoms of %zu expected in fragment %s \n",
+                   counter, frag->n_atoms, frag->name);
+            return EFP_RESULT_SUCCESS;
+        }
+        struct efp_atom atom;
+        memset(&atom, 0, sizeof(atom));
+        if (!tok_label(stream, sizeof(atom.label), atom.label) ||
+            !tok_label(stream, sizeof(atom.ff_label), atom.ff_label)){
+            printf("problem with fragment %s", frag->name);
+            efp_log("parse_mm_atomtype() failure");
+            return EFP_RESULT_SYNTAX_ERROR;
+        }
+        for (size_t j = 0; j < frag->n_atoms; j++) {
+            if (!strcmp(atom.label, frag->atoms[j].label)) {
+                // found a match
+                strcpy(frag->atoms[j].ff_label,atom.ff_label);
+                counter++;
+                break;
+            }
+        }
+        efp_stream_next_line(stream);
+    }
+
+    if (!tok_stop(stream)){
+        printf("problem with fragment %s", frag->name);
+        efp_log("parse_mm_atomtype() failure");
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+    return EFP_RESULT_SUCCESS;
 }
 
 typedef enum efp_result (*parse_fn)(struct frag *, struct stream *);
@@ -1285,6 +1484,9 @@ get_parse_fn(struct stream *stream)
         { "SCREEN",                     parse_screen                  },
 		{ "XRFIT",                      parse_xrfit                   },
 		{ "POLAB",                      parse_polab                   },
+        { "MM_CHARGE",                  parse_mm_atom_charge          },
+        { "MM_LJ",                      parse_mm_lj                   },
+        { "MM_ATOMTYPE",                parse_mm_atomtype             },
 	};
 
 	for (size_t i = 0; i < ARRAY_SIZE(funcs); i++)
@@ -1306,7 +1508,8 @@ parse_fragment(struct frag *frag, struct stream *stream)
 			if (tok_end(stream))
 				return EFP_RESULT_SUCCESS;
 
-			efp_log("unexpected string \"%s\" in .efp file",
+            printf("problem with fragment %s", frag->name);
+            efp_log("unexpected string \"%s\" in .efp file",
 			    efp_stream_get_ptr(stream));
 			return EFP_RESULT_SYNTAX_ERROR;
 		}
@@ -1315,7 +1518,8 @@ parse_fragment(struct frag *frag, struct stream *stream)
 			return res;
 	}
 
-	efp_log("unexpected end of EFP potential data file");
+    printf("problem with fragment %s", frag->name);
+    efp_log("unexpected end of EFP potential data file");
 	return EFP_RESULT_SYNTAX_ERROR;
 }
 
@@ -1369,7 +1573,7 @@ parse_file(struct efp *efp, struct stream *stream)
 		if ((res = parse_fragment(frag, stream)))
 			return res;
 		if (frag->n_lmo > 0 && frag->lmo_centroids == NULL) {
-			efp_log("LMO centroids are missing");
+			efp_log("LMO centroids are missing for fragment \"%s\"", name);
 			return EFP_RESULT_FATAL;
 		}
 	}

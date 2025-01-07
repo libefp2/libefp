@@ -27,33 +27,132 @@
 #include "common.h"
 #include "opt.h"
 
+#ifdef TORCH_SWITCH
+#include "torch.h"
+#endif
+
 void sim_opt(struct state *state);
 
 static double compute_efp(size_t n, const double *x, double *gx, void *data)
 {
-	size_t n_frags, n_charge;
-	struct state *state = (struct state *)data;
 
-	check_fail(efp_get_frag_count(state->efp, &n_frags));
-	check_fail(efp_get_point_charge_count(state->efp, &n_charge));
+    // printf("marker call for entry in compute_efp\n");	
+    int static opt_switch = 0;
+    size_t n_frags, n_charge, spec_frag, n_special_atoms;
+    struct state *state = (struct state *)data;
 
-	assert(n == (6 * n_frags + 3 * n_charge));
+    check_fail(efp_get_frag_count(state->efp, &n_frags));
+    check_fail(efp_get_point_charge_count(state->efp, &n_charge));
 
-	check_fail(efp_set_coordinates(state->efp, EFP_COORD_TYPE_XYZABC, x));
-	check_fail(efp_set_point_charge_coordinates(state->efp, x + 6 * n_frags));
+#ifdef TORCH_SWITCH
+    if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
+        // prepare for optimization of atom coordinates of a special fragment
+        // through forces provided externally
+        spec_frag = cfg_get_int(state->cfg, "special_fragment");
+        check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
-	compute_energy(state, true);
-	memcpy(gx, state->grad, (6 * n_frags + 3 * n_charge) * sizeof(double));
+        switch(cfg_get_int(state->cfg, "opt_special_frag")) {
+            // optimize only special fragment atoms
+            case 0:
+                assert(n == (3 * n_special_atoms));
 
-	for (size_t i = 0; i < n_frags; i++) {
-		const double *euler = x + 6 * i + 3;
-		double *gradptr = gx + 6 * i + 3;
+                // propagate special fragment coordinates to EFP and update fragment parameters
+                check_fail(update_special_fragment(state->efp, x));
+                // propagate special fragment coordinates to torch
+                torch_set_coord(state->torch, x);
+                // compute EFP and torch energies and gradients
+                compute_energy(state, true);
 
-		efp_torque_to_derivative(euler, gradptr, gradptr);
-	}
+                memcpy(gx, state->torch_grad, (3 * n_special_atoms) * sizeof(double));
+                break;
+
+            // optimize special fragment atoms and all fragments - the most general case
+            case 1:
+                assert(n == (6 * (n_frags-1) + 3 * n_charge + 3 * n_special_atoms));
+
+                // skips coordinates of special fragment
+                for (size_t i = 0, k=0; i < n_frags; i++) {
+                    if (i==spec_frag) continue;
+                    // note that xyzabc coordiantes are used for optimization, i.e. initial fragment coordinates
+                    // will be changed if atom cooridnates were used in input
+                    check_fail(efp_set_frag_coordinates(state->efp, i, EFP_COORD_TYPE_XYZABC, x+6*k));
+                    k++;
+                }
+                check_fail(efp_set_point_charge_coordinates(state->efp, x + 6 * (n_frags-1)));
+                
+                check_fail(update_special_fragment(state->efp, x + 6 * (n_frags-1) + 3 * n_charge));
+                // propagate special fragment coordinates to torch
+                torch_set_coord(state->torch, x + 6 * (n_frags-1) + 3 * n_charge);
+
+                // compute EFP and torch energies and gradients
+                compute_energy(state, true);
+
+		// skips gradient of special fragment
+		for (size_t i=0, k=0; i<n_frags; i++) {
+                    if (i == spec_frag) continue;
+                    memcpy(gx + 6*k, state->grad+6*i, 6 * sizeof(double));
+                    k++;
+                }
+
+                // add gradient of point charges if any
+                memcpy(gx + 6*(n_frags-1), state->grad + 6*(n_frags-1), (3 * n_charge) * sizeof(double));
+
+                // memcpy(gx, state->grad, (6 * n_frags + 3 * n_charge) * sizeof(double));
+                memcpy(gx + 6 * (n_frags-1) + 3 * n_charge, state->torch_grad, (3 * n_special_atoms) * sizeof(double));
+
+                for (size_t i = 0, k=0 ; i < n_frags; i++) {
+                    if (i==spec_frag)
+                        continue;
+                    const double *euler = x + 6 * k + 3;
+                    double *gradptr = gx + 6 * k + 3;
+
+                    efp_torque_to_derivative(euler, gradptr, gradptr);
+                    k++;
+                }
+                break;
+
+            // optimize intermittently special fragment atoms or all fragments
+            case 2:
+                if (opt_switch == 1)
+                    assert(n == (6 * n_frags + 3 * n_charge));
+                if (opt_switch == 2)
+                    assert(n == (3 * n_special_atoms));
+                // need to develop this case
+                break;
+
+            default:
+                error("do not know what to do for this opt_special_frag input");
+                break;
+        }
+    }
+#endif
+
+    if (!cfg_get_bool(state->cfg, "enable_torch")) {
+        // normal case - no special fragment to optimize
+        assert(n == (6 * n_frags + 3 * n_charge));
+
+        check_fail(efp_set_coordinates(state->efp, EFP_COORD_TYPE_XYZABC, x));
+        check_fail(efp_set_point_charge_coordinates(state->efp, x + 6 * n_frags));
+
+        compute_energy(state, true);
+        memcpy(gx, state->grad, (6 * n_frags + 3 * n_charge) * sizeof(double));
+
+        for (size_t i = 0; i < n_frags; i++) {
+            const double *euler = x + 6 * i + 3;
+            double *gradptr = gx + 6 * i + 3;
+
+            efp_torque_to_derivative(euler, gradptr, gradptr);
+        }
+    }
+
+    if (cfg_get_int(state->cfg, "print")>0) {
+        // print_geometry(state->efp);
+	    print_energy(state);
+    }
 
 	return (state->energy);
 }
+
 
 static void print_restart(struct efp *efp)
 {
@@ -98,9 +197,11 @@ static void print_restart(struct efp *efp)
 	msg("\n");
 }
 
-static int check_conv(double rms_grad, double max_grad, double opt_tol)
+static int check_conv(double delta_e, double rms_grad, double max_grad, double opt_tol, double ene_tol)
 {
-	return max_grad < opt_tol && rms_grad < opt_tol / 3.0;
+	// return max_grad < opt_tol && rms_grad < opt_tol / 3.0;
+    // printf("\n delta_e %lf, ene_tol %lf \n", delta_e, ene_tol);
+    return (max_grad < opt_tol && fabs(delta_e) < ene_tol); 
 }
 
 static void get_grad_info(size_t n_coord, const double *grad, double *rms_grad_out,
@@ -124,7 +225,7 @@ static void get_grad_info(size_t n_coord, const double *grad, double *rms_grad_o
 static void print_status(struct state *state, double e_diff, double rms_grad, double max_grad)
 {
 	print_geometry(state->efp);
-	print_restart(state->efp);
+	// print_restart(state->efp);
 	print_energy(state);
 
 	msg("%30s %16.10lf\n", "ENERGY CHANGE", e_diff);
@@ -137,59 +238,156 @@ static void print_status(struct state *state, double e_diff, double rms_grad, do
 
 void sim_opt(struct state *state)
 {
-	msg("ENERGY MINIMIZATION JOB\n\n\n");
+    size_t n_frags, n_charge, n_coord, n_special_atoms, spec_frag;
+    double rms_grad, max_grad;
 
-	size_t n_frags, n_charge, n_coord;
-	double rms_grad, max_grad;
+    int static algorithm_switch;
 
-	check_fail(efp_get_frag_count(state->efp, &n_frags));
-	check_fail(efp_get_point_charge_count(state->efp, &n_charge));
+#ifdef TORCH_SWITCH
+    if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1)
+    switch (cfg_get_int(state->cfg, "opt_special_frag")) {
+        case 0:
+            msg("SPECIAL FRAGMENT ENERGY MINIMIZATION JOB\n\n\n");
+            algorithm_switch = 0;
+            break;
+        case 1:
+            msg("SPECIAL FRAGMENT ATOMS AND ALL FRAGMENTS ENERGY MINIMIZATION JOB\n\n\n");
+            algorithm_switch = 1;
+            break;
+        case 2:
+            msg("CONSEQUENT OPTIMIZATION OF SPECIAL FRAGMENT ATOMS AND EFP FRAGMENTS\n\n\n");
+            algorithm_switch = 2;
+            break;
+        default:
+            error("do not know what to do for this opt_special_frag input");
+            break;
+    }
+#endif
 
-	n_coord = 6 * n_frags + 3 * n_charge;
+    if (!cfg_get_bool(state->cfg, "enable_torch")) {
+        msg("ENERGY MINIMIZATION JOB\n\n\n");
+        algorithm_switch = -1;
+    }
 
-	struct opt_state *opt_state = opt_create(n_coord);
-	if (!opt_state)
-		error("unable to create an optimizer");
+    check_fail(efp_get_frag_count(state->efp, &n_frags));
+    check_fail(efp_get_point_charge_count(state->efp, &n_charge));
 
-	opt_set_func(opt_state, compute_efp);
-	opt_set_user_data(opt_state, state);
 
-	double coord[n_coord], grad[n_coord];
-	check_fail(efp_get_coordinates(state->efp, coord));
-	check_fail(efp_get_point_charge_coordinates(state->efp, coord + 6 * n_frags));
+#ifdef TORCH_SWITCH
+   if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
+        spec_frag = cfg_get_int(state->cfg, "special_fragment");
+        check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
-	if (opt_init(opt_state, n_coord, coord))
-		error("unable to initialize an optimizer");
+        if (cfg_get_int(state->cfg, "opt_special_frag") == 0) 
+            n_coord = 3 * n_special_atoms;
+        if (cfg_get_int(state->cfg, "opt_special_frag") == 1) 
+            n_coord = 6 * (n_frags-1) + 3 * n_charge + 3 * n_special_atoms;
+   }
+#endif
+   // normal minimization job
+    if (!cfg_get_bool(state->cfg, "enable_torch")) n_coord = 6 * n_frags + 3 * n_charge;
 
-	double e_old = opt_get_fx(opt_state);
-	opt_get_gx(opt_state, n_coord, grad);
-	get_grad_info(n_coord, grad, &rms_grad, &max_grad);
 
-	msg("    INITIAL STATE\n\n");
-	print_status(state, 0.0, rms_grad, max_grad);
+    struct opt_state *opt_state = opt_create(n_coord);
+    if (!opt_state)
+        error("unable to create an optimizer");
 
-	for (int step = 1; step <= cfg_get_int(state->cfg, "max_steps"); step++) {
-		if (opt_step(opt_state))
-			error("unable to make an optimization step");
+    opt_set_func(opt_state, compute_efp);
+    opt_set_user_data(opt_state, state);
 
-		double e_new = opt_get_fx(opt_state);
-		opt_get_gx(opt_state, n_coord, grad);
-		get_grad_info(n_coord, grad, &rms_grad, &max_grad);
+    double coord[n_coord], grad[n_coord];
 
-		if (check_conv(rms_grad, max_grad, cfg_get_double(state->cfg, "opt_tol"))) {
-			msg("    FINAL STATE\n\n");
-			print_status(state, e_new - e_old, rms_grad, max_grad);
-			msg("OPTIMIZATION CONVERGED\n");
-			break;
-		}
+#ifdef TORCH_SWITCH
+    if (cfg_get_bool(state->cfg, "enable_torch")) {
+        if (cfg_get_int(state->cfg, "opt_special_frag") == 0) 
+            torch_get_coord(state->torch, coord);
 
-		msg("    STATE AFTER %d STEPS\n\n", step);
-		print_status(state, e_new - e_old, rms_grad, max_grad);
+        if (cfg_get_int(state->cfg, "opt_special_frag") == 1) { 
+            // getting efp coordinates of all but special fragment
+            for (size_t i=0, k=0; i<n_frags; i++) {
+                if (i==spec_frag) continue;
+                check_fail(efp_get_frag_xyzabc(state->efp, i, coord + 6*k));
+                k++;
+            }
+            check_fail(efp_get_point_charge_coordinates(state->efp, coord + 6 * (n_frags-1)));
+            torch_get_coord(state->torch, coord + 6 * (n_frags-1) + 3 * n_charge);
+        }
+    }
+#endif
+    // normal case
+    if (!cfg_get_bool(state->cfg, "enable_torch")) {
+        check_fail(efp_get_coordinates(state->efp, coord));
+        check_fail(efp_get_point_charge_coordinates(state->efp, coord + 6 * n_frags));
+    }
 
-		e_old = e_new;
-	}
+//////////////////////
+    bool if_converged = false;
 
-	opt_shutdown(opt_state);
+    if (opt_init(opt_state, n_coord, coord))
+        error("unable to initialize an optimizer");
 
-	msg("ENERGY MINIMIZATION JOB COMPLETED SUCCESSFULLY\n");
+    double e_old = opt_get_fx(opt_state);
+    opt_get_gx(opt_state, n_coord, grad);
+    get_grad_info(n_coord, grad, &rms_grad, &max_grad);
+
+    msg("    INITIAL STATE\n\n");
+    print_status(state, 0.0, rms_grad, max_grad);
+
+    if (cfg_get_int(state->cfg, "print")>2) {
+        printf("\n GRADIENTS in opt.c\n");
+        for (size_t i=0; i<n_coord; i++) {
+            printf(" %12.6lf\n", grad[i]);
+        }
+        printf("\n");
+    }
+
+    for (int step = 1; step <= cfg_get_int(state->cfg, "max_steps"); step++) {
+        if (opt_step(opt_state)) {
+            msg("\nL-BFGS-B is unable to make an optimization step\n");
+            break;
+            // error("unable to make an optimization step");
+        }
+
+        double e_new = opt_get_fx(opt_state);
+        // just checking coordinates
+        opt_get_x(opt_state, n_coord, coord);
+        opt_get_gx(opt_state, n_coord, grad);
+        get_grad_info(n_coord, grad, &rms_grad, &max_grad);
+
+        if (check_conv(e_new - e_old, rms_grad, max_grad, cfg_get_double(state->cfg, "opt_tol"), cfg_get_double(state->cfg, "opt_energy_tol"))) {
+            msg("    FINAL STATE\n\n");
+            print_status(state, e_new - e_old, rms_grad, max_grad);
+
+            if (cfg_get_int(state->cfg, "print")>2) {
+                printf("\n GRADIENTS \n");
+                for (size_t i=0; i<n_coord; i++) {
+                    printf(" %12.6lf\n", grad[i]);
+                }
+                printf("\n");
+            }
+
+            msg("\nOPTIMIZATION CONVERGED IN %d STEPS\n", step);
+            if_converged = true;
+            break;
+        }
+
+        msg("    STATE AFTER %d STEPS\n\n", step);
+        print_status(state, e_new - e_old, rms_grad, max_grad);
+
+        if (cfg_get_int(state->cfg, "print")>2) {
+            printf("\n GRADIENTS \n");
+            for (size_t i=0; i<n_coord; i++) {
+                printf(" %12.6lf\n", grad[i]);
+            }
+            printf("\n");
+        }
+
+        e_old = e_new;
+    }
+
+    if (!if_converged) msg("\nOPTIMIZATION HAS NOT CONVERGED\n");
+
+    opt_shutdown(opt_state);
+
+    msg("ENERGY MINIMIZATION JOB COMPLETED SUCCESSFULLY\n");
 }

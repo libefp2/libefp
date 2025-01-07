@@ -28,7 +28,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <stdio.h>
 #include "opt.h"
 
 struct opt_state {
@@ -147,6 +147,7 @@ enum opt_result opt_init(struct opt_state *state, size_t n, const double *x)
 
 void opt_set_func(struct opt_state *state, opt_func_t func)
 {
+	// printf("Inside opt_set_func\n");
 	assert(state);
 	state->func = func;
 }
@@ -170,12 +171,16 @@ void opt_set_bound(struct opt_state *state, size_t n, const int *nbd,
 
 enum opt_result opt_step(struct opt_state *state)
 {
+	// this is where the compute_efp gets evoked again and again
+	// printf("marker for calling opt_step\n");
 	assert(state);
 
 next:
 	call_routine(state);
 
 	if (strncmp(state->task, "FG", strlen("FG")) == 0) {
+        // when this if block is traversed compute_efp is evoked
+        printf("\n L-BFGS-B optimizer direction search \n");
 		state->f = state->func(state->n, state->x, state->g, state->data);
 
 		if (isnan(state->f))
@@ -184,20 +189,23 @@ next:
 		goto next;
 	}
 
-	if (strncmp(state->task, "NEW_X", strlen("NEW_X")) == 0)
+	if (strncmp(state->task, "NEW_X", strlen("NEW_X")) == 0){
+        printf("\n L-BFGS-B optimizer new step \n");
 		return OPT_RESULT_SUCCESS;
-
+	}
 	return OPT_RESULT_ERROR;
 }
 
 double opt_get_fx(struct opt_state *state)
 {
+	// printf("marker for calling in opt_get_fx\n");
 	assert(state);
 	return state->f;
 }
 
 void opt_get_x(struct opt_state *state, size_t size, double *out)
 {
+	// printf("marker for calling in opt_get_x\n");
 	assert(state);
 	assert(size >= state->n);
 	assert(out);
@@ -207,6 +215,7 @@ void opt_get_x(struct opt_state *state, size_t size, double *out)
 
 void opt_get_gx(struct opt_state *state, size_t size, double *out)
 {
+	// printf("marker for calling in opt_get_gx\n");
 	assert(state);
 	assert(size >= state->n);
 	assert(out);

@@ -1,0 +1,17 @@
+# this job crashes due to a polarization collapse
+# geometry optimizer does a weird step when searching for a direction...
+
+run_type opt
+coord xyzabc
+fraglib_path ../fraglib
+enable_torch false
+max_steps 200
+print 1
+
+fragment h2o_l
+   0.000   0.000   0.000   0.000   0.000   0.000
+fragment h2o_l
+   5.000   0.000   0.000   2.000   0.000   2.000
+fragment nh3_l
+   0.000   5.000   0.000   5.000   0.000  -3.000
+
