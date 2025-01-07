@@ -26,3 +26,5 @@ tags
 build*/
 /installed/
 /cmake-build-debug/
+compilation.log
+
