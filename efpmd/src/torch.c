@@ -94,6 +94,9 @@ void torch_set_atom_species(struct torch *torch, const int *atom_z) {
     memcpy(torch->atom_types, atom_z, (torch->natoms) * sizeof(int));
 }
 
+
+
+/*
 void torch_custom_compute(struct torch *torch, int print) {
 
     size_t n_atoms = torch->natoms;
@@ -176,7 +179,83 @@ void torch_custom_compute(struct torch *torch, int print) {
     free(elecpots_data);
  
 }
+*/
 
+void torch_custom_compute(struct torch *torch, int print) {
+
+    size_t n_atoms = torch->natoms;
+    double *gradients, *forces;
+    double *frag_coord;
+    double *elecpots_data;
+    double custom_energy;
+
+    elecpots_data = malloc(n_atoms * sizeof(double));
+    gradients = malloc(n_atoms * 3 * sizeof(double));
+    forces = malloc(n_atoms * 3 * sizeof(double));
+    frag_coord = malloc(n_atoms*3* sizeof(double));
+
+    for (size_t i=0; i<n_atoms; i++) {
+        frag_coord[i*3] = torch->atom_coords[i*3] * BOHR_RADIUS;
+        frag_coord[i*3+1] = torch->atom_coords[i*3+1] * BOHR_RADIUS;
+        frag_coord[i*3+2] = torch->atom_coords[i*3+2] * BOHR_RADIUS;
+        elecpots_data[i] = torch->elpot[i];
+    }
+
+    int atomic_num[n_atoms];
+    for (size_t i=0; i<n_atoms; i++) {
+       atomic_num[i] = torch->atom_types[i];
+    }
+
+    int64_t frag_species[n_atoms];
+    atomic_number_to_species(atomic_num, frag_species, n_atoms);
+
+    if (print > 0) {
+       printf("=============TORCH ELPOT=============\n");
+       for (size_t j = 0; j < n_atoms; j++) {
+           printf("%2d %12.6f\n",torch->atom_types[j], elecpots_data[j]);
+       }
+       printf("====================================\n");
+    }
+
+
+    get_custom_energy_grad_wrapper(torch->ani_model, frag_coord, frag_species, elecpots_data, n_atoms, &custom_energy, gradients, forces, print);
+
+    torch->energy = custom_energy;
+
+    if (print > 1) {
+        printf("Gradients:\n");
+        for (int i = 0; i < n_atoms; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                printf("%f\t", gradients[i * 3 + j]);
+            }
+            printf("\n");
+        }
+
+        printf("Forces:\n");
+        for (int i = 0; i < n_atoms; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                printf("%f\t", forces[i * 3 + j]);
+            }
+            printf("\n");
+        }
+    }
+
+    double *tG_double = xcalloc(3 * n_atoms, sizeof(double));
+
+    for (int i = 0; i < 3 * n_atoms; i++) {
+        tG_double[i] = (double)(gradients[i] * BOHR_RADIUS);
+    }
+
+    memcpy(torch->grad, tG_double, (3 * n_atoms) * sizeof(double)); // Atomistic gradient for the EFP-ML fragment
+
+    torch_print(torch);
+    free(gradients);
+    free(forces);
+    free(frag_coord);
+    free(tG_double);
+    free(elecpots_data);
+
+}
 
 void atomic_number_to_species(const int* atomic_num, int64_t* frag_species, size_t n_atoms) {
 
