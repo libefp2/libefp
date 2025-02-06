@@ -2,12 +2,12 @@
 
 export TORCH_SWITCH=ON
 
-export LIBEFP_DIR="./"
-export INSTALLATION_DIR="$LIBEFP_DIR"
+export LIBEFP_DIR="/depot/lslipche/data/skp/branch/MLMM_new/libefp"
+export INSTALLATION_DIR="$LIBEFP_DIR/installed"
 
 if [[ "$TORCH_SWITCH" == "ON" ]] then
     # Set the installation directory for LibTorch
-    export TORCH_INSTALLED_DIR=""
+    export TORCH_INSTALLED_DIR="/depot/lslipche/data/skp/libtorch"
     export LIBTORCH_INCLUDE_DIRS="$TORCH_INSTALLED_DIR/include/;$TORCH_INSTALLED_DIR/include/torch/csrc/api/include"
     export TORCHANI_DIR="$LIBEFP_DIR/efpmd/torch"
 

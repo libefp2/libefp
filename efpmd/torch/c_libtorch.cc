@@ -158,6 +158,7 @@ void ANIModel::get_energy_grad(const torch::Tensor& coordinates,
 }
 */
 
+/*
 void ANIModel::get_custom_energy_grad(float* coordinates_data, int64_t* species_data, float* elecpots_data, int num_atoms, double* custom_energy, float* cus_grads, float* cus_forces, int print) {
 
     torch::Tensor coordinates = torch::from_blob(coordinates_data, {1, num_atoms, 3}, torch::kFloat32).clone().set_requires_grad(true);
@@ -210,7 +211,133 @@ void ANIModel::get_custom_energy_grad(float* coordinates_data, int64_t* species_
     memcpy(cus_forces, force.data_ptr<float>(), force.numel() * sizeof(float));
     *custom_energy = static_cast<double>(energy_shifted.item<double>());
 }
+*/
 
+void ANIModel::get_custom_energy_grad(double* coordinates_data, int64_t* species_data, double* elecpots_data, int num_atoms, double* custom_energy, double* cus_grads, double* cus_forces, int print) {
+
+    torch::Tensor coordinates = torch::from_blob(coordinates_data, {1, num_atoms, 3}, torch::kDouble).clone().set_requires_grad(true);
+    torch::Tensor species = torch::from_blob(species_data, {1, num_atoms}, torch::kInt64).clone();
+    torch::Tensor elecpots = torch::from_blob(elecpots_data, {1, num_atoms}, torch::kDouble).clone();
+    module.to(torch::kDouble);
+
+    std::cout << "Original species tensor: " << species << std::endl;
+
+    std::map<int64_t, int64_t> atom_to_species = {
+        {0, 1}, // H
+        {1, 6}, // C
+        {2, 7}, // N
+        {3, 8}  // O
+    };
+
+    torch::Tensor species2 = species.clone(); // Start with the same shape
+    auto species_accessor = species.accessor<int64_t, 2>();
+    auto species2_accessor = species2.accessor<int64_t, 2>();
+
+    for (int64_t i = 0; i < species.size(1); ++i) {
+        int64_t atom_type = species_accessor[0][i];
+        if (atom_to_species.find(atom_type) != atom_to_species.end()) {
+            species2_accessor[0][i] = atom_to_species[atom_type];
+        } else {
+            throw std::runtime_error("Unrecognized atom type in species tensor!");
+        }
+    }
+
+    std::cout << "Mapped species2 tensor: " << species2 << std::endl;
+
+    coordinates = coordinates.contiguous();
+
+    auto aev_input = std::make_tuple(species, coordinates);
+    auto aev_output = aev_computer.forward({aev_input}).toTuple();
+    torch::Tensor aevs = aev_output->elements()[1].toTensor();  // Get AEV output
+
+    torch::Tensor aep = torch::cat({aevs, elecpots.unsqueeze(-1)}, -1);
+    auto model_input = std::make_tuple(species, aep);
+    auto energy_output = module.forward({model_input}).toTuple();
+    auto energy_unshifted = energy_output->elements()[1].toTensor(); //c
+
+    coordinates = coordinates.to(torch::kFloat32);
+
+    torch::jit::Module model_ANI1x = torch::jit::load("/depot/lslipche/data/skp/libtorch/ANI1x_saved2.pt");
+    std::vector<torch::jit::IValue> inputs;
+    inputs.push_back(std::make_tuple(species2, coordinates));
+    auto output = model_ANI1x.forward(inputs).toTuple();
+    auto energy_tensor = output->elements()[1].toTensor();
+    auto shifted_energy = energy_tensor.item<double>();
+
+    std::cout << std::fixed << std::setprecision(12) << "Shift energy: " << energy_tensor.item<double>() << std::endl;
+    auto energy_shifted = energy_unshifted + energy_tensor;
+
+       std::cout << "Energy (unshifted): " << energy_unshifted.item<double>() << std::endl; //c
+       std::cout << std::fixed << std::setprecision(12) << "Energy (shifted): " << energy_shifted.item<double>() << std::endl; //c
+
+    auto  shifted_gradients_vec = torch::autograd::grad({energy_shifted}, {coordinates}, {}, true, false);
+    torch::Tensor derivative = shifted_gradients_vec[0];
+
+    torch::Tensor force = -derivative;
+
+    if (print > 0) {
+       std::cout << "Force: " << force << std::endl; //c
+    }
+
+    memcpy(cus_grads, derivative.to(torch::kDouble).data_ptr<double>(), derivative.numel() * sizeof(double));
+    memcpy(cus_forces, force.to(torch::kDouble).data_ptr<double>(), force.numel() * sizeof(double));
+    *custom_energy = static_cast<double>(energy_shifted.item<double>());
+}
+
+
+/*
+void ANIModel::get_custom_energy_grad(double* coordinates_data, int64_t* species_data, double* elecpots_data, int num_atoms, double* custom_energy, double* cus_grads, double* cus_forces, int print) {
+
+    torch::Tensor coordinates = torch::from_blob(coordinates_data, {1, num_atoms, 3}, torch::kDouble).clone().set_requires_grad(true);
+    torch::Tensor species = torch::from_blob(species_data, {1, num_atoms}, torch::kInt64).clone();
+    torch::Tensor elecpots = torch::from_blob(elecpots_data, {1, num_atoms}, torch::kDouble).clone();
+    module.to(torch::kDouble);
+
+    coordinates = coordinates.contiguous();
+
+    std::map<int, double> ani1x_sae_dict_byIdx = {
+                {0, -0.60095298}, // H
+                {1, -38.08316124}, // C
+                {2, -54.7077577}, // N
+                {3, -75.19446356} // O
+        };
+
+    double shift = 0.0;
+    for (int i = 0; i < species.size(1); ++i) {
+        int atom_type = species[0][i].item<int>();
+        shift += ani1x_sae_dict_byIdx[atom_type];
+    }
+
+    auto aev_input = std::make_tuple(species, coordinates);
+    auto aev_output = aev_computer.forward({aev_input}).toTuple();
+    torch::Tensor aevs = aev_output->elements()[1].toTensor();  // Get AEV output
+
+    torch::Tensor aep = torch::cat({aevs, elecpots.unsqueeze(-1)}, -1);
+    auto model_input = std::make_tuple(species, aep);
+    auto energy_output = module.forward({model_input}).toTuple();
+
+    torch::Tensor energy_unshifted = energy_output->elements()[1].toTensor(); //c
+    torch::Tensor energy_shifted = energy_unshifted + shift; //c
+
+    if (print > 0) {
+       std::cout << "Energy (unshifted): " << energy_unshifted.item<double>() << std::endl; //c
+       std::cout << std::fixed << std::setprecision(12) << "Energy (shifted): " << energy_shifted.item<double>() << std::endl; //c
+    }
+
+    std::vector<torch::Tensor> gradients = torch::autograd::grad({energy_shifted}, {coordinates});
+    torch::Tensor derivative = gradients[0];
+    torch::Tensor force = -derivative;
+
+    if (print > 0) {
+       std::cout << "Force: " << force << std::endl; //c
+    }
+
+    memcpy(cus_grads, derivative.to(torch::kDouble).data_ptr<double>(), derivative.numel() * sizeof(double));
+    memcpy(cus_forces, force.to(torch::kDouble).data_ptr<double>(), force.numel() * sizeof(double));
+    *custom_energy = static_cast<double>(energy_shifted.item<double>());
+}
+
+*/
 
 // Hardcoded custom model routine 
 void engrad_custom_model(float* coordinates_data, int64_t* species_data, float* elecpots_data, int num_atoms, float* custom_energy, float* cus_grads, float* cus_forces) {
@@ -687,12 +814,19 @@ void get_ani_energy_grad(ANIModel* model, float* coordinates, int* species, doub
                            forces, num_atoms, print);
 }
 
-void get_custom_energy_grad_wrapper(ANIModel* model, float* coordinates, int64_t* species,
-                                    float* elecpots, int num_atoms, double* custom_energy,
-                                    float* gradients, float* forces, int print) {
-    model->get_custom_energy_grad(coordinates, species, elecpots, num_atoms, custom_energy,
-                                  gradients, forces, print);
+//void get_custom_energy_grad_wrapper(ANIModel* model, float* coordinates, int64_t* species,
+//                                    float* elecpots, int num_atoms, double* custom_energy,
+//                                    float* gradients, float* forces, int print) {
+//    model->get_custom_energy_grad(coordinates, species, elecpots, num_atoms, custom_energy,
+//                                  gradients, forces, print);
+//}
+
+void get_custom_energy_grad_wrapper(ANIModel* model, double* coordinates, int64_t* species, double* elecpots, int num_atoms, double* custom_energy, double* gradients, double* forces, int print) {
+
+    model->get_custom_energy_grad(coordinates, species, elecpots, num_atoms, custom_energy, gradients, forces, print);
+
 }
+
 
 void ANIModel_delete(ANIModel* model) {
     model->~ANIModel();
