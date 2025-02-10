@@ -220,6 +220,88 @@ void ANIModel::get_custom_energy_grad(double* coordinates_data, int64_t* species
     torch::Tensor elecpots = torch::from_blob(elecpots_data, {1, num_atoms}, torch::kDouble).clone();
     module.to(torch::kDouble);
 
+    std::cout << "SKP made everything DOUBLE.. now it should work!!!" << std::endl;
+    std::cout << "Original species tensor: " << species << std::endl;
+
+    std::map<int64_t, int64_t> atom_to_species = {
+        {0, 1}, // H
+        {1, 6}, // C
+        {2, 7}, // N
+        {3, 8}  // O
+    };
+
+    torch::Tensor species2 = species.clone(); // Start with the same shape
+    auto species_accessor = species.accessor<int64_t, 2>();
+    auto species2_accessor = species2.accessor<int64_t, 2>();
+
+    for (int64_t i = 0; i < species.size(1); ++i) {
+        int64_t atom_type = species_accessor[0][i];
+        if (atom_to_species.find(atom_type) != atom_to_species.end()) {
+            species2_accessor[0][i] = atom_to_species[atom_type];
+        } else {
+            throw std::runtime_error("Unrecognized atom type in species tensor!");
+        }
+    }
+
+    std::cout << "Mapped species2 tensor: " << species2 << std::endl;
+
+    coordinates = coordinates.contiguous();
+
+    auto aev_input = std::make_tuple(species, coordinates);
+    auto aev_output = aev_computer.forward({aev_input}).toTuple();
+    torch::Tensor aevs = aev_output->elements()[1].toTensor();  // Get AEV output
+
+    torch::Tensor aep = torch::cat({aevs, elecpots.unsqueeze(-1)}, -1);
+    auto model_input = std::make_tuple(species, aep);
+    auto energy_output = module.forward({model_input}).toTuple();
+    auto energy_unshifted = energy_output->elements()[1].toTensor(); //c
+
+    //coordinates = coordinates.to(torch::kFloat32);
+
+    //torch::jit::Module model_ANI1x = torch::jit::load("/depot/lslipche/data/skp/libtorch/ANI1x_saved2.pt");
+    //std::vector<torch::jit::IValue> inputs;
+    //inputs.push_back(std::make_tuple(species2, coordinates));
+    //auto output = model_ANI1x.forward(inputs).toTuple();
+    //auto energy_tensor = output->elements()[1].toTensor();
+    //auto shifted_energy = energy_tensor.item<double>();
+
+    std::cout << "ANI1x_scripted.pt loaded from libtorch.." << std::endl;
+
+    torch::jit::Module model_ANI1x = torch::jit::load("/depot/lslipche/data/skp/libtorch/ani1x_scripted.pt");
+    std::vector<torch::jit::IValue> inputs = {species2, coordinates};
+    torch::Tensor energy = model_ANI1x.forward(inputs).toTensor();
+    std::cout << "Energy: " << energy << std::endl;
+    auto energy_tensor = energy;
+
+    std::cout << std::fixed << std::setprecision(12) << "Shift energy: " << energy_tensor.item<double>() << std::endl;
+    auto energy_shifted = energy_unshifted + energy_tensor;
+
+       std::cout << "Energy (unshifted): " << energy_unshifted.item<double>() << std::endl; //c
+       std::cout << std::fixed << std::setprecision(12) << "Energy (shifted): " << energy_shifted.item<double>() << std::endl; //c
+
+    auto  shifted_gradients_vec = torch::autograd::grad({energy_shifted}, {coordinates}, {}, true, false);
+    torch::Tensor derivative = shifted_gradients_vec[0];
+
+    torch::Tensor force = -derivative;
+
+    if (print > 0) {
+       std::cout << "Force: " << force << std::endl; //c
+    }
+
+    memcpy(cus_grads, derivative.to(torch::kDouble).data_ptr<double>(), derivative.numel() * sizeof(double));
+    memcpy(cus_forces, force.to(torch::kDouble).data_ptr<double>(), force.numel() * sizeof(double));
+    *custom_energy = static_cast<double>(energy_shifted.item<double>());
+}
+
+
+/*
+void ANIModel::get_custom_energy_grad(double* coordinates_data, int64_t* species_data, double* elecpots_data, int num_atoms, double* custom_energy, double* cus_grads, double* cus_forces, int print) {
+
+    torch::Tensor coordinates = torch::from_blob(coordinates_data, {1, num_atoms, 3}, torch::kDouble).clone().set_requires_grad(true);
+    torch::Tensor species = torch::from_blob(species_data, {1, num_atoms}, torch::kInt64).clone();
+    torch::Tensor elecpots = torch::from_blob(elecpots_data, {1, num_atoms}, torch::kDouble).clone();
+    module.to(torch::kDouble);
+
     std::cout << "Original species tensor: " << species << std::endl;
 
     std::map<int64_t, int64_t> atom_to_species = {
@@ -283,7 +365,7 @@ void ANIModel::get_custom_energy_grad(double* coordinates_data, int64_t* species
     memcpy(cus_forces, force.to(torch::kDouble).data_ptr<double>(), force.numel() * sizeof(double));
     *custom_energy = static_cast<double>(energy_shifted.item<double>());
 }
-
+*/
 
 /*
 void ANIModel::get_custom_energy_grad(double* coordinates_data, int64_t* species_data, double* elecpots_data, int num_atoms, double* custom_energy, double* cus_grads, double* cus_forces, int print) {
