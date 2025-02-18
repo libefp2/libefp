@@ -1,0 +1,12 @@
+run_type grad
+coord xyzabc
+terms elec pol
+elec_damp screen
+fraglib_path ../fraglib
+print 2
+
+fragment h2o_l
+   0.0   0.0   0.0   1.0   2.0   3.0
+
+fragment nh3_l
+   5.0   0.0   0.0   5.0   2.0   8.0

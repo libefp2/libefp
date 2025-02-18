@@ -1729,7 +1729,7 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_balance_work(efp, compute_two_body_range, NULL);
 	}
 	else {  // high-symmetry crystals
-	    if ((res = compute_two_body_crystal(efp))) {
+	    if ((res = compute_two_body_crystal(efp))){
             efp_log("compute_two_body_crystal() failure");
             return res;
         }
@@ -1739,11 +1739,11 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_log("efp_compute_pol() failure");
         return res;
     }
-	if ((res = efp_compute_ai_elec(efp))) {
+	if ((res = efp_compute_ai_elec(efp))){
         efp_log("efp_compute_ai_elec() failure");
         return res;
     }
-	if ((res = efp_compute_ai_disp(efp))) {
+	if ((res = efp_compute_ai_disp(efp))){
         efp_log("efp_compute_ai_disp() failure");
         return res;
     }
@@ -1928,7 +1928,8 @@ efp_get_multipole_values(struct efp *efp, double *mult)
 		for (size_t j = 0; j < frag->n_multipole_pts; j++) {
 			struct multipole_pt *pt = frag->multipole_pts + j;
 
-			*mult++ = pt->monopole;
+            // monopole and nuclear charges are added together as of 2025: LVS
+			*mult++ = pt->monopole + pt->znuc;
 
 			*mult++ = pt->dipole.x;
 			*mult++ = pt->dipole.y;
@@ -1938,6 +1939,24 @@ efp_get_multipole_values(struct efp *efp, double *mult)
 				*mult++ = pt->quadrupole[t];
 			for (size_t t = 0; t < 10; t++)
 				*mult++ = pt->octupole[t];
+		}
+	}
+	return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+efp_get_mono_values(struct efp *efp, double *monopoles)
+{
+    assert(efp);
+    assert(monopoles);
+
+    for (size_t i = 0; i < efp->n_frag; i++) {
+        struct frag *frag = efp->frags + i;
+
+        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
+            struct multipole_pt *pt = frag->multipole_pts + j;
+
+            *monopoles++ = pt->monopole;
 		}
 	}
 	return EFP_RESULT_SUCCESS;
@@ -2659,6 +2678,28 @@ save_ai_field_pol_pt(struct efp *efp, struct efp_pol_pt *pol_pt, size_t frag_idx
     return EFP_RESULT_SUCCESS;
 }
 
+EFP_EXPORT enum efp_result
+save_ai_field(struct efp *efp, double *field) {
+    assert(efp);
+    assert(field);
+
+    size_t k = 0;
+    for (size_t i = 0; i < efp->n_frag; i++) {
+        struct frag *frag = efp->frags + i;
+
+        for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
+            struct polarizable_pt *pt = frag->polarizable_pts + j;
+
+            pt->elec_field_wf.x = -field[k];
+            pt->elec_field_wf.y = -field[k+1];
+            pt->elec_field_wf.z = -field[k+2];
+            k = k+3;
+
+            //print_pol_pt(efp,i,j);
+        }
+    }
+    return EFP_RESULT_SUCCESS;
+}
 
 EFP_EXPORT void
 efp_torque_to_derivative(const double *euler, const double *torque,
@@ -2688,7 +2729,7 @@ efp_banner(void)
 	static const char banner[] =
 		"LIBEFP ver. " LIBEFP_VERSION_STRING "\n"
 		"Copyright (c) 2012-2017 Ilya Kaliman\n"
-        "              2018-2022 Lyudmila Slipchenko\n"
+        "              2018-2025 Lyudmila Slipchenko\n"
 		"\n"
 		"Journal References:\n"
 		"  - Kaliman and Slipchenko, JCC 2013.\n"

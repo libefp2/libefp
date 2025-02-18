@@ -177,6 +177,8 @@ struct efp_opts {
 	enum efp_elec_damp elec_damp;
 	/** Polarization damping type (see #efp_pol_damp). */
 	enum efp_pol_damp pol_damp;
+	/** Polarization damping value (see #efp_pol_damp_tt_value). */
+	double pol_damp_tt_value;
 	/** Driver used to find polarization induced dipoles. */
 	enum efp_pol_driver pol_driver;
 	/** Enable periodic boundary conditions if nonzero. */
@@ -995,13 +997,26 @@ enum efp_result efp_get_multipole_coordinates(struct efp *efp, double *xyz);
 enum efp_result efp_get_multipole_values(struct efp *efp, double *mult);
 
 /**
+ *
+ * @param efp The efp structure.
+ * @param[out] monopoles Array with all efp monopoles.
+ *
+ * The size of the \p monopoles array must be at least [\p n_mult] elements
+ * where \p n_mult is the value returned by the ::efp_get_multipole_count function.
+ * Only monopoles (no nuclear charges) are returned by this funciton.
+ *
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_mono_values(struct efp *efp, double *monopoles);
+
+/**
  * Get electrostatics dipoles from EFP fragments.
  *
  * \param[in] efp The efp structure.
  *
  * \param[out] dipoles Array with all efp dipoles.
  *
- * The size of the \p mult array must be at least [3 * \p n_mult] elements
+ * The size of the \p dipoles array must be at least [3 * \p n_mult] elements
  * where \p n_mult is the value returned by the ::efp_get_multipole_count function.
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
@@ -1401,6 +1416,14 @@ efp_get_frag_pol_pt(struct efp *efp, size_t frag_idx, size_t pt_idx,
  */
 enum efp_result
 save_ai_field_pol_pt(struct efp *efp, struct efp_pol_pt *pol_pt, size_t frag_idx, size_t pt_idx);
+
+/**
+ * Saves ab initio field into polarizable points
+ * @param efp
+ * @param field pointer to the ab initio field
+ * @return
+ */
+enum efp_result save_ai_field(struct efp *efp, double *field);
 
 /**
  * Get electric field for a point on a fragment.

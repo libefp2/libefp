@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-export TORCH_SWITCH=ON
+export TORCH_SWITCH=OFF
 
 export LIBEFP_DIR="./"
 export INSTALLATION_DIR="$LIBEFP_DIR"

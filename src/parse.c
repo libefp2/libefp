@@ -1565,7 +1565,8 @@ parse_file(struct efp *efp, struct stream *stream)
 		efp->lib[efp->n_lib - 1] = frag;
 
 		/* default value */
-		frag->pol_damp = 0.6;
+		//frag->pol_damp = 0.6; //commented out for ticket 3416
+		frag->pol_damp = efp->opts.pol_damp_tt_value;
 
 		efp_stream_next_line(stream);
 		efp_stream_next_line(stream);
