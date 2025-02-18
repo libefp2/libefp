@@ -81,7 +81,7 @@ if((${BUILD_SHARED_LIBS}) AND NOT ${BUILD_FPIC})
 endif()
 
 ### This option turns OPENMP ON and OFF!
-option_with_print(LIBEFP_ENABLE_OPENMP "Enable OpenMP parallelization. Psi4 wants OFF" ON)
+option_with_print(LIBEFP_ENABLE_OPENMP "Enable OpenMP parallelization. Psi4 wants OFF" OFF)
 
 option_with_print(ENABLE_GENERIC "Enable mostly static linking in shared library" OFF)
 include(xhost)  # defines: option(ENABLE_XHOST "Enable processor-specific optimization" ON)

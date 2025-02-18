@@ -26,6 +26,8 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+
 
 #include "clapack.h"
 #include "private.h"
@@ -442,24 +444,28 @@ lmo_lmo_xr_energy(struct frag *fr_i, struct frag *fr_j, size_t i, size_t j,
 	double r_ij = vec_len(&dr);
 	double exr = 0.0;
 
+    double exr1 = 0.0, exr2 = 0.0, exr3 = 0.0;
+
 	/* xr - first part */
 	if (fabs(s_ij) > INTEGRAL_THRESHOLD) {
-		exr += -2.0 * sqrt(-2.0 * log(fabs(s_ij)) / PI) *
+		exr1 = -2.0 * sqrt(-2.0 * log(fabs(s_ij)) / PI) *
 		    s_ij * s_ij / r_ij;
+    //exr += exr1;
 	}
 
 	/* xr - second part */
 	for (size_t k = 0; k < fr_i->n_lmo; k++) {
-		exr -= s_ij * lmo_s[k * fr_j->n_lmo + j] *
+		exr2 -= s_ij * lmo_s[k * fr_j->n_lmo + j] *
 		    fr_i->xr_fock_mat[fock_idx(i, k)];
 	}
 	for (size_t l = 0; l < fr_j->n_lmo; l++) {
-		exr -= s_ij * lmo_s[i * fr_j->n_lmo + l] *
+		exr2 -= s_ij * lmo_s[i * fr_j->n_lmo + l] *
 		    fr_j->xr_fock_mat[fock_idx(j, l)];
 	}
-	exr += 2.0 * s_ij * t_ij;
+	exr2 += 2.0 * s_ij * t_ij;
+    //exr += exr2;
 
-	/* xr - third part */
+    /* xr - third part */
 	for (size_t jj = 0; jj < fr_j->n_xr_atoms; jj++) {
 		struct xr_atom *at_j = fr_j->xr_atoms + jj;
 
@@ -471,7 +477,7 @@ lmo_lmo_xr_energy(struct frag *fr_i, struct frag *fr_j, size_t i, size_t j,
 
 		double r = vec_len(&dr_a);
 
-		exr -= s_ij * s_ij * at_j->znuc / r;
+		exr3 -= s_ij * s_ij * at_j->znuc / r;
 	}
 	for (size_t jj = 0; jj < fr_j->n_lmo; jj++) {
 		const vec_t *ct_jj = fr_j->lmo_centroids + jj;
@@ -483,7 +489,7 @@ lmo_lmo_xr_energy(struct frag *fr_i, struct frag *fr_j, size_t i, size_t j,
 		};
 
 		double r = vec_len(&dr_a);
-		exr += 2.0 * s_ij * s_ij / r;
+		exr3 += 2.0 * s_ij * s_ij / r;
 	}
 	for (size_t ii = 0; ii < fr_i->n_xr_atoms; ii++) {
 		struct xr_atom *at_i = fr_i->xr_atoms + ii;
@@ -495,7 +501,7 @@ lmo_lmo_xr_energy(struct frag *fr_i, struct frag *fr_j, size_t i, size_t j,
 		};
 
 		double r = vec_len(&dr_a);
-		exr -= s_ij * s_ij * at_i->znuc / r;
+		exr3 -= s_ij * s_ij * at_i->znuc / r;
 	}
 	for (size_t ii = 0; ii < fr_i->n_lmo; ii++) {
 		const vec_t *ct_ii = fr_i->lmo_centroids + ii;
@@ -507,11 +513,15 @@ lmo_lmo_xr_energy(struct frag *fr_i, struct frag *fr_j, size_t i, size_t j,
 		};
 
 		double r = vec_len(&dr_a);
-		exr += 2.0 * s_ij * s_ij / r;
+		exr3 += 2.0 * s_ij * s_ij / r;
 	}
-	exr -= s_ij * s_ij / r_ij;
+	exr3 -= s_ij * s_ij / r_ij;
+    //exr += exr3;
 
-	return 2.0 * exr;
+    printf("frag1 %s, frag2 %s, i=%zu, j=%zu, exr1=%2.10lf, exr2=%2.10lf, exr3=%2.10lf, sij=%2.8lf \n", fr_i->name, fr_j->name, i, j, exr1, exr2, exr3, s_ij);
+
+    exr += exr1 + exr2 + exr3;
+    return 2.0 * exr;
 }
 
 void
