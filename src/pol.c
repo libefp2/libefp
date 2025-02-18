@@ -959,8 +959,7 @@ efp_compute_pol_energy(struct efp *efp, double *energy)
 
 	assert(energy);
 
-    printf("\nin efp_compute_pol_energy\n");
-	// counter to know when to zero out induced dipoles and static field
+ 	// counter to know when to zero out induced dipoles and static field
 	// need to be explored further
 	static int counter = 0;
 
@@ -1290,8 +1289,6 @@ efp_compute_pol(struct efp *efp)
 	if (!(efp->opts.terms & EFP_TERM_POL) &&
 	    !(efp->opts.terms & EFP_TERM_AI_POL))
 		return EFP_RESULT_SUCCESS;
-
-    printf("\nin efp_compute_pol\n");
 
 	// this is standard non-symmetric case
 	if (! efp->opts.symmetry) {
