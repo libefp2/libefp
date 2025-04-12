@@ -1,0 +1,40 @@
+run_type md
+coord xyzabc
+ensemble nvt
+enable_torch true
+torch_nn ani1.pt
+special_fragment 1
+time_step 0.5
+max_steps 50
+fraglib_path ../fraglib
+
+fragment h2o_l
+   0.000   0.000   0.000   0.000   0.000   0.000
+velocity
+   0.0   0.0   5.0e-4  0.0   0.0   0.0
+
+fragment h2o_l
+   5.000   0.000   0.000   2.000   0.000   2.000
+velocity
+   0.0   0.0   -7.0e-4  0.0   0.0   0.0
+
+fragment nh3_l
+   0.000   5.000   0.000   5.000   0.000  -3.000
+velocity
+   0.0   0.0   1.0e-4  0.0   0.0   0.0
+
+fragment nh3_l
+   0.000   0.000   5.000   8.000   0.000   4.000
+velocity
+   0.0   0.0   -5.0e-4  0.0   0.0   0.0
+
+fragment h2o_l
+   5.000   5.000   0.000   2.000   0.000   5.000
+velocity
+   0.0   0.0   -3.0e-4  0.0   0.0   0.0
+
+fragment nh3_l
+   0.000   5.000   5.000   1.000   0.000  -2.000
+velocity
+   0.0   0.0   7.0e-4  0.0   0.0   0.0
+

@@ -1,0 +1,933 @@
+EFPMD ver. 2.0.0
+Copyright (c) 2012-2017 Ilya Kaliman, 2017-2024 Lyudmila Slipchenko
+
+LIBEFP ver. 2.0.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 32 OPENMP THREADS EACH
+WALL CLOCK TIME IS Thu Apr 10 15:55:25 2025
+
+SIMULATION SETTINGS
+
+run_type md
+coord xyzabc
+terms elec pol disp xr
+special_terms elec pol disp xr
+elec_damp screen
+disp_damp overlap
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /../fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 10
+max_steps 20
+multistep_steps 1
+fraglib_path ../fraglib
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0003
+opt_energy_tol 1e-06
+gtest_tol 1e-06
+ref_energy 0
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+ensemble nve
+time_step 1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+enable_pairwise false
+print_pbc false
+symmetry false
+special_fragment 1
+enable_torch true
+enable_elpot false
+opt_special_frag 0
+torch_nn ani1.pt
+ml_path ../nnlib/
+userml_path .
+custom_nn custom_model_script.pt
+aev_nn aev_scripted.pt
+atom_gradient frag
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+Chosen nn_type: ani1.pt
+The location of NN potential is: ../nnlib/
+Model loaded from: ../nnlib/ANI1x_saved2.pt
+
+MOLECULAR DYNAMICS JOB
+
+
+Inside md_create(), Torch enabled
+In md_create(), (body->atoms[i]).atom_velo     0.0000000000     0.0000000000     0.0000000000
+In md_create(), (body->atoms[i]).atom_velo     0.0000000000     0.0000000000     0.0000000000
+In md_create(), (body->atoms[i]).atom_velo     0.0000000000     0.0000000000     0.0000000000
+In md_create(), (body->atoms[i]).atom_velo     0.0000000000     0.0000000000     0.0000000000
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+tG_double Gradients:
+    0.0000000291	    0.0000000000	    0.0208413518	
+    0.0071584740	    0.0123988375	   -0.0069471130	
+    0.0071584730	   -0.0123988384	   -0.0069471130	
+   -0.0143169766	    0.0000000005	   -0.0069471253	
+
+Torch gradient in energy.c
+0.000000 0.000000 0.020841 0.007158 0.012399 -0.006947 0.007158 -0.012399 -0.006947 -0.014317 0.000000 -0.006947 
+EFP fragment atomic gradient
+-0.000042 0.003309 -0.006793 0.000006 -0.000389 -0.001902 0.000011 -0.000389 0.000953 0.000008 -0.000393 -0.000518 
+
+====Torch grad + EFP grad ===
+-0.000042 0.003309 0.014048 0.007164 0.012010 -0.008849 0.007169 -0.012787 -0.005994 -0.014309 -0.000393 -0.007465 
+=================================
+    INITIAL STATE
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.063030     0.000000
+A02H2               -0.752652    -0.500166     0.000000
+A03H3                0.752652    -0.500166     0.000000
+A01N1                0.000000     0.000000     2.936823
+A02H2               -0.466791    -0.808506     3.292603
+A03H3               -0.466791     0.808506     3.292603
+A04H4                0.933582     0.000000     3.292603
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0000000000
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0000000000
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0000000000
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0031553188
+           POLARIZATION ENERGY    -0.0008033101
+             DISPERSION ENERGY    -0.0024607598
+     EXCHANGE REPULSION ENERGY     0.0067906511
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -56.5279306158
+
+                  TOTAL ENERGY   -56.5212487158
+
+
+                KINETIC ENERGY     0.0000000000
+                     INVARIANT   -56.5212487158
+               TEMPERATURE (K)     0.0000000000
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+body->mass 32831.2424303993
+Full position update.. will update special fragment
+special_atom-mass    14.0030700000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0000000343    -0.0000026797    -0.0000113759
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000806058    -0.0001351338     0.0000995634
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000806642     0.0001438767     0.0000674395
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0001609956     0.0000044220     0.0000839969
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+tG_double Gradients:
+   -0.0000000027	    0.0000077649	    0.0173101007	
+    0.0050994876	    0.0088299712	   -0.0057737382	
+    0.0050996222	   -0.0088352090	   -0.0057662175	
+   -0.0101991073	   -0.0000025268	   -0.0057701464	
+
+Torch gradient in energy.c
+-0.000000 0.000008 0.017310 0.005099 0.008830 -0.005774 0.005100 -0.008835 -0.005766 -0.010199 -0.000003 -0.005770 
+EFP fragment atomic gradient
+-0.000036 0.003317 -0.006783 0.000004 -0.000389 -0.001901 0.000010 -0.000388 0.000951 0.000007 -0.000394 -0.000513 
+
+====Torch grad + EFP grad ===
+-0.000036 0.003325 0.010527 0.005103 0.008441 -0.007675 0.005110 -0.009223 -0.004815 -0.010192 -0.000396 -0.006284 
+=================================
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0000000636    -0.0000053722    -0.0000199007
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0001380270    -0.0002301090     0.0001859178
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0001381587     0.0002476471     0.0001216189
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0002756704     0.0000088812     0.0001546962
+    STATE AFTER 1 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063059    -0.000212
+A02H2               -0.752653    -0.500135     0.000663
+A03H3                0.752651    -0.500137     0.000664
+A01N1                0.000001    -0.000059     2.936574
+A02H2               -0.468555    -0.811462     3.294781
+A03H3               -0.468556     0.811654     3.294079
+A04H4                0.937105     0.000097     3.294441
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.467350e-07   2.946340e-05  -1.137743e-04  -3.141199e+00   1.554304e-03   3.141198e+00
+velocity
+  -2.057864e-08   2.698487e-06  -1.039275e-05  -7.533524e-05  -1.395561e-08  -6.594396e-08
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0000247622
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0000247622
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0000247622
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0031453357
+           POLARIZATION ENERGY    -0.0008028541
+             DISPERSION ENERGY    -0.0024594226
+     EXCHANGE REPULSION ENERGY     0.0067850972
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -56.5282502849
+
+                  TOTAL ENERGY   -56.5215821286
+
+
+                KINETIC ENERGY     0.0002950112
+                     INVARIANT   -56.5212871174
+               TEMPERATURE (K)    31.0523911799
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+body->mass 32831.2424303993
+Full position update.. will update special fragment
+special_atom-mass    14.0030700000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0000000929    -0.0000080647    -0.0000284255
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0001954482    -0.0003250842     0.0002722721
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0001956532     0.0003514174     0.0001757984
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0003903451     0.0000133403     0.0002253956
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+tG_double Gradients:
+    0.0000001055	    0.0000196360	    0.0088825054	
+    0.0004199055	    0.0007214779	   -0.0029610358	
+    0.0004217197	   -0.0007356097	   -0.0029605168	
+   -0.0008417306	   -0.0000055045	   -0.0029609532	
+
+Torch gradient in energy.c
+0.000000 0.000020 0.008883 0.000420 0.000721 -0.002961 0.000422 -0.000736 -0.002961 -0.000842 -0.000006 -0.002961 
+EFP fragment atomic gradient
+-0.000018 0.003342 -0.006751 -0.000001 -0.000391 -0.001902 0.000009 -0.000386 0.000946 0.000004 -0.000397 -0.000499 
+
+====Torch grad + EFP grad ===
+-0.000017 0.003362 0.002131 0.000419 0.000331 -0.004863 0.000431 -0.001121 -0.002015 -0.000838 -0.000403 -0.003460 
+=================================
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0000001070    -0.0000107872    -0.0000301515
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0002001631    -0.0003288054     0.0003269840
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0002005007     0.0003640356     0.0001984648
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0003997694     0.0000178695     0.0002643232
+    STATE AFTER 2 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063147    -0.000847
+A02H2               -0.752656    -0.500034     0.002660
+A03H3                0.752648    -0.500042     0.002662
+A01N1                0.000003    -0.000235     2.935952
+A02H2               -0.472830    -0.818574     3.300738
+A03H3               -0.472836     0.819342     3.297924
+A04H4                0.945644     0.000389     3.299372
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -9.003942e-07   1.180691e-04  -4.547225e-04  -3.141411e+00   6.228925e-03   3.141406e+00
+velocity
+  -3.311875e-08   5.415680e-06  -2.075108e-05  -1.512036e-04   3.651396e-08  -1.598264e-07
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0000996034
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0000996034
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0000996034
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0031120508
+           POLARIZATION ENERGY    -0.0008006828
+             DISPERSION ENERGY    -0.0024554181
+     EXCHANGE REPULSION ENERGY     0.0067684425
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -56.5286481161
+
+                  TOTAL ENERGY   -56.5220237237
+
+
+                KINETIC ENERGY     0.0007033298
+                     INVARIANT   -56.5213203939
+               TEMPERATURE (K)    74.0313313029
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+body->mass 32831.2424303993
+Full position update.. will update special fragment
+special_atom-mass    14.0030700000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0000001211    -0.0000135098    -0.0000318775
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0002048780    -0.0003325266     0.0003816959
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0002053482     0.0003766537     0.0002211312
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0004091936     0.0000223987     0.0003032507
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+tG_double Gradients:
+    0.0000012528	    0.0000198890	    0.0002969570	
+   -0.0040851705	   -0.0070792203	   -0.0000677837	
+   -0.0040780956	    0.0070617286	   -0.0001303039	
+    0.0081620136	   -0.0000023973	   -0.0000988694	
+
+Torch gradient in energy.c
+0.000001 0.000020 0.000297 -0.004085 -0.007079 -0.000068 -0.004078 0.007062 -0.000130 0.008162 -0.000002 -0.000099 
+EFP fragment atomic gradient
+0.000014 0.003388 -0.006698 -0.000009 -0.000396 -0.001908 0.000007 -0.000385 0.000944 -0.000001 -0.000405 -0.000475 
+
+====Torch grad + EFP grad ===
+0.000015 0.003407 -0.006401 -0.004094 -0.007476 -0.001976 -0.004071 0.006676 0.000813 0.008161 -0.000407 -0.000574 
+=================================
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0000001090    -0.0000162691    -0.0000266942
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0001588142    -0.0002484159     0.0004039240
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0001595436     0.0003015351     0.0002119793
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0003173687     0.0000269801     0.0003097053
+    STATE AFTER 3 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063290    -0.001908
+A02H2               -0.752661    -0.499839     0.006010
+A03H3                0.752643    -0.499861     0.006007
+A01N1                0.000005    -0.000531     2.935254
+A02H2               -0.477313    -0.825849     3.309088
+A03H3               -0.477329     0.827582     3.302762
+A04H4                0.954596     0.000879     3.306006
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.695807e-06   2.664201e-04  -1.021714e-03   3.141413e+00   1.405623e-02  -3.141427e+00
+velocity
+  -2.937534e-08   8.166981e-06  -3.104018e-05  -2.280274e-04   2.187061e-07  -3.085985e-07
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0002260095
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0002260095
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0002260095
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0030479413
+           POLARIZATION ENERGY    -0.0007949593
+             DISPERSION ENERGY    -0.0024487680
+     EXCHANGE REPULSION ENERGY     0.0067407064
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -56.5285215661
+
+                  TOTAL ENERGY   -56.5219766457
+
+
+                KINETIC ENERGY     0.0006846776
+                     INVARIANT   -56.5212919680
+               TEMPERATURE (K)    72.0680358794
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+body->mass 32831.2424303993
+Full position update.. will update special fragment
+special_atom-mass    14.0030700000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0000000969    -0.0000190285    -0.0000215109
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0001127505    -0.0001643052     0.0004261522
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0001137389     0.0002264164     0.0002028274
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0002255438     0.0000315614     0.0003161599
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+tG_double Gradients:
+    0.0000040708	    0.0000126793	   -0.0059005860	
+   -0.0067509190	   -0.0116891250	    0.0020573735	
+   -0.0067327762	    0.0116696797	    0.0018762744	
+    0.0134796239	    0.0000067655	    0.0019669381	
+
+Torch gradient in energy.c
+0.000004 0.000013 -0.005901 -0.006751 -0.011689 0.002057 -0.006733 0.011670 0.001876 0.013480 0.000007 0.001967 
+EFP fragment atomic gradient
+0.000057 0.003455 -0.006623 -0.000020 -0.000408 -0.001924 0.000004 -0.000388 0.000949 -0.000008 -0.000419 -0.000442 
+
+====Torch grad + EFP grad ===
+0.000061 0.003468 -0.012523 -0.006771 -0.012097 0.000133 -0.006728 0.011281 0.002825 0.013472 -0.000412 0.001525 
+=================================
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0000000472    -0.0000218364    -0.0000113697
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000365670    -0.0000281995     0.0004246523
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000380345     0.0000994829     0.0001710394
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0000739662     0.0000361989     0.0002990005
+    STATE AFTER 4 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063486    -0.003394
+A02H2               -0.752670    -0.499510     0.010744
+A03H3                0.752634    -0.499557     0.010719
+A01N1                0.000008    -0.000947     2.934784
+A02H2               -0.479779    -0.829443     3.318411
+A03H3               -0.479817     0.832535     3.307199
+A04H4                0.959530     0.001569     3.312923
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.185678e-06   4.754058e-04  -1.812849e-03   3.140901e+00   2.508286e-02  -3.140932e+00
+velocity
+  -1.140246e-09   1.096320e-05  -4.122481e-05  -3.060749e-04   6.026472e-07  -5.366236e-07
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0004060081
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0004060081
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0004060081
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0029457444
+           POLARIZATION ENERGY    -0.0007839411
+             DISPERSION ENERGY    -0.0024395106
+     EXCHANGE REPULSION ENERGY     0.0067019319
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -56.5281788431
+
+                  TOTAL ENERGY   -56.5217546184
+
+
+                KINETIC ENERGY     0.0005039884
+                     INVARIANT   -56.5212506300
+               TEMPERATURE (K)    53.0489842753
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+body->mass 32831.2424303993
+Full position update.. will update special fragment
+special_atom-mass    14.0030700000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000000025    -0.0000246444    -0.0000012286
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0000396165     0.0001079062     0.0004231524
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0000376698    -0.0000274506     0.0001392513
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000776113     0.0000408364     0.0002818411
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+tG_double Gradients:
+    0.0000080135	    0.0000339710	   -0.0075497853	
+   -0.0067822534	   -0.0117428311	    0.0026658872	
+   -0.0067451912	    0.0116978097	    0.0023682744	
+    0.0135194312	    0.0000110505	    0.0025156236	
+
+Torch gradient in energy.c
+0.000008 0.000034 -0.007550 -0.006782 -0.011743 0.002666 -0.006745 0.011698 0.002368 0.013519 0.000011 0.002516 
+EFP fragment atomic gradient
+0.000112 0.003545 -0.006526 -0.000034 -0.000426 -0.001953 0.000001 -0.000395 0.000965 -0.000017 -0.000441 -0.000401 
+
+====Torch grad + EFP grad ===
+0.000120 0.003579 -0.014076 -0.006817 -0.012169 0.000713 -0.006744 0.011303 0.003333 0.013503 -0.000430 0.002115 
+=================================
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000000996    -0.0000275428     0.0000101699
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0001163143     0.0002448226     0.0004151270
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0001135509    -0.0001546208     0.0001017458
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0002295373     0.0000456698     0.0002580473
+    STATE AFTER 5 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000002     0.063727    -0.005306
+A02H2               -0.752683    -0.498987     0.016896
+A03H3                0.752621    -0.499078     0.016819
+A01N1                0.000007    -0.001486     2.934757
+A02H2               -0.478913    -0.827083     3.327668
+A03H3               -0.478993     0.831934     3.310246
+A04H4                0.957832     0.002462     3.319088
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.745697e-06   7.461021e-04  -2.825457e-03   3.140237e+00   3.936338e-02  -3.140296e+00
+velocity
+   5.912388e-08   1.381131e-05  -5.126959e-05  -3.854864e-04   1.258194e-06  -8.636334e-07
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0006418253
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0006418253
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0006418253
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0028008613
+           POLARIZATION ENERGY    -0.0007666501
+             DISPERSION ENERGY    -0.0024277063
+     EXCHANGE REPULSION ENERGY     0.0066522303
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -56.5282292984
+
+                  TOTAL ENERGY   -56.5219705632
+
+
+                KINETIC ENERGY     0.0007124928
+                     INVARIANT   -56.5212580704
+               TEMPERATURE (K)    74.9958104595
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+body->mass 32831.2424303993
+Full position update.. will update special fragment
+special_atom-mass    14.0030700000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000001968    -0.0000304413     0.0000215684
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0001930122     0.0003817391     0.0004071016
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0001894320    -0.0002817911     0.0000642403
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0003814632     0.0000505032     0.0002342534
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+tG_double Gradients:
+    0.0000146214	    0.0001432028	   -0.0041296663	
+   -0.0041734769	   -0.0072493178	    0.0015355212	
+   -0.0041073185	    0.0071146354	    0.0012215378	
+    0.0082661732	   -0.0000085202	    0.0013726073	
+
+Torch gradient in energy.c
+0.000015 0.000143 -0.004130 -0.004173 -0.007249 0.001536 -0.004107 0.007115 0.001222 0.008266 -0.000009 0.001373 
+EFP fragment atomic gradient
+0.000176 0.003659 -0.006408 -0.000052 -0.000452 -0.001993 -0.000003 -0.000407 0.000993 -0.000027 -0.000470 -0.000353 
+
+====Torch grad + EFP grad ===
+0.000191 0.003802 -0.010538 -0.004226 -0.007701 -0.000457 -0.004110 0.006708 0.002214 0.008239 -0.000479 0.001020 
+=================================
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000003516    -0.0000335201     0.0000301019
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0002405554     0.0004683884     0.0004122470
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0002356743    -0.0003572667     0.0000393241
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0004741626     0.0000558872     0.0002227786
+    STATE AFTER 6 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000007     0.064008    -0.007644
+A02H2               -0.752702    -0.498195     0.024505
+A03H3                0.752602    -0.498356     0.024327
+A01N1                0.000003    -0.002152     2.935229
+A02H2               -0.474690    -0.818731     3.336574
+A03H3               -0.474849     0.825770     3.311651
+A04H4                0.949487     0.003567     3.324213
+
+
+    RESTART DATA
+
+fragment H2O_L
+   4.012179e-07   1.079703e-03  -4.056090e-03   3.139422e+00   5.695606e-02  -3.139525e+00
+velocity
+   1.576897e-07   1.671625e-05  -6.113887e-05  -4.663390e-04   2.252267e-06  -1.303147e-06
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0009357575
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0009357575
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0009357575
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0026119514
+           POLARIZATION ENERGY    -0.0007432331
+             DISPERSION ENERGY    -0.0024134430
+     EXCHANGE REPULSION ENERGY     0.0065918234
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -56.5286932591
+
+                  TOTAL ENERGY   -56.5226461604
+
+
+                KINETIC ENERGY     0.0013292440
+                     INVARIANT   -56.5213169164
+               TEMPERATURE (K)   139.9140267357
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+body->mass 32831.2424303993
+Full position update.. will update special fragment
+special_atom-mass    14.0030700000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000005063    -0.0000365989     0.0000386353
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0002880987     0.0005550376     0.0004173925
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0002819165    -0.0004327424     0.0000144080
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0005668621     0.0000612712     0.0002113038
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+tG_double Gradients:
+    0.0000255234	    0.0003967622	    0.0032115577	
+    0.0002855110	    0.0004040628	   -0.0009975749	
+    0.0003914252	   -0.0007294318	   -0.0011350780	
+   -0.0007024595	   -0.0000713933	   -0.0010789049	
+
+Torch gradient in energy.c
+0.000026 0.000397 0.003212 0.000286 0.000404 -0.000998 0.000391 -0.000729 -0.001135 -0.000702 -0.000071 -0.001079 
+EFP fragment atomic gradient
+0.000249 0.003793 -0.006269 -0.000073 -0.000484 -0.002041 -0.000006 -0.000421 0.001030 -0.000039 -0.000506 -0.000299 
+
+====Torch grad + EFP grad ===
+0.000274 0.004190 -0.003057 0.000213 -0.000080 -0.003038 0.000385 -0.001150 -0.000105 -0.000742 -0.000577 -0.001378 
+=================================
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000007284    -0.0000399916     0.0000411109
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0002857043     0.0005559423     0.0004515781
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0002775826    -0.0004198028     0.0000155858
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0005585143     0.0000677656     0.0002268040
+    STATE AFTER 7 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000015     0.064316    -0.010407
+A02H2               -0.752727    -0.497036     0.033607
+A03H3                0.752577    -0.497305     0.033260
+A01N1               -0.000008    -0.002953     2.936074
+A02H2               -0.468387    -0.806589     3.345706
+A03H3               -0.468681     0.816303     3.311966
+A04H4                0.937086     0.004908     3.328836
+
+
+    RESTART DATA
+
+fragment H2O_L
+   5.153830e-06   1.477502e-03  -5.500516e-03   3.138458e+00   7.792190e-02  -3.138628e+00
+velocity
+   2.992890e-07   1.968312e-05  -7.079607e-05  -5.487292e-04   3.648178e-06  -1.861854e-06
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0012903301
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0012903301
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0012903301
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0023803184
+           POLARIZATION ENERGY    -0.0007149534
+             DISPERSION ENERGY    -0.0023968406
+     EXCHANGE REPULSION ENERGY     0.0065210821
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -56.5289619308
+
+                  TOTAL ENERGY   -56.5231723243
+
+
+                KINETIC ENERGY     0.0018042551
+                     INVARIANT   -56.5213680692
+               TEMPERATURE (K)   189.9129072076
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+body->mass 32831.2424303993
+Full position update.. will update special fragment
+special_atom-mass    14.0030700000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000009505    -0.0000433842     0.0000435865
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0002833099     0.0005568470     0.0004857637
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0002732487    -0.0004068631     0.0000167636
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0005501665     0.0000742600     0.0002423041
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+tG_double Gradients:
+    0.0000464470	    0.0008027641	    0.0109644303	
+    0.0050758769	    0.0085894659	   -0.0037646441	
+    0.0052401579	   -0.0092156104	   -0.0035312204	
+   -0.0103624820	   -0.0001766204	   -0.0036685658	
+
+Torch gradient in energy.c
+0.000046 0.000803 0.010964 0.005076 0.008589 -0.003765 0.005240 -0.009216 -0.003531 -0.010362 -0.000177 -0.003669 
+EFP fragment atomic gradient
+0.000325 0.003941 -0.006107 -0.000096 -0.000522 -0.002089 -0.000009 -0.000435 0.001073 -0.000052 -0.000545 -0.000241 
+
+====Torch grad + EFP grad ===
+0.000372 0.004744 0.004858 0.004980 0.008068 -0.005853 0.005231 -0.009650 -0.002458 -0.010415 -0.000722 -0.003910 
+=================================
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000012514    -0.0000472259     0.0000396526
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0002272756     0.0004660707     0.0005516234
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0002143944    -0.0002982834     0.0000444230
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0004329826     0.0000823812     0.0002862918
+    STATE AFTER 8 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000029     0.064641    -0.013592
+A02H2               -0.752759    -0.495395     0.044243
+A03H3                0.752544    -0.495823     0.043631
+A01N1               -0.000029    -0.003902     2.937028
+A02H2               -0.462189    -0.794407     3.356333
+A03H3               -0.462703     0.807402     3.312333
+A04H4                0.925050     0.006532     3.334137
+
+
+    RESTART DATA
+
+fragment H2O_L
+   1.349626e-05   1.940915e-03  -7.153689e-03   3.137351e+00   1.023272e-01  -3.137615e+00
+velocity
+   4.868124e-07   2.271900e-05  -8.020296e-05  -6.328445e-04   5.504247e-06  -2.538630e-06
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0017087072
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0017087072
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0017087072
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0021084666
+           POLARIZATION ENERGY    -0.0006838580
+             DISPERSION ENERGY    -0.0023780583
+     EXCHANGE REPULSION ENERGY     0.0064405942
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -56.5286536835
+
+                  TOTAL ENERGY   -56.5231665390
+
+
+                KINETIC ENERGY     0.0018088977
+                     INVARIANT   -56.5213576413
+               TEMPERATURE (K)   190.4015842853
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+body->mass 32831.2424303993
+Full position update.. will update special fragment
+special_atom-mass    14.0030700000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000015522    -0.0000510677     0.0000357187
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0001712412     0.0003752945     0.0006174832
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0001555401    -0.0001897036     0.0000720824
+special_atom-mass     1.0078250000
+In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0003157988     0.0000905024     0.0003302795
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+tG_double Gradients:
+    0.0000672298	    0.0011143362	    0.0136626046	
+    0.0074240158	    0.0125506019	   -0.0048359817	
+    0.0076093606	   -0.0133920472	   -0.0042566767	
+   -0.0151006055	   -0.0002728907	   -0.0045699461	
+
+Torch gradient in energy.c
+0.000067 0.001114 0.013663 0.007424 0.012551 -0.004836 0.007609 -0.013392 -0.004257 -0.015101 -0.000273 -0.004570 
+EFP fragment atomic gradient
+0.000399 0.004094 -0.005921 -0.000119 -0.000559 -0.002127 -0.000011 -0.000445 0.001115 -0.000065 -0.000583 -0.000184 
+
+====Torch grad + EFP grad ===
+0.000466 0.005209 0.007742 0.007305 0.011991 -0.006963 0.007598 -0.013837 -0.003142 -0.015166 -0.000856 -0.004754 
+=================================
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000019297    -0.0000552856     0.0000294497
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0000890502     0.0002403736     0.0006958263
+In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0000700481    -0.0000340155     0.0001074305
+In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0001451636     0.0001001364     0.0003837634
+    STATE AFTER 9 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000048     0.064968    -0.017196
+A02H2               -0.752798    -0.493130     0.056450
+A03H3                0.752505    -0.493785     0.055453
+A01N1               -0.000063    -0.005019     2.937809
+A02H2               -0.458443    -0.786197     3.369841
+A03H3               -0.459301     0.803252     3.313910
+A04H4                0.918141     0.008512     3.341362
+
+
+    RESTART DATA
+
+fragment H2O_L
+   2.645373e-05   2.471545e-03  -9.009703e-03   3.136104e+00   1.302487e-01  -3.136496e+00
+velocity
+   7.205823e-07   2.583345e-05  -8.931953e-05  -7.189971e-04   7.867680e-06  -3.321777e-06
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0021951743
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0021951743
+Inside get_kinetic_energy(), Torch enabled
+regular ke =     0.0021951743
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0017983402
+           POLARIZATION ENERGY    -0.0006521707
+             DISPERSION ENERGY    -0.0023573139
+     EXCHANGE REPULSION ENERGY     0.0063513703
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -56.5283124283
+
+                  TOTAL ENERGY   -56.5231722023
+
+
+                KINETIC ENERGY     0.0018328459
+                     INVARIANT   -56.5213393565
+               TEMPERATURE (K)   192.9223234569
+
+

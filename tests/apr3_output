@@ -1,0 +1,1391 @@
+EFPMD ver. 2.0.0
+Copyright (c) 2012-2017 Ilya Kaliman, 2017-2024 Lyudmila Slipchenko
+
+LIBEFP ver. 2.0.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 32 OPENMP THREADS EACH
+WALL CLOCK TIME IS Thu Apr  3 13:40:30 2025
+
+SIMULATION SETTINGS
+
+run_type md
+coord xyzabc
+terms elec pol disp xr
+special_terms elec pol disp xr
+elec_damp screen
+disp_damp overlap
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /../fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 10
+max_steps 20
+multistep_steps 1
+fraglib_path ../fraglib
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0003
+opt_energy_tol 1e-06
+gtest_tol 1e-06
+ref_energy 0
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+ensemble nve
+time_step 1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+enable_pairwise false
+print_pbc false
+symmetry false
+special_fragment 0
+enable_torch true
+enable_elpot false
+opt_special_frag 0
+torch_nn ani1.pt
+ml_path ../nnlib/
+userml_path .
+custom_nn custom_model_script.pt
+aev_nn aev_scripted.pt
+atom_gradient frag
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+Chosen nn_type: ani1.pt
+The location of NN potential is: ../nnlib/
+Model loaded from: ../nnlib/ANI1x_saved2.pt
+
+MOLECULAR DYNAMICS JOB
+
+
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.063030         0.000000
+   1         -0.752652         -0.500166         0.000000
+   1          0.752652         -0.500166         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000         -0.039631         0.000000
+   1          0.020252          0.019816         0.000000
+   1         -0.020252          0.019816         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.387024 
+
+    0.0000001299	   -0.0398944351	    0.0017629673	
+    0.0202521970	    0.0197986297	   -0.0007728474	
+   -0.0202513780	    0.0197997025	   -0.0007729637	
+    INITIAL STATE
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.063030     0.000000
+A02H2               -0.752652    -0.500166     0.000000
+A03H3                0.752652    -0.500166     0.000000
+A01N1                0.000000     0.000000     4.936823
+A02H2               -0.466791    -0.808506     5.292603
+A03H3               -0.466791     0.808506     5.292603
+A04H4                0.933582     0.000000     5.292603
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   5.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00  -6.168510e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006047186
+           POLARIZATION ENERGY    -0.0000255683
+             DISPERSION ENERGY    -0.0001028155
+     EXCHANGE REPULSION ENERGY     0.0000169443
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.3870240109
+
+                  TOTAL ENERGY   -76.3865307319
+
+
+                KINETIC ENERGY     0.0114873044
+                     INVARIANT   -76.3750434274
+               TEMPERATURE (K)   604.5673321113
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+Fragment NH3_L
+ Atom A01N1 0.000000 0.000000 9.329243
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882108 -1.527855 10.001570
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882108 1.527855 10.001570
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764215 0.000000 10.001571
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+ Before     0.0000000000     0.0630300216     0.0000000000
+ After    -0.0000036715     1.1909322517    -0.0498429090
+ Diff     0.0000036715    -1.1279022300     0.0498429090
+
+ Before    -0.7526519047    -0.5001659628     0.0000000000
+ After    -9.8398072701    -9.3838057994     0.3467764019
+ Diff     9.0871553654     8.8836398366    -0.3467764019
+
+ Before     0.7526519047    -0.5001659628     0.0000000000
+ After     9.8394397522    -9.3842871353     0.3468286240
+ Diff    -9.0867878475     8.8841211725    -0.3468286240
+
+Updating fragment using update_special_fragment routine()
+==================================================
+ ML/MD GEOMETRY TEST (ANGSTROMS)
+
+A01O1               -0.000004     1.190932    -0.049843
+A02H2               -9.839807    -9.383806     0.346776
+A03H3                9.839440    -9.384287     0.346829
+A01N1                0.000000     0.000000     4.936823
+A02H2               -0.466791    -0.808506     5.292603
+A03H3               -0.466791     0.808506     5.292603
+A04H4                0.933582     0.000000     5.292603
+
+
+==================================================
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.000004          1.190932        -0.049843
+   1         -9.839807         -9.383806         0.346776
+   1          9.839440         -9.384287         0.346829
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.408226 
+
+    0.0000162859	   -0.0002510446	    0.0005899880	
+    0.0000003765	   -0.0000170546	   -0.0000119105	
+    0.0000003765	   -0.0000184206	   -0.0000160917	
+    STATE AFTER 1 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000004     1.190932    -0.049843
+A02H2               -9.839807    -9.383806     0.346776
+A03H3                9.839440    -9.384287     0.346829
+A01N1                0.000000    -0.000010     4.923331
+A02H2               -0.466791    -0.808484     5.279184
+A03H3               -0.466792     0.808528     5.279038
+A04H4                0.933582     0.000022     5.279112
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   1.382581e-08  -4.314167e-06   4.986508e+00  -3.133782e+00   9.061445e-05   3.133782e+00
+velocity
+   1.197971e-08  -3.880213e-07  -6.163321e-04  -3.895757e-06  -1.802424e-07  -5.592128e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0042665215
+           POLARIZATION ENERGY    -0.0002374910
+             DISPERSION ENERGY    -0.0001038432
+     EXCHANGE REPULSION ENERGY     0.0000174707
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.4082263321
+
+                  TOTAL ENERGY   -76.4042836740
+
+
+                KINETIC ENERGY     0.0114774571
+                     INVARIANT   -76.3928062168
+               TEMPERATURE (K)   604.0490780408
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+Fragment NH3_L
+ Atom A01N1 0.000000 -0.000019 9.303747
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882108 -1.527813 9.976213
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882108 1.527897 9.975936
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764215 0.000042 9.976076
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+ Before    -0.0000036715     1.1909322517    -0.0498429090
+ After    -0.0004641094     1.1980298262    -0.0665231484
+ Diff     0.0004604379    -0.0070975745     0.0166802394
+
+ Before    -9.8398072701    -9.3838057994     0.3467764019
+ After    -9.8399762013    -9.3761534148     0.3521206597
+ Diff     0.0001689311    -0.0076523846    -0.0053442578
+
+ Before     9.8394397522    -9.3842871353     0.3468286240
+ After     9.8392708310    -9.3760218260     0.3540489871
+ Diff     0.0001689211    -0.0082653093    -0.0072203631
+
+Updating fragment using update_special_fragment routine()
+==================================================
+ ML/MD GEOMETRY TEST (ANGSTROMS)
+
+A01O1               -0.000464     1.198030    -0.066523
+A02H2               -9.839976    -9.376153     0.352121
+A03H3                9.839271    -9.376022     0.354049
+A01N1                0.000000    -0.000010     4.923331
+A02H2               -0.466791    -0.808484     5.279184
+A03H3               -0.466792     0.808528     5.279038
+A04H4                0.933582     0.000022     5.279112
+
+
+==================================================
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.000464          1.198030        -0.066523
+   1         -9.839976         -9.376153         0.352121
+   1          9.839271         -9.376022         0.354049
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.408226 
+
+    0.0000162790	   -0.0002502036	    0.0005857023	
+    0.0000003752	   -0.0000170874	   -0.0000117846	
+    0.0000003756	   -0.0000184716	   -0.0000159330	
+    STATE AFTER 2 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000464     1.198030    -0.066523
+A02H2               -9.839976    -9.376153     0.352121
+A03H3                9.839271    -9.376022     0.354049
+A01N1                0.000001    -0.000037     4.909856
+A02H2               -0.466799    -0.808427     5.265890
+A03H3               -0.466791     0.808586     5.265369
+A04H4                0.933579     0.000073     5.265650
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   5.241581e-07  -1.697742e-05   4.973033e+00  -3.095362e+00   3.224565e-04   3.095357e+00
+velocity
+   3.466912e-08  -7.691562e-07  -6.155862e-04  -7.304004e-06  -5.066407e-07  -1.737128e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0042568934
+           POLARIZATION ENERGY    -0.0002366338
+             DISPERSION ENERGY    -0.0001037605
+     EXCHANGE REPULSION ENERGY     0.0000174256
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.4082263321
+
+                  TOTAL ENERGY   -76.4042924074
+
+
+                KINETIC ENERGY     0.0114634084
+                     INVARIANT   -76.3928289989
+               TEMPERATURE (K)   603.3097061866
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+Fragment NH3_L
+ Atom A01N1 0.000003 -0.000071 9.278283
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882122 -1.527705 9.951089
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882108 1.528005 9.950105
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764208 0.000138 9.950637
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+ Before    -0.0004641094     1.1980298262    -0.0665231484
+ After    -0.0009243511     1.2051036250    -0.0830822225
+ Diff     0.0004602417    -0.0070737989     0.0165590741
+
+ Before    -9.8399762013    -9.3761534148     0.3521206597
+ After    -9.8401445550    -9.3684862845     0.3574083904
+ Diff     0.0001683537    -0.0076671302    -0.0052877307
+
+ Before     9.8392708310    -9.3760218260     0.3540489871
+ After     9.8391022907    -9.3677336138     0.3611981027
+ Diff     0.0001685403    -0.0082882121    -0.0071491156
+
+Updating fragment using update_special_fragment routine()
+==================================================
+ ML/MD GEOMETRY TEST (ANGSTROMS)
+
+A01O1               -0.000924     1.205104    -0.083082
+A02H2               -9.840145    -9.368486     0.357408
+A03H3                9.839102    -9.367734     0.361198
+A01N1                0.000001    -0.000037     4.909856
+A02H2               -0.466799    -0.808427     5.265890
+A03H3               -0.466791     0.808586     5.265369
+A04H4                0.933579     0.000073     5.265650
+
+
+==================================================
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.000924          1.205104        -0.083082
+   1         -9.840145         -9.368486         0.357408
+   1          9.839102         -9.367734         0.361198
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.408226 
+
+    0.0000162806	   -0.0002494263	    0.0005814094	
+    0.0000003742	   -0.0000171215	   -0.0000116553	
+    0.0000003751	   -0.0000185239	   -0.0000157706	
+    STATE AFTER 3 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000924     1.205104    -0.083082
+A02H2               -9.840145    -9.368486     0.357408
+A03H3                9.839102    -9.367734     0.361198
+A01N1                0.000004    -0.000082     4.896397
+A02H2               -0.466814    -0.808334     5.252719
+A03H3               -0.466791     0.808678     5.251596
+A04H4                0.933572     0.000152     5.252217
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   1.530733e-06  -3.796769e-05   4.959574e+00  -3.080342e+00   6.958320e-04   3.080328e+00
+velocity
+   5.735256e-08  -1.149327e-06  -6.148456e-04  -1.071450e-05  -8.335238e-07  -2.924033e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0042473332
+           POLARIZATION ENERGY    -0.0002357933
+             DISPERSION ENERGY    -0.0001036874
+     EXCHANGE REPULSION ENERGY     0.0000173856
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.4082263321
+
+                  TOTAL ENERGY   -76.4043010940
+
+
+                KINETIC ENERGY     0.0114496083
+                     INVARIANT   -76.3928514857
+               TEMPERATURE (K)   602.5834141533
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+Fragment NH3_L
+ Atom A01N1 0.000008 -0.000155 9.252849
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882150 -1.527530 9.926200
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882107 1.528180 9.924078
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764194 0.000287 9.925252
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+ Before    -0.0009243511     1.2051036250    -0.0830822225
+ After    -0.0013846391     1.2121554486    -0.0995199281
+ Diff     0.0004602880    -0.0070518236     0.0164377056
+
+ Before    -9.8401445550    -9.3684862845     0.3574083904
+ After    -9.8403124664    -9.3608038755     0.3626381404
+ Diff     0.0001679114    -0.0076824091    -0.0052297501
+
+ Before     9.8391022907    -9.3677336138     0.3611981027
+ After     9.8389339997    -9.3594219528     0.3682743750
+ Diff     0.0001682910    -0.0083116610    -0.0070762723
+
+Updating fragment using update_special_fragment routine()
+==================================================
+ ML/MD GEOMETRY TEST (ANGSTROMS)
+
+A01O1               -0.001385     1.212155    -0.099520
+A02H2               -9.840312    -9.360804     0.362638
+A03H3                9.838934    -9.359422     0.368274
+A01N1                0.000004    -0.000082     4.896397
+A02H2               -0.466814    -0.808334     5.252719
+A03H3               -0.466791     0.808678     5.251596
+A04H4                0.933572     0.000152     5.252217
+
+
+==================================================
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.001385          1.212155        -0.099520
+   1         -9.840312         -9.360804         0.362638
+   1          9.838934         -9.359422         0.368274
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.408226 
+
+    0.0000162908	   -0.0002487120	    0.0005771080	
+    0.0000003735	   -0.0000171567	   -0.0000115228	
+    0.0000003748	   -0.0000185773	   -0.0000156046	
+    STATE AFTER 4 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.001385     1.212155    -0.099520
+A02H2               -9.840312    -9.360804     0.362638
+A03H3                9.838934    -9.359422     0.368274
+A01N1                0.000008    -0.000144     4.882954
+A02H2               -0.466836    -0.808206     5.239672
+A03H3               -0.466789     0.808805     5.237718
+A04H4                0.933561     0.000259     5.238813
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   3.033552e-06  -6.726486e-05   4.946131e+00  -3.072330e+00   1.210921e-03   3.072301e+00
+velocity
+   8.004219e-08  -1.528620e-06  -6.141104e-04  -1.413047e-05  -1.161236e-06  -4.120172e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0042378369
+           POLARIZATION ENERGY    -0.0002349692
+             DISPERSION ENERGY    -0.0001036238
+     EXCHANGE REPULSION ENERGY     0.0000173506
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.4082263321
+
+                  TOTAL ENERGY   -76.4043097375
+
+
+                KINETIC ENERGY     0.0114360570
+                     INVARIANT   -76.3928736805
+               TEMPERATURE (K)   601.8702214924
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+Fragment NH3_L
+ Atom A01N1 0.000016 -0.000271 9.227445
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882192 -1.527288 9.901545
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882104 1.528420 9.897853
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764175 0.000490 9.899921
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+ Before    -0.0013846391     1.2121554486    -0.0995199281
+ After    -0.0018452147     1.2191870776    -0.1158360224
+ Diff     0.0004605756    -0.0070316289     0.0163160942
+
+ Before    -9.8403124664    -9.3608038755     0.3626381404
+ After    -9.8404800694    -9.3531056812     0.3678084267
+ Diff     0.0001676031    -0.0076981943    -0.0051702863
+
+ Before     9.8389339997    -9.3594219528     0.3682743750
+ After     9.8387658273    -9.3510863260     0.3752761660
+ Diff     0.0001681724    -0.0083356268    -0.0070017910
+
+Updating fragment using update_special_fragment routine()
+==================================================
+ ML/MD GEOMETRY TEST (ANGSTROMS)
+
+A01O1               -0.001845     1.219187    -0.115836
+A02H2               -9.840480    -9.353106     0.367808
+A03H3                9.838766    -9.351086     0.375276
+A01N1                0.000008    -0.000144     4.882954
+A02H2               -0.466836    -0.808206     5.239672
+A03H3               -0.466789     0.808805     5.237718
+A04H4                0.933561     0.000259     5.238813
+
+
+==================================================
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.001845          1.219187        -0.115836
+   1         -9.840480         -9.353106         0.367808
+   1          9.838766         -9.351086         0.375276
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.408226 
+
+    0.0000163094	   -0.0002480601	    0.0005727964	
+    0.0000003731	   -0.0000171929	   -0.0000113869	
+    0.0000003748	   -0.0000186318	   -0.0000154349	
+    STATE AFTER 5 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.001845     1.219187    -0.115836
+A02H2               -9.840480    -9.353106     0.367808
+A03H3                9.838766    -9.351086     0.375276
+A01N1                0.000014    -0.000223     4.869527
+A02H2               -0.466866    -0.808042     5.226749
+A03H3               -0.466788     0.808967     5.223736
+A04H4                0.933547     0.000395     5.225437
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   5.032885e-06  -1.048507e-04   4.932704e+00  -3.067345e+00   1.868023e-03   3.067296e+00
+velocity
+   1.027502e-07  -1.907123e-06  -6.133805e-04  -1.755512e-05  -1.490120e-06  -5.325793e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0042284002
+           POLARIZATION ENERGY    -0.0002341610
+             DISPERSION ENERGY    -0.0001035697
+     EXCHANGE REPULSION ENERGY     0.0000173207
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.4082263321
+
+                  TOTAL ENERGY   -76.4043183419
+
+
+                KINETIC ENERGY     0.0114227555
+                     INVARIANT   -76.3928955865
+               TEMPERATURE (K)   601.1701746575
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+Fragment NH3_L
+ Atom A01N1 0.000026 -0.000421 9.202073
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882249 -1.526978 9.877123
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882101 1.528727 9.871431
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764148 0.000747 9.874644
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+ Before    -0.0018452147     1.2191870776    -0.1158360224
+ After    -0.0023063182     1.2262002739    -0.1320302201
+ Diff     0.0004611035    -0.0070131963     0.0161941978
+
+ Before    -9.8404800694    -9.3531056812     0.3678084267
+ After    -9.8406474976    -9.3453912218     0.3729177348
+ Diff     0.0001674281    -0.0077144594    -0.0051093081
+
+ Before     9.8387658273    -9.3510863260     0.3752761660
+ After     9.8385976437    -9.3427262451     0.3822017932
+ Diff     0.0001681836    -0.0083600809    -0.0069256273
+
+Updating fragment using update_special_fragment routine()
+==================================================
+ ML/MD GEOMETRY TEST (ANGSTROMS)
+
+A01O1               -0.002306     1.226200    -0.132030
+A02H2               -9.840647    -9.345391     0.372918
+A03H3                9.838598    -9.342726     0.382202
+A01N1                0.000014    -0.000223     4.869527
+A02H2               -0.466866    -0.808042     5.226749
+A03H3               -0.466788     0.808967     5.223736
+A04H4                0.933547     0.000395     5.225437
+
+
+==================================================
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.002306          1.226200        -0.132030
+   1         -9.840647         -9.345391         0.372918
+   1          9.838598         -9.342726         0.382202
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.408226 
+
+    0.0000163366	   -0.0002474698	    0.0005684732	
+    0.0000003730	   -0.0000172302	   -0.0000112476	
+    0.0000003751	   -0.0000186873	   -0.0000152613	
+    STATE AFTER 6 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.002306     1.226200    -0.132030
+A02H2               -9.840647    -9.345391     0.372918
+A03H3                9.838598    -9.342726     0.382202
+A01N1                0.000021    -0.000319     4.856116
+A02H2               -0.466903    -0.807842     5.213949
+A03H3               -0.466785     0.809165     5.209649
+A04H4                0.933529     0.000560     5.212089
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   7.529265e-06  -1.507088e-04   4.919294e+00  -3.063940e+00   2.667568e-03   3.063867e+00
+velocity
+   1.254886e-07  -2.284921e-06  -6.126559e-04  -2.099167e-05  -1.820519e-06  -6.541144e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0042190183
+           POLARIZATION ENERGY    -0.0002333684
+             DISPERSION ENERGY    -0.0001035252
+     EXCHANGE REPULSION ENERGY     0.0000172956
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.4082263321
+
+                  TOTAL ENERGY   -76.4043269117
+
+
+                KINETIC ENERGY     0.0114097052
+                     INVARIANT   -76.3929172066
+               TEMPERATURE (K)   600.4833471885
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+Fragment NH3_L
+ Atom A01N1 0.000039 -0.000602 9.176730
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882320 -1.526600 9.852936
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882096 1.529099 9.844809
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764115 0.001058 9.849421
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+ Before    -0.0023063182     1.2262002739    -0.1320302201
+ After    -0.0027681891     1.2331967824    -0.1481021912
+ Diff     0.0004618709    -0.0069965085     0.0160719711
+
+ Before    -9.8406474976    -9.3453912218     0.3729177348
+ After    -9.8408148835    -9.3376600437     0.3779645169
+ Diff     0.0001673859    -0.0077311781    -0.0050467821
+
+ Before     9.8385976437    -9.3427262451     0.3822017932
+ After     9.8384293196    -9.3343412500     0.3890495274
+ Diff     0.0001683241    -0.0083849951    -0.0068477341
+
+Updating fragment using update_special_fragment routine()
+==================================================
+ ML/MD GEOMETRY TEST (ANGSTROMS)
+
+A01O1               -0.002768     1.233197    -0.148102
+A02H2               -9.840815    -9.337660     0.377965
+A03H3                9.838429    -9.334341     0.389050
+A01N1                0.000021    -0.000319     4.856116
+A02H2               -0.466903    -0.807842     5.213949
+A03H3               -0.466785     0.809165     5.209649
+A04H4                0.933529     0.000560     5.212089
+
+
+==================================================
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.002768          1.233197        -0.148102
+   1         -9.840815         -9.337660         0.377965
+   1          9.838429         -9.334341         0.389050
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.408226 
+
+    0.0000163722	   -0.0002469407	    0.0005641366	
+    0.0000003732	   -0.0000172684	   -0.0000111047	
+    0.0000003757	   -0.0000187438	   -0.0000150837	
+    STATE AFTER 7 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.002768     1.233197    -0.148102
+A02H2               -9.840815    -9.337660     0.377965
+A03H3                9.838429    -9.334341     0.389050
+A01N1                0.000029    -0.000432     4.842721
+A02H2               -0.466948    -0.807605     5.201274
+A03H3               -0.466782     0.809397     5.195455
+A04H4                0.933508     0.000753     5.198770
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   1.052349e-05  -2.048247e-04   4.905898e+00  -3.061465e+00   3.610119e-03   3.061362e+00
+velocity
+   1.482694e-07  -2.662099e-06  -6.119367e-04  -2.444331e-05  -2.152776e-06  -7.766479e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0042096860
+           POLARIZATION ENERGY    -0.0002325909
+             DISPERSION ENERGY    -0.0001034902
+     EXCHANGE REPULSION ENERGY     0.0000172755
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.4082263321
+
+                  TOTAL ENERGY   -76.4043354517
+
+
+                KINETIC ENERGY     0.0113969079
+                     INVARIANT   -76.3929385438
+               TEMPERATURE (K)   599.8098399928
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+Fragment NH3_L
+ Atom A01N1 0.000054 -0.000817 9.151417
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882405 -1.526153 9.828983
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882090 1.529538 9.817987
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764075 0.001423 9.824251
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+ Before    -0.0027681891     1.2331967824    -0.1481021912
+ After    -0.0032310667     1.2401783315    -0.1640515577
+ Diff     0.0004628775    -0.0069815492     0.0159493665
+
+ Before    -9.8408148835    -9.3376600437     0.3779645169
+ After    -9.8409823593    -9.3299117191     0.3829471903
+ Diff     0.0001674758    -0.0077483246    -0.0049826734
+
+ Before     9.8384293196    -9.3343412500     0.3890495274
+ After     9.8382607265    -9.3259309086     0.3958175896
+ Diff     0.0001685932    -0.0084103414    -0.0067680622
+
+Updating fragment using update_special_fragment routine()
+==================================================
+ ML/MD GEOMETRY TEST (ANGSTROMS)
+
+A01O1               -0.003231     1.240178    -0.164052
+A02H2               -9.840982    -9.329912     0.382947
+A03H3                9.838261    -9.325931     0.395818
+A01N1                0.000029    -0.000432     4.842721
+A02H2               -0.466948    -0.807605     5.201274
+A03H3               -0.466782     0.809397     5.195455
+A04H4                0.933508     0.000753     5.198770
+
+
+==================================================
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.003231          1.240178        -0.164052
+   1         -9.840982         -9.329912         0.382947
+   1          9.838261         -9.325931         0.395818
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.408226 
+
+    0.0000164163	   -0.0002464722	    0.0005597849	
+    0.0000003737	   -0.0000173075	   -0.0000109582	
+    0.0000003766	   -0.0000188012	   -0.0000149021	
+    STATE AFTER 8 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.003231     1.240178    -0.164052
+A02H2               -9.840982    -9.329912     0.382947
+A03H3                9.838261    -9.325931     0.395818
+A01N1                0.000038    -0.000563     4.829342
+A02H2               -0.467001    -0.807331     5.188723
+A03H3               -0.466778     0.809663     5.181155
+A04H4                0.933484     0.000975     5.185479
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   1.401662e-05  -2.671858e-04   4.892519e+00  -3.059582e+00   4.696373e-03   3.059445e+00
+velocity
+   1.711048e-07  -3.038739e-06  -6.112229e-04  -2.791325e-05  -2.487235e-06  -9.002055e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0042003977
+           POLARIZATION ENERGY    -0.0002318282
+             DISPERSION ENERGY    -0.0001034648
+     EXCHANGE REPULSION ENERGY     0.0000172603
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.4082263321
+
+                  TOTAL ENERGY   -76.4043439672
+
+
+                KINETIC ENERGY     0.0113843663
+                     INVARIANT   -76.3929596009
+               TEMPERATURE (K)   599.1497817222
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+Fragment NH3_L
+ Atom A01N1 0.000072 -0.001064 9.126134
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882505 -1.525635 9.805266
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882083 1.530042 9.790964
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764029 0.001843 9.799135
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+ Before    -0.0032310667     1.2401783315    -0.1640515577
+ After    -0.0036951898     1.2471466348    -0.1798778910
+ Diff     0.0004641232    -0.0069683032     0.0158263333
+
+ Before    -9.8409823593    -9.3299117191     0.3829471903
+ After    -9.8411500569    -9.3221458460     0.3878641354
+ Diff     0.0001676975    -0.0077658731    -0.0049169451
+
+ Before     9.8382607265    -9.3259309086     0.3958175896
+ After     9.8380917360    -9.3174948162     0.4025041494
+ Diff     0.0001689905    -0.0084360924    -0.0066865597
+
+Updating fragment using update_special_fragment routine()
+==================================================
+ ML/MD GEOMETRY TEST (ANGSTROMS)
+
+A01O1               -0.003695     1.247147    -0.179878
+A02H2               -9.841150    -9.322146     0.387864
+A03H3                9.838092    -9.317495     0.402504
+A01N1                0.000038    -0.000563     4.829342
+A02H2               -0.467001    -0.807331     5.188723
+A03H3               -0.466778     0.809663     5.181155
+A04H4                0.933484     0.000975     5.185479
+
+
+==================================================
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.003695          1.247147        -0.179878
+   1         -9.841150         -9.322146         0.387864
+   1          9.838092         -9.317495         0.402504
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.408226 
+
+    0.0000164688	   -0.0002460638	    0.0005554161	
+    0.0000003745	   -0.0000173475	   -0.0000108080	
+    0.0000003778	   -0.0000188594	   -0.0000147162	
+    STATE AFTER 9 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.003695     1.247147    -0.179878
+A02H2               -9.841150    -9.322146     0.387864
+A03H3                9.838092    -9.317495     0.402504
+A01N1                0.000049    -0.000711     4.815979
+A02H2               -0.467062    -0.807020     5.176297
+A03H3               -0.466774     0.809964     5.166747
+A04H4                0.933456     0.001227     5.172216
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   1.800998e-05  -3.377812e-04   4.879155e+00  -3.058102e+00   5.927156e-03   3.057925e+00
+velocity
+   1.940067e-07  -3.414925e-06  -6.105144e-04  -3.140471e-05  -2.824240e-06  -1.024814e-06
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0041911474
+           POLARIZATION ENERGY    -0.0002310799
+             DISPERSION ENERGY    -0.0001034490
+     EXCHANGE REPULSION ENERGY     0.0000172499
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.4082263321
+
+                  TOTAL ENERGY   -76.4043524637
+
+
+                KINETIC ENERGY     0.0113720831
+                     INVARIANT   -76.3929803806
+               TEMPERATURE (K)   598.5033292470
+
+
+ time_step =    41.3413733366
+Doing update_step_nve, Using Enable-Torch
+Fragment NH3_L
+ Atom A01N1 0.000093 -0.001343 9.100881
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882619 -1.525046 9.781784
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882075 1.530611 9.763736
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.763976 0.002318 9.774071
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+ Before    -0.0036951898     1.2471466348    -0.1798778910
+ After    -0.0041607978     1.2541033914    -0.1955807093
+ Diff     0.0004656080    -0.0069567567     0.0157028183
+
+ Before    -9.8411500569    -9.3221458460     0.3878641354
+ After    -9.8413181076    -9.3143620480     0.3927136937
+ Diff     0.0001680507    -0.0077837980    -0.0048495583
+
+ Before     9.8380917360    -9.3174948162     0.4025041494
+ After     9.8379222204    -9.3090325957     0.4091073216
+ Diff     0.0001695156    -0.0084622205    -0.0066031722
+
+Updating fragment using update_special_fragment routine()
+==================================================
+ ML/MD GEOMETRY TEST (ANGSTROMS)
+
+A01O1               -0.004161     1.254103    -0.195581
+A02H2               -9.841318    -9.314362     0.392714
+A03H3                9.837922    -9.309033     0.409107
+A01N1                0.000049    -0.000711     4.815979
+A02H2               -0.467062    -0.807020     5.176297
+A03H3               -0.466774     0.809964     5.166747
+A04H4                0.933456     0.001227     5.172216
+
+
+==================================================
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.004161          1.254103        -0.195581
+   1         -9.841318         -9.314362         0.392714
+   1          9.837922         -9.309033         0.409107
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+   1          0.000000          0.000000         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.408226 
+
+    0.0000165298	   -0.0002457150	    0.0005510283	
+    0.0000003756	   -0.0000173882	   -0.0000106541	
+    0.0000003792	   -0.0000189184	   -0.0000145261	
+    STATE AFTER 10 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.004161     1.254103    -0.195581
+A02H2               -9.841318    -9.314362     0.392714
+A03H3                9.837922    -9.309033     0.409107
+A01N1                0.000062    -0.000876     4.802631
+A02H2               -0.467130    -0.806670     5.163996
+A03H3               -0.466768     0.810300     5.152229
+A04H4                0.933424     0.001508     5.158980
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   2.250515e-05  -4.166018e-04   4.865807e+00  -3.056906e+00   7.303432e-03   3.056684e+00
+velocity
+   2.169872e-07  -3.790739e-06  -6.098113e-04  -3.492091e-05  -3.164136e-06  -1.150499e-06
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0041819286
+           POLARIZATION ENERGY    -0.0002303456
+             DISPERSION ENERGY    -0.0001034428
+     EXCHANGE REPULSION ENERGY     0.0000172443
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.4082263321
+
+                  TOTAL ENERGY   -76.4043609475
+
+
+                KINETIC ENERGY     0.0113600620
+                     INVARIANT   -76.3930008855
+               TEMPERATURE (K)   597.8706682279
+
+

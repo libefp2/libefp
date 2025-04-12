@@ -1,6 +1,7 @@
 #!/bin/csh
 
 rm -rf build
+rm -rf installed
 mkdir build
 
 if ( "$TORCH_SWITCH" == "ON" ) then

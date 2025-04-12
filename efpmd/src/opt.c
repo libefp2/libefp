@@ -79,8 +79,10 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
                     k++;
                 }
                 check_fail(efp_set_point_charge_coordinates(state->efp, x + 6 * (n_frags-1)));
-                
-                check_fail(update_special_fragment(state->efp, x + 6 * (n_frags-1) + 3 * n_charge));
+		check_fail(update_special_fragment(state->efp, x + 6 * (n_frags-1) + 3 * n_charge));
+		msg("==================================================================\n");
+                print_geometry(state->efp);
+                msg("==================================================================\n");
                 // propagate special fragment coordinates to torch
                 torch_set_coord(state->torch, x + 6 * (n_frags-1) + 3 * n_charge);
 

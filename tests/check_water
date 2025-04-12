@@ -1,0 +1,1709 @@
+EFPMD ver. 2.0.0
+Copyright (c) 2012-2017 Ilya Kaliman, 2017-2024 Lyudmila Slipchenko
+
+LIBEFP ver. 2.0.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
+WALL CLOCK TIME IS Wed Apr  2 06:11:22 2025
+
+SIMULATION SETTINGS
+
+run_type md
+coord xyzabc
+terms elec pol disp xr
+special_terms elec pol disp xr
+elec_damp screen
+disp_damp overlap
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /../fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 10
+max_steps 20
+multistep_steps 1
+fraglib_path ../fraglib
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0003
+opt_energy_tol 1e-06
+gtest_tol 1e-06
+ref_energy 0
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+ensemble nve
+time_step 1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+enable_pairwise false
+print_pbc false
+symmetry false
+special_fragment 1
+enable_torch false
+enable_elpot false
+opt_special_frag -1
+torch_nn none
+ml_path none
+userml_path none
+custom_nn none
+aev_nn none
+atom_gradient frag
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+MOLECULAR DYNAMICS JOB
+
+
+    INITIAL STATE
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.063030     0.000000
+A02H2               -0.752652    -0.500166     0.000000
+A03H3                0.752652    -0.500166     0.000000
+A01N1                0.000000     0.000000     4.936823
+A02H2               -0.466791    -0.808506     5.292603
+A03H3               -0.466791     0.808506     5.292603
+A04H4                0.933582     0.000000     5.292603
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+fragment NH3_L
+   0.000000e+00   0.000000e+00   5.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00  -6.168510e-04   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006047186
+           POLARIZATION ENERGY    -0.0000255683
+             DISPERSION ENERGY    -0.0001028155
+     EXCHANGE REPULSION ENERGY     0.0000169443
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004932790
+
+
+                KINETIC ENERGY     0.0114873044
+                     INVARIANT     0.0119805834
+               TEMPERATURE (K)   604.5673321113
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 0.000000 0.119109 0.000000
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422306 -0.945177 0.000000
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422306 -0.945177 0.000000
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000000 0.000000 9.329243
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882108 -1.527855 10.001570
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882108 1.527855 10.001570
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764215 0.000000 10.001571
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 1 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063034     0.012730
+A02H2               -0.752652    -0.500162     0.012948
+A03H3                0.752652    -0.500162     0.012948
+A01N1                0.000000    -0.000010     4.923331
+A02H2               -0.466791    -0.808484     5.279184
+A03H3               -0.466792     0.808528     5.279038
+A04H4                0.933582     0.000022     5.279112
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.307043e-08   4.078460e-06   1.275451e-02  -3.141544e+00   3.863517e-04   3.141543e+00
+velocity
+  -1.214908e-09   3.769795e-07   5.828713e-04  -1.884355e-05  -9.332410e-10  -8.612119e-09
+
+fragment NH3_L
+   1.382581e-08  -4.314167e-06   4.986508e+00  -3.133782e+00   9.061445e-05   3.133782e+00
+velocity
+   1.285121e-09  -3.987663e-07  -6.165572e-04  -4.421648e-06  -3.471794e-08   5.587179e-09
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006173657
+           POLARIZATION ENERGY    -0.0000264681
+             DISPERSION ENERGY    -0.0001062027
+     EXCHANGE REPULSION ENERGY     0.0000187631
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005034581
+
+
+                KINETIC ENERGY     0.0114771305
+                     INVARIANT     0.0119805885
+               TEMPERATURE (K)   604.0318845629
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000000 0.119117 0.024057
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422306 -0.945169 0.024468
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422306 -0.945169 0.024468
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000000 -0.000019 9.303747
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882108 -1.527813 9.976213
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882108 1.527897 9.975936
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764215 0.000042 9.976076
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 2 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063046     0.025405
+A02H2               -0.752652    -0.500148     0.026282
+A03H3                0.752651    -0.500149     0.026282
+A01N1                0.000000    -0.000041     4.909846
+A02H2               -0.466792    -0.808417     5.265921
+A03H3               -0.466792     0.808595     5.265329
+A04H4                0.933582     0.000090     5.265629
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.315687e-08   1.649430e-05   2.550285e-02  -3.141544e+00   1.558036e-03   3.141543e+00
+velocity
+  -2.472163e-09   7.624216e-07   5.825852e-04  -3.800110e-05  -1.878547e-09  -1.747388e-08
+
+fragment NH3_L
+   5.622897e-08  -1.744755e-05   4.973023e+00  -3.133741e+00   3.656053e-04   3.133741e+00
+velocity
+   2.615037e-09  -8.064843e-07  -6.162545e-04  -8.921382e-06  -7.045508e-08   1.133575e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006287349
+           POLARIZATION ENERGY    -0.0000273814
+             DISPERSION ENERGY    -0.0001097194
+     EXCHANGE REPULSION ENERGY     0.0000207481
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005123822
+
+
+                KINETIC ENERGY     0.0114682119
+                     INVARIANT     0.0119805941
+               TEMPERATURE (K)   603.5625101546
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000000 0.119141 0.048008
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422307 -0.945143 0.049666
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422305 -0.945145 0.049666
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000000 -0.000077 9.278264
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882108 -1.527686 9.951148
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882110 1.528024 9.950031
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764214 0.000170 9.950597
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 3 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063067     0.038022
+A02H2               -0.752653    -0.500124     0.040009
+A03H3                0.752651    -0.500127     0.040010
+A01N1                0.000001    -0.000092     4.896367
+A02H2               -0.466792    -0.808304     5.252815
+A03H3               -0.466794     0.808708     5.251475
+A04H4                0.933581     0.000204     5.252154
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.212370e-07   3.743732e-05   3.824484e-02  -3.141544e+00   3.528387e-03   3.141543e+00
+velocity
+  -3.776658e-09   1.156768e-06   5.822909e-04  -5.749016e-05  -2.815721e-09  -2.657982e-08
+
+fragment NH3_L
+   1.282437e-07  -3.960094e-05   4.959545e+00  -3.133704e+00   8.282818e-04   3.133705e+00
+velocity
+   3.994922e-09  -1.223621e-06  -6.159432e-04  -1.350323e-05  -1.073401e-07   1.724148e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006387231
+           POLARIZATION ENERGY    -0.0000283070
+             DISPERSION ENERGY    -0.0001133712
+     EXCHANGE REPULSION ENERGY     0.0000229119
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005199569
+
+
+                KINETIC ENERGY     0.0114606435
+                     INVARIANT     0.0119806004
+               TEMPERATURE (K)   603.1641876524
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000000 0.119179 0.071852
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422308 -0.945098 0.075607
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422304 -0.945102 0.075607
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000001 -0.000174 9.252793
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882109 -1.527472 9.926381
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882113 1.528237 9.923850
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764212 0.000385 9.925133
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 4 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063096     0.050582
+A02H2               -0.752654    -0.500087     0.054137
+A03H3                0.752650    -0.500091     0.054137
+A01N1                0.000001    -0.000165     4.882896
+A02H2               -0.466793    -0.808143     5.239869
+A03H3               -0.466796     0.808867     5.237472
+A04H4                0.933579     0.000364     5.238687
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.184001e-07   6.710730e-05   5.098030e-02  -3.141545e+00   6.311481e-03   3.141542e+00
+velocity
+  -5.133717e-09   1.560485e-06   5.819888e-04  -7.732925e-05  -3.723252e-09  -3.592341e-08
+
+fragment NH3_L
+   2.310221e-07  -7.098563e-05   4.946073e+00  -3.133667e+00   1.482124e-03   3.133669e+00
+velocity
+   5.430410e-09  -1.650670e-06  -6.156237e-04  -1.817142e-05  -1.455117e-07   2.329922e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006472177
+           POLARIZATION ENERGY    -0.0000292435
+             DISPERSION ENERGY    -0.0001171639
+     EXCHANGE REPULSION ENERGY     0.0000252682
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005260785
+
+
+                KINETIC ENERGY     0.0114545287
+                     INVARIANT     0.0119806072
+               TEMPERATURE (K)   602.8423755111
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000000 0.119234 0.095587
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422309 -0.945027 0.102304
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422303 -0.945035 0.102305
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000002 -0.000311 9.227336
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882111 -1.527170 9.901917
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882117 1.528537 9.897389
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764209 0.000689 9.899684
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 5 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063133     0.063084
+A02H2               -0.752655    -0.500032     0.068671
+A03H3                0.752649    -0.500039     0.068672
+A01N1                0.000002    -0.000259     4.869432
+A02H2               -0.466794    -0.807935     5.227087
+A03H3               -0.466799     0.809073     5.223318
+A04H4                0.933577     0.000573     5.225229
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.458568e-07   1.057145e-04   6.370908e-02  -3.141547e+00   9.922181e-03   3.141542e+00
+velocity
+  -6.549148e-09   1.974070e-06   5.816793e-04  -9.753787e-05  -4.578491e-09  -4.549681e-08
+
+fragment NH3_L
+   3.658449e-07  -1.118241e-04   4.932609e+00  -3.133626e+00   2.330793e-03   3.133629e+00
+velocity
+   6.927643e-09  -2.088157e-06  -6.152963e-04  -2.293041e-05  -1.851197e-07   2.950271e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006540950
+           POLARIZATION ENERGY    -0.0000301892
+             DISPERSION ENERGY    -0.0001211037
+     EXCHANGE REPULSION ENERGY     0.0000278312
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005306333
+
+
+                KINETIC ENERGY     0.0114499815
+                     INVARIANT     0.0119806148
+               TEMPERATURE (K)   602.6030587897
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000000 0.119303 0.119211
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422311 -0.944924 0.129770
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422301 -0.944937 0.129771
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000003 -0.000490 9.201892
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882113 -1.526776 9.877763
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882122 1.528926 9.870641
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764206 0.001083 9.874251
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 6 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063177     0.075525
+A02H2               -0.752656    -0.499956     0.083621
+A03H3                0.752648    -0.499966     0.083622
+A01N1                0.000002    -0.000376     4.855975
+A02H2               -0.466795    -0.807677     5.214472
+A03H3               -0.466802     0.809326     5.209010
+A04H4                0.933575     0.000830     5.211779
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.049504e-07   1.534804e-04   7.643100e-02  -3.141548e+00   1.437618e-02   3.141542e+00
+velocity
+  -8.029291e-09   2.398044e-06   5.813628e-04  -1.181366e-04  -5.357870e-09  -5.529063e-08
+
+fragment NH3_L
+   5.341330e-07  -1.623505e-04   4.919152e+00  -3.133582e+00   3.378136e-03   3.133587e+00
+velocity
+   8.493328e-09  -2.536634e-06  -6.149615e-04  -2.778486e-05  -2.263261e-07   3.584433e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006592201
+           POLARIZATION ENERGY    -0.0000311426
+             DISPERSION ENERGY    -0.0001251970
+     EXCHANGE REPULSION ENERGY     0.0000306163
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005334967
+
+
+                KINETIC ENERGY     0.0114471265
+                     INVARIANT     0.0119806232
+               TEMPERATURE (K)   602.4527996413
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000000 0.119387 0.142721
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422313 -0.944779 0.158020
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422299 -0.944798 0.158022
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000004 -0.000710 9.176462
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882115 -1.526289 9.853924
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882128 1.529404 9.843601
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764201 0.001569 9.848834
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 7 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063228     0.087905
+A02H2               -0.752657    -0.499851     0.098993
+A03H3                0.752647    -0.499865     0.098994
+A01N1                0.000003    -0.000515     4.842525
+A02H2               -0.466797    -0.807369     5.202027
+A03H3               -0.466806     0.809626     5.194543
+A04H4                0.933572     0.001137     5.198337
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -6.971690e-07   2.106381e-04   8.914592e-02  -3.141550e+00   1.969004e-02   3.141541e+00
+velocity
+  -9.581085e-09   2.832960e-06   5.810397e-04  -1.391470e-04  -6.037172e-09  -6.529359e-08
+
+fragment NH3_L
+   7.374605e-07  -2.228115e-04   4.905702e+00  -3.133535e+00   4.628198e-03   3.133541e+00
+velocity
+   1.013480e-08  -2.996685e-06  -6.146197e-04  -3.273962e-05  -2.693064e-07   4.231484e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006624450
+           POLARIZATION ENERGY    -0.0000321019
+             DISPERSION ENERGY    -0.0001294506
+     EXCHANGE REPULSION ENERGY     0.0000336396
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005345322
+
+
+                KINETIC ENERGY     0.0114461003
+                     INVARIANT     0.0119806324
+               TEMPERATURE (K)   602.3987915303
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000000 0.119484 0.166116
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422316 -0.944582 0.187069
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422296 -0.944608 0.187072
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000006 -0.000974 9.151047
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882118 -1.525706 9.830405
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882136 1.529971 9.816263
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764196 0.002149 9.823433
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 8 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063286     0.100223
+A02H2               -0.752659    -0.499712     0.114796
+A03H3                0.752645    -0.499730     0.114798
+A01N1                0.000004    -0.000678     4.829084
+A02H2               -0.466799    -0.807008     5.189754
+A03H3               -0.466811     0.809974     5.179915
+A04H4                0.933569     0.001494     5.184904
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -9.241595e-07   2.774333e-04   1.018537e-01  -3.141553e+00   2.588124e-02   3.141541e+00
+velocity
+  -1.121213e-08   3.279398e-06   5.807106e-04  -1.605918e-04  -6.591881e-09  -7.549225e-08
+
+fragment NH3_L
+   9.775694e-07  -2.934669e-04   4.892260e+00  -3.133484e+00   6.085229e-03   3.133492e+00
+velocity
+   1.186011e-08  -3.468924e-06  -6.142716e-04  -3.779973e-05  -3.142507e-07   4.890303e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006636084
+           POLARIZATION ENERGY    -0.0000330652
+             DISPERSION ENERGY    -0.0001338714
+     EXCHANGE REPULSION ENERGY     0.0000369182
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005335899
+
+
+                KINETIC ENERGY     0.0114470527
+                     INVARIANT     0.0119806426
+               TEMPERATURE (K)   602.4489172864
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000000 0.119594 0.189393
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422319 -0.944319 0.216933
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422293 -0.944353 0.216937
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000008 -0.001281 9.125645
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882121 -1.525024 9.807214
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882145 1.530630 9.788620
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764190 0.002824 9.798048
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 9 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063350     0.112477
+A02H2               -0.752661    -0.499528     0.131040
+A03H3                0.752643    -0.499552     0.131042
+A01N1                0.000005    -0.000864     4.815650
+A02H2               -0.466801    -0.806593     5.177659
+A03H3               -0.466816     0.810371     5.165122
+A04H4                0.933565     0.001904     5.171479
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.187742e-06   3.541243e-04   1.145542e-01  -3.141556e+00   3.296821e-02   3.141541e+00
+velocity
+  -1.293075e-08   3.737966e-06   5.803761e-04  -1.824947e-04  -6.997596e-09  -8.587058e-08
+
+fragment NH3_L
+   1.256386e-06  -3.745902e-04   4.878825e+00  -3.133429e+00   7.753691e-03   3.133439e+00
+velocity
+   1.367806e-08  -3.953995e-06  -6.139177e-04  -4.297038e-05  -3.613655e-07   5.559535e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006625337
+           POLARIZATION ENERGY    -0.0000340308
+             DISPERSION ENERGY    -0.0001384671
+     EXCHANGE REPULSION ENERGY     0.0000404703
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005305060
+
+
+                KINETIC ENERGY     0.0114501478
+                     INVARIANT     0.0119806538
+               TEMPERATURE (K)   602.6118110382
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000000 0.119714 0.212550
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422323 -0.943972 0.247629
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422289 -0.944016 0.247634
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000010 -0.001634 9.100259
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882125 -1.524239 9.784357
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882155 1.531379 9.760665
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764183 0.003597 9.772679
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 10 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063418     0.124666
+A02H2               -0.752663    -0.499291     0.147732
+A03H3                0.752641    -0.499320     0.147735
+A01N1                0.000007    -0.001075     4.802224
+A02H2               -0.466803    -0.806121     5.165743
+A03H3               -0.466823     0.810816     5.150159
+A04H4                0.933561     0.002366     5.158062
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.489929e-06   4.409836e-04   1.272474e-01  -3.141559e+00   4.097040e-02   3.141540e+00
+velocity
+  -1.474612e-08   4.209303e-06   5.800368e-04  -2.048805e-04  -7.230561e-09  -9.640961e-08
+
+fragment NH3_L
+   1.576037e-06  -4.664693e-04   4.865399e+00  -3.133369e+00   9.638264e-03   3.133382e+00
+velocity
+   1.559834e-08  -4.452572e-06  -6.135589e-04  -4.825695e-05  -4.108749e-07   6.237548e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006590280
+           POLARIZATION ENERGY    -0.0000349968
+             DISPERSION ENERGY    -0.0001432454
+     EXCHANGE REPULSION ENERGY     0.0000443152
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005251010
+
+
+                KINETIC ENERGY     0.0114555652
+                     INVARIANT     0.0119806662
+               TEMPERATURE (K)   602.8969239755
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000001 0.119843 0.235584
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422327 -0.943523 0.279173
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422285 -0.943577 0.279179
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000012 -0.002032 9.074888
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882130 -1.523348 9.761840
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882167 1.532221 9.732390
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764174 0.004470 9.747325
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 11 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063490     0.136789
+A02H2               -0.752665    -0.498987     0.164883
+A03H3                0.752638    -0.499022     0.164887
+A01N1                0.000008    -0.001311     4.788807
+A02H2               -0.466806    -0.805591     5.154012
+A03H3               -0.466830     0.811310     5.135023
+A04H4                0.933556     0.002881     5.144654
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.832941e-06   5.382975e-04   1.399331e-01  -3.141563e+00   4.990830e-02   3.141540e+00
+velocity
+  -1.666827e-08   4.694075e-06   5.796937e-04  -2.277751e-04  -7.268296e-09  -1.070869e-07
+
+fragment NH3_L
+   1.938873e-06  -5.694073e-04   4.851980e+00  -3.133305e+00   1.174385e-02   3.133321e+00
+velocity
+   1.763157e-08  -4.965360e-06  -6.131959e-04  -5.366490e-05  -4.630224e-07   6.922378e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006528813
+           POLARIZATION ENERGY    -0.0000359614
+             DISPERSION ENERGY    -0.0001482147
+     EXCHANGE REPULSION ENERGY     0.0000484732
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005171784
+
+
+                KINETIC ENERGY     0.0114635013
+                     INVARIANT     0.0119806797
+               TEMPERATURE (K)   603.3145937676
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000001 0.119978 0.258493
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422332 -0.942949 0.311584
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422280 -0.943016 0.311592
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000015 -0.002478 9.049533
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882136 -1.522346 9.739671
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882180 1.533153 9.703787
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764165 0.005445 9.721986
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 12 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063564     0.148844
+A02H2               -0.752668    -0.498604     0.182503
+A03H3                0.752636    -0.498646     0.182507
+A01N1                0.000010    -0.001573     4.775398
+A02H2               -0.466809    -0.805000     5.142468
+A03H3               -0.466837     0.811852     5.119709
+A04H4                0.933550     0.003452     5.131253
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.219230e-06   6.463673e-04   1.526112e-01  -3.141567e+00   5.980347e-02   3.141539e+00
+velocity
+  -1.870826e-08   5.192974e-06   5.793474e-04  -2.512052e-04  -7.090375e-09  -1.178762e-07
+
+fragment NH3_L
+   2.347486e-06  -6.837228e-04   4.838569e+00  -3.133237e+00   1.407559e-02   3.133255e+00
+velocity
+   1.978947e-08  -5.493092e-06  -6.128296e-04  -5.919983e-05  -5.180726e-07   7.611670e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006438645
+           POLARIZATION ENERGY    -0.0000369229
+             DISPERSION ENERGY    -0.0001533837
+     EXCHANGE REPULSION ENERGY     0.0000529660
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005065238
+
+
+                KINETIC ENERGY     0.0114741707
+                     INVARIANT     0.0119806946
+               TEMPERATURE (K)   603.8761172930
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000001 0.120118 0.281274
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422337 -0.942226 0.344880
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422275 -0.942305 0.344889
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000018 -0.002972 9.024194
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882142 -1.521230 9.717856
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882195 1.534177 9.674848
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764155 0.006524 9.696662
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 13 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063638     0.160831
+A02H2               -0.752671    -0.498127     0.200600
+A03H3                0.752633    -0.498177     0.200606
+A01N1                0.000012    -0.001861     4.761997
+A02H2               -0.466813    -0.804346     5.131115
+A03H3               -0.466846     0.812442     5.104212
+A04H4                0.933544     0.004080     5.117859
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.651499e-06   7.655100e-04   1.652817e-01  -3.141572e+00   7.067864e-02   3.141539e+00
+velocity
+  -2.087825e-08   5.706721e-06   5.789991e-04  -2.751988e-04  -6.679367e-09  -1.287465e-07
+
+fragment NH3_L
+   2.804737e-06  -8.097511e-04   4.825166e+00  -3.133164e+00   1.663884e-02   3.133185e+00
+velocity
+   2.208487e-08  -6.036529e-06  -6.124612e-04  -6.486736e-05  -5.763132e-07   8.302609e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006317283
+           POLARIZATION ENERGY    -0.0000378801
+             DISPERSION ENERGY    -0.0001587616
+     EXCHANGE REPULSION ENERGY     0.0000578165
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004929030
+
+
+                KINETIC ENERGY     0.0114878078
+                     INVARIANT     0.0119807109
+               TEMPERATURE (K)   604.5938261170
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000001 0.120259 0.303926
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422342 -0.941323 0.379080
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422270 -0.941417 0.379091
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000022 -0.003517 8.998871
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882149 -1.519994 9.696402
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882211 1.535293 9.645563
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764143 0.007709 9.671353
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 14 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063711     0.172747
+A02H2               -0.752674    -0.497537     0.219187
+A03H3                0.752629    -0.497595     0.219194
+A01N1                0.000014    -0.002176     4.748606
+A02H2               -0.466817    -0.803626     5.119958
+A03H3               -0.466855     0.813081     5.088527
+A04H4                0.933537     0.004764     5.104473
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.132733e-06   8.960582e-04   1.779446e-01  -3.141577e+00   8.255767e-02   3.141538e+00
+velocity
+  -2.319162e-08   6.236057e-06   5.786498e-04  -2.997846e-04  -6.021976e-09  -1.396619e-07
+
+fragment NH3_L
+   3.313783e-06  -9.478441e-04   4.811771e+00  -3.133085e+00   1.943921e-02   3.133110e+00
+velocity
+   2.453193e-08  -6.596458e-06  -6.120917e-04  -7.067317e-05  -6.380567e-07   8.991831e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006162019
+           POLARIZATION ENERGY    -0.0000388320
+             DISPERSION ENERGY    -0.0001643583
+     EXCHANGE REPULSION ENERGY     0.0000630490
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004760606
+
+
+                KINETIC ENERGY     0.0115046680
+                     INVARIANT     0.0119807286
+               TEMPERATURE (K)   605.4811638630
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000001 0.120397 0.326444
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422349 -0.940209 0.414203
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422263 -0.940319 0.414216
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000026 -0.004112 8.973565
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882157 -1.518634 9.675317
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882229 1.536499 9.615923
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764130 0.009003 9.646057
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 15 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063781     0.184592
+A02H2               -0.752678    -0.496817     0.238272
+A03H3                0.752626    -0.496884     0.238280
+A01N1                0.000016    -0.002519     4.735223
+A02H2               -0.466822    -0.802837     5.108999
+A03H3               -0.466866     0.813767     5.072649
+A04H4                0.933530     0.005508     5.091094
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.666221e-06   1.038361e-03   1.905999e-01  -3.141582e+00   9.546565e-02   3.141537e+00
+velocity
+  -2.566306e-08   6.781748e-06   5.783007e-04  -3.249920e-04  -5.110413e-09  -1.505807e-07
+
+fragment NH3_L
+   3.878103e-06  -1.098371e-03   4.798385e+00  -3.133001e+00   2.248253e-02   3.133030e+00
+velocity
+   2.714621e-08  -7.173685e-06  -6.117225e-04  -7.662285e-05  -7.036427e-07   9.675332e-08
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005969914
+           POLARIZATION ENERGY    -0.0000397780
+             DISPERSION ENERGY    -0.0001701840
+     EXCHANGE REPULSION ENERGY     0.0000686894
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004557187
+
+
+                KINETIC ENERGY     0.0115250294
+                     INVARIANT     0.0119807480
+               TEMPERATURE (K)   606.5527642485
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000002 0.120529 0.348828
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422355 -0.938847 0.450269
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422257 -0.938974 0.450284
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000030 -0.004759 8.948275
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882166 -1.517142 9.654609
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882248 1.537796 9.585918
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764116 0.010409 9.620773
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 16 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063846     0.196364
+A02H2               -0.752682    -0.495943     0.257866
+A03H3                0.752622    -0.496020     0.257876
+A01N1                0.000019    -0.002890     4.721850
+A02H2               -0.466828    -0.801975     5.098244
+A03H3               -0.466877     0.814500     5.056572
+A04H4                0.933521     0.006313     5.077720
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.255590e-06   1.192786e-03   2.032475e-01  -3.141588e+00   1.094289e-01   3.141537e+00
+velocity
+  -2.830875e-08   7.344574e-06   5.779534e-04  -3.508512e-04  -3.944040e-09  -1.614547e-07
+
+fragment NH3_L
+   4.501534e-06  -1.261720e-03   4.785006e+00  -3.132912e+00   2.577487e-02   3.132945e+00
+velocity
+   2.994480e-08  -7.769039e-06  -6.113551e-04  -8.272193e-05  -7.734394e-07   1.034835e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005737788
+           POLARIZATION ENERGY    -0.0000407188
+             DISPERSION ENERGY    -0.0001762500
+     EXCHANGE REPULSION ENERGY     0.0000747651
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004315752
+
+
+                KINETIC ENERGY     0.0115491940
+                     INVARIANT     0.0119807691
+               TEMPERATURE (K)   607.8245280741
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000002 0.120651 0.371074
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422362 -0.937197 0.487297
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422249 -0.937342 0.487314
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000035 -0.005461 8.923003
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882177 -1.515514 9.634285
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882269 1.539182 9.555536
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764100 0.011929 9.595501
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 17 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063902     0.208062
+A02H2               -0.752686    -0.494893     0.277980
+A03H3                0.752618    -0.494980     0.277990
+A01N1                0.000021    -0.003290     4.708485
+A02H2               -0.466834    -0.801038     5.087697
+A03H3               -0.466889     0.815279     5.040290
+A04H4                0.933512     0.007179     5.064352
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.904838e-06   1.359715e-03   2.158875e-01   3.141591e+00   1.244750e-01   3.141536e+00
+velocity
+  -3.114645e-08   7.925329e-06   5.776093e-04  -3.773929e-04  -2.531354e-09  -1.722282e-07
+
+fragment NH3_L
+   5.188303e-06  -1.438296e-03   4.771636e+00  -3.132817e+00   2.932251e-02   3.132854e+00
+velocity
+   3.294650e-08  -8.383357e-06  -6.109911e-04  -8.897571e-05  -8.478461e-07   1.100525e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005462205
+           POLARIZATION ENERGY    -0.0000416556
+             DISPERSION ENERGY    -0.0001825677
+     EXCHANGE REPULSION ENERGY     0.0000813054
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004033026
+
+
+                KINETIC ENERGY     0.0115774895
+                     INVARIANT     0.0119807920
+               TEMPERATURE (K)   609.3136968459
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000002 0.120757 0.393180
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422370 -0.935212 0.525306
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422242 -0.935376 0.525326
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000041 -0.006218 8.897748
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882189 -1.513742 9.614353
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882292 1.540655 9.524768
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764083 0.013566 9.570239
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 18 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063947     0.219685
+A02H2               -0.752690    -0.493640     0.298622
+A03H3                0.752614    -0.493737     0.298634
+A01N1                0.000025    -0.003721     4.695130
+A02H2               -0.466841    -0.800021     5.077360
+A03H3               -0.466902     0.816104     5.023798
+A04H4                0.933502     0.008108     5.050989
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.618367e-06   1.539549e-03   2.285201e-01   3.141585e+00   1.406328e-01   3.141535e+00
+velocity
+  -3.419566e-08   8.524811e-06   5.772703e-04  -4.046481e-04  -8.923425e-10  -1.828377e-07
+
+fragment NH3_L
+   5.943069e-06  -1.628524e-03   4.758273e+00  -3.132715e+00   3.313195e-02   3.132757e+00
+velocity
+   3.617193e-08  -9.017486e-06  -6.106325e-04  -9.538923e-05  -9.272946e-07   1.163933e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005139464
+           POLARIZATION ENERGY    -0.0000425914
+             DISPERSION ENERGY    -0.0001891499
+     EXCHANGE REPULSION ENERGY     0.0000883415
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0003705466
+
+
+                KINETIC ENERGY     0.0116102702
+                     INVARIANT     0.0119808168
+               TEMPERATURE (K)   611.0389199316
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000003 0.120843 0.415145
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422378 -0.932844 0.564314
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422233 -0.933029 0.564337
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000046 -0.007032 8.872510
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882202 -1.511820 9.594821
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882316 1.542214 9.493601
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764064 0.015322 9.544986
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 19 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000002     0.063978     0.231232
+A02H2               -0.752695    -0.492154     0.319803
+A03H3                0.752609    -0.492263     0.319817
+A01N1                0.000028    -0.004183     4.681784
+A02H2               -0.466849    -0.798920     5.067240
+A03H3               -0.466915     0.816973     5.007087
+A04H4                0.933491     0.009102     5.037629
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -6.401028e-06   1.732708e-03   2.411453e-01   3.141578e+00   1.579324e-01   3.141534e+00
+velocity
+  -3.747774e-08   9.143818e-06   5.769383e-04  -4.326476e-04   9.386944e-10  -1.932107e-07
+
+fragment NH3_L
+   6.770963e-06  -1.832846e-03   4.744918e+00  -3.132607e+00   3.720992e-02   3.132655e+00
+velocity
+   3.964369e-08  -9.672267e-06  -6.102813e-04  -1.019671e-04  -1.012252e-06   1.224269e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0004765588
+           POLARIZATION ENERGY    -0.0000435307
+             DISPERSION ENERGY    -0.0001960098
+     EXCHANGE REPULSION ENERGY     0.0000959068
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0003329251
+
+
+                KINETIC ENERGY     0.0116479184
+                     INVARIANT     0.0119808434
+               TEMPERATURE (K)   613.0203111855
+
+
+ time_step =    41.3413733366
+Fragment H2O_L
+ Atom A01O1 -0.000003 0.120901 0.436965
+ znuc, mass 8.000000 15.994910
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -1.422387 -0.930036 0.604340
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 1.422225 -0.930243 0.604366
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Fragment NH3_L
+ Atom A01N1 0.000053 -0.007905 8.847290
+ znuc, mass 7.000000 14.003070
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A02H2 -0.882217 -1.509739 9.575696
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A03H3 -0.882342 1.543856 9.462024
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+ Atom A04H4 1.764043 0.017200 9.519740
+ znuc, mass 1.000000 1.007825
+ mm_charge, sigma, epsilon, atom_type 0.000000 0.000000 0.000000 
+
+
+Full position update.. will update special fragment
+    STATE AFTER 20 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000002     0.063991     0.242702
+A02H2               -0.752700    -0.490403     0.341530
+A03H3                0.752604    -0.490525     0.341546
+A01N1                0.000032    -0.004677     4.668448
+A02H2               -0.466858    -0.797730     5.057339
+A03H3               -0.466930     0.817886     4.990153
+A04H4                0.933479     0.010162     5.024272
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -7.258161e-06   1.939626e-03   2.537634e-01   3.141571e+00   1.764053e-01   3.141533e+00
+velocity
+  -4.101609e-08   9.783133e-06   5.766155e-04  -4.614219e-04   2.909795e-09  -2.032646e-07
+
+fragment NH3_L
+   7.677632e-06  -2.051723e-03   4.731571e+00  -3.132493e+00   4.156329e-02   3.132545e+00
+velocity
+   4.338653e-08  -1.034853e-05  -6.099398e-04  -1.087135e-04  -1.103220e-06   1.280602e-07
+
+
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0004336324
+           POLARIZATION ENERGY    -0.0000444805
+             DISPERSION ENERGY    -0.0002031618
+     EXCHANGE REPULSION ENERGY     0.0001040371
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0002900273
+
+
+                KINETIC ENERGY     0.0116908447
+                     INVARIANT     0.0119808720
+               TEMPERATURE (K)   615.2794897692
+
+
+MOLECULAR DYNAMICS JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Wed Apr  2 06:11:22 2025
+TOTAL RUN TIME IS 0 SECONDS

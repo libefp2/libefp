@@ -1,0 +1,1575 @@
+EFPMD ver. 2.0.0
+Copyright (c) 2012-2017 Ilya Kaliman, 2017-2024 Lyudmila Slipchenko
+
+LIBEFP ver. 2.0.0
+Copyright (c) 2012-2017 Ilya Kaliman
+              2018-2022 Lyudmila Slipchenko
+
+Journal References:
+  - Kaliman and Slipchenko, JCC 2013.
+    DOI: http://dx.doi.org/10.1002/jcc.23375
+  - Kaliman and Slipchenko, JCC 2015.
+    DOI: http://dx.doi.org/10.1002/jcc.23772
+
+Project web site: https://github.com/libefp2/libefp/
+
+RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
+WALL CLOCK TIME IS Tue Apr  8 19:39:16 2025
+
+SIMULATION SETTINGS
+
+run_type md
+coord xyzabc
+terms elec pol disp xr
+special_terms elec pol disp xr
+elec_damp screen
+disp_damp overlap
+pol_damp tt
+pol_driver iterative
+enable_ff false
+enable_multistep false
+ff_geometry ff.xyz
+ff_parameters /../fraglib/params/amber99.prm
+single_params_file false
+efp_params_file params.efp
+enable_cutoff false
+swf_cutoff 10
+xr_cutoff 10
+max_steps 20
+multistep_steps 1
+fraglib_path ../fraglib
+userlib_path .
+enable_pbc false
+periodic_box 30.0 30.0 30.0 90.0 90.0 90.0
+opt_tol 0.0003
+opt_energy_tol 1e-06
+gtest_tol 1e-06
+ref_energy 0
+hess_central false
+num_step_dist 0.001
+num_step_angle 0.01
+ensemble nve
+time_step 0.1
+print_step 1
+velocitize false
+temperature 300
+pressure 1
+thermostat_tau 1000
+barostat_tau 10000
+ligand -100
+enable_pairwise false
+print_pbc false
+symmetry false
+special_fragment 0
+enable_torch true
+enable_elpot false
+opt_special_frag 0
+torch_nn ani1.pt
+ml_path ../nnlib/
+userml_path .
+custom_nn custom_model_script.pt
+aev_nn aev_scripted.pt
+atom_gradient frag
+symm_frag frag
+update_params 0
+update_params_cutoff 0
+print 0
+
+
+Chosen nn_type: ani1.pt
+The location of NN potential is: ../nnlib/
+Model loaded from: ../nnlib/ANI1x_saved2.pt
+
+MOLECULAR DYNAMICS JOB
+
+
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.063030         0.000000
+   1         -0.752652         -0.500166         0.000000
+   1          0.752652         -0.500166         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000         -0.039631         0.000000
+   1          0.020252          0.019816         0.000000
+   1         -0.020252          0.019816         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.387024 
+
+    INITIAL STATE
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.063030     0.000000
+A02H2               -0.752652    -0.500166     0.000000
+A03H3                0.752652    -0.500166     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.3870240109
+
+                  TOTAL ENERGY   -76.3870240109
+
+
+                KINETIC ENERGY     0.0036133288
+                     INVARIANT   -76.3834106821
+               TEMPERATURE (K)   380.3330162147
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.074235         0.000000
+   1         -0.843522         -0.589079         0.000000
+   1          0.843522         -0.589079         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.087121         0.000000
+   1         -0.063510         -0.043561         0.000000
+   1          0.063510         -0.043561         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.370654 
+
+    STATE AFTER 1 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.074235     0.000000
+A02H2               -0.843522    -0.589079     0.000000
+A03H3                0.843522    -0.589079     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.3706535766
+
+                  TOTAL ENERGY   -76.3706535766
+
+
+                KINETIC ENERGY     0.0261590353
+                     INVARIANT   -76.3444945413
+               TEMPERATURE (K)  2753.4567876464
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.049604         0.000000
+   1         -0.558553         -0.393622         0.000000
+   1          0.558553         -0.393622         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000         -0.253104         0.000000
+   1          0.200345          0.126552         0.000000
+   1         -0.200345          0.126552         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.226220 
+
+    STATE AFTER 2 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.049604     0.000000
+A02H2               -0.558553    -0.393622     0.000000
+A03H3                0.558553    -0.393622     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.2262199851
+
+                  TOTAL ENERGY   -76.2262199851
+
+
+                KINETIC ENERGY     0.2466258532
+                     INVARIANT   -75.9795941319
+               TEMPERATURE (K) 25959.4294032752
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.121162         0.000000
+   1         -1.457502         -0.961462         0.000000
+   1          1.457502         -0.961462         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.103404         0.000000
+   1         -0.062447         -0.051702         0.000000
+   1          0.062447         -0.051702         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.088804 
+
+    STATE AFTER 3 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.121162     0.000000
+A02H2               -1.457502    -0.961462     0.000000
+A03H3                1.457502    -0.961462     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.0888039203
+
+                  TOTAL ENERGY   -76.0888039203
+
+
+                KINETIC ENERGY     0.0292939740
+                     INVARIANT   -76.0595099463
+               TEMPERATURE (K)  3083.4352578675
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.091927         0.000000
+   1         -1.177302         -0.729475         0.000000
+   1          1.177302         -0.729475         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.109579         0.000000
+   1         -0.089939         -0.054790         0.000000
+   1          0.089939         -0.054790         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.217281 
+
+    STATE AFTER 4 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.091927     0.000000
+A02H2               -1.177302    -0.729475     0.000000
+A03H3                1.177302    -0.729475     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.2172808381
+
+                  TOTAL ENERGY   -76.2172808381
+
+
+                KINETIC ENERGY     0.0486249584
+                     INVARIANT   -76.1686558796
+               TEMPERATURE (K)  5118.1827040244
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.060947         0.000000
+   1         -0.773745         -0.483634         0.000000
+   1          0.773745         -0.483634         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000         -0.036018         0.000000
+   1          0.009946          0.018009         0.000000
+   1         -0.009946          0.018009         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.386913 
+
+    STATE AFTER 5 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.060947     0.000000
+A02H2               -0.773745    -0.483634     0.000000
+A03H3                0.773745    -0.483634     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.3869132096
+
+                  TOTAL ENERGY   -76.3869132096
+
+
+                KINETIC ENERGY     0.0019676494
+                     INVARIANT   -76.3849455602
+               TEMPERATURE (K)   207.1115203201
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.071130         0.000000
+   1         -0.818372         -0.564441         0.000000
+   1          0.818372         -0.564441         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.063770         0.000000
+   1         -0.050183         -0.031885         0.000000
+   1          0.050183         -0.031885         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.380098 
+
+    STATE AFTER 6 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.071130     0.000000
+A02H2               -0.818372    -0.564441     0.000000
+A03H3                0.818372    -0.564441     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.3800979363
+
+                  TOTAL ENERGY   -76.3800979363
+
+
+                KINETIC ENERGY     0.0155302906
+                     INVARIANT   -76.3645676457
+               TEMPERATURE (K)  1634.6926998030
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.053101         0.000000
+   1         -0.593199         -0.421372         0.000000
+   1          0.593199         -0.421372         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000         -0.326312         0.000000
+   1          0.231125          0.163156         0.000000
+   1         -0.231125          0.163156         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.271782 
+
+    STATE AFTER 7 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.053101     0.000000
+A02H2               -0.593199    -0.421372     0.000000
+A03H3                0.593199    -0.421372     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.2717821183
+
+                  TOTAL ENERGY   -76.2717821183
+
+
+                KINETIC ENERGY     0.3535544994
+                     INVARIANT   -75.9182276188
+               TEMPERATURE (K) 37214.5618530754
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.145356         0.000000
+   1         -1.630258         -1.153453         0.000000
+   1          1.630258         -1.153453         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.016791         0.000000
+   1          0.007274         -0.008396         0.000000
+   1         -0.007274         -0.008396         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.043421 
+
+    STATE AFTER 8 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.145356     0.000000
+A02H2               -1.630258    -1.153453     0.000000
+A03H3                1.630258    -1.153453     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.0434205862
+
+                  TOTAL ENERGY   -76.0434205862
+
+
+                KINETIC ENERGY     0.0005608186
+                     INVARIANT   -76.0428597675
+               TEMPERATURE (K)    59.0308420958
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.140609         0.000000
+   1         -1.662897         -1.115782         0.000000
+   1          1.662897         -1.115782         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.016084         0.000000
+   1          0.003180         -0.008042         0.000000
+   1         -0.003180         -0.008042         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.045383 
+
+    STATE AFTER 9 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.140609     0.000000
+A02H2               -1.662897    -1.115782     0.000000
+A03H3                1.662897    -1.115782     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.0453832479
+
+                  TOTAL ENERGY   -76.0453832479
+
+
+                KINETIC ENERGY     0.0003516340
+                     INVARIANT   -76.0450316139
+               TEMPERATURE (K)    37.0124170256
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.136061         0.000000
+   1         -1.677166         -1.079697         0.000000
+   1          1.677166         -1.079697         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.019548         0.000000
+   1         -0.001242         -0.009774         0.000000
+   1          0.001242         -0.009774         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.046801 
+
+    STATE AFTER 10 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.136061     0.000000
+A02H2               -1.677166    -1.079697     0.000000
+A03H3                1.677166    -1.079697     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.0468010040
+
+                  TOTAL ENERGY   -76.0468010040
+
+
+                KINETIC ENERGY     0.0004626052
+                     INVARIANT   -76.0463383988
+               TEMPERATURE (K)    48.6930563879
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.130535         0.000000
+   1         -1.671591         -1.035840         0.000000
+   1          1.671591         -1.035840         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.030652         0.000000
+   1         -0.008743         -0.015326         0.000000
+   1          0.008743         -0.015326         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.049248 
+
+    STATE AFTER 11 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.130535     0.000000
+A02H2               -1.671591    -1.035840     0.000000
+A03H3                1.671591    -1.035840     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.0492483409
+
+                  TOTAL ENERGY   -76.0492483409
+
+
+                KINETIC ENERGY     0.0014453808
+                     INVARIANT   -76.0478029601
+               TEMPERATURE (K)   152.1383908327
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.121869         0.000000
+   1         -1.632360         -0.967073         0.000000
+   1          1.632360         -0.967073         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.058351         0.000000
+   1         -0.025743         -0.029176         0.000000
+   1          0.025743         -0.029176         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.058131 
+
+    STATE AFTER 12 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.121869     0.000000
+A02H2               -1.632360    -0.967073     0.000000
+A03H3                1.632360    -0.967073     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.0581307741
+
+                  TOTAL ENERGY   -76.0581307741
+
+
+                KINETIC ENERGY     0.0068731584
+                     INVARIANT   -76.0512576156
+               TEMPERATURE (K)   723.4572888099
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.105372         0.000000
+   1         -1.516853         -0.836162         0.000000
+   1          1.516853         -0.836162         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.087956         0.000000
+   1         -0.058981         -0.043978         0.000000
+   1          0.058981         -0.043978         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.100459 
+
+    STATE AFTER 13 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.105372     0.000000
+A02H2               -1.516853    -0.836162     0.000000
+A03H3                1.516853    -0.836162     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.1004587145
+
+                  TOTAL ENERGY   -76.1004587145
+
+
+                KINETIC ENERGY     0.0239817766
+                     INVARIANT   -76.0764769379
+               TEMPERATURE (K)  2524.2821401736
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.080505         0.000000
+   1         -1.252203         -0.638832         0.000000
+   1          1.252203         -0.638832         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.097183         0.000000
+   1         -0.089769         -0.048591         0.000000
+   1          0.089769         -0.048591         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.212108 
+
+    STATE AFTER 14 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.080505     0.000000
+A02H2               -1.252203    -0.638832     0.000000
+A03H3                1.252203    -0.638832     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.2121079894
+
+                  TOTAL ENERGY   -76.2121079894
+
+
+                KINETIC ENERGY     0.0454361501
+                     INVARIANT   -76.1666718393
+               TEMPERATURE (K)  4782.5340094805
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.053029         0.000000
+   1         -0.849411         -0.420803         0.000000
+   1          0.849411         -0.420803         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000         -0.025963         0.000000
+   1         -0.029449          0.012981         0.000000
+   1          0.029449          0.012981         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.379934 
+
+    STATE AFTER 15 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.053029     0.000000
+A02H2               -0.849411    -0.420803     0.000000
+A03H3                0.849411    -0.420803     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.3799343066
+
+                  TOTAL ENERGY   -76.3799343066
+
+
+                KINETIC ENERGY     0.0044813071
+                     INVARIANT   -76.3754529996
+               TEMPERATURE (K)   471.6949693100
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.060369         0.000000
+   1         -0.717272         -0.479050         0.000000
+   1          0.717272         -0.479050         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000         -0.118472         0.000000
+   1          0.077049          0.059236         0.000000
+   1         -0.077049          0.059236         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.377317 
+
+    STATE AFTER 16 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.060369     0.000000
+A02H2               -0.717272    -0.479050     0.000000
+A03H3                0.717272    -0.479050     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.3773172995
+
+                  TOTAL ENERGY   -76.3773172995
+
+
+                KINETIC ENERGY     0.0419200084
+                     INVARIANT   -76.3353972911
+               TEMPERATURE (K)  4412.4307545411
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.093864         0.000000
+   1         -1.062992         -0.744843         0.000000
+   1          1.062992         -0.744843         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.000000          0.143656         0.000000
+   1         -0.104029         -0.071828         0.000000
+   1          0.104029         -0.071828         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.255586 
+
+    STATE AFTER 17 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.093864     0.000000
+A02H2               -1.062992    -0.744843     0.000000
+A03H3                1.062992    -0.744843     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.2555861505
+
+                  TOTAL ENERGY   -76.2555861505
+
+
+                KINETIC ENERGY     0.0705106407
+                     INVARIANT   -76.1850755098
+               TEMPERATURE (K)  7421.8334198133
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.053249         0.000000
+   1         -0.596214         -0.422552         0.000000
+   1          0.596214         -0.422552         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.000000         -0.331560         0.000000
+   1          0.230031          0.165780         0.000000
+   1         -0.230031          0.165780         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.275235 
+
+    STATE AFTER 18 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.053249     0.000000
+A02H2               -0.596214    -0.422552     0.000000
+A03H3                0.596214    -0.422552     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.2752354102
+
+                  TOTAL ENERGY   -76.2752354102
+
+
+                KINETIC ENERGY     0.3555357617
+                     INVARIANT   -75.9196996485
+               TEMPERATURE (K) 37423.1062432974
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.146989         0.000000
+   1         -1.628363         -1.166408         0.000000
+   1          1.628363         -1.166407         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.014651         0.000000
+   1          0.009108         -0.007325         0.000000
+   1         -0.009108         -0.007325         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.042929 
+
+    STATE AFTER 19 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.146989     0.000000
+A02H2               -1.628363    -1.166408     0.000000
+A03H3                1.628363    -1.166407     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.0429290267
+
+                  TOTAL ENERGY   -76.0429290267
+
+
+                KINETIC ENERGY     0.0006078338
+                     INVARIANT   -76.0423211929
+               TEMPERATURE (K)    63.9795761126
+
+
+ time_step =     4.1341373337
+Doing update_step_nve, Using Enable-Torch
+Full position update.. will update special fragment
+Updating fragment using update_special_fragment routine()
+Inside compute forces, Torch enabled
+Setting special fragments as Torch coordinates
+
+ Inside the 'enable_torch portion of compute_energy()' 
+
+ TORCH INFO 
+-----------
+
+ Special fragment coordinates (Angstroms) 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8          0.000000          0.142847         0.000000
+   1         -1.669228         -1.133539         0.000000
+   1          1.669228         -1.133539         0.000000
+-----------------------------------------------------------
+
+ Special fragment atom gradients 
+-----------------------------------------------------------
+  Atom            X                 Y                Z
+   8         -0.000000          0.010377         0.000000
+   1          0.006338         -0.005189         0.000000
+   1         -0.006338         -0.005189         0.000000
+------------------------------------------------------------
+
+ Torch energy -76.044997 
+
+    STATE AFTER 20 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1                0.000000     0.142847     0.000000
+A02H2               -1.669228    -1.133539     0.000000
+A03H3                1.669228    -1.133539     0.000000
+
+
+    RESTART DATA
+
+fragment H2O_L
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+
+
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+Inside get_kinetic_energy(), Torch enabled
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0000000000
+           POLARIZATION ENERGY     0.0000000000
+             DISPERSION ENERGY     0.0000000000
+     EXCHANGE REPULSION ENERGY     0.0000000000
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                     ML ENERGY   -76.0449972780
+
+                  TOTAL ENERGY   -76.0449972780
+
+
+                KINETIC ENERGY     0.0002988376
+                     INVARIANT   -76.0446984404
+               TEMPERATURE (K)    31.4551546578
+
+
+MOLECULAR DYNAMICS JOB COMPLETED SUCCESSFULLY
+WALL CLOCK TIME IS Tue Apr  8 19:39:17 2025
+TOTAL RUN TIME IS 1 SECONDS

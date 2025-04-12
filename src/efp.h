@@ -1290,6 +1290,8 @@ enum efp_result efp_get_frag_name(struct efp *efp, size_t frag_idx, size_t size,
 enum efp_result efp_get_frag_mass(struct efp *efp, size_t frag_idx,
     double *mass);
 
+//enum efp_result efp_get_frag_atom_mass(struct efp *efp, size_t frag_idx, double *atom_mass_out);
+
 /**
  * Get fragment principal moments of inertia.
  *

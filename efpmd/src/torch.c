@@ -214,11 +214,13 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
     forces = malloc(n_atoms * 3 * sizeof(float));
 
     frag_coord = malloc(n_atoms*3* sizeof(float));
+    
     for (size_t i=0; i<n_atoms; i++) {
         frag_coord[i*3] = (float)(torch->atom_coords[i*3] * BOHR_RADIUS);
         frag_coord[i*3+1] = (float)(torch->atom_coords[i*3+1] * BOHR_RADIUS);
         frag_coord[i*3+2] = (float)(torch->atom_coords[i*3+2] * BOHR_RADIUS);
-    }
+	//printf("frag_coord %16.10lf %16.10lf %16.10lf\n",frag_coord[i*3],frag_coord[i*3+1],frag_coord[i*3+2]);
+    } 
 
     int frag_species[n_atoms];
         for (size_t i=0; i<n_atoms; i++) {
@@ -261,15 +263,15 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
         tG_double[i] = (double)(gradients[i] * BOHR_RADIUS);
     }
 
-    if (print > 2) {
+    //if (print > 2) {
         printf("tG_double Gradients:\n");
         for (int i = 0; i < n_atoms; ++i) {
             for (int j = 0; j < 3; ++j) {
-                printf("%12.8f\t", tG_double[i * 3 + j]);
+                printf("%16.10lf\t", tG_double[i * 3 + j]);
             }
             printf("\n");
         }
-    }
+    //}
 
     memcpy(torch->grad, tG_double, (3 * n_atoms) * sizeof(double));
     if (print > 0)

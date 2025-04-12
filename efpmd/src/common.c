@@ -141,6 +141,33 @@ void print_geometry(struct efp *efp)
 	msg("\n\n");
 }
 
+void print_mlmd_geometry(struct efp *efp)
+{
+//      printf("Inside print_geometry\n");
+        size_t n_frags;
+        check_fail(efp_get_frag_count(efp, &n_frags));
+
+        msg(" ML/MD GEOMETRY TEST (ANGSTROMS)\n\n");
+
+        for (size_t i = 0; i < n_frags; i++) {
+                size_t n_atoms;
+                check_fail(efp_get_frag_atom_count(efp, i, &n_atoms));
+
+                struct efp_atom atoms[n_atoms];
+                check_fail(efp_get_frag_atoms(efp, i, n_atoms, atoms));
+
+                for (size_t a = 0; a < n_atoms; a++) {
+                        double x = atoms[a].x * BOHR_RADIUS;
+                        double y = atoms[a].y * BOHR_RADIUS;
+                        double z = atoms[a].z * BOHR_RADIUS;
+
+                        msg("%-16s %12.6lf %12.6lf %12.6lf\n", atoms[a].label, x, y, z);
+                }
+        }
+
+        msg("\n\n");
+}
+
 void print_geometry_pbc(struct efp *efp, int ligand)
 {
     size_t n_frags;

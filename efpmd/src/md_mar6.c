@@ -26,18 +26,10 @@
 
 #include "common.h"
 #include "rand.h"
-#include "torch.h"
 
 #define MAX_ITER 10
 
-struct atom {
-	vec_t atom_pos;
-        vec_t atom_force;
-	vec_t atom_vel;
-};
-
 struct body {
-	struct atom *atoms;
 	mat_t rotmat;
 	vec_t pos;
 	vec_t vel;
@@ -101,48 +93,12 @@ static vec_t wrap(const struct md *md, const vec_t *pos)
         return dr;
     }
 }
-/*
-static double get_kinetic_energy(const struct md *md)
-{
-        double ke = 0.0;
-
-        for (size_t i = 0; i < md->n_bodies; i++) {
-                struct body *body = md->bodies + i;
-
-                ke += body->mass * body->vel.x * body->vel.x;
-                ke += body->mass * body->vel.y * body->vel.y;
-                ke += body->mass * body->vel.z * body->vel.z;
-
-                ke += body->angmom.x * body->angmom.x * body->inertia_inv.x;
-                ke += body->angmom.y * body->angmom.y * body->inertia_inv.y;
-                ke += body->angmom.z * body->angmom.z * body->inertia_inv.z;
-        }
-
-        return 0.5 * ke;
-}
-*/
-
 
 static double get_kinetic_energy(const struct md *md)
 {
 	double ke = 0.0;
 
-	size_t spec_frag = 0, n_special_atoms = 0;
-        bool use_torch = cfg_get_bool(md->state->cfg, "enable_torch") &&
-                         cfg_get_int(md->state->cfg, "opt_special_frag") > -1;
-
-        if (use_torch) {
-            msg("Inside get_kinetic_energy(), Torch enabled\n");
-            spec_frag = cfg_get_int(md->state->cfg, "special_fragment");
-            check_fail(efp_get_frag_atom_count(md->state->efp, spec_frag, &n_special_atoms));
-	}
-
 	for (size_t i = 0; i < md->n_bodies; i++) {
-	
-		if (use_torch && i == spec_frag) {
-                    continue;
-                }
-		
 		struct body *body = md->bodies + i;
 
 		ke += body->mass * body->vel.x * body->vel.x;
@@ -152,34 +108,10 @@ static double get_kinetic_energy(const struct md *md)
 		ke += body->angmom.x * body->angmom.x * body->inertia_inv.x;
 		ke += body->angmom.y * body->angmom.y * body->inertia_inv.y;
 		ke += body->angmom.z * body->angmom.z * body->inertia_inv.z;
-		//msg("regular ke = %16.10lf\n",ke);
 	}
 
-	msg("regular ke = %16.10lf\n",ke);
-	if (use_torch) {
-
-            // Get fragment atom positions and masses
-            struct efp_atom *special_atoms;
-            special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
-            check_fail(efp_get_frag_atoms(md->state->efp, spec_frag, n_special_atoms, special_atoms));
-            struct body *body = md->bodies + spec_frag;
-	    double dt = cfg_get_double(md->state->cfg, "time_step");
- 
-            // Get atomic forces from torch gradients
-            for (size_t i = 0; i < n_special_atoms; i++) {
-	 
-		ke += AMU_TO_AU * special_atoms[i].mass * (body->atoms[i]).atom_vel.x * (body->atoms[i]).atom_vel.x;
-	        ke += AMU_TO_AU * special_atoms[i].mass * (body->atoms[i]).atom_vel.y * (body->atoms[i]).atom_vel.y;
-	        ke += AMU_TO_AU * special_atoms[i].mass * (body->atoms[i]).atom_vel.z * (body->atoms[i]).atom_vel.z;
-            
-	    }
-	    free(special_atoms);    
-	}    
-	//msg("regular+special ke = %16.10lf\n",ke);
-	
 	return 0.5 * ke;
 }
-
 
 static double get_temperature(const struct md *md)
 {
@@ -372,6 +304,46 @@ static void remove_system_drift(struct md *md)
 
 	vec_t av = mat_vec(&inertia_inv, &am);
 
+
+	if (cfg_get_bool(md->state->cfg, "enable_torch")) {
+		size_t spec_frag = cfg_get_int(md->state->cfg, "special_fragment");
+        	msg("Enable Torch Turned ON in remove_system_drift()\n");
+        	msg("%30s %4d\n", "Special fragment", spec_frag); 
+		
+		struct body *body = md->bodies + spec_frag;
+		vec_t pos = wrap(md, &body->pos);
+
+                vec_t cross = {
+                        av.y * (pos.z - cp.z) - av.z * (pos.y - cp.y),
+                        av.z * (pos.x - cp.x) - av.x * (pos.z - cp.z),
+                        av.x * (pos.y - cp.y) - av.y * (pos.x - cp.x)
+                };
+
+                body->vel.x -= cv.x + cross.x;
+                body->vel.y -= cv.y + cross.y;
+                body->vel.z -= cv.z + cross.z;	
+	   
+	   for (size_t i = 0; i < md->n_bodies; i++) {
+		if (i == spec_frag) continue; 
+
+                struct body *body = md->bodies + i;
+                vec_t pos = wrap(md, &body->pos);
+
+                vec_t cross = {
+                        av.y * (pos.z - cp.z) - av.z * (pos.y - cp.y),
+                        av.z * (pos.x - cp.x) - av.x * (pos.z - cp.z),
+                        av.x * (pos.y - cp.y) - av.y * (pos.x - cp.x)
+                };
+
+                body->vel.x -= cv.x + cross.x;
+                body->vel.y -= cv.y + cross.y;
+                body->vel.z -= cv.z + cross.z;
+
+           }
+
+	}
+
+	if (!cfg_get_bool(md->state->cfg, "enable_torch")) {
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		struct body *body = md->bodies + i;
 		vec_t pos = wrap(md, &body->pos);
@@ -385,17 +357,78 @@ static void remove_system_drift(struct md *md)
 		body->vel.x -= cv.x + cross.x;
 		body->vel.y -= cv.y + cross.y;
 		body->vel.z -= cv.z + cross.z;
+
 	}
-	// do it for special fragment atomistically 
+	}
 	vec_t cv2 = get_system_com_velocity(md);
 	vec_t am2 = get_system_angular_momentum(md);
 
 	assert(vec_len(&cv2) < EPSILON && vec_len(&am2) < EPSILON);
 }
 
-/*
+
 static void compute_forces(struct md *md)
-{
+{ 
+     if (cfg_get_bool(md->state->cfg, "enable_torch")) {
+	size_t spec_frag = cfg_get_int(md->state->cfg, "special_fragment");	
+	msg("Enable Torch Turned ON in compute_forces()\n");
+	msg("%30s %4d\n", "Special fragment", spec_frag);
+ 
+        double crd[12];
+
+        memcpy(crd, &md->bodies[spec_frag].pos, 3 * sizeof(double));
+        memcpy(crd + 3, &md->bodies[spec_frag].rotmat, 9 * sizeof(double));
+
+        check_fail(efp_set_frag_coordinates(md->state->efp, spec_frag, EFP_COORD_TYPE_ROTMAT, crd));
+
+	for (size_t i = 0; i < md->n_bodies; i++) {
+		if (i == spec_frag) continue; 
+    		
+                double crd[12];
+
+                memcpy(crd, &md->bodies[i].pos, 3 * sizeof(double));
+                memcpy(crd + 3, &md->bodies[i].rotmat, 9 * sizeof(double));
+
+                check_fail(efp_set_frag_coordinates(md->state->efp, i,
+                    EFP_COORD_TYPE_ROTMAT, crd));
+        }
+	
+	compute_energy(md->state, true);
+        md->potential_energy = md->state->energy;
+
+	struct body *body = md->bodies + spec_frag;
+
+        body->force.x = -md->state->grad[6 * spec_frag + 0];
+        body->force.y = -md->state->grad[6 * spec_frag + 1];
+        body->force.z = -md->state->grad[6 * spec_frag + 2];
+
+        body->torque.x = -md->state->grad[6 * spec_frag + 3];
+        body->torque.y = -md->state->grad[6 * spec_frag + 4];
+        body->torque.z = -md->state->grad[6 * spec_frag + 5];
+
+	body->torque = mat_trans_vec(&body->rotmat, &body->torque);
+
+	for (size_t i = 0; i < md->n_bodies; i++) {
+
+		if (i == spec_frag) continue; 
+
+                struct body *body = md->bodies + i;
+
+                body->force.x = -md->state->grad[6 * i + 0];
+                body->force.y = -md->state->grad[6 * i + 1];
+                body->force.z = -md->state->grad[6 * i + 2];
+
+                body->torque.x = -md->state->grad[6 * i + 3];
+                body->torque.y = -md->state->grad[6 * i + 4];
+                body->torque.z = -md->state->grad[6 * i + 5];
+
+                /* convert torque to body frame */
+                body->torque = mat_trans_vec(&body->rotmat, &body->torque);
+        }	
+
+     } 
+
+     if (!cfg_get_bool(md->state->cfg, "enable_torch")) {
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		double crd[12];
 
@@ -415,7 +448,7 @@ static void compute_forces(struct md *md)
 		check_fail(efp_get_opts(md->state->efp, &opts));
 		if (md->step % multistep_steps == 0) {
 			opts_save = opts;
-			opts.terms = EFP_TERM_XR; // xr only 
+			opts.terms = EFP_TERM_XR; /* xr only */
 			check_fail(efp_set_opts(md->state->efp, &opts));
 			compute_energy(md->state, true);
 			md->xr_energy = md->state->energy;
@@ -423,7 +456,7 @@ static void compute_forces(struct md *md)
 			    6 * md->n_bodies * sizeof(double));
 			opts = opts_save;
 		}
-		opts.terms &= ~EFP_TERM_XR; // turn off xr 
+		opts.terms &= ~EFP_TERM_XR; /* turn off xr */
 		check_fail(efp_set_opts(md->state->efp, &opts));
 		compute_energy(md->state, true);
 		md->state->energy += md->xr_energy;
@@ -433,7 +466,7 @@ static void compute_forces(struct md *md)
 		compute_energy(md->state, true);
 
 	md->potential_energy = md->state->energy;
-// get force and torque for the atoms as well from torch gradients
+ 
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		struct body *body = md->bodies + i;
 
@@ -445,101 +478,11 @@ static void compute_forces(struct md *md)
 		body->torque.y = -md->state->grad[6 * i + 4];
 		body->torque.z = -md->state->grad[6 * i + 5];
 
-		// convert torque to body frame 
+		/* convert torque to body frame */
 		body->torque = mat_trans_vec(&body->rotmat, &body->torque);
 	}
+     }
 }
-*/
-
-static void compute_forces(struct md *md)
-{
-        size_t spec_frag = 0, n_special_atoms = 0;
-        bool use_torch = cfg_get_bool(md->state->cfg, "enable_torch") && 
-                         cfg_get_int(md->state->cfg, "opt_special_frag") > -1;
-        
-        if (use_torch) {
-	    msg("Inside compute forces, Torch enabled\n");
-    	    spec_frag = cfg_get_int(md->state->cfg, "special_fragment");
-            check_fail(efp_get_frag_atom_count(md->state->efp, spec_frag, &n_special_atoms));
-	}
-        
-        // Set coordinates for regular fragments
-        for (size_t i = 0; i < md->n_bodies; i++) {
-		//skip for special fragment
-                if (use_torch && i == spec_frag) {
-                    continue;
-                }
-		double crd[12];
-                memcpy(crd, &md->bodies[i].pos, 3 * sizeof(double));
-                memcpy(crd + 3, &md->bodies[i].rotmat, 9 * sizeof(double));
-                check_fail(efp_set_frag_coordinates(md->state->efp, i,
-                    EFP_COORD_TYPE_ROTMAT, crd));
-		// do it for special fragment as well
-	}
-        
-        // For special fragment, get coordinates from atoms struct
-        if (use_torch) {
-            struct efp_atom *special_atoms;
-            special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
-            check_fail(efp_get_frag_atoms(md->state->efp, spec_frag, n_special_atoms, special_atoms));
-
-            double *atom_coords = xmalloc(3 * n_special_atoms * sizeof(double));
-            // Extract coordinates from atoms structure
-            for (size_t i = 0; i < n_special_atoms; i++) {
-                atom_coords[3 * i + 0] = special_atoms[i].x;
-                atom_coords[3 * i + 1] = special_atoms[i].y;
-                atom_coords[3 * i + 2] = special_atoms[i].z;
-            
-	    	//msg(" In compute_forces() %16.10lf %16.10lf %16.10lf\n",atom_coords[3*i+0],atom_coords[3*i+1],atom_coords[3*i+2]);
-	    }
-	    // Update torch coordinates
-	    msg("Setting special fragments as Torch coordinates\n");
-            torch_set_coord(md->state->torch, atom_coords);
-            // feed the spec_frag coordinates to efp 
-	    check_fail(efp_set_frag_coordinates(md->state->efp, spec_frag, EFP_COORD_TYPE_ATOMS, atom_coords));  
-	    free(atom_coords);
-            free(special_atoms);
-	}
-        
-        // Compute energies and gradients
-        compute_energy(md->state, true);
-        md->potential_energy = md->state->energy;
-        
-        // Process gradients for regular fragments
-        for (size_t i = 0; i < md->n_bodies; i++) {
-                struct body *body = md->bodies + i;
-                
-                // Skip special fragment - handle separately
-                if (use_torch && i == spec_frag) {
-                    continue;
-                }
-                
-                body->force.x = -md->state->grad[6 * i + 0];
-                body->force.y = -md->state->grad[6 * i + 1];
-                body->force.z = -md->state->grad[6 * i + 2];
-
-		body->torque.x = -md->state->grad[6 * i + 3];
-                body->torque.y = -md->state->grad[6 * i + 4];
-                body->torque.z = -md->state->grad[6 * i + 5];
-                /* convert torque to body frame */
-                body->torque = mat_trans_vec(&body->rotmat, &body->torque);
-        }
-        
-        // Process gradients for special fragment if torch is enabled
-        if (use_torch) {
-            struct body *body = md->bodies + spec_frag;
-            // Accumulate force and compute torque from atomic forces
-            for (size_t i = 0; i < n_special_atoms; i++) {
-                // get atomic forces from torch gradients
-		// feed it to body->atom_force
-		(body->atoms[i]).atom_force.x = -md->state->torch_grad[3 * i + 0];
-		(body->atoms[i]).atom_force.y = -md->state->torch_grad[3 * i + 1];
-		(body->atoms[i]).atom_force.z = -md->state->torch_grad[3 * i + 2];
-		//msg(" In compute_forces(), (body->atoms[i]).atom_force %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_force.x, (body->atoms[i]).atom_force.y, (body->atoms[i]).atom_force.z);
-            }
-	}
-}
-
 
 static void set_body_mass_and_inertia(struct efp *efp, size_t idx,
     struct body *body)
@@ -621,13 +564,10 @@ static void rotate_body(struct body *body, double dt)
 	rotate_step(1, 2, angle, &body->angmom, &body->rotmat);
 }
 
-
-/*
 static void update_step_nve(struct md *md)
 {
 	double dt = cfg_get_double(md->state->cfg, "time_step");
-// for spec_frag add vel and angmom to each of the atoms
-// and change their positions as well
+
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		struct body *body = md->bodies + i;
 
@@ -660,159 +600,6 @@ static void update_step_nve(struct md *md)
 		body->angmom.z += 0.5 * body->torque.z * dt;
 	}
 }
-*/
-
-
-
-static void update_step_nve(struct md *md)
-{
-        double dt = cfg_get_double(md->state->cfg, "time_step");
-        size_t spec_frag = 0, n_special_atoms = 0;
-        bool use_torch = cfg_get_bool(md->state->cfg, "enable_torch") && 
-                         cfg_get_int(md->state->cfg, "opt_special_frag") > -1;
-       
-        msg(" time_step = %16.10lf\n",dt);	
-        if (use_torch) {
-	    msg("Doing update_step_nve, Using Enable-Torch\n");
-    	    spec_frag = cfg_get_int(md->state->cfg, "special_fragment");
-            check_fail(efp_get_frag_atom_count(md->state->efp, spec_frag, &n_special_atoms));
-	}
-        
-        // First half step velocity update for all bodies
-        for (size_t i = 0; i < md->n_bodies; i++) {
-		// skip it for spec_frag
-                if (use_torch && i == spec_frag) {
-                    continue;
-                }
-		
-
-		struct body *body = md->bodies + i;
-                body->vel.x += 0.5 * body->force.x * dt / body->mass;
-                body->vel.y += 0.5 * body->force.y * dt / body->mass;
-                body->vel.z += 0.5 * body->force.z * dt / body->mass;
-       
-	       	msg("body->mass %16.10lf\n",body->mass);
-		body->angmom.x += 0.5 * body->torque.x * dt;
-                body->angmom.y += 0.5 * body->torque.y * dt;
-                body->angmom.z += 0.5 * body->torque.z * dt;
-        }
-        
-        // Full step position update all bodies
-        for (size_t i = 0; i < md->n_bodies; i++) {
-		// skip it for spec_frag
-		if (use_torch && i == spec_frag) {
-                    continue;
-                }	
-		
-		struct body *body = md->bodies + i;
-                body->pos.x += body->vel.x * dt;
-                body->pos.y += body->vel.y * dt;
-                body->pos.z += body->vel.z * dt;
-                
-                // For regular fragments, just rotate the body
-                if (!use_torch || i != spec_frag) {
-                    rotate_body(body, dt);
-                }
-		//print_frag_info(md->state->efp, i);
-
-	}
-        msg("Full position update.. will update special fragment\n"); 
-        // Handling for the special fragment atoms if torch enabled
-        if (use_torch) {
-            
-            // Get fragment atom positions and masses
-	    struct efp_atom *special_atoms;
-            special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
-            check_fail(efp_get_frag_atoms(md->state->efp, spec_frag, n_special_atoms, special_atoms));
-	    double *atom_coords = xmalloc(3 * n_special_atoms * sizeof(double));           
- 	    struct body *body = md->bodies + spec_frag;
-
-            // Get atomic forces from torch gradients
-            for (size_t i = 0; i < n_special_atoms; i++) {
-		    
-    		msg("special_atom-mass %16.10lf\n",special_atoms[i].mass);
-
-		(body->atoms[i]).atom_vel.x += 0.5 * (body->atoms[i]).atom_force.x * dt / (AMU_TO_AU * special_atoms[i].mass);
-                (body->atoms[i]).atom_vel.y += 0.5 * (body->atoms[i]).atom_force.y * dt / (AMU_TO_AU * special_atoms[i].mass);
-                (body->atoms[i]).atom_vel.z += 0.5 * (body->atoms[i]).atom_force.z * dt / (AMU_TO_AU * special_atoms[i].mass);
-		// is velocity correct
-		msg("In update_step_nve() part-1, (body->atoms[i]).atom_vel %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_vel.x, (body->atoms[i]).atom_vel.y, (body->atoms[i]).atom_vel.z);
-            }
-            
-            // Update atomic positions based on forces and masses
-            for (size_t i = 0; i < n_special_atoms; i++) {
-		// point of contentions
-		// unit issue
-		(body->atoms[i]).atom_pos.x += (body->atoms[i]).atom_vel.x * dt;
-	        (body->atoms[i]).atom_pos.y += (body->atoms[i]).atom_vel.y * dt;
-		(body->atoms[i]).atom_pos.z += (body->atoms[i]).atom_vel.z * dt;	
- 		  
-		atom_coords[3*i+0] = (body->atoms[i]).atom_pos.x;
-		atom_coords[3*i+1] = (body->atoms[i]).atom_pos.y;
-		atom_coords[3*i+2] = (body->atoms[i]).atom_pos.z;
-
-		double rx = special_atoms[i].x - (body->atoms[i]).atom_pos.x;
-                double ry = special_atoms[i].y - (body->atoms[i]).atom_pos.y;
-                double rz = special_atoms[i].z - (body->atoms[i]).atom_pos.z;
-
-		// uncomment the following lines to get geom changes	
-		//msg(" Before %16.10lf %16.10lf %16.10lf\n",special_atoms[i].x * BOHR_RADIUS, special_atoms[i].y * BOHR_RADIUS, special_atoms[i].z * BOHR_RADIUS);
-		//msg(" After position update %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_pos.x * BOHR_RADIUS, (body->atoms[i]).atom_pos.y * BOHR_RADIUS, (body->atoms[i]).atom_pos.z * BOHR_RADIUS);
-		//msg(" Diff %16.10lf %16.10lf %16.10lf\n\n", rx * BOHR_RADIUS, ry * BOHR_RADIUS, rz * BOHR_RADIUS);
-
-	    }
-
-            msg("Updating fragment using update_special_fragment routine()\n");
-            // Update fragment with new atomic positions
-	    check_fail(update_special_fragment(md->state->efp, atom_coords));
-            //check_fail(efp_set_frag_coordinates(md->state->efp, spec_frag, EFP_COORD_TYPE_ATOMS, atom_coords)); 
-	    //msg("==================================================\n");
-	    //print_mlmd_geometry(md->state->efp);
-	    //msg("==================================================\n");
-	    free(atom_coords);
-            free(special_atoms);
-	    
-	}
-        
-        // Recompute forces with updated positions
-        compute_forces(md);
-       
-        // Second half step velocity update
-        for (size_t i = 0; i < md->n_bodies; i++) {
-		// skip it for spec_frag
-		if (use_torch && i == spec_frag) {
-                    continue;
-                }
-		// update separately for spec_frag
-                struct body *body = md->bodies + i;
-                body->vel.x += 0.5 * body->force.x * dt / body->mass;
-                body->vel.y += 0.5 * body->force.y * dt / body->mass;
-                body->vel.z += 0.5 * body->force.z * dt / body->mass;
-            
-	    	body->angmom.x += 0.5 * body->torque.x * dt;
-                body->angmom.y += 0.5 * body->torque.y * dt;
-                body->angmom.z += 0.5 * body->torque.z * dt;
-        }
-
-	if (use_torch) {
-	    struct body *body = md->bodies + spec_frag;
-	    // Get fragment atom positions and masses
-            struct efp_atom *special_atoms;
-            special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
-            check_fail(efp_get_frag_atoms(md->state->efp, spec_frag, n_special_atoms, special_atoms)); 
-            // Update atomic forces from torch gradients
-            for (size_t i = 0; i < n_special_atoms; i++) {
-		(body->atoms[i]).atom_vel.x += 0.5 * (body->atoms[i]).atom_force.x * dt / (AMU_TO_AU * special_atoms[i].mass);
-                (body->atoms[i]).atom_vel.y += 0.5 * (body->atoms[i]).atom_force.y * dt / (AMU_TO_AU * special_atoms[i].mass);
-                (body->atoms[i]).atom_vel.z += 0.5 * (body->atoms[i]).atom_force.z * dt / (AMU_TO_AU * special_atoms[i].mass);
-
-                msg("In update_step_nve() part-2, (body->atoms[i]).atom_vel %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_vel.x, (body->atoms[i]).atom_vel.y, (body->atoms[i]).atom_vel.z);
-	    }
-	    free(special_atoms);	    
-	}
-}
-
-
 
 /*
  * NVT with Nose-Hoover thermostat:
@@ -823,6 +610,8 @@ static void update_step_nve(struct md *md)
  *
  * Phys. Rev. A 31, 1695 (1985)
  */
+
+/*
 static void update_step_nvt(struct md *md)
 {
 	struct nvt_data *data = (struct nvt_data *)md->data;
@@ -831,8 +620,71 @@ static void update_step_nvt(struct md *md)
 	double target = cfg_get_double(md->state->cfg, "temperature");
 	double tau = cfg_get_double(md->state->cfg, "thermostat_tau");
 
+	msg("%30s %4d\n", "Target temperature", target);
+
 	double t0 = get_temperature(md);
 
+	msg("%30s %4d\n", "get_temperature t0 = ", t0);
+
+	if (cfg_get_bool(md->state->cfg, "enable_torch")) {
+
+        	size_t spec_frag = cfg_get_int(md->state->cfg, "special_fragment");
+        	msg("Enable Torch Turned ON update_step_nvt()\n");
+        	msg("%30s %4d\n", "Special fragment", spec_frag);
+ 
+	        struct body *body = md->bodies + spec_frag;
+
+                body->vel.x += 0.5 * dt * (body->force.x / body->mass -
+                                        body->vel.x * data->chi);
+                body->vel.y += 0.5 * dt * (body->force.y / body->mass -
+                                        body->vel.y * data->chi);
+                body->vel.z += 0.5 * dt * (body->force.z / body->mass -
+                                        body->vel.z * data->chi);
+
+                body->angmom.x += 0.5 * dt * (body->torque.x -
+                                        body->angmom.x * data->chi);
+                body->angmom.y += 0.5 * dt * (body->torque.y -
+                                        body->angmom.y * data->chi);
+                body->angmom.z += 0.5 * dt * (body->torque.z -
+                                        body->angmom.z * data->chi);
+
+                body->pos.x += body->vel.x * dt;
+                body->pos.y += body->vel.y * dt;
+                body->pos.z += body->vel.z * dt;
+
+                rotate_body(body, dt);	
+
+		for (size_t i = 0; i < md->n_bodies; i++) {
+
+			if (i == spec_frag) continue;
+
+                	struct body *body = md->bodies + i;
+
+                	body->vel.x += 0.5 * dt * (body->force.x / body->mass -
+                	                        body->vel.x * data->chi);
+                	body->vel.y += 0.5 * dt * (body->force.y / body->mass -
+                	                        body->vel.y * data->chi);
+                	body->vel.z += 0.5 * dt * (body->force.z / body->mass -
+                	                        body->vel.z * data->chi);
+
+                	body->angmom.x += 0.5 * dt * (body->torque.x -
+                	                        body->angmom.x * data->chi);
+                	body->angmom.y += 0.5 * dt * (body->torque.y -
+                	                        body->angmom.y * data->chi);
+                	body->angmom.z += 0.5 * dt * (body->torque.z -
+                	                        body->angmom.z * data->chi);
+
+                	body->pos.x += body->vel.x * dt;
+                	body->pos.y += body->vel.y * dt;
+                	body->pos.z += body->vel.z * dt;
+
+                rotate_body(body, dt);
+        	}
+
+	}
+
+	
+	if (!cfg_get_bool(md->state->cfg, "enable_torch")) {
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		struct body *body = md->bodies + i;
 
@@ -856,6 +708,7 @@ static void update_step_nvt(struct md *md)
 
 		rotate_body(body, dt);
 	}
+	}
 
 	data->chi += 0.5 * dt * (t0 / target - 1.0) / tau / tau;
 	data->chi_dt += 0.5 * dt * data->chi;
@@ -865,10 +718,80 @@ static void update_step_nvt(struct md *md)
 	double chi_init = data->chi;
 	vec_t angmom_init[md->n_bodies], vel_init[md->n_bodies];
 
+	if (cfg_get_bool(md->state->cfg, "enable_torch")) {
+                size_t spec_frag = cfg_get_int(md->state->cfg, "special_fragment");
+                msg("Enable Torch Turned ON in update_step_nvt()\n");
+                msg("%30s %4d\n", "Special fragment", spec_frag);
+ 
+		angmom_init[spec_frag] = md->bodies[spec_frag].angmom;
+                vel_init[spec_frag] = md->bodies[spec_frag].vel;
+
+		for (size_t iter = 1; iter <= MAX_ITER; iter++) {
+	                double chi_prev = data->chi;
+	                double ratio = get_temperature(md) / target;
+
+	                data->chi = chi_init + 0.5 * dt * (ratio - 1.0) / tau / tau;
+ 
+			struct body *body = md->bodies + spec_frag;
+
+                        body->vel.x = vel_init[spec_frag].x +
+                            0.5 * dt * (body->force.x / body->mass -
+                                vel_init[spec_frag].x * data->chi);
+                        body->vel.y = vel_init[spec_frag].y +
+                            0.5 * dt * (body->force.y / body->mass -
+                                vel_init[spec_frag].y * data->chi);
+                        body->vel.z = vel_init[spec_frag].z +
+                            0.5 * dt * (body->force.z / body->mass -
+                                vel_init[spec_frag].z * data->chi);
+
+                        body->angmom.x = angmom_init[spec_frag].x + 0.5 * dt *
+                                (body->torque.x - angmom_init[spec_frag].x * data->chi);
+                        body->angmom.y = angmom_init[spec_frag].y + 0.5 * dt *
+                                (body->torque.y - angmom_init[spec_frag].y * data->chi);
+                        body->angmom.z = angmom_init[spec_frag].z + 0.5 * dt *
+                                (body->torque.z - angmom_init[spec_frag].z * data->chi);
+			
+
+			for (size_t i = 0; i < md->n_bodies; i++) {
+
+				if (i == spec_frag ) continue;
+
+                        	struct body *body = md->bodies + i;
+
+                        	body->vel.x = vel_init[i].x +
+                        	    0.5 * dt * (body->force.x / body->mass -
+                        	        vel_init[i].x * data->chi);
+                        	body->vel.y = vel_init[i].y +
+                        	    0.5 * dt * (body->force.y / body->mass -
+                        	        vel_init[i].y * data->chi);
+                        	body->vel.z = vel_init[i].z +
+                        	    0.5 * dt * (body->force.z / body->mass -
+                        	        vel_init[i].z * data->chi);
+
+                        	body->angmom.x = angmom_init[i].x + 0.5 * dt *
+                        	        (body->torque.x - angmom_init[i].x * data->chi);
+                        	body->angmom.y = angmom_init[i].y + 0.5 * dt *
+                        	        (body->torque.y - angmom_init[i].y * data->chi);
+                        	body->angmom.z = angmom_init[i].z + 0.5 * dt *
+                        	        (body->torque.z - angmom_init[i].z * data->chi);
+                	}
+
+			if (fabs(data->chi - chi_prev) < EPSILON)
+                        break;
+
+                if (iter == MAX_ITER)
+                        msg("WARNING: NVT UPDATE DID NOT CONVERGE\n\n");
+        	}
+	
+
+	}
+
+	if (!cfg_get_bool(md->state->cfg, "enable_torch")) {
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		angmom_init[i] = md->bodies[i].angmom;
 		vel_init[i] = md->bodies[i].vel;
 	}
+	
 
 	for (size_t iter = 1; iter <= MAX_ITER; iter++) {
 		double chi_prev = data->chi;
@@ -903,8 +826,93 @@ static void update_step_nvt(struct md *md)
 		if (iter == MAX_ITER)
 			msg("WARNING: NVT UPDATE DID NOT CONVERGE\n\n");
 	}
-
+	}
 	data->chi_dt += 0.5 * dt * data->chi;
+}
+*/
+
+static void update_step_nvt(struct md *md)
+{
+        struct nvt_data *data = (struct nvt_data *)md->data;
+
+        double dt = cfg_get_double(md->state->cfg, "time_step");
+        double target = cfg_get_double(md->state->cfg, "temperature");
+        double tau = cfg_get_double(md->state->cfg, "thermostat_tau");
+
+        double t0 = get_temperature(md);
+
+        for (size_t i = 0; i < md->n_bodies; i++) {
+                struct body *body = md->bodies + i;
+
+                body->vel.x += 0.5 * dt * (body->force.x / body->mass -
+                                        body->vel.x * data->chi);
+                body->vel.y += 0.5 * dt * (body->force.y / body->mass -
+                                        body->vel.y * data->chi);
+                body->vel.z += 0.5 * dt * (body->force.z / body->mass -
+                                        body->vel.z * data->chi);
+
+                body->angmom.x += 0.5 * dt * (body->torque.x -
+                                        body->angmom.x * data->chi);
+                body->angmom.y += 0.5 * dt * (body->torque.y -
+                                        body->angmom.y * data->chi);
+                body->angmom.z += 0.5 * dt * (body->torque.z -
+                                        body->angmom.z * data->chi);
+
+                body->pos.x += body->vel.x * dt;
+                body->pos.y += body->vel.y * dt;
+                body->pos.z += body->vel.z * dt;
+
+                rotate_body(body, dt);
+        }
+
+        data->chi += 0.5 * dt * (t0 / target - 1.0) / tau / tau;
+        data->chi_dt += 0.5 * dt * data->chi;
+
+        compute_forces(md);
+
+        double chi_init = data->chi;
+        vec_t angmom_init[md->n_bodies], vel_init[md->n_bodies];
+
+        for (size_t i = 0; i < md->n_bodies; i++) {
+                angmom_init[i] = md->bodies[i].angmom;
+                vel_init[i] = md->bodies[i].vel;
+        }
+
+        for (size_t iter = 1; iter <= MAX_ITER; iter++) {
+                double chi_prev = data->chi;
+                double ratio = get_temperature(md) / target;
+
+                data->chi = chi_init + 0.5 * dt * (ratio - 1.0) / tau / tau;
+
+                for (size_t i = 0; i < md->n_bodies; i++) {
+                        struct body *body = md->bodies + i;
+
+                        body->vel.x = vel_init[i].x +
+                            0.5 * dt * (body->force.x / body->mass -
+                                vel_init[i].x * data->chi);
+                        body->vel.y = vel_init[i].y +
+                            0.5 * dt * (body->force.y / body->mass -
+                                vel_init[i].y * data->chi);
+                        body->vel.z = vel_init[i].z +
+                            0.5 * dt * (body->force.z / body->mass -
+                                vel_init[i].z * data->chi);
+
+                        body->angmom.x = angmom_init[i].x + 0.5 * dt *
+                                (body->torque.x - angmom_init[i].x * data->chi);
+                        body->angmom.y = angmom_init[i].y + 0.5 * dt *
+                                (body->torque.y - angmom_init[i].y * data->chi);
+                        body->angmom.z = angmom_init[i].z + 0.5 * dt *
+                                (body->torque.z - angmom_init[i].z * data->chi);
+                }
+
+                if (fabs(data->chi - chi_prev) < EPSILON)
+                        break;
+
+                if (iter == MAX_ITER)
+                        msg("WARNING: NVT UPDATE DID NOT CONVERGE\n\n");
+        }
+
+        data->chi_dt += 0.5 * dt * data->chi;
 }
 
 /*
@@ -1152,27 +1160,7 @@ static struct md *md_create(struct state *state)
 	double coord[6 * md->n_bodies];
 	check_fail(efp_get_coordinates(state->efp, coord));
 
-//============ Torch part =============================//
-	size_t spec_frag = 0, n_special_atoms = 0;
-        bool use_torch = cfg_get_bool(md->state->cfg, "enable_torch") &&
-                         cfg_get_int(md->state->cfg, "opt_special_frag") > -1;
-
-        if (use_torch) {
-            msg("Inside md_create(), Torch enabled\n");
-            spec_frag = cfg_get_int(md->state->cfg, "special_fragment");
-            check_fail(efp_get_frag_atom_count(md->state->efp, spec_frag, &n_special_atoms));
-
-	    // defining and allocating body->atoms object
-	    struct body *body = md->bodies + spec_frag;
-            body->atoms = xmalloc(n_special_atoms * sizeof(struct atom));
-	}
-//=======================================================//
 	for (size_t i = 0; i < md->n_bodies; i++) {
-		
-		if (use_torch && i == spec_frag) {
-                    continue;
-                }
-		
 		struct body *body = md->bodies + i;
 
 		body->pos.x = coord[6 * i + 0];
@@ -1207,32 +1195,7 @@ static struct md *md_create(struct state *state)
 		if (body->inertia.z > EPSILON)
 			md->n_freedom++;
 	}
-//============ Torch part =============================//
-	if (use_torch) {
 
-            // Get fragment atom positions and masses
-            struct efp_atom *special_atoms;
-            special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
-            check_fail(efp_get_frag_atoms(md->state->efp, spec_frag, n_special_atoms, special_atoms));
-            struct body *body = md->bodies + spec_frag;
-
-            // Get atomic forces from torch gradients
-            for (size_t i = 0; i < n_special_atoms; i++) {
-            // redistribute start velo to atoms (trans + rotn)
-            // n-th step velocities should depend on (n-1)th step's velos.
-	    	
-		(body->atoms[i]).atom_pos.x = special_atoms[i].x;
-		(body->atoms[i]).atom_pos.y = special_atoms[i].y;
-		(body->atoms[i]).atom_pos.z = special_atoms[i].z;
-                
-		(body->atoms[i]).atom_vel.x = md->state->sys->frags[spec_frag].vel[0];
-                (body->atoms[i]).atom_vel.y = md->state->sys->frags[spec_frag].vel[1];
-                (body->atoms[i]).atom_vel.z = md->state->sys->frags[spec_frag].vel[2];
-
-                msg("In md_create(), (body->atoms[i]).atom_velo %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_vel.x, (body->atoms[i]).atom_vel.y, (body->atoms[i]).atom_vel.z);
-            }
-	}    
-//=======================================================//
 	return (md);
 }
 
@@ -1279,6 +1242,7 @@ static void md_shutdown(struct md *md)
 	free(md);
 }
 
+
 void sim_md(struct state *state)
 {
 	msg("MOLECULAR DYNAMICS JOB\n\n\n");
@@ -1309,3 +1273,4 @@ void sim_md(struct state *state)
 
 	msg("MOLECULAR DYNAMICS JOB COMPLETED SUCCESSFULLY\n");
 }
+

@@ -67,6 +67,7 @@ void ANIModel::get_energy_grad(const torch::Tensor& coordinates,
     }
 
     auto force = -gradient;
+    
 
     if (print > 2) {
         std::cout << "=========TESTING FOR OBJECT BASED MODEL LOADING ===============" << std::endl;
