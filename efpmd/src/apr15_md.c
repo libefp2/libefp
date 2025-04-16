@@ -138,18 +138,16 @@ static double get_kinetic_energy(const struct md *md)
 	}
 
 
-//	for(size_t i = 0; i < md->n_bodies; i++) {
-//	
-//	     struct body *body = md->bodies + i;
+	for(size_t i = 0; i < md->n_bodies; i++) {
+	
+	     struct body *body = md->bodies + i;
 
-//	     msg("checking body->vels in get_kinetic_energy(), %16.10lf %16.10lf %16.10lf\n",body->vel.x, body->vel.y, body->vel.z);
-//	}
-
+	     msg("checking body->vels in get_kinetic_energy(), %16.10lf %16.10lf %16.10lf\n",body->vel.x, body->vel.y, body->vel.z);
+	}
 
 	for (size_t i = 0; i < md->n_bodies; i++) {
 	
 		if (use_torch && i == spec_frag) {
-/*
 			// Get fragment atom positions and masses
             		struct efp_atom *special_atoms;
             		special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
@@ -161,12 +159,10 @@ static double get_kinetic_energy(const struct md *md)
 		                ke += AMU_TO_AU * special_atoms[j].mass * (body->atoms[j]).atom_vel.x * (body->atoms[j]).atom_vel.x;
         		        ke += AMU_TO_AU * special_atoms[j].mass * (body->atoms[j]).atom_vel.y * (body->atoms[j]).atom_vel.y;
         		        ke += AMU_TO_AU * special_atoms[j].mass * (body->atoms[j]).atom_vel.z * (body->atoms[j]).atom_vel.z;
-  
-		msg("checking atom_vel in get_kinetic_energy(), %16.10lf %16.10lf %16.10lf\n",(body->atoms[j]).atom_vel.x, (body->atoms[j]).atom_vel.y, (body->atoms[j]).atom_vel.z);
+
             		}
             		free(special_atoms);
-*/
-			continue;
+    		continue;
                 }
 	
 		struct body *body = md->bodies + i;
@@ -183,8 +179,8 @@ static double get_kinetic_energy(const struct md *md)
 		//msg("regular ke = %16.10lf\n",ke);
 	}
 
-	msg("regular  ke = %16.10lf\n",ke);
-
+	msg(" ke = %16.10lf\n",ke);
+/*
 	if (use_torch) {
 
             // Get fragment atom positions and masses
@@ -200,13 +196,12 @@ static double get_kinetic_energy(const struct md *md)
 		ke += AMU_TO_AU * special_atoms[i].mass * (body->atoms[i]).atom_vel.x * (body->atoms[i]).atom_vel.x;
 	        ke += AMU_TO_AU * special_atoms[i].mass * (body->atoms[i]).atom_vel.y * (body->atoms[i]).atom_vel.y;
 	        ke += AMU_TO_AU * special_atoms[i].mass * (body->atoms[i]).atom_vel.z * (body->atoms[i]).atom_vel.z;
-
-    		msg("checking atom_vel in get_kinetic_energy(), %16.10lf %16.10lf %16.10lf\n",(body->atoms[i]).atom_vel.x, (body->atoms[i]).atom_vel.y, (body->atoms[i]).atom_vel.z);		
+            
 	    }
 	    free(special_atoms);    
 	}
-    	
-	msg("regular + special ke = %16.10lf\n",ke);
+*/    	
+	//msg("regular+special ke = %16.10lf\n",ke);
 	
 	return 0.5 * ke;
 }
@@ -476,25 +471,18 @@ static void remove_system_drift(struct md *md)
                 body->vel.z -= cv.z + cross.z;
         }
 
-
-	msg("\ncv vals = %16.10lf %16.10lf %16.10lf\n",cv.x, cv.y, cv.z);	
-	msg("\ncp vals = %16.10lf %16.10lf %16.10lf\n",cp.x, cp.y, cp.z);
-	msg("\nam vals = %16.10lf %16.10lf %16.10lf\n",am.x, am.y, am.z);
- 
 	if (use_torch) {
         	
 		struct body *body = md->bodies + spec_frag;
         	
 		for (size_t i = 0; i < n_special_atoms; i++) {
-
-	//	 msg("checking atom_vel in remove_system_drift(), %16.10lf %16.10lf %16.10lf\n",(body->atoms[j]).atom_vel.x, (body->atoms[j]).atom_vel.y, (body->atoms[j]).atom_vel.z);			
+        	
         	    (body->atoms[i]).atom_vel.x -= cv.x;
         	    (body->atoms[i]).atom_vel.y -= cv.y;
         	    (body->atoms[i]).atom_vel.z -= cv.z;
-        	} 
+        	}
     	}
         
-
         vec_t cv2 = get_system_com_velocity(md);
         vec_t am2 = get_system_angular_momentum(md);
 
@@ -657,9 +645,9 @@ static void set_body_mass_and_inertia(struct efp *efp, size_t idx,
 
 	check_fail(efp_get_frag_mass(efp, idx, &mass));
 	check_fail(efp_get_frag_inertia(efp, idx, inertia));
- 
+
 	body->mass = AMU_TO_AU * mass;
-	msg("\nIn set_body_mass_and_inertia(), body->mass = %16.10lf\n\n",body->mass);
+
 	body->inertia.x = AMU_TO_AU * inertia[0];
 	body->inertia.y = AMU_TO_AU * inertia[1];
 	body->inertia.z = AMU_TO_AU * inertia[2];
@@ -1276,17 +1264,14 @@ static struct md *md_create(struct state *state)
 	    struct body *body = md->bodies + spec_frag;
             body->atoms = xmalloc(n_special_atoms * sizeof(struct atom));
 	}
-
 //=======================================================//
-/*
 	for (size_t i = 0; i < md->n_bodies; i++) {
 		struct body *body = md->bodies + i;
                  
 	      	body->pos.x = 0.0;
                 body->pos.y = 0.0;
                 body->pos.z = 0.0;
-                
-		body->vel.x = 0.0;
+                body->vel.x = 0.0;
                 body->vel.y = 0.0;
                 body->vel.z = 0.0;
 	
@@ -1294,7 +1279,7 @@ static struct md *md_create(struct state *state)
 		body->angmom.y = 0.0;
 		body->angmom.z = 0.0;
 
-		//body->mass = 0.0;
+		body->mass = 0.0;
 		body->inertia_inv.x = 0.0;
 		body->inertia_inv.y = 0.0;
 		body->inertia_inv.z = 0.0;
@@ -1302,9 +1287,9 @@ static struct md *md_create(struct state *state)
 		msg("For all fragments, body has been initialized..\n\n");
 
 	}
-*/	
+	
 	for (size_t i = 0; i < md->n_bodies; i++) {
-/*	
+	
 		if (use_torch && i == spec_frag) {
 		    // Get fragment atom positions and masses
 	            struct efp_atom *special_atoms;
@@ -1332,7 +1317,7 @@ static struct md *md_create(struct state *state)
 
     		    continue;
                 }
-*/		
+		
 		struct body *body = md->bodies + i;
 
 		body->pos.x = coord[6 * i + 0];
@@ -1358,17 +1343,18 @@ static struct md *md_create(struct state *state)
 		body->angmom.z = md->state->sys->frags[i].vel[5] *
 		    body->inertia.z;
 
+		md->n_freedom += 3;
+
 		if (body->inertia.x > EPSILON)
 			md->n_freedom++;
 		if (body->inertia.y > EPSILON)
 			md->n_freedom++;
 		if (body->inertia.z > EPSILON)
 			md->n_freedom++;
-	
-		if (use_torch && i == spec_frag) md->n_freedom -= 3;
 	}
+	msg("md->n_freedom = %4d\n",md->n_freedom);
 //============ Torch part =============================//
-
+/*
 	if (use_torch) {
 
             // Get fragment atom positions and masses
@@ -1392,9 +1378,8 @@ static struct md *md_create(struct state *state)
 
                 msg("In md_create(), (body->atoms[i]).atom_velo %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_vel.x, (body->atoms[i]).atom_vel.y, (body->atoms[i]).atom_vel.z);
             }
-	    
-	    md->n_freedom += (3 * n_special_atoms);
 	}
+*/	
 //=======================================================//
 	return (md);
 }
@@ -1453,7 +1438,7 @@ void sim_md(struct state *state)
 
 	remove_system_drift(md);
 	compute_forces(md);
-	msg("md->n_freedom = %4d\n",md->n_freedom);
+
 	msg("    INITIAL STATE\n\n");
 	print_status(md);
 
