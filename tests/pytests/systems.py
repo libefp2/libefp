@@ -8,7 +8,7 @@ a2b = 1.0 / b2a
 def system_1():
     sys = pylibefp.core.efp()
 
-    frags = ['h2o_l', 'nh3_L']  # specifying LIBRARY with _l for variety
+    frags = ['h2o_l', 'nh3_l']  # specifying LIBRARY with _l for variety
     sys.add_potential(frags)
     sys.add_fragment(frags)
     sys.set_frag_coordinates(0, 'xyzabc', [0.0 * a2b, 0.0 * a2b, 0.0 * a2b, 1.0, 2.0, 3.0])  # yapf: disable
@@ -21,7 +21,7 @@ def system_1():
 def system_2():
     sys = pylibefp.core.efp()
 
-    frags = ['h2o', 'nh3', 'h2o', 'h2o', 'nh3']
+    frags = ['h2o_l', 'nh3_l', 'h2o_l', 'h2o_l', 'nh3_l']
     sys.add_potential(frags)
     sys.add_fragment(frags)
     sys.set_frag_coordinates(0, 'xyzabc', [-1.0 * a2b,   3.7 * a2b,   0.4 * a2b,  -1.3,   0.0,   7.0])  # yapf: disable
@@ -37,7 +37,7 @@ def system_2():
 def system_3():
     sys = pylibefp.core.efp()
 
-    frags = ['h2o', 'nh3', 'nh3', 'nh3', 'ch3oh', 'h2o', 'h2o', 'ch3oh', 'h2o']
+    frags = ['h2o_l', 'nh3_l', 'nh3_l', 'nh3_l', 'ch3oh_l', 'h2o_l', 'h2o_l', 'ch3oh_l', 'h2o_l']
     sys.add_potential(frags)
     sys.add_fragment(frags)
     sys.set_frag_coordinates(
@@ -66,7 +66,7 @@ def system_3():
 def system_4():
     sys = pylibefp.core.efp()
 
-    frags = ['acetone', 'c2h5oh', 'c6h6', 'ccl4', 'ch3oh', 'ch4', 'cl2', 'dcm', 'dmso', 'h2', 'h2o', 'nh3']
+    frags = ['acetone_l', 'c2h5oh_l', 'c6h6_l', 'ccl4_l', 'ch3oh_l', 'ch4_l', 'cl2_l', 'dcm_l', 'dmso_l', 'h2_l', 'h2o_l', 'nh3_l']
     sys.add_potential(frags)
     sys.add_fragment(frags)
     sys.set_frag_coordinates(0, 'xyzabc', [   0.0 * a2b,   0.0 * a2b,   0.0 * a2b,   0.0,   0.2,   0.3])  # yapf: disable
@@ -89,7 +89,7 @@ def system_4():
 def system_5():
     sys = pylibefp.core.efp()
 
-    frags = ['h2o', 'nh3']
+    frags = ['h2o_l', 'nh3_l']
     sys.add_potential(frags)
     sys.add_fragment(frags)
     sys.set_frag_coordinates(0, 'xyzabc', [   0.0 * a2b,   0.0 * a2b,   0.0 * a2b,   3.0,   0.0,   7.0])  # yapf: disable
@@ -102,7 +102,7 @@ def system_5():
 def system_6():
     sys = pylibefp.core.efp()
 
-    frags = ['h2o', 'ch3oh', 'h2o', 'ch3oh', 'nh3']
+    frags = ['h2o_l', 'ch3oh_l', 'h2o_l', 'ch3oh_l', 'nh3_l']
     sys.add_potential(frags)
     sys.add_fragment(frags)
     sys.set_frag_coordinates(0, 'xyzabc', [   0.0 * a2b,   0.0 * a2b,   0.0 * a2b,   0.0,   0.0,   0.0])  # yapf: disable
@@ -118,7 +118,7 @@ def system_6():
 def system_qm1():
     sys = pylibefp.core.efp()
 
-    frags = ['h2o', 'c6h6', 'nh3']
+    frags = ['h2o_l', 'c6h6_l', 'nh3_l']
     sys.add_potential(frags)
     sys.add_fragment(frags)
     sys.set_frag_coordinates(0, 'xyzabc', [  -1.6 * a2b,   4.7 * a2b,   1.4 * a2b,  -1.3,   0.1,   7.0])  # yapf: disable
@@ -132,7 +132,7 @@ def system_qm1():
 def system_qm2():
     sys = pylibefp.core.efp()
 
-    frags = ['ch3oh', 'dmso', 'dmso', 'acetone', 'dcm', 'acetone', 'acetone']
+    frags = ['ch3oh_l', 'dmso_l', 'dmso_l', 'acetone_l', 'dcm_l', 'acetone_l', 'acetone_l']
     sys.add_potential(frags)
     sys.add_fragment(frags)
     sys.set_frag_coordinates(0, 'xyzabc', [   0.0 * a2b,  -1.0 * a2b,   0.0 * a2b,   0.0,   1.1,   2.0])  # yapf: disable

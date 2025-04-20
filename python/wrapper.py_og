@@ -30,8 +30,6 @@ _lbtl = {
         'elec': 'elst',
         'pol': 'ind',
         'xr': 'exch',
-        'qq': 'charge_charge',
-        'lj': 'lennard-jones',
         'elec_damp': 'elst_damping',
         'pol_damp': 'ind_damping',
         'disp_damp': 'disp_damping',
@@ -41,7 +39,6 @@ _lbtl = {
         'ai_disp': 'qm_disp',
         'ai_xr': 'qm_exch',
         'ai_chtr': 'qm_chtr',
-        'ai_qq': 'qm_qq',
     },
 }
 
@@ -99,23 +96,7 @@ def compute(efpobj, do_gradient=False):
     """
     res = efpobj._efp_compute(do_gradient)
     _result_to_error(res)
-    # If pairwise is enabled, call the pairwise interaction calculator
-#    if efpobj.get_opts().get("enable_pairwise", False):
-#        nfrag = efpobj.get_frag_count()
-#        res2 = efpobj._efp_compute_pairwise_energy_range(0, nfrag)
-#        _result_to_error(res2)
-#        efpobj.print_pairwise_energies()
-    if efpobj.get_opts().get("enable_pairwise", False):
-        if efpobj.get_opts().get("symmetry", False):
-            # Use the symmetry-aware two-body computation
-            res2 = efpobj._efp_compute_two_body_crystal()
-        else:
-            # Use the regular pairwise energy range
-            nfrag = efpobj.get_frag_count()
-            res2 = efpobj._efp_compute_pairwise_energy_range(0, nfrag)
 
-        _result_to_error(res2)
-        efpobj.print_pairwise_energies() 
 
 def add_potential(efpobj, potential, fragpath='LIBRARY', duplicates_ok=False):
     """Searches for EFP fragments and adds to `efpobj`.
@@ -156,15 +137,10 @@ def add_potential(efpobj, potential, fragpath='LIBRARY', duplicates_ok=False):
             for lst in [paths, library_paths]:
                 for spth in '@libefp_FRAGLIB_DIRS@'.split(';'):
                     lst.append(spth)
-                lst.append('/scratch/gilbreth/paulsk/backup/oglib/uplibefp2/fraglib')
-                #lst.append('/opt/anaconda1anaconda2anaconda3/share/libefp/fraglib')
-                #lst.append('/opt/anaconda1anaconda2anaconda3/share/libefp/fraglib/databases')
-                #lst.append('/opt/anaconda1anaconda2anaconda3/Library/share/libefp/fraglib')
-                #lst.append('/opt/anaconda1anaconda2anaconda3/Library/share/libefp/fraglib/databases')
-		#lst.append('/scratch/gilbreth/paulsk/backup/libefp/installed/share/libefp/fraglib')
-                #lst.append('/scratch/gilbreth/paulsk/backup/libefp/installed/share/libefp/fraglib/databases')
-                #lst.append('/opt/anaconda1anaconda2anaconda3/Library/share/libefp/fraglib')
-                #lst.append('/opt/anaconda1anaconda2anaconda3/Library/share/libefp/fraglib/databases')
+                lst.append('/opt/anaconda1anaconda2anaconda3/share/libefp/fraglib')
+                lst.append('/opt/anaconda1anaconda2anaconda3/share/libefp/fraglib/databases')
+                lst.append('/opt/anaconda1anaconda2anaconda3/Library/share/libefp/fraglib')
+                lst.append('/opt/anaconda1anaconda2anaconda3/Library/share/libefp/fraglib/databases')
                 for spth in '@FRAGLIB_DATADIRS@'.split(';'):
                     lst.append(str((Path('@CMAKE_CURRENT_SOURCE_DIR@') / '..' / spth).resolve()))
         else:
@@ -262,15 +238,7 @@ def get_opts(efpobj, label='libefp'):
     dopts['disp'] = bool(opts.terms & core.efp_term.EFP_TERM_DISP)
     dopts['xr'] = bool(opts.terms & core.efp_term.EFP_TERM_XR)
     dopts['chtr'] = bool(opts.terms & core.efp_term.EFP_TERM_CHTR)
-    dopts['qq'] = bool(opts.terms & core.efp_term.EFP_TERM_QQ) # SKP
-    dopts['lj'] = bool(opts.terms & core.efp_term.EFP_TERM_LJ)  # SKP
 
-    dopts['spec_elec'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_ELEC) # SKP
-    dopts['spec_pol'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_POL) # SKP
-    dopts['spec_disp'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_DISP) # SKP
-    dopts['spec_xr'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_XR) # SKP
-    dopts['spec_chtr'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_CHTR)  # SKP
- 
     dopts['elec_damp'] = {
         core.EFP_ELEC_DAMP_SCREEN: 'screen',
         core.EFP_ELEC_DAMP_OVERLAP: 'overlap',
@@ -291,10 +259,6 @@ def get_opts(efpobj, label='libefp'):
     dopts['enable_pbc'] = bool(opts.enable_pbc)
     dopts['enable_cutoff'] = bool(opts.enable_cutoff)
     dopts['swf_cutoff'] = opts.swf_cutoff
-    dopts['special_fragment'] = opts.special_fragment
-    dopts['enable_pairwise'] = bool(opts.enable_pairwise) # SKP 
-    dopts['symmetry'] = bool(opts.symmetry) # SKP
-    dopts['ligand'] = opts.ligand # SKP
 
     dopts['pol_driver'] = {
         core.EFP_POL_DRIVER_ITERATIVE: 'iterative',
@@ -306,7 +270,6 @@ def get_opts(efpobj, label='libefp'):
     dopts['ai_disp'] = bool(opts.terms & core.efp_term.EFP_TERM_AI_DISP)
     dopts['ai_xr'] = bool(opts.terms & core.efp_term.EFP_TERM_AI_XR)
     dopts['ai_chtr'] = bool(opts.terms & core.efp_term.EFP_TERM_AI_CHTR)
-    dopts['ai_qq'] = bool(opts.terms & core.efp_term.EFP_TERM_AI_QQ) # SKP
 
     return _rekey(dopts, label=label)
 
@@ -340,8 +303,7 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
     # warn on stray dopts keys
     allowed = [
         'elec', 'pol', 'disp', 'xr', 'elec_damp', 'pol_damp', 'disp_damp', 'enable_pbc', 'enable_cutoff', 'swf_cutoff',
-        'pol_driver', 'ai_elec', 'ai_pol', 'enable_pairwise', 'ligand', 'symmetry', 
-        'spec_elec', 'spec_pol', 'spec_disp', 'spec_xr', 'spec_chtr', 'ai_qq', 'qq', 'lj', 'special_fragment' # SKP
+        'pol_driver', 'ai_elec', 'ai_pol'
     ]
     label_allowed = [_lbtl[label].get(itm, itm) for itm in allowed]
     for key in dopts.keys():
@@ -359,14 +321,11 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         opts.terms |= core.efp_term.EFP_TERM_POL
         opts.terms |= core.efp_term.EFP_TERM_DISP
         opts.terms |= core.efp_term.EFP_TERM_XR
-        opts.terms |= core.efp_term.EFP_TERM_QQ # SKP
-        opts.terms |= core.efp_term.EFP_TERM_LJ # SKP
         opts.elec_damp = core.EFP_ELEC_DAMP_SCREEN
         opts.pol_damp = core.EFP_POL_DAMP_TT
         opts.disp_damp = core.EFP_DISP_DAMP_OVERLAP
         opts.terms |= core.efp_term.EFP_TERM_AI_ELEC
         opts.terms |= core.efp_term.EFP_TERM_AI_POL
-        opts.terms |= core.efp_term.EFP_TERM_AI_QQ # SKP
     #elif append == 'qchem':
     #    # q-chem and psi4 have different defaults for at least this option
     #    opts.disp_damp = core.EFP_DISP_DAMP_TT
@@ -386,7 +345,7 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         else:
             _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
                              'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
-    
+
     topic = _lbtl[label].get('pol', 'pol')
     if topic in dopts:
         if dopts[topic] in trues:
@@ -416,27 +375,7 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         else:
             _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
                              'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
-#========== SKP changes ======================================================================#
-    topic = _lbtl[label].get('qq', 'qq')
-    if topic in dopts:
-        if dopts[topic] in trues:
-            opts.terms |= core.efp_term.EFP_TERM_QQ
-        elif dopts[topic] in falses:
-            opts.terms &= ~core.efp_term.EFP_TERM_QQ
-        else:
-            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
-                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
- 
-    topic = _lbtl[label].get('lj', 'lj')
-    if topic in dopts:
-        if dopts[topic] in trues:
-            opts.terms |= core.efp_term.EFP_TERM_LJ
-        elif dopts[topic] in falses:
-            opts.terms &= ~core.efp_term.EFP_TERM_LJ
-        else:
-            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
-                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
-#================================================================================================#
+
     # may be enabled in a future libefp release
     # topic = _lbtl[label].get('chtr', 'chtr')
 
@@ -484,35 +423,6 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         else:
             _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
                              'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
-    topic = _lbtl[label].get('symmetry', 'symmetry')
-    if topic in dopts:
-        if dopts[topic] in trues:
-            opts.symmetry = 1
-        elif dopts[topic] in falses:
-            opts.symmetry = 0
-        else:
-            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
-                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))        
-# PAIRWISE - SKP    
-    topic = _lbtl[label].get('enable_pairwise', 'enable_pairwise')
-    if topic in dopts:
-        if dopts[topic] in trues:
-            opts.enable_pairwise = 1
-        elif dopts[topic] in falses:
-            opts.enable_pairwise = 0
-        else:
-            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
-                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
-# LIGAND - SKP
-    topic = _lbtl[label].get('ligand', 'ligand')
-    if topic in dopts:
-        ligand_idx = dopts[topic]
-        if not isinstance(ligand_idx, int):
-            raise TypeError(f"ligand value must be an integer, got: {ligand_idx}")
-        if ligand_idx >= efpobj.get_frag_count():
-            raise ValueError(f"Invalid ligand index: {ligand_idx}, only {efpobj.get_frag_count()} fragments present.")
-        opts.ligand = ligand_idx
- 
 
     topic = _lbtl[label].get('enable_cutoff', 'enable_cutoff')
     if topic in dopts:
@@ -558,22 +468,12 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         else:
             _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
                              'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
-#=================== SKP addition ===================================================#   
-    topic = _lbtl[label].get('ai_qq', 'ai_qq')
-    if topic in dopts:
-        if dopts[topic] in trues:
-            opts.terms |= core.efp_term.EFP_TERM_AI_QQ
-        elif dopts[topic] in falses:
-            opts.terms &= ~core.efp_term.EFP_TERM_AI_QQ
-        else:
-            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
-                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
-#======================================================================================#
+
     # may be enabled in a future libefp release
     # topic = _lbtl[label].get('ai_disp', 'ai_disp')
     # topic = _lbtl[label].get('ai_xr', 'ai_xr')
     # topic = _lbtl[label].get('ai_chtr', 'ai_chtr')
- 
+
     # set computed options state
     res = efpobj._efp_set_opts(opts)
     _result_to_error(res)
@@ -700,32 +600,9 @@ def get_energy(efpobj, label='libefp'):
         'xr': ene.exchange_repulsion,
         'pol': ene.polarization,
         'disp': ene.dispersion,
-        'qq': ene.qq,
     }
 
     return _rekey(energies, label=label)
-
-
-def print_pairwise_energies(efpobj):
-    """Prints pairwise energy between ligand and all fragments."""
-
-    ligand_index = efpobj.get_opts().get("ligand", 0)
-    nfrag = efpobj.get_frag_count()
-
-    energies = efpobj._efp_get_pairwise_energy(nfrag)
-
-    for i in range(nfrag):
-        if i == ligand_index:
-            continue
-
-        print(f"\nPAIRWISE ENERGY BETWEEN FRAGMENT {i} AND LIGAND {ligand_index}")
-        energy = energies[i]
-        print(f"{'ELECTROSTATIC':>40} {energy['electrostatic']:16.10f}")
-        print(f"{'POLARIZATION':>40} {energy['polarization']:16.10f}")
-        print(f"{'DISPERSION':>40} {energy['dispersion']:16.10f}")
-        print(f"{'EXCHANGE REPULSION':>40} {energy['exchange_repulsion']:16.10f}")
-        print(f"{'TOTAL':>40} {energy['total']:16.10f}")
-        print("------------------------------------------------------------")
 
 
 def get_frag_count(efpobj):
@@ -1065,43 +942,6 @@ def get_gradient(efpobj):
 
     return grad
 
-# SKP
-
-def get_pairwise_energy(efpobj):
-    """Gets the per-fragment pairwise energy breakdowns.
-
-    Returns
-    -------
-    list of dict
-        A list of `n_frag` dictionaries, each containing energy components:
-        'electrostatic', 'exchange_repulsion', 'polarization',
-        'dispersion', and 'total'.
-    """
-    nfrag = efpobj.get_frag_count()
-    energies = efpobj._efp_get_pairwise_energy(nfrag)
-    return energies
-
-#SKP
-
-def set_pairwise_energy(efpobj, pair_energies):
-    """Sets pairwise energy values per fragment.
-
-    Parameters
-    ----------
-    pair_energies : list of dict
-        A list of dicts with energy components for each fragment, where each dict includes:
-        'electrostatic', 'exchange_repulsion', 'polarization', 'dispersion', and 'total'.
-
-    Returns
-    -------
-    None
-    """
-    nfrag = efpobj.get_frag_count()
-    if len(pair_energies) != nfrag:
-        raise PyEFPSyntaxError(f"Expected {nfrag} energy entries, got {len(pair_energies)}")
-
-    res = efpobj._efp_set_pairwise_energy(nfrag, pair_energies)
-    _result_to_error(res)
 
 def gradient_summary(efpobj):
     """Gets the computed per-fragment EFP energy gradient of `efpobj`.
@@ -1735,9 +1575,6 @@ core.efp.set_opts = set_opts
 core.efp.get_frag_count = get_frag_count
 core.efp.get_energy = get_energy
 core.efp.get_gradient = get_gradient
-core.efp.get_pairwise_energy = get_pairwise_energy
-core.efp.set_pairwise_energy = set_pairwise_energy
-core.efp.print_pairwise_energies = print_pairwise_energies
 core.efp.energy_summary = energy_summary
 core.efp.nuclear_repulsion_energy = nuclear_repulsion_energy
 core.efp.to_viz_dict = to_viz_dict

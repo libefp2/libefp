@@ -383,7 +383,11 @@ void efp_set_error_log(void (*cb)(const char *));
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
 enum efp_result efp_set_opts(struct efp *efp, const struct efp_opts *opts);
+ 
+enum efp_result efp_compute_pairwise_energy_range_range(struct efp *efp, size_t frag_from, size_t frag_to);
 
+enum efp_result efp_compute_two_body_crystal(struct efp *efp);
+ 
 /**
  * Get currently set computation options.
  *
@@ -1289,6 +1293,8 @@ enum efp_result efp_get_frag_name(struct efp *efp, size_t frag_idx, size_t size,
  */
 enum efp_result efp_get_frag_mass(struct efp *efp, size_t frag_idx,
     double *mass);
+
+//enum efp_result efp_get_frag_atom_mass(struct efp *efp, size_t frag_idx, double *atom_mass_out);
 
 /**
  * Get fragment principal moments of inertia.

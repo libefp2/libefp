@@ -59,35 +59,6 @@ efp_result _efp_set_frag_coordinates(efp* efp, size_t frag_idx, efp_coord_type c
     return res;
 }
 
-//SKP
-
-efp_result _efp_set_pairwise_energy(efp* efp, size_t n_frag, py::list pair_energy_list) {
-    std::vector<struct efp_energy> pair_energies(n_frag);
-
-    for (size_t i = 0; i < n_frag; ++i) {
-        py::dict py_energy = pair_energy_list[i];
-
-        pair_energies[i].electrostatic = py_energy["electrostatic"].cast<double>();
-        pair_energies[i].exchange_repulsion = py_energy["exchange_repulsion"].cast<double>();
-        pair_energies[i].polarization = py_energy["polarization"].cast<double>();
-        pair_energies[i].dispersion = py_energy["dispersion"].cast<double>();
-        pair_energies[i].total = py_energy["total"].cast<double>();
-    }
-
-    return efp_set_pairwise_energy(efp, pair_energies.data());
-}
-
-efp_result _efp_compute_pairwise_energy_range(efp* efp, size_t frag_from, size_t frag_to) {
-
-    	return efp_compute_pairwise_energy_range_range(efp, frag_from, frag_to);
-
-}
-
-efp_result _efp_compute_two_body_crystal(efp *efp) {
-
-    	return efp_compute_two_body_crystal(efp);
-}
-
 efp_result _efp_set_point_charge_values(efp* efp, size_t n_ptc, py::list ptc) {
     enum efp_result res;
 
@@ -162,29 +133,6 @@ py::tuple _efp_get_gradient(efp* efp, size_t n_frag) {
 
     py::tuple rets = py::make_tuple(res, grad);
     return rets;
-}
-
-// SKP
-
-py::list _efp_get_pairwise_energy(efp* efp, size_t n_frag) {
-    enum efp_result res;
-
-    std::vector<struct efp_energy> pair_energies(n_frag);
-    res = efp_get_pairwise_energy(efp, pair_energies.data());
-
-    py::list py_energies;
-
-    for (size_t i = 0; i < n_frag; ++i) {
-        py::dict energy;
-        energy["electrostatic"] = pair_energies[i].electrostatic;
-        energy["exchange_repulsion"] = pair_energies[i].exchange_repulsion;
-        energy["polarization"] = pair_energies[i].polarization;
-        energy["dispersion"] = pair_energies[i].dispersion;
-        energy["total"] = pair_energies[i].total;
-        py_energies.append(energy);
-    }
-
-    return py_energies;
 }
 
 py::tuple _efp_get_frag_count(efp* efp) {
@@ -505,7 +453,6 @@ efp_result cwrapped_field_fn(size_t n_pt, const double* xyz, double* field, void
     return EFP_RESULT_SUCCESS;
 }
 
-
 void _efp_set_electron_density_field_fn(efp* efp, py::function fn) {
     field_fn_callback = fn;
     efp_set_electron_density_field_fn(efp, cwrapped_field_fn);
@@ -623,8 +570,7 @@ PYBIND11_MODULE(core, m) {
         .def_readwrite("swf_cutoff", &efp_opts::swf_cutoff,                   "Cutoff distance for frag-frag interactions.")
 	.def_readwrite("special_terms", &efp_opts::special_terms,             "Terms for a special fragment - typically QM or ML fragment") // SKP
         .def_readwrite("enable_pairwise", &efp_opts::enable_pairwise,         "Enable ligand-fragment energy decomposition from total system") // SKP
-        .def_readwrite("symmetry", &efp_opts::symmetry,                       "Sets system symmetry option") // SKP
-	.def_readwrite("ligand", &efp_opts::ligand,                           "Ligand number") // SKP
+        .def_readwrite("ligand", &efp_opts::ligand,         "Ligand number") // SKP
 	.def_readwrite("special_fragment", &efp_opts::special_fragment,       "Index of a special (QM or ML) fragment"); // SKP
  
     py::class_<efp_energy>(m, "efp_energy", "EFP energy terms")
@@ -721,11 +667,7 @@ PYBIND11_MODULE(core, m) {
              "Wrapped gets values of polarization conjugated induced dipoles")
         .def("_efp_get_energy", &efp_get_energy, "Gets computed energy components")
         .def("_efp_get_gradient", &_efp_get_gradient, "Gets computed EFP energy gradient")
-        .def("_efp_get_pairwise_energy", &_efp_get_pairwise_energy, "Gets pairwise energies")
-	.def("_efp_set_pairwise_energy", &_efp_set_pairwise_energy, "Sets pairwise energies")
-	.def("_efp_compute_pairwise_energy_range", &_efp_compute_pairwise_energy_range, "Computes pairwise_energy_range")
-        .def("_efp_compute_two_body_crystal", &_efp_compute_two_body_crystal, "Computes two body crystal for symmetric systems")	
-	.def("_efp_get_frag_count", &_efp_get_frag_count, "Gets the number of fragments in this computation")
+        .def("_efp_get_frag_count", &_efp_get_frag_count, "Gets the number of fragments in this computation")
         .def("_efp_get_frag_name", &_efp_get_frag_name, "Gets the name of the specified effective fragment")
         .def("_efp_get_frag_atom_count", &_efp_get_frag_atom_count, "Gets the number of atoms on fragment")
         .def("_efp_get_frag_atoms", &_efp_get_frag_atoms,

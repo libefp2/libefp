@@ -296,7 +296,7 @@ def test_total_4a():
     asdf.compute()
     ene = asdf.get_energy()
 
-    nfrags = ['ACETONE', 'C2H5OH', 'C6H6', 'CCL4', 'CH3OH', 'CH4', 'CL2', 'DCM', 'DMSO', 'H2', 'H2O', 'NH3']
+    nfrags = ['ACETONE_L', 'C2H5OH_L', 'C6H6_L', 'CCL4_L', 'CH3OH_L', 'CH4_L', 'CL2_L', 'DCM_L', 'DMSO_L', 'H2_L', 'H2O_L', 'NH3_L']
     mfrags = [1 for fr in range(12)]
     cfrags = [0.0 for fr in range(12)]
     tnm = sys._getframe().f_code.co_name

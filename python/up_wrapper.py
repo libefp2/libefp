@@ -99,23 +99,7 @@ def compute(efpobj, do_gradient=False):
     """
     res = efpobj._efp_compute(do_gradient)
     _result_to_error(res)
-    # If pairwise is enabled, call the pairwise interaction calculator
-#    if efpobj.get_opts().get("enable_pairwise", False):
-#        nfrag = efpobj.get_frag_count()
-#        res2 = efpobj._efp_compute_pairwise_energy_range(0, nfrag)
-#        _result_to_error(res2)
-#        efpobj.print_pairwise_energies()
-    if efpobj.get_opts().get("enable_pairwise", False):
-        if efpobj.get_opts().get("symmetry", False):
-            # Use the symmetry-aware two-body computation
-            res2 = efpobj._efp_compute_two_body_crystal()
-        else:
-            # Use the regular pairwise energy range
-            nfrag = efpobj.get_frag_count()
-            res2 = efpobj._efp_compute_pairwise_energy_range(0, nfrag)
 
-        _result_to_error(res2)
-        efpobj.print_pairwise_energies() 
 
 def add_potential(efpobj, potential, fragpath='LIBRARY', duplicates_ok=False):
     """Searches for EFP fragments and adds to `efpobj`.
@@ -293,9 +277,7 @@ def get_opts(efpobj, label='libefp'):
     dopts['swf_cutoff'] = opts.swf_cutoff
     dopts['special_fragment'] = opts.special_fragment
     dopts['enable_pairwise'] = bool(opts.enable_pairwise) # SKP 
-    dopts['symmetry'] = bool(opts.symmetry) # SKP
-    dopts['ligand'] = opts.ligand # SKP
-
+  
     dopts['pol_driver'] = {
         core.EFP_POL_DRIVER_ITERATIVE: 'iterative',
         core.EFP_POL_DRIVER_DIRECT: 'direct',
@@ -340,7 +322,7 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
     # warn on stray dopts keys
     allowed = [
         'elec', 'pol', 'disp', 'xr', 'elec_damp', 'pol_damp', 'disp_damp', 'enable_pbc', 'enable_cutoff', 'swf_cutoff',
-        'pol_driver', 'ai_elec', 'ai_pol', 'enable_pairwise', 'ligand', 'symmetry', 
+        'pol_driver', 'ai_elec', 'ai_pol', 
         'spec_elec', 'spec_pol', 'spec_disp', 'spec_xr', 'spec_chtr', 'ai_qq', 'qq', 'lj', 'special_fragment' # SKP
     ]
     label_allowed = [_lbtl[label].get(itm, itm) for itm in allowed]
@@ -484,36 +466,6 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         else:
             _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
                              'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
-    topic = _lbtl[label].get('symmetry', 'symmetry')
-    if topic in dopts:
-        if dopts[topic] in trues:
-            opts.symmetry = 1
-        elif dopts[topic] in falses:
-            opts.symmetry = 0
-        else:
-            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
-                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))        
-# PAIRWISE - SKP    
-    topic = _lbtl[label].get('enable_pairwise', 'enable_pairwise')
-    if topic in dopts:
-        if dopts[topic] in trues:
-            opts.enable_pairwise = 1
-        elif dopts[topic] in falses:
-            opts.enable_pairwise = 0
-        else:
-            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
-                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
-# LIGAND - SKP
-    topic = _lbtl[label].get('ligand', 'ligand')
-    if topic in dopts:
-        ligand_idx = dopts[topic]
-        if not isinstance(ligand_idx, int):
-            raise TypeError(f"ligand value must be an integer, got: {ligand_idx}")
-        if ligand_idx >= efpobj.get_frag_count():
-            raise ValueError(f"Invalid ligand index: {ligand_idx}, only {efpobj.get_frag_count()} fragments present.")
-        opts.ligand = ligand_idx
- 
-
     topic = _lbtl[label].get('enable_cutoff', 'enable_cutoff')
     if topic in dopts:
         if dopts[topic] in trues:
@@ -704,28 +656,6 @@ def get_energy(efpobj, label='libefp'):
     }
 
     return _rekey(energies, label=label)
-
-
-def print_pairwise_energies(efpobj):
-    """Prints pairwise energy between ligand and all fragments."""
-
-    ligand_index = efpobj.get_opts().get("ligand", 0)
-    nfrag = efpobj.get_frag_count()
-
-    energies = efpobj._efp_get_pairwise_energy(nfrag)
-
-    for i in range(nfrag):
-        if i == ligand_index:
-            continue
-
-        print(f"\nPAIRWISE ENERGY BETWEEN FRAGMENT {i} AND LIGAND {ligand_index}")
-        energy = energies[i]
-        print(f"{'ELECTROSTATIC':>40} {energy['electrostatic']:16.10f}")
-        print(f"{'POLARIZATION':>40} {energy['polarization']:16.10f}")
-        print(f"{'DISPERSION':>40} {energy['dispersion']:16.10f}")
-        print(f"{'EXCHANGE REPULSION':>40} {energy['exchange_repulsion']:16.10f}")
-        print(f"{'TOTAL':>40} {energy['total']:16.10f}")
-        print("------------------------------------------------------------")
 
 
 def get_frag_count(efpobj):
@@ -1065,43 +995,6 @@ def get_gradient(efpobj):
 
     return grad
 
-# SKP
-
-def get_pairwise_energy(efpobj):
-    """Gets the per-fragment pairwise energy breakdowns.
-
-    Returns
-    -------
-    list of dict
-        A list of `n_frag` dictionaries, each containing energy components:
-        'electrostatic', 'exchange_repulsion', 'polarization',
-        'dispersion', and 'total'.
-    """
-    nfrag = efpobj.get_frag_count()
-    energies = efpobj._efp_get_pairwise_energy(nfrag)
-    return energies
-
-#SKP
-
-def set_pairwise_energy(efpobj, pair_energies):
-    """Sets pairwise energy values per fragment.
-
-    Parameters
-    ----------
-    pair_energies : list of dict
-        A list of dicts with energy components for each fragment, where each dict includes:
-        'electrostatic', 'exchange_repulsion', 'polarization', 'dispersion', and 'total'.
-
-    Returns
-    -------
-    None
-    """
-    nfrag = efpobj.get_frag_count()
-    if len(pair_energies) != nfrag:
-        raise PyEFPSyntaxError(f"Expected {nfrag} energy entries, got {len(pair_energies)}")
-
-    res = efpobj._efp_set_pairwise_energy(nfrag, pair_energies)
-    _result_to_error(res)
 
 def gradient_summary(efpobj):
     """Gets the computed per-fragment EFP energy gradient of `efpobj`.
@@ -1735,9 +1628,6 @@ core.efp.set_opts = set_opts
 core.efp.get_frag_count = get_frag_count
 core.efp.get_energy = get_energy
 core.efp.get_gradient = get_gradient
-core.efp.get_pairwise_energy = get_pairwise_energy
-core.efp.set_pairwise_energy = set_pairwise_energy
-core.efp.print_pairwise_energies = print_pairwise_energies
 core.efp.energy_summary = energy_summary
 core.efp.nuclear_repulsion_energy = nuclear_repulsion_energy
 core.efp.to_viz_dict = to_viz_dict

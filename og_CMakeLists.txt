@@ -4,7 +4,23 @@ if (POLICY CMP0135)
 endif ()
 
 # extract project version from source
+
+if(NOT DEFINED torch_switch)
+    if(DEFINED ENV{TORCH_SWITCH})
+        set(torch_switch $ENV{TORCH_SWITCH})
+    else()
+        set(torch_switch OFF)
+    endif()
+endif()
+
+option(torch_switch "Enable Torch library integration" ${TORCH_SWITCH})
+
+if(torch_switch)
+    add_definitions(-DTORCH_SWITCH)
+endif()
+
 file(STRINGS "src/efp.h" _src_efp_h REGEX "LIBEFP_VERSION_STRING")
+
 if (${_src_efp_h} MATCHES "^#define LIBEFP_VERSION_STRING \"(.*)\"$")
     set(_libefp_VERSION ${CMAKE_MATCH_1})
 endif()
@@ -13,9 +29,17 @@ project(
   libefp
   # someday when Makefile dropped, configure efp.h.in from cmake
   VERSION ${_libefp_VERSION}
-  LANGUAGES C
+  LANGUAGES C CXX
   )
-set(libefp_AUTHORS "Ilya A. Kaliman, Lori A. Burns, Dmitry Morozov, Carlos H. Borca, Yen (Terri) Bui, Yongbin Kim, Lyudmila V. Slipchenko")
+
+#set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/installed" CACHE PATH "Installation directory" FORCE)
+#set(CMAKE_INSTALL_PREFIX "${LIBEFP_DIR}" CACHE PATH "Installation directory")
+set(CMAKE_INSTALL_LIBDIR "lib")
+
+### LVS needs this on MacOS silicon
+set(CMAKE_CXX_STANDARD 17)
+
+set(libefp_AUTHORS "Ilya A. Kaliman, Lori A. Burns, Suranjan Paul, Dmitry Morozov, Carlos H. Borca, Yen (Terri) Bui, Yongbin Kim, Lyudmila V. Slipchenko")
 set(libefp_DESCRIPTION "Parallel implementation of the Effective Fragment Potential method")
 set(libefp_URL "https://github.com/libefp2/libefp")
 set(libefp_LICENSE "BSD 2-clause")
@@ -23,6 +47,7 @@ set(libefp_LICENSE "BSD 2-clause")
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 set(efp libefp)  # Namespace
+
 
 # TODO: Remove when requiring cmake >= 3.21  # from LecrisUT/CMake-Template
 if (NOT DEFINED ${efp}_IS_TOP_LEVEL)
@@ -54,7 +79,10 @@ option_with_default(BUILD_FPIC "Libraries will be compiled with position indepen
 if((${BUILD_SHARED_LIBS}) AND NOT ${BUILD_FPIC})
     message(FATAL_ERROR "BUILD_SHARED_LIBS ON and BUILD_FPIC OFF are incompatible, as shared library requires position independent code")
 endif()
-option_with_print(LIBEFP_ENABLE_OPENMP "Enable OpenMP parallelization. Psi4 wants OFF" OFF)
+
+### This option turns OPENMP ON and OFF!
+option_with_print(LIBEFP_ENABLE_OPENMP "Enable OpenMP parallelization. Psi4 wants OFF" ON)
+
 option_with_print(ENABLE_GENERIC "Enable mostly static linking in shared library" OFF)
 include(xhost)  # defines: option(ENABLE_XHOST "Enable processor-specific optimization" ON)
 option_with_print(FRAGLIB_UNDERSCORE_L "DEPRECATED: Installed fragment library has names ending in _L. Psi4 wants OFF" ON)
@@ -132,6 +160,7 @@ set(raw_sources_list
   util.c
   xr.c
   )
+
 set(src_prefix "src/")
 string(REGEX REPLACE "([^;]+)" "${src_prefix}\\1" sources_list "${raw_sources_list}")
 
@@ -201,6 +230,9 @@ endif()
 install(FILES fraglib/makefp.inp
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fraglib
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
+
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/nnlib
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
 
 # headers NOT namespace protected

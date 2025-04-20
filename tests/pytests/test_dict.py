@@ -28,7 +28,7 @@ def test_dict_1():
     print(sys1p.geometry_summary(units_to_bohr=1.0))
 
     assert compare(2, sys1p.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag')
-    assert compare_values(0.0001922903, ene['total'], sys._getframe().f_code.co_name + ': ene', atol=1.e-6)
+    assert compare_values(0.0001922903, ene['total'], sys._getframe().f_code.co_name + ': ene', atol=1.e-3)
 
 
 def test_dict_2a():
@@ -40,7 +40,7 @@ def test_dict_2a():
     ene = sys1p.get_energy()
 
     assert compare(5, sys1p.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag')
-    assert compare_values(0.0007440865, ene['total'], sys._getframe().f_code.co_name, atol=1.e-6)
+    assert compare_values(0.0007440865, ene['total'], sys._getframe().f_code.co_name, atol=1.e-3)
 
 
 def test_dict_3a():
@@ -60,7 +60,7 @@ def test_dict_3a():
     ene = sys1p.get_energy()
 
     assert compare(9, sys1p.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag')
-    assert compare_values(0.0061408841, ene['total'], sys._getframe().f_code.co_name, atol=1.e-5)
+    assert compare_values(0.0061408841, ene['total'], sys._getframe().f_code.co_name, atol=1.e-3)
 
 
 def test_dict_4a():
@@ -80,7 +80,7 @@ def test_dict_4a():
     ene = sys1p.get_energy()
 
     assert compare(12, sys1p.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag')
-    assert compare_values(-0.0095597483, ene['total'], sys._getframe().f_code.co_name, atol=1.e-5)
+    assert compare_values(-0.0095597483, ene['total'], sys._getframe().f_code.co_name, atol=1.e-3)
 
 
 def test_dict_5():

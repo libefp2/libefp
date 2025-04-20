@@ -108,12 +108,12 @@ set_coord_points(struct frag *frag, const double *coord)
 static enum efp_result
 set_coord_atoms(struct frag *frag, const double *coord)
 {
-    int natoms = frag->n_atoms;
-
-    // printf("\nCOORDINATES IN set_coord_atoms\n");
-    // for (size_t i=0; i<natoms; i++) {
-    //    printf("%12.6lf    %12.6lf    %12.6lf\n", coord[3 * i], coord[3 * i + 1], coord[3 * i + 2]);
-    //}
+     int natoms = frag->n_atoms;
+     //double BOHR_RADIUS = 0.52917721092; 
+     //printf("\nCOORDINATES IN set_coord_atoms\n");
+     //for (size_t i=0; i<natoms; i++) {
+     //   printf("%12.6lf    %12.6lf    %12.6lf\n", coord[3 * i] * BOHR_RADIUS, coord[3 * i + 1] * BOHR_RADIUS, coord[3 * i + 2] * BOHR_RADIUS);
+     //}
 
     double current_coord[3*natoms];
     for (size_t i=0; i<3*natoms; i++) {
@@ -541,6 +541,7 @@ do_qq(const struct efp_opts *opts)
     return opts->terms & EFP_TERM_QQ;
 }
 
+
 static void
 compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
     void *data)
@@ -668,12 +669,19 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 }
 
 EFP_EXPORT enum efp_result
+efp_compute_pairwise_energy_range_range(struct efp *efp, size_t frag_from, size_t frag_to)
+{
+    compute_two_body_range(efp, frag_from, frag_to, NULL);
+    return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
 compute_two_body_crystal(struct efp *efp)
 {
     double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0, e_elec_tmp = 0.0, e_disp_tmp = 0.0;
-
 // no parallelization
     int nsymm = efp->nsymm_frag;
+    printf("nsymm = %4d\n",nsymm);
     size_t *unique_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     unique_symm_frag(efp, unique_frag);
 
@@ -682,11 +690,12 @@ compute_two_body_crystal(struct efp *efp)
 
     for (size_t k = 0; k < nsymm; k++) {
         size_t i = unique_frag[k];
-        struct frag *frag = efp->frags + i;
+        printf("unique_frag %16.10lf\n",unique_frag[k]);
+	struct frag *frag = efp->frags + i;
 
         // scaling factor that tells how many fragments like this are in the system
         size_t factor = nsymm_frag[k];
-
+	printf("nsymm_frag = %16.10lf\n",factor);
         for (size_t fr_j=0; fr_j<efp->n_frag; fr_j++){
             if ( fr_j != i && !efp_skip_frag_pair(efp, i, fr_j)) {
 
@@ -765,6 +774,13 @@ compute_two_body_crystal(struct efp *efp)
     efp->energy.exchange_repulsion += e_xr/2;
     efp->energy.charge_penetration += e_cp/2;
 
+    return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+efp_compute_two_body_crystal(struct efp *efp)
+{
+    compute_two_body_crystal(efp);
     return EFP_RESULT_SUCCESS;
 }
 
@@ -2467,6 +2483,27 @@ efp_get_frag_mass(struct efp *efp, size_t frag_idx, double *mass_out)
 	return EFP_RESULT_SUCCESS;
 }
 
+/*
+EFP_EXPORT enum efp_result
+efp_get_frag_atom_mass(struct efp *efp, size_t frag_idx, double *atom_mass_out)
+{
+        assert(efp);
+        assert(atom_mass_out);
+        assert(frag_idx < efp->n_frag);
+ 
+        const struct frag *frag = efp->frags + frag_idx;
+	size_t n_atoms;
+	*n_atoms = efp->frags[frag_idx].n_atoms;
+
+	double atom_mass_out[n_atoms] ;
+
+        for (size_t i = 0; i < frag->n_atoms; i++)
+                atom_mass_out[i] = frag->atoms[i].mass;
+
+        return EFP_RESULT_SUCCESS;
+}
+*/
+
 EFP_EXPORT enum efp_result
 efp_get_frag_inertia(struct efp *efp, size_t frag_idx, double *inertia_out)
 {
@@ -2494,6 +2531,7 @@ efp_get_frag_inertia(struct efp *efp, size_t frag_idx, double *inertia_out)
 	return EFP_RESULT_SUCCESS;
 }
 
+
 EFP_EXPORT enum efp_result
 efp_get_frag_atom_count(struct efp *efp, size_t frag_idx, size_t *n_atoms)
 {
@@ -2505,6 +2543,7 @@ efp_get_frag_atom_count(struct efp *efp, size_t frag_idx, size_t *n_atoms)
 
 	return EFP_RESULT_SUCCESS;
 }
+
 
 EFP_EXPORT enum efp_result
 efp_get_frag_atoms(struct efp *efp, size_t frag_idx, size_t size,
@@ -2942,13 +2981,13 @@ print_frag_info(struct efp *efp, size_t frag_index) {
         print_atoms(efp, frag_index, i);
     }
 
-    for (int i=0; i < fr->n_multipole_pts; i++) {
-        print_mult_pt(efp, frag_index, i);
-    }
+    //for (int i=0; i < fr->n_multipole_pts; i++) {
+    //    print_mult_pt(efp, frag_index, i);
+    //}
 
-    for (int i=0; i < fr->n_polarizable_pts; i++) {
-        print_pol_pt(efp, frag_index, i);
-    }
+    //for (int i=0; i < fr->n_polarizable_pts; i++) {
+    //    print_pol_pt(efp, frag_index, i);
+    //}
 
     print_ligand(efp, frag_index);
     printf("\n");
