@@ -681,7 +681,7 @@ compute_two_body_crystal(struct efp *efp)
     double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0, e_elec_tmp = 0.0, e_disp_tmp = 0.0;
 // no parallelization
     int nsymm = efp->nsymm_frag;
-    printf("nsymm = %4d\n",nsymm);
+    printf("Inside compute_two_body_crystal()\n\n");
     size_t *unique_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     unique_symm_frag(efp, unique_frag);
 

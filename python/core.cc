@@ -568,8 +568,8 @@ PYBIND11_MODULE(core, m) {
         .value("EFP_TERM_AI_XR", EFP_TERM_AI_XR,                              "Ab initio/EFP exchange repulsion, reserved for future.")
         .value("EFP_TERM_AI_CHTR", EFP_TERM_AI_CHTR,                          "Ab initio/EFP charge transfer, reserved for future.")
 	.value("EFP_TERM_QQ", EFP_TERM_QQ,                                    "MM-like charge-charge coulomb interaction") // SKP
-        .value("EFP_TERM_LJ", EFP_TERM_LJ,                                "MM-like Lennard-Jones interaction") // SKP
-	.value("EFP_TERM_AI_QQ", EFP_TERM_AI_QQ,                                "QM/MM coulomb interaction with MM charges") // SKP
+        .value("EFP_TERM_LJ", EFP_TERM_LJ,                                    "MM-like Lennard-Jones interaction") // SKP
+	.value("EFP_TERM_AI_QQ", EFP_TERM_AI_QQ,                              "QM/MM coulomb interaction with MM charges") // SKP
         .export_values();
 // ============= SKP addition ========================== //
     py::enum_<efp_special_term>(m, "efp_special_term", py::arithmetic(), "Flags to specify EFP energy terms for a special fragment")
@@ -644,7 +644,8 @@ PYBIND11_MODULE(core, m) {
         .def_readwrite("dispersion", &efp_energy::dispersion,                 "EFP/EFP dispersion energy.")
         .def_readwrite("ai_dispersion", &efp_energy::ai_dispersion,           "AI/EFP dispersion energy.")
         .def_readwrite("exchange_repulsion", &efp_energy::exchange_repulsion, "EFP/EFP exchange-repulsion energy.")
-	.def_readwrite("qq", &efp_energy::qq, "EFP/EFP charge-charge energy.")
+	.def_readwrite("qq", &efp_energy::qq, 				      "EFP/EFP charge-charge energy.")
+	.def_readwrite("lj", &efp_energy::lj, 				      "EFP/EFP lennard-jones energy.")	
 	.def_readwrite("total", &efp_energy::total,                           "Sum of all the above energy terms.");
 
     py::class_<efp_atom>(m, "efp_atom", "EFP atom info")

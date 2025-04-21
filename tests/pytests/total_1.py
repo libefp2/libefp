@@ -30,7 +30,6 @@ def test_total_1a():
     ene = asdf.get_energy()
     pprint.pprint(ene)
     print('<<< get_opts():  ', asdf.get_opts(), '>>>')
-    print('<<< summary():   ', asdf.summary(), '>>>')
     print('<<< get_energy():', ene, '>>>')
     print('<<< get_atoms(): ', asdf.get_atoms(), '>>>')
     print(asdf.energy_summary())

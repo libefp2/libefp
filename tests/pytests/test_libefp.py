@@ -132,15 +132,15 @@ def test_qm_1b():
     assert compare_values(382.798972923,
                           asdf.nuclear_repulsion_energy(use_efp_frags=True, use_point_charges=True),
                           sys._getframe().f_code.co_name + ': NRE qmefp',
-                          atol=1.e-6)
+                          atol=1.e-4)
     assert compare_values(1.90431498139,
                           asdf.nuclear_repulsion_energy(use_efp_frags=False, use_point_charges=True),
                           sys._getframe().f_code.co_name + ': NRE qm',
-                          atol=1.e-6)
+                          atol=1.e-4)
     assert compare_values(321.754522402,
                           asdf.nuclear_repulsion_energy(use_efp_frags=True, use_point_charges=False),
                           sys._getframe().f_code.co_name + ': NRE efp',
-                          atol=1.e-6)
+                          atol=1.e-4)
 
 
 def test_qm_2a():

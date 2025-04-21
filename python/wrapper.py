@@ -99,18 +99,13 @@ def compute(efpobj, do_gradient=False):
     """
     res = efpobj._efp_compute(do_gradient)
     _result_to_error(res)
-    # If pairwise is enabled, call the pairwise interaction calculator
-#    if efpobj.get_opts().get("enable_pairwise", False):
-#        nfrag = efpobj.get_frag_count()
-#        res2 = efpobj._efp_compute_pairwise_energy_range(0, nfrag)
-#        _result_to_error(res2)
-#        efpobj.print_pairwise_energies()
+    # If pairwise is enabled
     if efpobj.get_opts().get("enable_pairwise", False):
         if efpobj.get_opts().get("symmetry", False):
-            # Use the symmetry-aware two-body computation
+            # If symmetry, use two-body crystal
             res2 = efpobj._efp_compute_two_body_crystal()
         else:
-            # Use the regular pairwise energy range
+            # If not, two-body range
             nfrag = efpobj.get_frag_count()
             res2 = efpobj._efp_compute_pairwise_energy_range(0, nfrag)
 
@@ -156,7 +151,7 @@ def add_potential(efpobj, potential, fragpath='LIBRARY', duplicates_ok=False):
             for lst in [paths, library_paths]:
                 for spth in '@libefp_FRAGLIB_DIRS@'.split(';'):
                     lst.append(spth)
-                lst.append('/scratch/gilbreth/paulsk/backup/oglib/uplibefp2/fraglib')
+                lst.append('/scratch/gilbreth/paulsk/backup/branch_pylib/libefp/fraglib')
                 #lst.append('/opt/anaconda1anaconda2anaconda3/share/libefp/fraglib')
                 #lst.append('/opt/anaconda1anaconda2anaconda3/share/libefp/fraglib/databases')
                 #lst.append('/opt/anaconda1anaconda2anaconda3/Library/share/libefp/fraglib')
@@ -270,6 +265,8 @@ def get_opts(efpobj, label='libefp'):
     dopts['spec_disp'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_DISP) # SKP
     dopts['spec_xr'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_XR) # SKP
     dopts['spec_chtr'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_CHTR)  # SKP
+    dopts['spec_qq'] = bool(opts.terms & core.efp_special_term.EFP_SPEC_TERM_QQ) # SKP
+    dopts['spec_lj'] = bool(opts.terms & core.efp_special_term.EFP_SPEC_TERM_LJ)  # SKP
  
     dopts['elec_damp'] = {
         core.EFP_ELEC_DAMP_SCREEN: 'screen',
@@ -341,7 +338,8 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
     allowed = [
         'elec', 'pol', 'disp', 'xr', 'elec_damp', 'pol_damp', 'disp_damp', 'enable_pbc', 'enable_cutoff', 'swf_cutoff',
         'pol_driver', 'ai_elec', 'ai_pol', 'enable_pairwise', 'ligand', 'symmetry', 
-        'spec_elec', 'spec_pol', 'spec_disp', 'spec_xr', 'spec_chtr', 'ai_qq', 'qq', 'lj', 'special_fragment' # SKP
+        'spec_elec', 'spec_pol', 'spec_disp', 'spec_xr', 'spec_qq', 'ai_qq', 'qq', 'lj', 'special_fragment',
+        'spec_qq', 'spec_lj'# SKP
     ]
     label_allowed = [_lbtl[label].get(itm, itm) for itm in allowed]
     for key in dopts.keys():
@@ -436,6 +434,68 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         else:
             _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
                              'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
+
+    topic = _lbtl[label].get('spec_qq', 'spec_qq')
+    if topic in dopts:
+        if dopts[topic] in trues:
+            opts.terms |= core.efp_special_term.EFP_SPEC_TERM_QQ
+        elif dopts[topic] in falses:
+            opts.terms &= ~core.efp_special_term.EFP_SPEC_TERM_QQ
+        else:
+            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
+                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
+
+    topic = _lbtl[label].get('spec_lj', 'spec_lj')
+    if topic in dopts:
+        if dopts[topic] in trues:
+            opts.terms |= core.efp_special_term.EFP_SPEC_TERM_LJ
+        elif dopts[topic] in falses:
+            opts.terms &= ~core.efp_special_term.EFP_SPEC_TERM_LJ
+        else:
+            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
+                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
+
+    topic = _lbtl[label].get('spec_elec', 'spec_elec')
+    if topic in dopts:
+        if dopts[topic] in trues:
+            opts.terms |= core.efp_special_term.EFP_SPEC_TERM_ELEC
+        elif dopts[topic] in falses:
+            opts.terms &= ~core.efp_special_term.EFP_SPEC_TERM_ELEC
+        else:
+            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
+                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
+
+    topic = _lbtl[label].get('spec_pol', 'spec_pol')
+    if topic in dopts:
+        if dopts[topic] in trues:
+            opts.terms |= core.efp_special_term.EFP_SPEC_TERM_POL
+        elif dopts[topic] in falses:
+            opts.terms &= ~core.efp_special_term.EFP_SPEC_TERM_POL
+        else:
+            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
+                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
+
+    topic = _lbtl[label].get('spec_xr', 'spec_xr')
+    if topic in dopts:
+        if dopts[topic] in trues:
+            opts.terms |= core.efp_special_term.EFP_SPEC_TERM_XR
+        elif dopts[topic] in falses:
+            opts.terms &= ~core.efp_special_term.EFP_SPEC_TERM_XR
+        else:
+            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
+                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
+
+
+    topic = _lbtl[label].get('spec_disp', 'spec_disp')
+    if topic in dopts:
+        if dopts[topic] in trues:
+            opts.terms |= core.efp_special_term.EFP_SPEC_TERM_DISP
+        elif dopts[topic] in falses:
+            opts.terms &= ~core.efp_special_term.EFP_SPEC_TERM_DISP
+        else:
+            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
+                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
+
 #================================================================================================#
     # may be enabled in a future libefp release
     # topic = _lbtl[label].get('chtr', 'chtr')
@@ -503,7 +563,7 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         else:
             _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
                              'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
-# LIGAND - SKP
+# LIGAND NUMBER - SKP
     topic = _lbtl[label].get('ligand', 'ligand')
     if topic in dopts:
         ligand_idx = dopts[topic]
@@ -512,7 +572,16 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         if ligand_idx >= efpobj.get_frag_count():
             raise ValueError(f"Invalid ligand index: {ligand_idx}, only {efpobj.get_frag_count()} fragments present.")
         opts.ligand = ligand_idx
- 
+
+# SPECIAL-FRAGMENT NUMBER - SKP
+    topic = _lbtl[label].get('special_fragment', 'special_fragment')
+    if topic in dopts:
+        special_frag_idx = dopts[topic]
+        if not isinstance(special_frag_idx, int):
+            raise TypeError(f"special_fragment value must be an integer, got: {special_frag_idx}")
+        if special_frag_idx >= efpobj.get_frag_count():
+            raise ValueError(f"Invalid special_fragment index: {special_frag_idx}, only {efpobj.get_frag_count()} fragments present.")
+        opts.special_fragment = special_frag_idx
 
     topic = _lbtl[label].get('enable_cutoff', 'enable_cutoff')
     if topic in dopts:
@@ -701,6 +770,13 @@ def get_energy(efpobj, label='libefp'):
         'pol': ene.polarization,
         'disp': ene.dispersion,
         'qq': ene.qq,
+        'lj':ene.lj,
+        'spec_elec':ene.electrostatic,
+        'spec_pol':ene.polarization,
+        'spec_disp':ene.dispersion,
+        'spec_xr':ene.exchange_repulsion,
+        'spec_qq':ene.qq,
+        'spec_lj':ene.lj,
     }
 
     return _rekey(energies, label=label)
