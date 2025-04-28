@@ -13,8 +13,8 @@ Journal References:
 
 Project web site: https://github.com/libefp2/libefp/
 
-RUNNING 1 MPI PROCESSES WITH 32 OPENMP THREADS EACH
-WALL CLOCK TIME IS Mon Apr 14 12:58:56 2025
+RUNNING 1 MPI PROCESSES WITH 1 OPENMP THREADS EACH
+WALL CLOCK TIME IS Mon Apr 28 00:35:46 2025
 
 SIMULATION SETTINGS
 
@@ -35,7 +35,7 @@ efp_params_file params.efp
 enable_cutoff false
 swf_cutoff 10
 xr_cutoff 10
-max_steps 10
+max_steps 50
 multistep_steps 1
 fraglib_path ../fraglib
 userlib_path .
@@ -48,8 +48,8 @@ ref_energy 0
 hess_central false
 num_step_dist 0.001
 num_step_angle 0.01
-ensemble nve
-time_step 1
+ensemble nvt
+time_step 0.5
 print_step 1
 velocitize false
 temperature 300
@@ -60,15 +60,15 @@ ligand -100
 enable_pairwise false
 print_pbc false
 symmetry false
-special_fragment 0
-enable_torch true
+special_fragment -100
+enable_torch false
 enable_elpot false
-opt_special_frag 0
-torch_nn ani1.pt
-ml_path ../nnlib/
-userml_path .
-custom_nn custom_model_script.pt
-aev_nn aev_scripted.pt
+opt_special_frag -1
+torch_nn none
+ml_path none
+userml_path none
+custom_nn none
+aev_nn none
 atom_gradient frag
 symm_frag frag
 update_params 0
@@ -76,33 +76,10 @@ update_params_cutoff 0
 print 0
 
 
-Chosen nn_type: ani1.pt
-The location of NN potential is: ../nnlib/
-Model loaded from: ../nnlib/ANI1x_saved2.pt
-
 MOLECULAR DYNAMICS JOB
 
 
-Inside md_create(), Torch enabled
-In md_create(), (body->atoms[i]).atom_velo     0.0000000000     0.0000000000     0.0005000000
-In md_create(), (body->atoms[i]).atom_velo     0.0000000000     0.0000000000     0.0005000000
-In md_create(), (body->atoms[i]).atom_velo     0.0000000000     0.0000000000     0.0005000000
-md->n_freedom =   15
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-    0.0000000000	   -0.0396314705	    0.0000000000	
-    0.0202517875	    0.0198157353	    0.0000000000	
-   -0.0202517875	    0.0198157353	    0.0000000000	
-
-Torch gradient in energy.c
-0.000000 -0.039631 0.000000 0.020252 0.019816 0.000000 -0.020252 0.019816 0.000000 
-EFP fragment atomic gradient
-0.000011 -0.001900 0.013652 0.000003 -0.000123 -0.002694 0.000003 -0.000116 -0.002698 
-
-====Torch grad + EFP grad ===
-0.000011 -0.041531 0.013652 0.020255 0.019692 -0.002694 -0.020248 0.019700 -0.002698 
-=================================
+md->n_freedom =    6
     INITIAL STATE
 
     GEOMETRY (ANGSTROMS)
@@ -110,872 +87,2900 @@ EFP fragment atomic gradient
 A01O1                0.000000     0.063030     0.000000
 A02H2               -0.752652    -0.500166     0.000000
 A03H3                0.752652    -0.500166     0.000000
-A01N1                0.000000     0.000000     2.936823
-A02H2               -0.466791    -0.808506     3.292603
-A03H3               -0.466791     0.808506     3.292603
-A04H4                0.933582     0.000000     3.292603
+A01N1                0.000000     0.000000     4.936823
+A02H2               -0.466791    -0.808506     5.292603
+A03H3               -0.466791     0.808506     5.292603
+A04H4                0.933582     0.000000     5.292603
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
-velocity
    0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+velocity
+   0.000000e+00   0.000000e+00   5.831490e-04   0.000000e+00   0.000000e+00   0.000000e+00
 
 fragment NH3_L
-   0.000000e+00   0.000000e+00   3.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+   0.000000e+00   0.000000e+00   5.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+   0.000000e+00   0.000000e+00  -6.168510e-04   0.000000e+00   0.000000e+00   0.000000e+00
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000000000
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000000000
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000000000
+checking body->vels in get_kinetic_energy(),     0.0000000000     0.0000000000     0.0005831490
+checking body->vels in get_kinetic_energy(),     0.0000000000     0.0000000000    -0.0006168510
+checking body->vels in get_kinetic_energy(),     0.0000000000     0.0000000000     0.0005831490
+checking body->vels in get_kinetic_energy(),     0.0000000000     0.0000000000    -0.0006168510
+checking body->vels in get_kinetic_energy(),     0.0000000000     0.0000000000     0.0005831490
+checking body->vels in get_kinetic_energy(),     0.0000000000     0.0000000000    -0.0006168510
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0031553188
-           POLARIZATION ENERGY    -0.0008033101
-             DISPERSION ENERGY    -0.0024607598
-     EXCHANGE REPULSION ENERGY     0.0067906511
+          ELECTROSTATIC ENERGY     0.0006047186
+           POLARIZATION ENERGY    -0.0000255683
+             DISPERSION ENERGY    -0.0001028155
+     EXCHANGE REPULSION ENERGY     0.0000169443
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3870240109
-
-                  TOTAL ENERGY   -76.3803421108
+                  TOTAL ENERGY     0.0004932790
 
 
-                KINETIC ENERGY     0.0041039053
-                     INVARIANT   -76.3762382055
-               TEMPERATURE (K)   172.7881138830
+                KINETIC ENERGY     0.0114873044
+                     INVARIANT     0.0119805834
+               TEMPERATURE (K)  1209.1346642227
 
 
- time_step =    41.3413733366
-Doing update_step_nve, Using Enable-Torch
-body->mass 31037.4928179414
-Full position update.. will update special fragment
-special_atom-mass    15.9949100000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000000078     0.0000294433     0.0004903212
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0002279017    -0.0002215677     0.0005303139
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0002278235    -0.0002216515     0.0005303561
-Updating fragment using update_special_fragment routine()
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-   -0.0000000343	   -0.0291862652	    0.0000449262	
-    0.0129486143	    0.0145931159	   -0.0000224552	
-   -0.0129485798	    0.0145931484	   -0.0000224710	
-
-Torch gradient in energy.c
--0.000000 -0.029186 0.000045 0.012949 0.014593 -0.000022 -0.012949 0.014593 -0.000022 
-EFP fragment atomic gradient
-0.000011 -0.001930 0.013976 0.000004 -0.000131 -0.002691 0.000004 -0.000123 -0.002695 
-
-====Torch grad + EFP grad ===
-0.000011 -0.031116 0.014021 0.012952 0.014462 -0.002714 -0.012945 0.014470 -0.002717 
-=================================
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000000156     0.0000515029     0.0004803812
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0003736330    -0.0003842889     0.0005608467
-In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0003734740    -0.0003844590     0.0005609289
+checking body->vels in get_kinetic_energy(),     0.0000000000     0.0000000000     0.0005831490
+checking body->vels in get_kinetic_energy(),     0.0000000000     0.0000000000    -0.0006168510
+checking body->vels in get_kinetic_energy(),    -0.0000000003     0.0000000932     0.0005830807
+checking body->vels in get_kinetic_energy(),     0.0000000003    -0.0000000986    -0.0006167787
+checking body->vels in get_kinetic_energy(),    -0.0000000006     0.0000001874     0.0005830110
+checking body->vels in get_kinetic_energy(),     0.0000000006    -0.0000001983    -0.0006167050
     STATE AFTER 1 STEPS
 
     GEOMETRY (ANGSTROMS)
 
-A01O1               -0.000000     0.063674     0.010727
-A02H2               -0.757638    -0.505013     0.011602
-A03H3                0.757636    -0.505015     0.011603
-A01N1                0.000001    -0.000059     2.936943
-A02H2               -0.466793    -0.808410     3.293071
-A03H3               -0.466794     0.808602     3.292368
-A04H4                0.933580     0.000097     3.292731
+A01O1               -0.000000     0.063031     0.006372
+A02H2               -0.752652    -0.500165     0.006426
+A03H3                0.752652    -0.500165     0.006426
+A01N1                0.000000    -0.000003     4.930076
+A02H2               -0.466791    -0.808501     5.285875
+A03H3               -0.466791     0.808512     5.285838
+A04H4                0.933582     0.000006     5.285857
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+  -3.267608e-09   1.019615e-06   6.378002e-03  -3.141543e+00   9.658792e-05   3.141543e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+  -6.023138e-10   1.874457e-07   5.830110e-04  -9.383071e-06  -4.638510e-10  -4.274704e-09
 
 fragment NH3_L
-   2.609949e-07  -3.116618e-05   3.000120e+00  -3.123791e+00   4.346806e-04   3.123791e+00
+   3.456453e-09  -1.078542e-06   4.993253e+00  -3.133782e+00   2.265361e-05   3.133782e+00
 velocity
-   2.409398e-08  -2.879126e-06   1.122205e-05  -2.124096e-05  -3.780136e-07   3.889300e-08
+   6.371233e-10  -1.982788e-07  -6.167050e-04  -2.201189e-06  -1.723566e-08   2.773281e-09
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000089618
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000089618
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000089618
+checking body->vels in get_kinetic_energy(),    -0.0000000006     0.0000001874     0.0005830110
+checking body->vels in get_kinetic_energy(),     0.0000000006    -0.0000001983    -0.0006167050
+checking body->vels in get_kinetic_energy(),    -0.0000000006     0.0000001874     0.0005830110
+checking body->vels in get_kinetic_energy(),     0.0000000006    -0.0000001983    -0.0006167050
+checking body->vels in get_kinetic_energy(),    -0.0000000006     0.0000001874     0.0005830110
+checking body->vels in get_kinetic_energy(),     0.0000000006    -0.0000001983    -0.0006167050
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0031945092
-           POLARIZATION ENERGY    -0.0008267126
-             DISPERSION ENERGY    -0.0025158314
-     EXCHANGE REPULSION ENERGY     0.0070304555
+          ELECTROSTATIC ENERGY     0.0006111942
+           POLARIZATION ENERGY    -0.0000260164
+             DISPERSION ENERGY    -0.0001044932
+     EXCHANGE REPULSION ENERGY     0.0000178337
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3876928262
-
-                  TOTAL ENERGY   -76.3808104055
+                  TOTAL ENERGY     0.0004985183
 
 
-                KINETIC ENERGY     0.0045131136
-                     INVARIANT   -76.3762972918
-               TEMPERATURE (K)   190.0171511062
+                KINETIC ENERGY     0.0114820571
+                     INVARIANT     0.0119805851
+               TEMPERATURE (K)  1208.5823373323
 
 
- time_step =    41.3413733366
-Doing update_step_nve, Using Enable-Torch
-body->mass 31037.4928179414
-Full position update.. will update special fragment
-special_atom-mass    15.9949100000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000000235     0.0000735625     0.0004704411
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0005193642    -0.0005470101     0.0005913796
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0005191245    -0.0005472664     0.0005915017
-Updating fragment using update_special_fragment routine()
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-   -0.0000000325	   -0.0068641576	    0.0000415253	
-   -0.0023661989	    0.0034320896	   -0.0000207682	
-    0.0023662314	    0.0034320680	   -0.0000207571	
-
-Torch gradient in energy.c
--0.000000 -0.006864 0.000042 -0.002366 0.003432 -0.000021 0.002366 0.003432 -0.000021 
-EFP fragment atomic gradient
-0.000011 -0.001966 0.014295 0.000004 -0.000150 -0.002675 0.000004 -0.000141 -0.002678 
-
-====Torch grad + EFP grad ===
-0.000011 -0.008830 0.014336 -0.002362 0.003282 -0.002696 0.002370 0.003291 -0.002698 
-=================================
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000000312     0.0000798228     0.0004602777
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0004927838    -0.0005839427     0.0006217097
-In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0004924581    -0.0005842909     0.0006218630
+checking body->vels in get_kinetic_energy(),    -0.0000000006     0.0000001874     0.0005830110
+checking body->vels in get_kinetic_energy(),     0.0000000006    -0.0000001983    -0.0006167050
+checking body->vels in get_kinetic_energy(),    -0.0000000009     0.0000002817     0.0005829414
+checking body->vels in get_kinetic_energy(),     0.0000000010    -0.0000002980    -0.0006166313
+checking body->vels in get_kinetic_energy(),    -0.0000000012     0.0000003770     0.0005828704
+checking body->vels in get_kinetic_energy(),     0.0000000013    -0.0000003987    -0.0006165562
     STATE AFTER 2 STEPS
 
     GEOMETRY (ANGSTROMS)
 
-A01O1               -0.000001     0.065283     0.021019
-A02H2               -0.769000    -0.516980     0.024539
-A03H3                0.768993    -0.516988     0.024543
-A01N1                0.000003    -0.000237     2.937314
-A02H2               -0.466797    -0.808118     3.294499
-A03H3               -0.466802     0.808891     3.291659
-A04H4                0.933574     0.000391     3.293123
+A01O1               -0.000000     0.063034     0.012730
+A02H2               -0.752652    -0.500162     0.012948
+A03H3                0.752652    -0.500162     0.012949
+A01N1                0.000000    -0.000010     4.923331
+A02H2               -0.466791    -0.808484     5.279185
+A03H3               -0.466792     0.808528     5.279038
+A04H4                0.933582     0.000022     5.279112
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+  -1.317677e-08   4.100733e-06   1.275448e-02  -3.141543e+00   3.879090e-04   3.141543e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+  -1.214629e-09   3.769534e-07   5.828704e-04  -1.884251e-05  -9.331270e-10  -8.612424e-09
 
 fragment NH3_L
-   1.054204e-06  -1.259728e-04   3.000491e+00  -3.123796e+00   1.756539e-03   3.123799e+00
+   1.393829e-08  -4.337727e-06   4.986508e+00  -3.133763e+00   9.100296e-05   3.133763e+00
 velocity
-   4.863381e-08  -5.836936e-06   2.289815e-05  -4.308133e-05  -7.644902e-07   8.032335e-08
+   1.284826e-09  -3.987387e-07  -6.165562e-04  -4.421408e-06  -3.471067e-08   5.587382e-09
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000370595
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000370595
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000370595
+checking body->vels in get_kinetic_energy(),    -0.0000000012     0.0000003770     0.0005828704
+checking body->vels in get_kinetic_energy(),     0.0000000013    -0.0000003987    -0.0006165562
+checking body->vels in get_kinetic_energy(),    -0.0000000012     0.0000003770     0.0005828704
+checking body->vels in get_kinetic_energy(),     0.0000000013    -0.0000003987    -0.0006165562
+checking body->vels in get_kinetic_energy(),    -0.0000000012     0.0000003770     0.0005828704
+checking body->vels in get_kinetic_energy(),     0.0000000013    -0.0000003987    -0.0006165562
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0032716566
-           POLARIZATION ENERGY    -0.0008543459
-             DISPERSION ENERGY    -0.0025694194
-     EXCHANGE REPULSION ENERGY     0.0072673056
+          ELECTROSTATIC ENERGY     0.0006173625
+           POLARIZATION ENERGY    -0.0000264680
+             DISPERSION ENERGY    -0.0001062027
+     EXCHANGE REPULSION ENERGY     0.0000187631
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3883699694
-
-                  TOTAL ENERGY   -76.3812547725
+                  TOTAL ENERGY     0.0005034549
 
 
-                KINETIC ENERGY     0.0049828795
-                     INVARIANT   -76.3762718930
-               TEMPERATURE (K)   209.7958621775
+                KINETIC ENERGY     0.0114770950
+                     INVARIANT     0.0119805869
+               TEMPERATURE (K)  1208.0600382364
 
 
- time_step =    41.3413733366
-Doing update_step_nve, Using Enable-Torch
-body->mass 31037.4928179414
-Full position update.. will update special fragment
-special_atom-mass    15.9949100000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000000390     0.0000860830     0.0004501142
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0004662034    -0.0006208754     0.0006520398
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0004657917    -0.0006213154     0.0006522244
-Updating fragment using update_special_fragment routine()
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-   -0.0000000749	    0.0135710329	   -0.0001803150	
-   -0.0157738955	   -0.0067852587	    0.0000900791	
-    0.0157739704	   -0.0067857742	    0.0000902359	
-
-Torch gradient in energy.c
--0.000000 0.013571 -0.000180 -0.015774 -0.006785 0.000090 0.015774 -0.006786 0.000090 
-EFP fragment atomic gradient
-0.000011 -0.001999 0.014617 0.000004 -0.000178 -0.002668 0.000004 -0.000169 -0.002670 
-
-====Torch grad + EFP grad ===
-0.000011 0.011572 0.014437 -0.015770 -0.006963 -0.002578 0.015778 -0.006955 -0.002580 
-=================================
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000000465     0.0000778794     0.0004398791
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0002887688    -0.0005425285     0.0006810484
-In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0002882661    -0.0005430597     0.0006812484
+checking body->vels in get_kinetic_energy(),    -0.0000000012     0.0000003770     0.0005828704
+checking body->vels in get_kinetic_energy(),     0.0000000013    -0.0000003987    -0.0006165562
+checking body->vels in get_kinetic_energy(),    -0.0000000015     0.0000004722     0.0005827995
+checking body->vels in get_kinetic_energy(),     0.0000000016    -0.0000004995    -0.0006164812
+checking body->vels in get_kinetic_energy(),    -0.0000000018     0.0000005686     0.0005827273
+checking body->vels in get_kinetic_energy(),     0.0000000019    -0.0000006014    -0.0006164048
     STATE AFTER 3 STEPS
 
     GEOMETRY (ANGSTROMS)
 
-A01O1               -0.000002     0.067167     0.030866
-A02H2               -0.779199    -0.530563     0.038804
-A03H3                0.779183    -0.530580     0.038811
-A01N1                0.000007    -0.000539     2.937945
-A02H2               -0.466804    -0.807620     3.296921
-A03H3               -0.466816     0.809379     3.290459
-A04H4                0.933564     0.000890     3.293789
+A01O1               -0.000000     0.063039     0.019074
+A02H2               -0.752652    -0.500156     0.019567
+A03H3                0.752652    -0.500157     0.019567
+A01N1                0.000000    -0.000023     4.916588
+A02H2               -0.466792    -0.808456     5.272534
+A03H3               -0.466792     0.808556     5.272201
+A04H4                0.933582     0.000051     5.272370
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+  -2.983994e-08   9.266192e-06   1.912941e-02  -3.141543e+00   8.755630e-04   3.141543e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+  -1.837519e-09   5.685756e-07   5.827273e-04  -2.838039e-05  -1.405434e-09  -1.301256e-08
 
 fragment NH3_L
-   2.388910e-06  -2.865545e-04   3.001122e+00  -3.123839e+00   3.997324e-03   3.123846e+00
+   3.156448e-08  -9.801713e-06   4.979765e+00  -3.133746e+00   2.054463e-04   3.133747e+00
 velocity
-   7.347100e-08  -8.903180e-06   3.503337e-05  -6.577726e-05  -1.159964e-06   1.253640e-07
+   1.943715e-09  -6.014352e-07  -6.164048e-04  -6.661137e-06  -5.244019e-08   8.441841e-09
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000865434
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000865434
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0000865434
+checking body->vels in get_kinetic_energy(),    -0.0000000018     0.0000005686     0.0005827273
+checking body->vels in get_kinetic_energy(),     0.0000000019    -0.0000006014    -0.0006164048
+checking body->vels in get_kinetic_energy(),    -0.0000000018     0.0000005686     0.0005827273
+checking body->vels in get_kinetic_energy(),     0.0000000019    -0.0000006014    -0.0006164048
+checking body->vels in get_kinetic_energy(),    -0.0000000018     0.0000005686     0.0005827273
+checking body->vels in get_kinetic_energy(),     0.0000000019    -0.0000006014    -0.0006164048
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0033203325
-           POLARIZATION ENERGY    -0.0008793263
-             DISPERSION ENERGY    -0.0026212704
-     EXCHANGE REPULSION ENERGY     0.0074997817
+          ELECTROSTATIC ENERGY     0.0006232114
+           POLARIZATION ENERGY    -0.0000269230
+             DISPERSION ENERGY    -0.0001079445
+     EXCHANGE REPULSION ENERGY     0.0000197340
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3879051007
-
-                  TOTAL ENERGY   -76.3805855833
+                  TOTAL ENERGY     0.0005080779
 
 
-                KINETIC ENERGY     0.0044991053
-                     INVARIANT   -76.3760864780
-               TEMPERATURE (K)   189.4273523854
+                KINETIC ENERGY     0.0114724293
+                     INVARIANT     0.0119805886
+               TEMPERATURE (K)  1207.5689305937
 
 
- time_step =    41.3413733366
-Doing update_step_nve, Using Enable-Torch
-body->mass 31037.4928179414
-Full position update.. will update special fragment
-special_atom-mass    15.9949100000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000000541     0.0000696757     0.0004296439
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0001113342    -0.0004641816     0.0007100570
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0001107405    -0.0004648041     0.0007102724
-Updating fragment using update_special_fragment routine()
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-    0.0000001479	    0.0251806863	   -0.0005817248	
-   -0.0213408812	   -0.0125897931	    0.0002906908	
-    0.0213407333	   -0.0125908932	    0.0002910340	
-
-Torch gradient in energy.c
-0.000000 0.025181 -0.000582 -0.021341 -0.012590 0.000291 0.021341 -0.012591 0.000291 
-EFP fragment atomic gradient
-0.000010 -0.002021 0.014956 0.000004 -0.000216 -0.002695 0.000004 -0.000207 -0.002694 
-
-====Torch grad + EFP grad ===
-0.000011 0.023160 0.014375 -0.021337 -0.012805 -0.002404 0.021345 -0.012798 -0.002403 
-=================================
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000000615     0.0000532565     0.0004194531
-In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0001287373    -0.0003201019     0.0007371089
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0001294194    -0.0003208079     0.0007373144
+checking body->vels in get_kinetic_energy(),    -0.0000000018     0.0000005686     0.0005827273
+checking body->vels in get_kinetic_energy(),     0.0000000019    -0.0000006014    -0.0006164048
+checking body->vels in get_kinetic_energy(),    -0.0000000022     0.0000006649     0.0005826551
+checking body->vels in get_kinetic_energy(),     0.0000000023    -0.0000007033    -0.0006163285
+checking body->vels in get_kinetic_energy(),    -0.0000000025     0.0000007624     0.0005825816
+checking body->vels in get_kinetic_energy(),     0.0000000026    -0.0000008064    -0.0006162508
     STATE AFTER 4 STEPS
 
     GEOMETRY (ANGSTROMS)
 
-A01O1               -0.000003     0.068691     0.040265
-A02H2               -0.781635    -0.540718     0.054338
-A03H3                0.781606    -0.540748     0.054350
-A01N1                0.000012    -0.000970     2.938848
-A02H2               -0.466814    -0.806902     3.300377
-A03H3               -0.466835     0.810068     3.288743
-A04H4                0.933549     0.001603     3.294738
+A01O1               -0.000000     0.063046     0.025404
+A02H2               -0.752652    -0.500148     0.026284
+A03H3                0.752651    -0.500149     0.026284
+A01N1                0.000000    -0.000041     4.909846
+A02H2               -0.466792    -0.808417     5.265921
+A03H3               -0.466792     0.808596     5.265329
+A04H4                0.933582     0.000090     5.265629
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+  -5.337602e-08   1.653941e-05   2.550275e-02  -3.141544e+00   1.561193e-03   3.141543e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+  -2.471582e-09   7.623661e-07   5.825816e-04  -3.799887e-05  -1.878289e-09  -1.747445e-08
 
 fragment NH3_L
-   4.268841e-06  -5.155210e-04   3.002024e+00  -3.123913e+00   7.196029e-03   3.123927e+00
+   5.646077e-08  -1.749527e-05   4.973023e+00  -3.133731e+00   3.663920e-04   3.133731e+00
 velocity
-   9.818856e-08  -1.209337e-05   4.758477e-05  -8.943362e-05  -1.561626e-06   1.722078e-07
+   2.614422e-09  -8.064255e-07  -6.162508e-04  -8.920868e-06  -7.043997e-08   1.133615e-08
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0001598352
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0001598352
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0001598352
+checking body->vels in get_kinetic_energy(),    -0.0000000025     0.0000007624     0.0005825816
+checking body->vels in get_kinetic_energy(),     0.0000000026    -0.0000008064    -0.0006162508
+checking body->vels in get_kinetic_energy(),    -0.0000000025     0.0000007624     0.0005825816
+checking body->vels in get_kinetic_energy(),     0.0000000026    -0.0000008064    -0.0006162508
+checking body->vels in get_kinetic_energy(),    -0.0000000025     0.0000007624     0.0005825816
+checking body->vels in get_kinetic_energy(),     0.0000000026    -0.0000008064    -0.0006162508
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0032759150
-           POLARIZATION ENERGY    -0.0008944186
-             DISPERSION ENERGY    -0.0026711271
-     EXCHANGE REPULSION ENERGY     0.0077263987
+          ELECTROSTATIC ENERGY     0.0006287283
+           POLARIZATION ENERGY    -0.0000273813
+             DISPERSION ENERGY    -0.0001097193
+     EXCHANGE REPULSION ENERGY     0.0000207481
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3873005755
-
-                  TOTAL ENERGY   -76.3798638076
+                  TOTAL ENERGY     0.0005123757
 
 
-                KINETIC ENERGY     0.0039039422
-                     INVARIANT   -76.3759598654
-               TEMPERATURE (K)   164.3689982486
+                KINETIC ENERGY     0.0114680714
+                     INVARIANT     0.0119805904
+               TEMPERATURE (K)  1207.1102322737
 
 
- time_step =    41.3413733366
-Doing update_step_nve, Using Enable-Torch
-body->mass 31037.4928179414
-Full position update.. will update special fragment
-special_atom-mass    15.9949100000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000000690     0.0000368373     0.0004092623
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0003688089    -0.0001760222     0.0007641609
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0003695792    -0.0001768117     0.0007643563
-Updating fragment using update_special_fragment routine()
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-    0.0000000710	    0.0245940041	   -0.0008748885	
-   -0.0170619505	   -0.0122962076	    0.0004372514	
-    0.0170618795	   -0.0122977975	    0.0004376371	
-
-Torch gradient in energy.c
-0.000000 0.024594 -0.000875 -0.017062 -0.012296 0.000437 0.017062 -0.012298 0.000438 
-EFP fragment atomic gradient
-0.000010 -0.002021 0.015318 0.000004 -0.000264 -0.002769 0.000004 -0.000256 -0.002765 
-
-====Torch grad + EFP grad ===
-0.000010 0.022573 0.014443 -0.017058 -0.012560 -0.002332 0.017066 -0.012554 -0.002327 
-=================================
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000000763     0.0000208345     0.0003990228
-In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0005607400    -0.0000347019     0.0007903953
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0005615917    -0.0000355594     0.0007905421
+checking body->vels in get_kinetic_energy(),    -0.0000000025     0.0000007624     0.0005825816
+checking body->vels in get_kinetic_energy(),     0.0000000026    -0.0000008064    -0.0006162508
+checking body->vels in get_kinetic_energy(),    -0.0000000028     0.0000008598     0.0005825082
+checking body->vels in get_kinetic_energy(),     0.0000000030    -0.0000009095    -0.0006161731
+checking body->vels in get_kinetic_energy(),    -0.0000000031     0.0000009584     0.0005824335
+checking body->vels in get_kinetic_energy(),     0.0000000033    -0.0000010138    -0.0006160941
     STATE AFTER 5 STEPS
 
     GEOMETRY (ANGSTROMS)
 
-A01O1               -0.000004     0.069497     0.049218
-A02H2               -0.773566    -0.544569     0.071055
-A03H3                0.773520    -0.544617     0.071072
-A01N1                0.000019    -0.001535     2.940031
-A02H2               -0.466827    -0.805947     3.304905
-A03H3               -0.466860     0.810960     3.286485
-A04H4                0.933531     0.002539     3.295975
+A01O1               -0.000000     0.063056     0.031720
+A02H2               -0.752653    -0.500138     0.033098
+A03H3                0.752651    -0.500139     0.033098
+A01N1                0.000000    -0.000064     4.903106
+A02H2               -0.466792    -0.808366     5.259349
+A03H3               -0.466793     0.808646     5.258420
+A04H4                0.933581     0.000141     5.258891
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+  -8.391051e-08   2.594441e-05   3.187449e-02  -3.141544e+00   2.446488e-03   3.141543e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+  -3.117438e-09   9.583808e-07   5.824335e-04  -4.770015e-05  -2.349119e-09  -2.199739e-08
 
 fragment NH3_L
-   6.685035e-06  -8.156857e-04   3.003204e+00  -3.124020e+00   1.139307e-02   3.124042e+00
+   8.875995e-08  -2.744381e-05   4.966283e+00  -3.133714e+00   5.742587e-04   3.133715e+00
 velocity
-   1.220887e-07  -1.541330e-05   6.047255e-05  -1.140424e-04  -1.964284e-06   2.167703e-07
+   3.297604e-09  -1.013768e-06  -6.160941e-04  -1.120111e-05  -8.872636e-08   1.426976e-08
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0002591161
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0002591161
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0002591161
+checking body->vels in get_kinetic_energy(),    -0.0000000031     0.0000009584     0.0005824335
+checking body->vels in get_kinetic_energy(),     0.0000000033    -0.0000010138    -0.0006160941
+checking body->vels in get_kinetic_energy(),    -0.0000000031     0.0000009584     0.0005824335
+checking body->vels in get_kinetic_energy(),     0.0000000033    -0.0000010138    -0.0006160941
+checking body->vels in get_kinetic_energy(),    -0.0000000031     0.0000009584     0.0005824335
+checking body->vels in get_kinetic_energy(),     0.0000000033    -0.0000010138    -0.0006160941
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0031035327
-           POLARIZATION ENERGY    -0.0008954328
-             DISPERSION ENERGY    -0.0027187296
-     EXCHANGE REPULSION ENERGY     0.0079456414
+          ELECTROSTATIC ENERGY     0.0006339000
+           POLARIZATION ENERGY    -0.0000278426
+             DISPERSION ENERGY    -0.0001115280
+     EXCHANGE REPULSION ENERGY     0.0000218068
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3876573661
-
-                  TOTAL ENERGY   -76.3802223543
+                  TOTAL ENERGY     0.0005163362
 
 
-                KINETIC ENERGY     0.0041857862
-                     INVARIANT   -76.3760365681
-               TEMPERATURE (K)   176.2355730020
+                KINETIC ENERGY     0.0114640336
+                     INVARIANT     0.0119805923
+               TEMPERATURE (K)  1206.6852180080
 
 
- time_step =    41.3413733366
-Doing update_step_nve, Using Enable-Torch
-body->mass 31037.4928179414
-Full position update.. will update special fragment
-special_atom-mass    15.9949100000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000000836     0.0000048317     0.0003887832
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0007526711     0.0001066184     0.0008166296
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0007536042     0.0001056929     0.0008167280
-Updating fragment using update_special_fragment routine()
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-   -0.0000005342	    0.0123231104	   -0.0006284922	
-   -0.0039088946	   -0.0061609441	    0.0003141754	
-    0.0039094289	   -0.0061621658	    0.0003143168	
-
-Torch gradient in energy.c
--0.000001 0.012323 -0.000628 -0.003909 -0.006161 0.000314 0.003909 -0.006162 0.000314 
-EFP fragment atomic gradient
-0.000010 -0.001993 0.015700 0.000003 -0.000326 -0.002888 0.000003 -0.000320 -0.002879 
-
-====Torch grad + EFP grad ===
-0.000010 0.010330 0.015072 -0.003906 -0.006487 -0.002574 0.003912 -0.006482 -0.002565 
-=================================
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000000904    -0.0000024914     0.0003780982
-In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0007966187     0.0001796080     0.0008455882
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0007976243     0.0001786277     0.0008455847
+checking body->vels in get_kinetic_energy(),    -0.0000000031     0.0000009584     0.0005824335
+checking body->vels in get_kinetic_energy(),     0.0000000033    -0.0000010138    -0.0006160941
+checking body->vels in get_kinetic_energy(),    -0.0000000034     0.0000010570     0.0005823588
+checking body->vels in get_kinetic_energy(),     0.0000000036    -0.0000011180    -0.0006160151
+checking body->vels in get_kinetic_energy(),    -0.0000000038     0.0000011567     0.0005822829
+checking body->vels in get_kinetic_energy(),     0.0000000040    -0.0000012235    -0.0006159348
     STATE AFTER 6 STEPS
 
     GEOMETRY (ANGSTROMS)
 
-A01O1               -0.000006     0.069603     0.057724
-A02H2               -0.757100    -0.542236     0.088920
-A03H3                0.757034    -0.542304     0.088939
-A01N1                0.000028    -0.002240     2.941501
-A02H2               -0.466843    -0.804736     3.310538
-A03H3               -0.466890     0.812053     3.283657
-A04H4                0.933507     0.003706     3.297503
+A01O1               -0.000000     0.063067     0.038022
+A02H2               -0.752653    -0.500124     0.040012
+A03H3                0.752651    -0.500127     0.040012
+A01N1                0.000001    -0.000092     4.896368
+A02H2               -0.466792    -0.808303     5.252816
+A03H3               -0.466794     0.808708     5.251475
+A04H4                0.933581     0.000204     5.252154
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+  -1.215759e-07   3.750582e-05   3.824460e-02  -3.141544e+00   3.533183e-03   3.141543e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+  -3.775739e-09   1.156677e-06   5.822829e-04  -5.748648e-05  -2.815271e-09  -2.658059e-08
 
 fragment NH3_L
-   9.610691e-06  -1.189912e-03   3.004670e+00  -3.124159e+00   1.662677e-02   3.124191e+00
+   1.286022e-07  -3.967339e-05   4.959545e+00  -3.133697e+00   8.294757e-04   3.133698e+00
 velocity
-   1.443994e-07  -1.886401e-05   7.360428e-05  -1.395446e-04  -2.363258e-06   2.544189e-07
+   3.993951e-09  -1.223525e-06  -6.159348e-04  -1.350238e-05  -1.073163e-07   1.724204e-08
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0003861711
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0003861711
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0003861711
+checking body->vels in get_kinetic_energy(),    -0.0000000038     0.0000011567     0.0005822829
+checking body->vels in get_kinetic_energy(),     0.0000000040    -0.0000012235    -0.0006159348
+checking body->vels in get_kinetic_energy(),    -0.0000000038     0.0000011567     0.0005822829
+checking body->vels in get_kinetic_energy(),     0.0000000040    -0.0000012235    -0.0006159348
+checking body->vels in get_kinetic_energy(),    -0.0000000038     0.0000011567     0.0005822829
+checking body->vels in get_kinetic_energy(),     0.0000000040    -0.0000012235    -0.0006159348
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0028117589
-           POLARIZATION ENERGY    -0.0008832793
-             DISPERSION ENERGY    -0.0027638302
-     EXCHANGE REPULSION ENERGY     0.0081560383
+          ELECTROSTATIC ENERGY     0.0006387128
+           POLARIZATION ENERGY    -0.0000283068
+             DISPERSION ENERGY    -0.0001133711
+     EXCHANGE REPULSION ENERGY     0.0000229119
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3883781213
-
-                  TOTAL ENERGY   -76.3810574336
+                  TOTAL ENERGY     0.0005199467
 
 
-                KINETIC ENERGY     0.0048171575
-                     INVARIANT   -76.3762402760
-               TEMPERATURE (K)   202.8184137829
+                KINETIC ENERGY     0.0114603285
+                     INVARIANT     0.0119805941
+               TEMPERATURE (K)  1206.2952221449
 
 
- time_step =    41.3413733366
-Doing update_step_nve, Using Enable-Torch
-body->mass 31037.4928179414
-Full position update.. will update special fragment
-special_atom-mass    15.9949100000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000000971    -0.0000098146     0.0003674133
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0008405664     0.0002525975     0.0008745468
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0008416444     0.0002515626     0.0008744414
-Updating fragment using update_special_fragment routine()
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-   -0.0000017986	   -0.0055761701	    0.0003891316	
-    0.0125400543	    0.0027879126	   -0.0001944679	
-   -0.0125382555	    0.0027882576	   -0.0001946637	
-
-Torch gradient in energy.c
--0.000002 -0.005576 0.000389 0.012540 0.002788 -0.000194 -0.012538 0.002788 -0.000195 
-EFP fragment atomic gradient
-0.000011 -0.001933 0.016086 0.000002 -0.000406 -0.003033 0.000002 -0.000401 -0.003018 
-
-====Torch grad + EFP grad ===
-0.000009 -0.007509 0.016475 0.012542 0.002382 -0.003227 -0.012536 0.002387 -0.003212 
-=================================
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000001033    -0.0000044912     0.0003557331
-In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0006994496     0.0002257945     0.0009108552
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0007005930     0.0002247079     0.0009105846
+checking body->vels in get_kinetic_energy(),    -0.0000000038     0.0000011567     0.0005822829
+checking body->vels in get_kinetic_energy(),     0.0000000040    -0.0000012235    -0.0006159348
+checking body->vels in get_kinetic_energy(),    -0.0000000041     0.0000012564     0.0005822070
+checking body->vels in get_kinetic_energy(),     0.0000000043    -0.0000013290    -0.0006158545
+checking body->vels in get_kinetic_energy(),    -0.0000000044     0.0000013573     0.0005821300
+checking body->vels in get_kinetic_energy(),     0.0000000047    -0.0000014358    -0.0006157730
     STATE AFTER 7 STEPS
 
     GEOMETRY (ANGSTROMS)
 
-A01O1               -0.000008     0.069388     0.065762
-A02H2               -0.738711    -0.536710     0.108053
-A03H3                0.738621    -0.536801     0.108069
-A01N1                0.000038    -0.003090     2.943264
-A02H2               -0.466863    -0.803248     3.317303
-A03H3               -0.466925     0.813339     3.280230
-A04H4                0.933480     0.005112     3.299320
+A01O1               -0.000000     0.063081     0.044309
+A02H2               -0.752653    -0.500107     0.047025
+A03H3                0.752651    -0.500111     0.047026
+A01N1                0.000001    -0.000126     4.889631
+A02H2               -0.466793    -0.808229     5.246323
+A03H3               -0.466795     0.808782     5.244492
+A04H4                0.933580     0.000278     5.245420
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+  -1.665120e-07   5.124892e-05   4.461305e-02  -3.141545e+00   4.823058e-03   3.141542e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+  -4.447163e-09   1.357313e-06   5.821300e-04  -6.736021e-05  -3.274015e-09  -3.122318e-08
 
 fragment NH3_L
-   1.300306e-05  -1.641058e-03   3.006425e+00  -3.124325e+00   2.293265e-02   3.124368e+00
+   1.761353e-07  -5.421075e-05   4.952809e+00  -3.133679e+00   1.132483e-03   3.133681e+00
 velocity
-   1.647420e-07  -2.244680e-05   8.690359e-05  -1.659022e-04  -2.758679e-06   2.819826e-07
+   4.704178e-09  -1.435756e-06  -6.157730e-04  -1.582521e-05  -1.262275e-07   2.025233e-08
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0005425892
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0005425892
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0005425892
+checking body->vels in get_kinetic_energy(),    -0.0000000044     0.0000013573     0.0005821300
+checking body->vels in get_kinetic_energy(),     0.0000000047    -0.0000014358    -0.0006157730
+checking body->vels in get_kinetic_energy(),    -0.0000000044     0.0000013573     0.0005821300
+checking body->vels in get_kinetic_energy(),     0.0000000047    -0.0000014358    -0.0006157730
+checking body->vels in get_kinetic_energy(),    -0.0000000044     0.0000013573     0.0005821300
+checking body->vels in get_kinetic_energy(),     0.0000000047    -0.0000014358    -0.0006157730
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0024500153
-           POLARIZATION ENERGY    -0.0008634573
-             DISPERSION ENERGY    -0.0028062173
-     EXCHANGE REPULSION ENERGY     0.0083562585
+          ELECTROSTATIC ENERGY     0.0006431522
+           POLARIZATION ENERGY    -0.0000287738
+             DISPERSION ENERGY    -0.0001152494
+     EXCHANGE REPULSION ENERGY     0.0000240651
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3881085230
-
-                  TOTAL ENERGY   -76.3809719237
+                  TOTAL ENERGY     0.0005231941
 
 
-                KINETIC ENERGY     0.0046336651
-                     INVARIANT   -76.3763382586
-               TEMPERATURE (K)   195.0927707218
+                KINETIC ENERGY     0.0114569693
+                     INVARIANT     0.0119805960
+               TEMPERATURE (K)  1205.9416415078
 
 
- time_step =    41.3413733366
-Doing update_step_nve, Using Enable-Torch
-body->mass 31037.4928179414
-Full position update.. will update special fragment
-special_atom-mass    15.9949100000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000001095     0.0000008322     0.0003440530
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0005583329     0.0001989915     0.0009471635
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0005595416     0.0001978533     0.0009467277
-Updating fragment using update_special_fragment routine()
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-   -0.0000024563	   -0.0192327513	    0.0017732953	
-    0.0242327602	    0.0096148331	   -0.0008865679	
-   -0.0242303039	    0.0096179182	   -0.0008867274	
-
-Torch gradient in energy.c
--0.000002 -0.019233 0.001773 0.024233 0.009615 -0.000887 -0.024230 0.009618 -0.000887 
-EFP fragment atomic gradient
-0.000012 -0.001842 0.016453 0.000001 -0.000505 -0.003173 0.000001 -0.000502 -0.003153 
-
-====Torch grad + EFP grad ===
-0.000009 -0.021075 0.018226 0.024234 0.009110 -0.004059 -0.024229 0.009116 -0.004040 
-=================================
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000001162     0.0000157732     0.0003311318
-In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0002856664     0.0000964878     0.0009928358
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0002869269     0.0000952852     0.0009921791
+checking body->vels in get_kinetic_energy(),    -0.0000000044     0.0000013573     0.0005821300
+checking body->vels in get_kinetic_energy(),     0.0000000047    -0.0000014358    -0.0006157730
+checking body->vels in get_kinetic_energy(),    -0.0000000048     0.0000014582     0.0005820529
+checking body->vels in get_kinetic_energy(),     0.0000000051    -0.0000015425    -0.0006156915
+checking body->vels in get_kinetic_energy(),    -0.0000000051     0.0000015604     0.0005819747
+checking body->vels in get_kinetic_energy(),     0.0000000054    -0.0000016505    -0.0006156087
     STATE AFTER 8 STEPS
 
     GEOMETRY (ANGSTROMS)
 
-A01O1               -0.000011     0.069406     0.073288
-A02H2               -0.726496    -0.532357     0.128774
-A03H3                0.726380    -0.532472     0.128781
-A01N1                0.000050    -0.004089     2.945324
-A02H2               -0.466888    -0.801459     3.325227
-A03H3               -0.466964     0.814809     3.276172
-A04H4                0.933447     0.006763     3.301423
+A01O1               -0.000000     0.063096     0.050582
+A02H2               -0.752654    -0.500087     0.054140
+A03H3                0.752650    -0.500091     0.054140
+A01N1                0.000001    -0.000165     4.882897
+A02H2               -0.466793    -0.808143     5.239871
+A03H3               -0.466796     0.808867     5.237472
+A04H4                0.933579     0.000365     5.238688
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+  -2.188661e-07   6.719964e-05   5.097981e-02  -3.141545e+00   6.317946e-03   3.141542e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+  -5.132417e-09   1.560351e-06   5.819747e-04  -7.732373e-05  -3.722549e-09  -3.592424e-08
 
 fragment NH3_L
-   1.681878e-05  -2.172045e-03   3.008472e+00  -3.124504e+00   3.034591e-02   3.124559e+00
+   2.315150e-07  -7.108331e-05   4.946074e+00  -3.133661e+00   1.483732e-03   3.133663e+00
 velocity
-   1.837507e-07  -2.616884e-05   1.003321e-04  -1.931679e-04  -3.159947e-06   2.989097e-07
+   5.429035e-09  -1.650528e-06  -6.156087e-04  -1.817014e-05  -1.454781e-07   2.329988e-08
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0007303007
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0007303007
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0007303007
+checking body->vels in get_kinetic_energy(),    -0.0000000051     0.0000015604     0.0005819747
+checking body->vels in get_kinetic_energy(),     0.0000000054    -0.0000016505    -0.0006156087
+checking body->vels in get_kinetic_energy(),    -0.0000000051     0.0000015604     0.0005819747
+checking body->vels in get_kinetic_energy(),     0.0000000054    -0.0000016505    -0.0006156087
+checking body->vels in get_kinetic_energy(),    -0.0000000051     0.0000015604     0.0005819747
+checking body->vels in get_kinetic_energy(),     0.0000000054    -0.0000016505    -0.0006156087
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0020833153
-           POLARIZATION ENERGY    -0.0008427634
-             DISPERSION ENERGY    -0.0028457392
-     EXCHANGE REPULSION ENERGY     0.0085451847
+          ELECTROSTATIC ENERGY     0.0006472033
+           POLARIZATION ENERGY    -0.0000292432
+             DISPERSION ENERGY    -0.0001171638
+     EXCHANGE REPULSION ENERGY     0.0000252681
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3871893365
-
-                  TOTAL ENERGY   -76.3802493391
+                  TOTAL ENERGY     0.0005260644
 
 
-                KINETIC ENERGY     0.0039444833
-                     INVARIANT   -76.3763048558
-               TEMPERATURE (K)   166.0759165199
+                KINETIC ENERGY     0.0114539700
+                     INVARIANT     0.0119805980
+               TEMPERATURE (K)  1205.6259383619
 
 
- time_step =    41.3413733366
-Doing update_step_nve, Using Enable-Torch
-body->mass 31037.4928179414
-Full position update.. will update special fragment
-special_atom-mass    15.9949100000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000001229     0.0000307143     0.0003182105
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0000129999    -0.0000060160     0.0010385082
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000143121    -0.0000072828     0.0010376304
-Updating fragment using update_special_fragment routine()
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-   -0.0000011483	   -0.0166974480	    0.0019737894	
-    0.0233366310	    0.0083462145	   -0.0009870676	
-   -0.0233354817	    0.0083512345	   -0.0009867218	
-
-Torch gradient in energy.c
--0.000001 -0.016697 0.001974 0.023337 0.008346 -0.000987 -0.023335 0.008351 -0.000987 
-EFP fragment atomic gradient
-0.000015 -0.001732 0.016776 0.000000 -0.000622 -0.003282 0.000000 -0.000620 -0.003261 
-
-====Torch grad + EFP grad ===
-0.000014 -0.018429 0.018750 0.023337 0.007725 -0.004269 -0.023335 0.007731 -0.004248 
-=================================
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000001325     0.0000437796     0.0003049176
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0002495768    -0.0000929298     0.0010865401
-In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0002482415    -0.0000942705     0.0010854221
+checking body->vels in get_kinetic_energy(),    -0.0000000051     0.0000015604     0.0005819747
+checking body->vels in get_kinetic_energy(),     0.0000000054    -0.0000016505    -0.0006156087
+checking body->vels in get_kinetic_energy(),    -0.0000000055     0.0000016625     0.0005818964
+checking body->vels in get_kinetic_energy(),     0.0000000058    -0.0000017586    -0.0006155260
+checking body->vels in get_kinetic_energy(),    -0.0000000058     0.0000017659     0.0005818171
+checking body->vels in get_kinetic_energy(),     0.0000000062    -0.0000018679    -0.0006154420
     STATE AFTER 9 STEPS
 
     GEOMETRY (ANGSTROMS)
 
-A01O1               -0.000013     0.070078     0.080250
-A02H2               -0.726212    -0.532488     0.151493
-A03H3                0.726067    -0.532632     0.151481
-A01N1                0.000063    -0.005243     2.947685
-A02H2               -0.466919    -0.799338     3.334334
-A03H3               -0.467007     0.816451     3.271447
-A04H4                0.933411     0.008668     3.303808
+A01O1               -0.000000     0.063113     0.056839
+A02H2               -0.752654    -0.500062     0.061356
+A03H3                0.752650    -0.500067     0.061356
+A01N1                0.000001    -0.000209     4.876164
+A02H2               -0.466793    -0.808045     5.233460
+A03H3               -0.466797     0.808964     5.230414
+A04H4                0.933578     0.000463     5.231958
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+  -2.787935e-07   8.538458e-05   5.734486e-02  -3.141546e+00   8.019727e-03   3.141542e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+  -5.832241e-09   1.765852e-06   5.818171e-04  -8.737948e-05  -4.158004e-09  -4.068273e-08
 
 fragment NH3_L
-   2.104286e-05  -2.786045e-03   3.010815e+00  -3.124676e+00   3.890644e-02   3.124743e+00
+   2.949058e-07  -9.031921e-05   4.939341e+00  -3.133642e+00   1.883686e-03   3.133644e+00
 velocity
-   2.034661e-07  -3.004640e-05   1.138923e-04  -2.215142e-04  -3.587841e-06   3.069405e-07
+   6.169304e-09  -1.867906e-06  -6.154420e-04  -2.053775e-05  -1.650874e-07   2.638386e-08
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0009521644
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0009521644
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0009521644
+checking body->vels in get_kinetic_energy(),    -0.0000000058     0.0000017659     0.0005818171
+checking body->vels in get_kinetic_energy(),     0.0000000062    -0.0000018679    -0.0006154420
+checking body->vels in get_kinetic_energy(),    -0.0000000058     0.0000017659     0.0005818171
+checking body->vels in get_kinetic_energy(),     0.0000000062    -0.0000018679    -0.0006154420
+checking body->vels in get_kinetic_energy(),    -0.0000000058     0.0000017659     0.0005818171
+checking body->vels in get_kinetic_energy(),     0.0000000062    -0.0000018679    -0.0006154420
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0017581147
-           POLARIZATION ENERGY    -0.0008257151
-             DISPERSION ENERGY    -0.0028823124
-     EXCHANGE REPULSION ENERGY     0.0087218991
+          ELECTROSTATIC ENERGY     0.0006508501
+           POLARIZATION ENERGY    -0.0000297150
+             DISPERSION ENERGY    -0.0001191148
+     EXCHANGE REPULSION ENERGY     0.0000265228
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3872464573
-
-                  TOTAL ENERGY   -76.3804744710
+                  TOTAL ENERGY     0.0005285430
 
 
-                KINETIC ENERGY     0.0041560282
-                     INVARIANT   -76.3763184428
-               TEMPERATURE (K)   174.9826601676
+                KINETIC ENERGY     0.0114513451
+                     INVARIANT     0.0119806000
+               TEMPERATURE (K)  1205.3496434911
 
 
- time_step =    41.3413733366
-Doing update_step_nve, Using Enable-Torch
-body->mass 31037.4928179414
-Full position update.. will update special fragment
-special_atom-mass    15.9949100000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0000001421     0.0000568450     0.0002916247
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel    -0.0005121535    -0.0001798436     0.0011345719
-special_atom-mass     1.0078250000
-In update_step_nve() part-1, (body->atoms[i]).atom_vel     0.0005107951    -0.0001812583     0.0011332137
-Updating fragment using update_special_fragment routine()
-Inside compute forces, Torch enabled
-Setting special fragments as Torch coordinates
-tG_double Gradients:
-    0.0000022025	    0.0001704099	   -0.0000251378	
-    0.0110606099	   -0.0000874130	    0.0000123868	
-   -0.0110628119	   -0.0000829969	    0.0000127511	
-
-Torch gradient in energy.c
-0.000002 0.000170 -0.000025 0.011061 -0.000087 0.000012 -0.011063 -0.000083 0.000013 
-EFP fragment atomic gradient
-0.000019 -0.001605 0.017046 0.000000 -0.000754 -0.003354 0.000000 -0.000753 -0.003337 
-
-====Torch grad + EFP grad ===
-0.000022 -0.001435 0.017021 0.011061 -0.000841 -0.003342 -0.011062 -0.000836 -0.003325 
-=================================
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0000001573     0.0000578621     0.0002795578
-In update_step_nve() part-2, (body->atoms[i]).atom_vel    -0.0006366056    -0.0001703813     0.0011721738
-In update_step_nve() part-2, (body->atoms[i]).atom_vel     0.0006352643    -0.0001718556     0.0011706199
+checking body->vels in get_kinetic_energy(),    -0.0000000058     0.0000017659     0.0005818171
+checking body->vels in get_kinetic_energy(),     0.0000000062    -0.0000018679    -0.0006154420
+checking body->vels in get_kinetic_energy(),    -0.0000000062     0.0000018692     0.0005817377
+checking body->vels in get_kinetic_energy(),     0.0000000065    -0.0000019773    -0.0006153581
+checking body->vels in get_kinetic_energy(),    -0.0000000065     0.0000019739     0.0005816572
+checking body->vels in get_kinetic_energy(),     0.0000000069    -0.0000020880    -0.0006152729
     STATE AFTER 10 STEPS
 
     GEOMETRY (ANGSTROMS)
 
-A01O1               -0.000016     0.071322     0.086630
-A02H2               -0.737416    -0.536423     0.176314
-A03H3                0.737242    -0.536597     0.176272
-A01N1                0.000077    -0.006559     2.950353
-A02H2               -0.466956    -0.796851     3.344657
-A03H3               -0.467053     0.818248     3.266009
-A04H4                0.933369     0.010838     3.306470
+A01O1               -0.000000     0.063133     0.063082
+A02H2               -0.752655    -0.500032     0.068675
+A03H3                0.752649    -0.500039     0.068675
+A01N1                0.000002    -0.000259     4.869433
+A02H2               -0.466794    -0.807935     5.227090
+A03H3               -0.466799     0.809073     5.223318
+A04H4                0.933577     0.000573     5.225230
 
 
     RESTART DATA
 
 fragment H2O_L
-   0.000000e+00   0.000000e+00   0.000000e+00   3.141593e+00   1.570796e+00   0.000000e+00
+  -3.464575e-07   1.058310e-04   6.370817e-02  -3.141546e+00   9.930334e-03   3.141542e+00
 velocity
-   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
+  -6.547409e-09   1.973881e-06   5.816572e-04  -9.752999e-05  -4.577456e-09  -4.549752e-08
 
 fragment NH3_L
-   2.572120e-05  -3.486690e-03   3.013455e+00  -3.124815e+00   4.866371e-02   3.124895e+00
+   3.664804e-07  -1.119473e-04   4.932610e+00  -3.133621e+00   2.332818e-03   3.133624e+00
 velocity
-   2.271616e-07  -3.409876e-05   1.276039e-04  -2.511652e-04  -4.072655e-06   3.084144e-07
+   6.925803e-09  -2.087957e-06  -6.152729e-04  -2.292859e-05  -1.850749e-07   2.950338e-08
 
 
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0012119736
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0012119736
-Inside get_kinetic_energy(), Torch enabled
-regular ke =     0.0012119736
+checking body->vels in get_kinetic_energy(),    -0.0000000065     0.0000019739     0.0005816572
+checking body->vels in get_kinetic_energy(),     0.0000000069    -0.0000020880    -0.0006152729
+checking body->vels in get_kinetic_energy(),    -0.0000000065     0.0000019739     0.0005816572
+checking body->vels in get_kinetic_energy(),     0.0000000069    -0.0000020880    -0.0006152729
+checking body->vels in get_kinetic_energy(),    -0.0000000065     0.0000019739     0.0005816572
+checking body->vels in get_kinetic_energy(),     0.0000000069    -0.0000020880    -0.0006152729
     ENERGY COMPONENTS (ATOMIC UNITS)
 
-          ELECTROSTATIC ENERGY     0.0014708624
-           POLARIZATION ENERGY    -0.0008118193
-             DISPERSION ENERGY    -0.0029158946
-     EXCHANGE REPULSION ENERGY     0.0088855505
+          ELECTROSTATIC ENERGY     0.0006540762
+           POLARIZATION ENERGY    -0.0000301889
+             DISPERSION ENERGY    -0.0001211034
+     EXCHANGE REPULSION ENERGY     0.0000278310
           POINT CHARGES ENERGY     0.0000000000
      CHARGE PENETRATION ENERGY     0.0000000000
                      QQ ENERGY     0.0000000000
                      LJ ENERGY     0.0000000000
 
-                     ML ENERGY   -76.3880834760
-
-                  TOTAL ENERGY   -76.3814547769
+                  TOTAL ENERGY     0.0005306149
 
 
-                KINETIC ENERGY     0.0051117938
-                     INVARIANT   -76.3763429831
-               TEMPERATURE (K)   215.2235835950
+                KINETIC ENERGY     0.0114491098
+                     INVARIANT     0.0119806020
+               TEMPERATURE (K)  1205.1143593892
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000065     0.0000019739     0.0005816572
+checking body->vels in get_kinetic_energy(),     0.0000000069    -0.0000020880    -0.0006152729
+checking body->vels in get_kinetic_energy(),    -0.0000000069     0.0000020785     0.0005815767
+checking body->vels in get_kinetic_energy(),     0.0000000073    -0.0000021987    -0.0006151878
+checking body->vels in get_kinetic_energy(),    -0.0000000073     0.0000021845     0.0005814952
+checking body->vels in get_kinetic_energy(),     0.0000000077    -0.0000023108    -0.0006151015
+    STATE AFTER 11 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063154     0.069310
+A02H2               -0.752655    -0.499997     0.076097
+A03H3                0.752649    -0.500005     0.076098
+A01N1                0.000002    -0.000315     4.862704
+A02H2               -0.466795    -0.807812     5.220761
+A03H3               -0.466800     0.809194     5.216183
+A04H4                0.933576     0.000696     5.218504
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.220305e-07   1.285670e-04   7.006972e-02  -3.141547e+00   1.205175e-02   3.141542e+00
+velocity
+  -7.278728e-09   2.184503e-06   5.814952e-04  -1.077779e-04  -4.977930e-09  -5.036739e-08
+
+fragment NH3_L
+   4.464209e-07  -1.359973e-04   4.925881e+00  -3.133600e+00   2.831616e-03   3.133604e+00
+velocity
+   7.699387e-09  -2.310752e-06  -6.151015e-04  -2.534326e-05  -2.054615e-07   3.265742e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000073     0.0000021845     0.0005814952
+checking body->vels in get_kinetic_energy(),     0.0000000077    -0.0000023108    -0.0006151015
+checking body->vels in get_kinetic_energy(),    -0.0000000073     0.0000021845     0.0005814952
+checking body->vels in get_kinetic_energy(),     0.0000000077    -0.0000023108    -0.0006151015
+checking body->vels in get_kinetic_energy(),    -0.0000000073     0.0000021845     0.0005814952
+checking body->vels in get_kinetic_energy(),     0.0000000077    -0.0000023108    -0.0006151015
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006568643
+           POLARIZATION ENERGY    -0.0000306647
+             DISPERSION ENERGY    -0.0001231304
+     EXCHANGE REPULSION ENERGY     0.0000291947
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005322640
+
+
+                KINETIC ENERGY     0.0114472800
+                     INVARIANT     0.0119806041
+               TEMPERATURE (K)  1204.9217635643
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000073     0.0000021845     0.0005814952
+checking body->vels in get_kinetic_energy(),     0.0000000077    -0.0000023108    -0.0006151015
+checking body->vels in get_kinetic_energy(),    -0.0000000076     0.0000022905     0.0005814136
+checking body->vels in get_kinetic_energy(),     0.0000000081    -0.0000024228    -0.0006150152
+checking body->vels in get_kinetic_energy(),    -0.0000000080     0.0000023978     0.0005813310
+checking body->vels in get_kinetic_energy(),     0.0000000085    -0.0000025364    -0.0006149279
+    STATE AFTER 12 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063177     0.075523
+A02H2               -0.752656    -0.499956     0.083624
+A03H3                0.752648    -0.499966     0.083625
+A01N1                0.000002    -0.000376     4.855976
+A02H2               -0.466795    -0.807677     5.214475
+A03H3               -0.466802     0.809326     5.209009
+A04H4                0.933575     0.000831     5.211780
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.056936e-07   1.536212e-04   7.642949e-02  -3.141548e+00   1.438602e-02   3.141542e+00
+velocity
+  -8.027043e-09   2.397787e-06   5.813310e-04  -1.181257e-04  -5.356409e-09  -5.529098e-08
+
+fragment NH3_L
+   5.349192e-07  -1.624994e-04   4.919153e+00  -3.133578e+00   3.380578e-03   3.133582e+00
+velocity
+   8.490950e-09  -2.536362e-06  -6.149279e-04  -2.778235e-05  -2.262684e-07   3.584489e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000080     0.0000023978     0.0005813310
+checking body->vels in get_kinetic_energy(),     0.0000000085    -0.0000025364    -0.0006149279
+checking body->vels in get_kinetic_energy(),    -0.0000000080     0.0000023978     0.0005813310
+checking body->vels in get_kinetic_energy(),     0.0000000085    -0.0000025364    -0.0006149279
+checking body->vels in get_kinetic_energy(),    -0.0000000080     0.0000023978     0.0005813310
+checking body->vels in get_kinetic_energy(),     0.0000000085    -0.0000025364    -0.0006149279
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006591964
+           POLARIZATION ENERGY    -0.0000311421
+             DISPERSION ENERGY    -0.0001251965
+     EXCHANGE REPULSION ENERGY     0.0000306159
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005334737
+
+
+                KINETIC ENERGY     0.0114458725
+                     INVARIANT     0.0119806063
+               TEMPERATURE (K)  1204.7736119627
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000080     0.0000023978     0.0005813310
+checking body->vels in get_kinetic_energy(),     0.0000000085    -0.0000025364    -0.0006149279
+checking body->vels in get_kinetic_energy(),    -0.0000000084     0.0000025051     0.0005812484
+checking body->vels in get_kinetic_energy(),     0.0000000089    -0.0000026499    -0.0006148405
+checking body->vels in get_kinetic_energy(),    -0.0000000088     0.0000026138     0.0005811647
+checking body->vels in get_kinetic_energy(),     0.0000000093    -0.0000027649    -0.0006147520
+    STATE AFTER 13 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063202     0.081720
+A02H2               -0.752656    -0.499907     0.091257
+A03H3                0.752647    -0.499919     0.091258
+A01N1                0.000003    -0.000443     4.849251
+A02H2               -0.466796    -0.807529     5.208232
+A03H3               -0.466804     0.809470     5.201796
+A04H4                0.933574     0.000978     5.205059
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.976374e-07   1.810232e-04   8.278745e-02  -3.141549e+00   1.693523e-02   3.141541e+00
+velocity
+  -8.793240e-09   2.613802e-06   5.811647e-04  -1.285763e-04  -5.709847e-09  -6.026682e-08
+
+fragment NH3_L
+   6.321767e-07  -1.914850e-04   4.912428e+00  -3.133555e+00   3.980214e-03   3.133560e+00
+velocity
+   9.301428e-09  -2.764861e-06  -6.147520e-04  -3.024646e-05  -2.475181e-07   3.906458e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000088     0.0000026138     0.0005811647
+checking body->vels in get_kinetic_energy(),     0.0000000093    -0.0000027649    -0.0006147520
+checking body->vels in get_kinetic_energy(),    -0.0000000088     0.0000026138     0.0005811647
+checking body->vels in get_kinetic_energy(),     0.0000000093    -0.0000027649    -0.0006147520
+checking body->vels in get_kinetic_energy(),    -0.0000000088     0.0000026138     0.0005811647
+checking body->vels in get_kinetic_energy(),     0.0000000093    -0.0000027649    -0.0006147520
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006610536
+           POLARIZATION ENERGY    -0.0000316211
+             DISPERSION ENERGY    -0.0001273027
+     EXCHANGE REPULSION ENERGY     0.0000320966
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005342265
+
+
+                KINETIC ENERGY     0.0114449047
+                     INVARIANT     0.0119806085
+               TEMPERATURE (K)  1204.6717425101
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000088     0.0000026138     0.0005811647
+checking body->vels in get_kinetic_energy(),     0.0000000093    -0.0000027649    -0.0006147520
+checking body->vels in get_kinetic_energy(),    -0.0000000092     0.0000027225     0.0005810811
+checking body->vels in get_kinetic_energy(),     0.0000000097    -0.0000028798    -0.0006146635
+checking body->vels in get_kinetic_energy(),    -0.0000000096     0.0000028326     0.0005809965
+checking body->vels in get_kinetic_energy(),     0.0000000101    -0.0000029963    -0.0006145740
+    STATE AFTER 14 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063229     0.087902
+A02H2               -0.752657    -0.499851     0.098996
+A03H3                0.752647    -0.499865     0.098998
+A01N1                0.000003    -0.000516     4.842528
+A02H2               -0.466797    -0.807368     5.202031
+A03H3               -0.466806     0.809627     5.194543
+A04H4                0.933572     0.001138     5.198339
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -6.980625e-07   2.108031e-04   8.914358e-02  -3.141550e+00   1.970154e-02   3.141541e+00
+velocity
+  -9.578244e-09   2.832618e-06   5.809965e-04  -1.391323e-04  -6.035178e-09  -6.529330e-08
+
+fragment NH3_L
+   7.384057e-07  -2.229861e-04   4.905705e+00  -3.133531e+00   4.631050e-03   3.133537e+00
+velocity
+   1.013180e-08  -2.996324e-06  -6.145740e-04  -3.273623e-05  -2.692336e-07   4.231515e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000096     0.0000028326     0.0005809965
+checking body->vels in get_kinetic_energy(),     0.0000000101    -0.0000029963    -0.0006145740
+checking body->vels in get_kinetic_energy(),    -0.0000000096     0.0000028326     0.0005809965
+checking body->vels in get_kinetic_energy(),     0.0000000101    -0.0000029963    -0.0006145740
+checking body->vels in get_kinetic_energy(),    -0.0000000096     0.0000028326     0.0005809965
+checking body->vels in get_kinetic_energy(),     0.0000000101    -0.0000029963    -0.0006145740
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006624162
+           POLARIZATION ENERGY    -0.0000321013
+             DISPERSION ENERGY    -0.0001294498
+     EXCHANGE REPULSION ENERGY     0.0000336390
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005345041
+
+
+                KINETIC ENERGY     0.0114443949
+                     INVARIANT     0.0119806107
+               TEMPERATURE (K)  1204.6180787722
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000096     0.0000028326     0.0005809965
+checking body->vels in get_kinetic_energy(),     0.0000000101    -0.0000029963    -0.0006145740
+checking body->vels in get_kinetic_energy(),    -0.0000000100     0.0000029427     0.0005809118
+checking body->vels in get_kinetic_energy(),     0.0000000106    -0.0000031128    -0.0006144845
+checking body->vels in get_kinetic_energy(),    -0.0000000104     0.0000030543     0.0005808263
+checking body->vels in get_kinetic_energy(),     0.0000000110    -0.0000032308    -0.0006143939
+    STATE AFTER 15 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063257     0.094068
+A02H2               -0.752658    -0.499786     0.106843
+A03H3                0.752646    -0.499802     0.106845
+A01N1                0.000004    -0.000594     4.835806
+A02H2               -0.466798    -0.807194     5.195874
+A03H3               -0.466808     0.809795     5.187250
+A04H4                0.933571     0.001310     5.191622
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -8.071798e-07   2.429921e-04   9.549786e-02  -3.141552e+00   2.268715e-02   3.141541e+00
+velocity
+  -1.038302e-08   3.054310e-06   5.808263e-04  -1.497968e-04  -6.329328e-09  -7.036865e-08
+
+fragment NH3_L
+   8.538292e-07  -2.570353e-04   4.898983e+00  -3.133506e+00   5.333621e-03   3.133513e+00
+velocity
+   1.098309e-08  -3.230827e-06  -6.143939e-04  -3.525227e-05  -2.914394e-07   4.559513e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000104     0.0000030543     0.0005808263
+checking body->vels in get_kinetic_energy(),     0.0000000110    -0.0000032308    -0.0006143939
+checking body->vels in get_kinetic_energy(),    -0.0000000104     0.0000030543     0.0005808263
+checking body->vels in get_kinetic_energy(),     0.0000000110    -0.0000032308    -0.0006143939
+checking body->vels in get_kinetic_energy(),    -0.0000000104     0.0000030543     0.0005808263
+checking body->vels in get_kinetic_energy(),     0.0000000110    -0.0000032308    -0.0006143939
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006632635
+           POLARIZATION ENERGY    -0.0000325825
+             DISPERSION ENERGY    -0.0001316386
+     EXCHANGE REPULSION ENERGY     0.0000352451
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005342874
+
+
+                KINETIC ENERGY     0.0114443622
+                     INVARIANT     0.0119806131
+               TEMPERATURE (K)  1204.6146337365
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000104     0.0000030543     0.0005808263
+checking body->vels in get_kinetic_energy(),     0.0000000110    -0.0000032308    -0.0006143939
+checking body->vels in get_kinetic_energy(),    -0.0000000108     0.0000031659     0.0005807407
+checking body->vels in get_kinetic_energy(),     0.0000000114    -0.0000033488    -0.0006143034
+checking body->vels in get_kinetic_energy(),    -0.0000000112     0.0000032790     0.0005806542
+checking body->vels in get_kinetic_energy(),     0.0000000119    -0.0000034685    -0.0006142119
+    STATE AFTER 16 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063287     0.100218
+A02H2               -0.752659    -0.499712     0.114799
+A03H3                0.752645    -0.499730     0.114801
+A01N1                0.000004    -0.000678     4.829087
+A02H2               -0.466799    -0.807007     5.189761
+A03H3               -0.466811     0.809975     5.179916
+A04H4                0.933569     0.001495     5.184907
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -9.252110e-07   2.776220e-04   1.018503e-01  -3.141553e+00   2.589434e-02   3.141541e+00
+velocity
+  -1.120859e-08   3.278951e-06   5.806542e-04  -1.605724e-04  -6.589232e-09  -7.549095e-08
+
+fragment NH3_L
+   9.786817e-07  -2.936666e-04   4.892264e+00  -3.133480e+00   6.088477e-03   3.133488e+00
+velocity
+   1.185637e-08  -3.468451e-06  -6.142119e-04  -3.779524e-05  -3.141604e-07   4.890292e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000112     0.0000032790     0.0005806542
+checking body->vels in get_kinetic_energy(),     0.0000000119    -0.0000034685    -0.0006142119
+checking body->vels in get_kinetic_energy(),    -0.0000000112     0.0000032790     0.0005806542
+checking body->vels in get_kinetic_energy(),     0.0000000119    -0.0000034685    -0.0006142119
+checking body->vels in get_kinetic_energy(),    -0.0000000112     0.0000032790     0.0005806542
+checking body->vels in get_kinetic_energy(),     0.0000000119    -0.0000034685    -0.0006142119
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006635739
+           POLARIZATION ENERGY    -0.0000330645
+             DISPERSION ENERGY    -0.0001338702
+     EXCHANGE REPULSION ENERGY     0.0000369172
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005335565
+
+
+                KINETIC ENERGY     0.0114448265
+                     INVARIANT     0.0119806154
+               TEMPERATURE (K)  1204.6635137125
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000112     0.0000032790     0.0005806542
+checking body->vels in get_kinetic_energy(),     0.0000000119    -0.0000034685    -0.0006142119
+checking body->vels in get_kinetic_energy(),    -0.0000000116     0.0000033920     0.0005805677
+checking body->vels in get_kinetic_energy(),     0.0000000123    -0.0000035881    -0.0006141204
+checking body->vels in get_kinetic_energy(),    -0.0000000121     0.0000035066     0.0005804803
+checking body->vels in get_kinetic_energy(),     0.0000000128    -0.0000037093    -0.0006140280
+    STATE AFTER 17 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063318     0.106353
+A02H2               -0.752660    -0.499626     0.122865
+A03H3                0.752644    -0.499646     0.122867
+A01N1                0.000005    -0.000769     4.822370
+A02H2               -0.466800    -0.806806     5.183691
+A03H3               -0.466814     0.810168     5.172541
+A04H4                0.933567     0.001693     5.178195
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.052389e-06   3.147254e-04   1.082008e-01  -3.141554e+00   2.932543e-02   3.141541e+00
+velocity
+  -1.205602e-08   3.506619e-06   5.804803e-04  -1.714623e-04  -6.811844e-09  -8.065813e-08
+
+fragment NH3_L
+   1.113210e-06  -3.329143e-04   4.885546e+00  -3.133453e+00   6.896181e-03   3.133462e+00
+velocity
+   1.275277e-08  -3.709277e-06  -6.140280e-04  -4.036578e-05  -3.374230e-07   5.223673e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000121     0.0000035066     0.0005804803
+checking body->vels in get_kinetic_energy(),     0.0000000128    -0.0000037093    -0.0006140280
+checking body->vels in get_kinetic_energy(),    -0.0000000121     0.0000035066     0.0005804803
+checking body->vels in get_kinetic_energy(),     0.0000000128    -0.0000037093    -0.0006140280
+checking body->vels in get_kinetic_energy(),    -0.0000000121     0.0000035066     0.0005804803
+checking body->vels in get_kinetic_energy(),     0.0000000128    -0.0000037093    -0.0006140280
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006633250
+           POLARIZATION ENERGY    -0.0000335470
+             DISPERSION ENERGY    -0.0001361455
+     EXCHANGE REPULSION ENERGY     0.0000386577
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005322902
+
+
+                KINETIC ENERGY     0.0114458090
+                     INVARIANT     0.0119806179
+               TEMPERATURE (K)  1204.7669223509
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000121     0.0000035066     0.0005804803
+checking body->vels in get_kinetic_energy(),     0.0000000128    -0.0000037093    -0.0006140280
+checking body->vels in get_kinetic_energy(),    -0.0000000125     0.0000036212     0.0005803929
+checking body->vels in get_kinetic_energy(),     0.0000000132    -0.0000038305    -0.0006139356
+checking body->vels in get_kinetic_energy(),    -0.0000000129     0.0000037374     0.0005803047
+checking body->vels in get_kinetic_energy(),     0.0000000137    -0.0000039534    -0.0006138423
+    STATE AFTER 18 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063350     0.112471
+A02H2               -0.752661    -0.499528     0.131042
+A03H3                0.752643    -0.499551     0.131045
+A01N1                0.000005    -0.000865     4.815655
+A02H2               -0.466801    -0.806592     5.177667
+A03H3               -0.466816     0.810372     5.165124
+A04H4                0.933565     0.001904     5.171484
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.188959e-06   3.543360e-04   1.145494e-01  -3.141556e+00   3.298283e-02   3.141540e+00
+velocity
+  -1.292641e-08   3.737392e-06   5.803047e-04  -1.824695e-04  -6.994160e-09  -8.586789e-08
+
+fragment NH3_L
+   1.257673e-06  -3.748141e-04   4.878830e+00  -3.133425e+00   7.757311e-03   3.133435e+00
+velocity
+   1.367346e-08  -3.953387e-06  -6.138423e-04  -4.296455e-05  -3.612546e-07   5.559463e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000129     0.0000037374     0.0005803047
+checking body->vels in get_kinetic_energy(),     0.0000000137    -0.0000039534    -0.0006138423
+checking body->vels in get_kinetic_energy(),    -0.0000000129     0.0000037374     0.0005803047
+checking body->vels in get_kinetic_energy(),     0.0000000137    -0.0000039534    -0.0006138423
+checking body->vels in get_kinetic_energy(),    -0.0000000129     0.0000037374     0.0005803047
+checking body->vels in get_kinetic_energy(),     0.0000000137    -0.0000039534    -0.0006138423
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006624932
+           POLARIZATION ENERGY    -0.0000340298
+             DISPERSION ENERGY    -0.0001384653
+     EXCHANGE REPULSION ENERGY     0.0000404689
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005304669
+
+
+                KINETIC ENERGY     0.0114473313
+                     INVARIANT     0.0119806204
+               TEMPERATURE (K)  1204.9271647786
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000129     0.0000037374     0.0005803047
+checking body->vels in get_kinetic_energy(),     0.0000000137    -0.0000039534    -0.0006138423
+checking body->vels in get_kinetic_energy(),    -0.0000000134     0.0000038536     0.0005802165
+checking body->vels in get_kinetic_energy(),     0.0000000141    -0.0000040763    -0.0006137490
+checking body->vels in get_kinetic_energy(),    -0.0000000138     0.0000039713     0.0005801276
+checking body->vels in get_kinetic_energy(),     0.0000000146    -0.0000042009    -0.0006136549
+    STATE AFTER 19 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063384     0.118573
+A02H2               -0.752662    -0.499417     0.139331
+A03H3                0.752642    -0.499443     0.139334
+A01N1                0.000006    -0.000967     4.808942
+A02H2               -0.466802    -0.806363     5.171687
+A03H3               -0.466819     0.810588     5.157665
+A04H4                0.933563     0.002129     5.164775
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.335179e-06   3.964880e-04   1.208961e-01  -3.141558e+00   3.686898e-02   3.141540e+00
+velocity
+  -1.382094e-08   3.971350e-06   5.801276e-04  -1.935971e-04  -7.133234e-09  -9.111776e-08
+
+fragment NH3_L
+   1.412343e-06  -4.194022e-04   4.872117e+00  -3.133396e+00   8.672457e-03   3.133407e+00
+velocity
+   1.461969e-08  -4.200866e-06  -6.136549e-04  -4.559223e-05  -3.856837e-07   5.897448e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000138     0.0000039713     0.0005801276
+checking body->vels in get_kinetic_energy(),     0.0000000146    -0.0000042009    -0.0006136549
+checking body->vels in get_kinetic_energy(),    -0.0000000138     0.0000039713     0.0005801276
+checking body->vels in get_kinetic_energy(),     0.0000000146    -0.0000042009    -0.0006136549
+checking body->vels in get_kinetic_energy(),    -0.0000000138     0.0000039713     0.0005801276
+checking body->vels in get_kinetic_energy(),     0.0000000146    -0.0000042009    -0.0006136549
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006610538
+           POLARIZATION ENERGY    -0.0000345128
+             DISPERSION ENERGY    -0.0001408308
+     EXCHANGE REPULSION ENERGY     0.0000423531
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005280634
+
+
+                KINETIC ENERGY     0.0114494166
+                     INVARIANT     0.0119806230
+               TEMPERATURE (K)  1205.1466518469
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000138     0.0000039713     0.0005801276
+checking body->vels in get_kinetic_energy(),     0.0000000146    -0.0000042009    -0.0006136549
+checking body->vels in get_kinetic_energy(),    -0.0000000143     0.0000040891     0.0005800386
+checking body->vels in get_kinetic_energy(),     0.0000000151    -0.0000043255    -0.0006135607
+checking body->vels in get_kinetic_energy(),    -0.0000000147     0.0000042086     0.0005799488
+checking body->vels in get_kinetic_energy(),     0.0000000156    -0.0000044518    -0.0006134658
+    STATE AFTER 20 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063418     0.124658
+A02H2               -0.752663    -0.499290     0.147733
+A03H3                0.752641    -0.499319     0.147737
+A01N1                0.000007    -0.001076     4.802231
+A02H2               -0.466803    -0.806120     5.165754
+A03H3               -0.466823     0.810817     5.150163
+A04H4                0.933561     0.002366     5.158069
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.491319e-06   4.412168e-04   1.272408e-01  -3.141559e+00   4.098640e-02   3.141540e+00
+velocity
+  -1.474082e-08   4.208575e-06   5.799488e-04  -2.048483e-04  -7.226198e-09  -9.640506e-08
+
+fragment NH3_L
+   1.577507e-06  -4.667161e-04   4.865406e+00  -3.133366e+00   9.642224e-03   3.133379e+00
+velocity
+   1.559274e-08  -4.451801e-06  -6.134658e-04  -4.824949e-05  -4.107400e-07   6.237394e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000147     0.0000042086     0.0005799488
+checking body->vels in get_kinetic_energy(),     0.0000000156    -0.0000044518    -0.0006134658
+checking body->vels in get_kinetic_energy(),    -0.0000000147     0.0000042086     0.0005799488
+checking body->vels in get_kinetic_energy(),     0.0000000156    -0.0000044518    -0.0006134658
+checking body->vels in get_kinetic_energy(),    -0.0000000147     0.0000042086     0.0005799488
+checking body->vels in get_kinetic_energy(),     0.0000000156    -0.0000044518    -0.0006134658
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006589812
+           POLARIZATION ENERGY    -0.0000349955
+             DISPERSION ENERGY    -0.0001432429
+     EXCHANGE REPULSION ENERGY     0.0000443131
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005250558
+
+
+                KINETIC ENERGY     0.0114520886
+                     INVARIANT     0.0119806256
+               TEMPERATURE (K)  1205.4279044880
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000147     0.0000042086     0.0005799488
+checking body->vels in get_kinetic_energy(),     0.0000000156    -0.0000044518    -0.0006134658
+checking body->vels in get_kinetic_energy(),    -0.0000000152     0.0000043280     0.0005798591
+checking body->vels in get_kinetic_energy(),     0.0000000161    -0.0000045781    -0.0006133709
+checking body->vels in get_kinetic_energy(),    -0.0000000157     0.0000044492     0.0005797687
+checking body->vels in get_kinetic_energy(),     0.0000000166    -0.0000047063    -0.0006132753
+    STATE AFTER 21 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063454     0.130727
+A02H2               -0.752664    -0.499148     0.156250
+A03H3                0.752640    -0.499179     0.156254
+A01N1                0.000007    -0.001191     4.795522
+A02H2               -0.466805    -0.805862     5.159866
+A03H3               -0.466826     0.811058     5.142618
+A04H4                0.933558     0.002618     5.151365
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.657663e-06   4.885586e-04   1.335835e-01  -3.141561e+00   4.533769e-02   3.141540e+00
+velocity
+  -1.568735e-08   4.449150e-06   5.797687e-04  -2.162263e-04  -7.270285e-09  -1.017269e-07
+
+fragment NH3_L
+   1.753464e-06  -5.167939e-04   4.858696e+00  -3.133335e+00   1.066723e-02   3.133349e+00
+velocity
+   1.659397e-08  -4.706280e-06  -6.132753e-04  -5.093701e-05  -4.364545e-07   6.579044e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000157     0.0000044492     0.0005797687
+checking body->vels in get_kinetic_energy(),     0.0000000166    -0.0000047063    -0.0006132753
+checking body->vels in get_kinetic_energy(),    -0.0000000157     0.0000044492     0.0005797687
+checking body->vels in get_kinetic_energy(),     0.0000000166    -0.0000047063    -0.0006132753
+checking body->vels in get_kinetic_energy(),    -0.0000000157     0.0000044492     0.0005797687
+checking body->vels in get_kinetic_energy(),     0.0000000166    -0.0000047063    -0.0006132753
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006562486
+           POLARIZATION ENERGY    -0.0000354780
+             DISPERSION ENERGY    -0.0001457027
+     EXCHANGE REPULSION ENERGY     0.0000463512
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005214192
+
+
+                KINETIC ENERGY     0.0114553725
+                     INVARIANT     0.0119806284
+               TEMPERATURE (K)  1205.7735581742
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000157     0.0000044492     0.0005797687
+checking body->vels in get_kinetic_energy(),     0.0000000166    -0.0000047063    -0.0006132753
+checking body->vels in get_kinetic_energy(),    -0.0000000162     0.0000045703     0.0005796783
+checking body->vels in get_kinetic_energy(),     0.0000000171    -0.0000048344    -0.0006131796
+checking body->vels in get_kinetic_energy(),    -0.0000000167     0.0000046932     0.0005795872
+checking body->vels in get_kinetic_energy(),     0.0000000176    -0.0000049644    -0.0006130833
+    STATE AFTER 22 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063490     0.136779
+A02H2               -0.752665    -0.498987     0.164883
+A03H3                0.752638    -0.499022     0.164887
+A01N1                0.000008    -0.001312     4.788816
+A02H2               -0.466806    -0.805590     5.154024
+A03H3               -0.466830     0.811311     5.135029
+A04H4                0.933556     0.002882     5.144663
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.834509e-06   5.385505e-04   1.399243e-01  -3.141563e+00   4.992549e-02   3.141540e+00
+velocity
+  -1.666186e-08   4.693162e-06   5.795872e-04  -2.277344e-04  -7.262858e-09  -1.070800e-07
+
+fragment NH3_L
+   1.940531e-06  -5.696749e-04   4.851989e+00  -3.133302e+00   1.174811e-02   3.133318e+00
+velocity
+   1.762480e-08  -4.964394e-06  -6.130833e-04  -5.365549e-05  -4.628594e-07   6.922119e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000167     0.0000046932     0.0005795872
+checking body->vels in get_kinetic_energy(),     0.0000000176    -0.0000049644    -0.0006130833
+checking body->vels in get_kinetic_energy(),    -0.0000000167     0.0000046932     0.0005795872
+checking body->vels in get_kinetic_energy(),     0.0000000176    -0.0000049644    -0.0006130833
+checking body->vels in get_kinetic_energy(),    -0.0000000167     0.0000046932     0.0005795872
+checking body->vels in get_kinetic_energy(),     0.0000000176    -0.0000049644    -0.0006130833
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006528280
+           POLARIZATION ENERGY    -0.0000359598
+             DISPERSION ENERGY    -0.0001482112
+     EXCHANGE REPULSION ENERGY     0.0000484702
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005171272
+
+
+                KINETIC ENERGY     0.0114592943
+                     INVARIANT     0.0119806312
+               TEMPERATURE (K)  1206.1863674705
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000167     0.0000046932     0.0005795872
+checking body->vels in get_kinetic_energy(),     0.0000000176    -0.0000049644    -0.0006130833
+checking body->vels in get_kinetic_energy(),    -0.0000000172     0.0000048160     0.0005794962
+checking body->vels in get_kinetic_energy(),     0.0000000181    -0.0000050944    -0.0006129870
+checking body->vels in get_kinetic_energy(),    -0.0000000177     0.0000049407     0.0005794046
+checking body->vels in get_kinetic_energy(),     0.0000000187    -0.0000052262    -0.0006128901
+    STATE AFTER 23 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063527     0.142814
+A02H2               -0.752667    -0.498806     0.173633
+A03H3                0.752637    -0.498844     0.173637
+A01N1                0.000009    -0.001439     4.782112
+A02H2               -0.466808    -0.805302     5.148230
+A03H3               -0.466833     0.811576     5.127395
+A04H4                0.933553     0.003161     5.137963
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.022173e-06   5.912305e-04   1.462631e-01  -3.141565e+00   5.475254e-02   3.141539e+00
+velocity
+  -1.766577e-08   4.940697e-06   5.794046e-04  -2.393761e-04  -7.201432e-09  -1.124610e-07
+
+fragment NH3_L
+   2.139040e-06  -6.253995e-04   4.845284e+00  -3.133269e+00   1.288550e-02   3.133285e+00
+velocity
+   1.868673e-08  -5.226235e-06  -6.128901e-04  -5.640562e-05  -4.899886e-07   7.266311e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000177     0.0000049407     0.0005794046
+checking body->vels in get_kinetic_energy(),     0.0000000187    -0.0000052262    -0.0006128901
+checking body->vels in get_kinetic_energy(),    -0.0000000177     0.0000049407     0.0005794046
+checking body->vels in get_kinetic_energy(),     0.0000000187    -0.0000052262    -0.0006128901
+checking body->vels in get_kinetic_energy(),    -0.0000000177     0.0000049407     0.0005794046
+checking body->vels in get_kinetic_energy(),     0.0000000187    -0.0000052262    -0.0006128901
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006486902
+           POLARIZATION ENERGY    -0.0000364409
+             DISPERSION ENERGY    -0.0001507696
+     EXCHANGE REPULSION ENERGY     0.0000506728
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005121524
+
+
+                KINETIC ENERGY     0.0114638815
+                     INVARIANT     0.0119806341
+               TEMPERATURE (K)  1206.6692106734
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000177     0.0000049407     0.0005794046
+checking body->vels in get_kinetic_energy(),     0.0000000187    -0.0000052262    -0.0006128901
+checking body->vels in get_kinetic_energy(),    -0.0000000182     0.0000050654     0.0005793130
+checking body->vels in get_kinetic_energy(),     0.0000000192    -0.0000053581    -0.0006127932
+checking body->vels in get_kinetic_energy(),    -0.0000000187     0.0000051918     0.0005792208
+checking body->vels in get_kinetic_energy(),     0.0000000198    -0.0000054919    -0.0006126957
+    STATE AFTER 24 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000000     0.063564     0.148832
+A02H2               -0.752668    -0.498604     0.182500
+A03H3                0.752636    -0.498646     0.182505
+A01N1                0.000010    -0.001573     4.775410
+A02H2               -0.466809    -0.804999     5.142483
+A03H3               -0.466837     0.811853     5.119717
+A04H4                0.933550     0.003453     5.131265
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.220982e-06   6.466377e-04   1.525999e-01  -3.141567e+00   5.982162e-02   3.141539e+00
+velocity
+  -1.870056e-08   5.191844e-06   5.792208e-04  -2.511546e-04  -7.083711e-09  -1.178663e-07
+
+fragment NH3_L
+   2.349339e-06  -6.840088e-04   4.838581e+00  -3.133234e+00   1.408008e-02   3.133252e+00
+velocity
+   1.978132e-08  -5.491896e-06  -6.126957e-04  -5.918810e-05  -5.178770e-07   7.611284e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000187     0.0000051918     0.0005792208
+checking body->vels in get_kinetic_energy(),     0.0000000198    -0.0000054919    -0.0006126957
+checking body->vels in get_kinetic_energy(),    -0.0000000187     0.0000051918     0.0005792208
+checking body->vels in get_kinetic_energy(),     0.0000000198    -0.0000054919    -0.0006126957
+checking body->vels in get_kinetic_energy(),    -0.0000000187     0.0000051918     0.0005792208
+checking body->vels in get_kinetic_energy(),     0.0000000198    -0.0000054919    -0.0006126957
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006438046
+           POLARIZATION ENERGY    -0.0000369210
+             DISPERSION ENERGY    -0.0001533790
+     EXCHANGE REPULSION ENERGY     0.0000529618
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005064664
+
+
+                KINETIC ENERGY     0.0114691627
+                     INVARIANT     0.0119806371
+               TEMPERATURE (K)  1207.2250945217
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000187     0.0000051918     0.0005792208
+checking body->vels in get_kinetic_energy(),     0.0000000198    -0.0000054919    -0.0006126957
+checking body->vels in get_kinetic_energy(),    -0.0000000192     0.0000053183     0.0005791287
+checking body->vels in get_kinetic_energy(),     0.0000000203    -0.0000056257    -0.0006125983
+checking body->vels in get_kinetic_energy(),    -0.0000000198     0.0000054467     0.0005790361
+checking body->vels in get_kinetic_energy(),     0.0000000209    -0.0000057615    -0.0006125004
+    STATE AFTER 25 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063601     0.154832
+A02H2               -0.752670    -0.498378     0.191488
+A03H3                0.752634    -0.498423     0.191493
+A01N1                0.000011    -0.001714     4.768710
+A02H2               -0.466811    -0.804680     5.136784
+A03H3               -0.466842     0.812142     5.111993
+A04H4                0.933547     0.003760     5.124569
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.431283e-06   7.048120e-04   1.589347e-01  -3.141569e+00   6.513561e-02   3.141539e+00
+velocity
+  -1.976778e-08   5.446692e-06   5.790361e-04  -2.630736e-04  -6.907615e-09  -1.232918e-07
+
+fragment NH3_L
+   2.571794e-06  -7.455452e-04   4.831880e+00  -3.133198e+00   1.533251e-02   3.133218e+00
+velocity
+   2.091022e-08  -5.761473e-06  -6.125004e-04  -6.200363e-05  -5.465614e-07   7.956671e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000198     0.0000054467     0.0005790361
+checking body->vels in get_kinetic_energy(),     0.0000000209    -0.0000057615    -0.0006125004
+checking body->vels in get_kinetic_energy(),    -0.0000000198     0.0000054467     0.0005790361
+checking body->vels in get_kinetic_energy(),     0.0000000209    -0.0000057615    -0.0006125004
+checking body->vels in get_kinetic_energy(),    -0.0000000198     0.0000054467     0.0005790361
+checking body->vels in get_kinetic_energy(),     0.0000000209    -0.0000057615    -0.0006125004
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006381396
+           POLARIZATION ENERGY    -0.0000374000
+             DISPERSION ENERGY    -0.0001560405
+     EXCHANGE REPULSION ENERGY     0.0000553401
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0005000391
+
+
+                KINETIC ENERGY     0.0114751676
+                     INVARIANT     0.0119806402
+               TEMPERATURE (K)  1207.8571589661
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000198     0.0000054467     0.0005790361
+checking body->vels in get_kinetic_energy(),     0.0000000209    -0.0000057615    -0.0006125004
+checking body->vels in get_kinetic_energy(),    -0.0000000203     0.0000055751     0.0005789436
+checking body->vels in get_kinetic_energy(),     0.0000000215    -0.0000058973    -0.0006124024
+checking body->vels in get_kinetic_energy(),    -0.0000000209     0.0000057053     0.0005788506
+checking body->vels in get_kinetic_energy(),     0.0000000221    -0.0000060351    -0.0006123041
+    STATE AFTER 26 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063638     0.160815
+A02H2               -0.752671    -0.498126     0.200596
+A03H3                0.752633    -0.498176     0.200601
+A01N1                0.000012    -0.001861     4.762013
+A02H2               -0.466813    -0.804345     5.131134
+A03H3               -0.466846     0.812443     5.104223
+A04H4                0.933544     0.004081     5.117875
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.653440e-06   7.657945e-04   1.652674e-01  -3.141572e+00   7.069745e-02   3.141539e+00
+velocity
+  -2.086905e-08   5.705334e-06   5.788506e-04  -2.751365e-04  -6.671324e-09  -1.287331e-07
+
+fragment NH3_L
+   2.806790e-06  -8.100520e-04   4.825181e+00  -3.133161e+00   1.664349e-02   3.133182e+00
+velocity
+   2.207513e-08  -6.035062e-06  -6.123041e-04  -6.485292e-05  -5.760797e-07   8.302071e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000209     0.0000057053     0.0005788506
+checking body->vels in get_kinetic_energy(),     0.0000000221    -0.0000060351    -0.0006123041
+checking body->vels in get_kinetic_energy(),    -0.0000000209     0.0000057053     0.0005788506
+checking body->vels in get_kinetic_energy(),     0.0000000221    -0.0000060351    -0.0006123041
+checking body->vels in get_kinetic_energy(),    -0.0000000209     0.0000057053     0.0005788506
+checking body->vels in get_kinetic_energy(),     0.0000000221    -0.0000060351    -0.0006123041
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006316619
+           POLARIZATION ENERGY    -0.0000378778
+             DISPERSION ENERGY    -0.0001587554
+     EXCHANGE REPULSION ENERGY     0.0000578107
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004928395
+
+
+                KINETIC ENERGY     0.0114819273
+                     INVARIANT     0.0119806434
+               TEMPERATURE (K)  1208.5686819796
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000209     0.0000057053     0.0005788506
+checking body->vels in get_kinetic_energy(),     0.0000000221    -0.0000060351    -0.0006123041
+checking body->vels in get_kinetic_energy(),    -0.0000000214     0.0000058356     0.0005787577
+checking body->vels in get_kinetic_energy(),     0.0000000227    -0.0000061729    -0.0006122058
+checking body->vels in get_kinetic_energy(),    -0.0000000220     0.0000059679     0.0005786644
+checking body->vels in get_kinetic_energy(),     0.0000000233    -0.0000063128    -0.0006121072
+    STATE AFTER 27 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063675     0.166780
+A02H2               -0.752673    -0.497846     0.209825
+A03H3                0.752631    -0.497900     0.209832
+A01N1                0.000013    -0.002016     4.755317
+A02H2               -0.466815    -0.803994     5.125532
+A03H3               -0.466851     0.812756     5.096406
+A04H4                0.933541     0.004416     5.111182
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -2.887834e-06   8.296271e-04   1.715982e-01  -3.141574e+00   7.651013e-02   3.141538e+00
+velocity
+  -2.200608e-08   5.967863e-06   5.786644e-04  -2.873469e-04  -6.373313e-09  -1.341856e-07
+
+fragment NH3_L
+   3.054730e-06  -8.775737e-04   4.818485e+00  -3.133122e+00   1.801373e-02   3.133145e+00
+velocity
+   2.327787e-08  -6.312763e-06  -6.121072e-04  -6.773666e-05  -6.064719e-07   8.647047e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000220     0.0000059679     0.0005786644
+checking body->vels in get_kinetic_energy(),     0.0000000233    -0.0000063128    -0.0006121072
+checking body->vels in get_kinetic_energy(),    -0.0000000220     0.0000059679     0.0005786644
+checking body->vels in get_kinetic_energy(),     0.0000000233    -0.0000063128    -0.0006121072
+checking body->vels in get_kinetic_energy(),    -0.0000000220     0.0000059679     0.0005786644
+checking body->vels in get_kinetic_energy(),     0.0000000233    -0.0000063128    -0.0006121072
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006243372
+           POLARIZATION ENERGY    -0.0000383542
+             DISPERSION ENERGY    -0.0001615249
+     EXCHANGE REPULSION ENERGY     0.0000603768
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004848349
+
+
+                KINETIC ENERGY     0.0114894745
+                     INVARIANT     0.0119806467
+               TEMPERATURE (K)  1209.3630843885
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000220     0.0000059679     0.0005786644
+checking body->vels in get_kinetic_energy(),     0.0000000233    -0.0000063128    -0.0006121072
+checking body->vels in get_kinetic_energy(),    -0.0000000226     0.0000061001     0.0005785712
+checking body->vels in get_kinetic_energy(),     0.0000000239    -0.0000064527    -0.0006120085
+checking body->vels in get_kinetic_energy(),    -0.0000000232     0.0000062344     0.0005784777
+checking body->vels in get_kinetic_energy(),     0.0000000245    -0.0000065947    -0.0006119096
+    STATE AFTER 28 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063712     0.172728
+A02H2               -0.752674    -0.497536     0.219179
+A03H3                0.752629    -0.497594     0.219185
+A01N1                0.000014    -0.002176     4.748625
+A02H2               -0.466817    -0.803625     5.119980
+A03H3               -0.466855     0.813081     5.088542
+A04H4                0.933537     0.004766     5.104492
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.134865e-06   8.963529e-04   1.779268e-01  -3.141577e+00   8.257676e-02   3.141538e+00
+velocity
+  -2.318066e-08   6.234372e-06   5.784777e-04  -2.997085e-04  -6.012401e-09  -1.396443e-07
+
+fragment NH3_L
+   3.316038e-06  -9.481558e-04   4.811790e+00  -3.133082e+00   1.944393e-02   3.133107e+00
+velocity
+   2.452034e-08  -6.594675e-06  -6.119096e-04  -7.065556e-05  -6.377794e-07   8.991120e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000232     0.0000062344     0.0005784777
+checking body->vels in get_kinetic_energy(),     0.0000000245    -0.0000065947    -0.0006119096
+checking body->vels in get_kinetic_energy(),    -0.0000000232     0.0000062344     0.0005784777
+checking body->vels in get_kinetic_energy(),     0.0000000245    -0.0000065947    -0.0006119096
+checking body->vels in get_kinetic_energy(),    -0.0000000232     0.0000062344     0.0005784777
+checking body->vels in get_kinetic_energy(),     0.0000000245    -0.0000065947    -0.0006119096
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006161294
+           POLARIZATION ENERGY    -0.0000388292
+             DISPERSION ENERGY    -0.0001643503
+     EXCHANGE REPULSION ENERGY     0.0000630413
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004759913
+
+
+                KINETIC ENERGY     0.0114978430
+                     INVARIANT     0.0119806501
+               TEMPERATURE (K)  1210.2439346993
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000232     0.0000062344     0.0005784777
+checking body->vels in get_kinetic_energy(),     0.0000000245    -0.0000065947    -0.0006119096
+checking body->vels in get_kinetic_energy(),    -0.0000000238     0.0000063686     0.0005783842
+checking body->vels in get_kinetic_energy(),     0.0000000252    -0.0000067367    -0.0006118107
+checking body->vels in get_kinetic_energy(),    -0.0000000244     0.0000065050     0.0005782906
+checking body->vels in get_kinetic_energy(),     0.0000000258    -0.0000068809    -0.0006117117
+    STATE AFTER 29 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063747     0.178657
+A02H2               -0.752676    -0.497194     0.228656
+A03H3                0.752628    -0.497256     0.228664
+A01N1                0.000015    -0.002344     4.741934
+A02H2               -0.466820    -0.803239     5.114478
+A03H3               -0.466860     0.813419     5.080630
+A04H4                0.933534     0.005130     5.097804
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.394955e-06   9.660159e-04   1.842535e-01  -3.141579e+00   8.890049e-02   3.141538e+00
+velocity
+  -2.439467e-08   6.504959e-06   5.782906e-04  -3.122250e-04  -5.587794e-09  -1.451038e-07
+
+fragment NH3_L
+   3.591159e-06  -1.021845e-03   4.805098e+00  -3.133041e+00   2.093484e-02   3.133068e+00
+velocity
+   2.580451e-08  -6.880900e-06  -6.117117e-04  -7.361031e-05  -6.700452e-07   9.333770e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000244     0.0000065050     0.0005782906
+checking body->vels in get_kinetic_energy(),     0.0000000258    -0.0000068809    -0.0006117117
+checking body->vels in get_kinetic_energy(),    -0.0000000244     0.0000065050     0.0005782906
+checking body->vels in get_kinetic_energy(),     0.0000000258    -0.0000068809    -0.0006117117
+checking body->vels in get_kinetic_energy(),    -0.0000000244     0.0000065050     0.0005782906
+checking body->vels in get_kinetic_energy(),     0.0000000258    -0.0000068809    -0.0006117117
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0006070012
+           POLARIZATION ENERGY    -0.0000393027
+             DISPERSION ENERGY    -0.0001672328
+     EXCHANGE REPULSION ENERGY     0.0000658077
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004662734
+
+
+                KINETIC ENERGY     0.0115070681
+                     INVARIANT     0.0119806536
+               TEMPERATURE (K)  1211.2149538933
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000244     0.0000065050     0.0005782906
+checking body->vels in get_kinetic_energy(),     0.0000000258    -0.0000068809    -0.0006117117
+checking body->vels in get_kinetic_energy(),    -0.0000000250     0.0000066413     0.0005781969
+checking body->vels in get_kinetic_energy(),     0.0000000265    -0.0000070251    -0.0006116127
+checking body->vels in get_kinetic_energy(),    -0.0000000257     0.0000067797     0.0005781033
+checking body->vels in get_kinetic_energy(),     0.0000000271    -0.0000071715    -0.0006115136
+    STATE AFTER 30 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063782     0.184569
+A02H2               -0.752678    -0.496815     0.238260
+A03H3                0.752626    -0.496882     0.238268
+A01N1                0.000016    -0.002519     4.735246
+A02H2               -0.466822    -0.802836     5.109026
+A03H3               -0.466866     0.813768     5.072668
+A04H4                0.933530     0.005509     5.091117
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.668545e-06   1.038661e-03   1.905780e-01  -3.141582e+00   9.548457e-02   3.141537e+00
+velocity
+  -2.565007e-08   6.779718e-06   5.781033e-04  -3.249001e-04  -5.099148e-09  -1.505583e-07
+
+fragment NH3_L
+   3.880561e-06  -1.098689e-03   4.798408e+00  -3.132998e+00   2.248721e-02   3.133027e+00
+velocity
+   2.713246e-08  -7.171538e-06  -6.115136e-04  -7.660159e-05  -7.033145e-07   9.674429e-08
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000257     0.0000067797     0.0005781033
+checking body->vels in get_kinetic_energy(),     0.0000000271    -0.0000071715    -0.0006115136
+checking body->vels in get_kinetic_energy(),    -0.0000000257     0.0000067797     0.0005781033
+checking body->vels in get_kinetic_energy(),     0.0000000271    -0.0000071715    -0.0006115136
+checking body->vels in get_kinetic_energy(),    -0.0000000257     0.0000067797     0.0005781033
+checking body->vels in get_kinetic_energy(),     0.0000000271    -0.0000071715    -0.0006115136
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005969136
+           POLARIZATION ENERGY    -0.0000397747
+             DISPERSION ENERGY    -0.0001701738
+     EXCHANGE REPULSION ENERGY     0.0000686792
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004556442
+
+
+                KINETIC ENERGY     0.0115171867
+                     INVARIANT     0.0119806572
+               TEMPERATURE (K)  1212.2800201559
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000257     0.0000067797     0.0005781033
+checking body->vels in get_kinetic_energy(),     0.0000000271    -0.0000071715    -0.0006115136
+checking body->vels in get_kinetic_energy(),    -0.0000000263     0.0000069182     0.0005780096
+checking body->vels in get_kinetic_energy(),     0.0000000278    -0.0000073180    -0.0006114145
+checking body->vels in get_kinetic_energy(),    -0.0000000269     0.0000070587     0.0005779160
+checking body->vels in get_kinetic_energy(),     0.0000000285    -0.0000074667    -0.0006113154
+    STATE AFTER 31 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063815     0.190462
+A02H2               -0.752680    -0.496399     0.247990
+A03H3                0.752624    -0.496471     0.247999
+A01N1                0.000017    -0.002701     4.728561
+A02H2               -0.466825    -0.802414     5.103625
+A03H3               -0.466871     0.814128     5.064657
+A04H4                0.933526     0.005904     5.084432
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -3.956099e-06   1.114335e-03   1.969006e-01  -3.141585e+00   1.023323e-01   3.141537e+00
+velocity
+  -2.694892e-08   7.058748e-06   5.779160e-04  -3.377375e-04  -4.546617e-09  -1.560014e-07
+
+fragment NH3_L
+   4.184734e-06  -1.178736e-03   4.791720e+00  -3.132954e+00   2.410179e-02   3.132985e+00
+velocity
+   2.850638e-08  -7.466694e-06  -6.113154e-04  -7.963009e-05  -7.376340e-07   1.001248e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000269     0.0000070587     0.0005779160
+checking body->vels in get_kinetic_energy(),     0.0000000285    -0.0000074667    -0.0006113154
+checking body->vels in get_kinetic_energy(),    -0.0000000269     0.0000070587     0.0005779160
+checking body->vels in get_kinetic_energy(),     0.0000000285    -0.0000074667    -0.0006113154
+checking body->vels in get_kinetic_energy(),    -0.0000000269     0.0000070587     0.0005779160
+checking body->vels in get_kinetic_energy(),     0.0000000285    -0.0000074667    -0.0006113154
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005858261
+           POLARIZATION ENERGY    -0.0000402454
+             DISPERSION ENERGY    -0.0001731747
+     EXCHANGE REPULSION ENERGY     0.0000716594
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004440653
+
+
+                KINETIC ENERGY     0.0115282371
+                     INVARIANT     0.0119806609
+               TEMPERATURE (K)  1213.4431735007
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000269     0.0000070587     0.0005779160
+checking body->vels in get_kinetic_energy(),     0.0000000285    -0.0000074667    -0.0006113154
+checking body->vels in get_kinetic_energy(),    -0.0000000276     0.0000071993     0.0005778223
+checking body->vels in get_kinetic_energy(),     0.0000000292    -0.0000076154    -0.0006112164
+checking body->vels in get_kinetic_energy(),    -0.0000000283     0.0000073421     0.0005777288
+checking body->vels in get_kinetic_energy(),     0.0000000299    -0.0000077665    -0.0006111175
+    STATE AFTER 32 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063846     0.196336
+A02H2               -0.752682    -0.495942     0.257849
+A03H3                0.752622    -0.496019     0.257858
+A01N1                0.000019    -0.002890     4.721878
+A02H2               -0.466828    -0.801974     5.098276
+A03H3               -0.466877     0.814501     5.056596
+A04H4                0.933521     0.006314     5.077748
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.258104e-06   1.193085e-03   2.032211e-01  -3.141588e+00   1.094471e-01   3.141537e+00
+velocity
+  -2.829340e-08   7.342147e-06   5.777288e-04  -3.507412e-04  -3.930926e-09  -1.614266e-07
+
+fragment NH3_L
+   4.504192e-06  -1.262037e-03   4.785034e+00  -3.132909e+00   2.577937e-02   3.132942e+00
+velocity
+   2.992856e-08  -7.766472e-06  -6.111175e-04  -8.269647e-05  -7.730525e-07   1.034724e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000283     0.0000073421     0.0005777288
+checking body->vels in get_kinetic_energy(),     0.0000000299    -0.0000077665    -0.0006111175
+checking body->vels in get_kinetic_energy(),    -0.0000000283     0.0000073421     0.0005777288
+checking body->vels in get_kinetic_energy(),     0.0000000299    -0.0000077665    -0.0006111175
+checking body->vels in get_kinetic_energy(),    -0.0000000283     0.0000073421     0.0005777288
+checking body->vels in get_kinetic_energy(),     0.0000000299    -0.0000077665    -0.0006111175
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005736967
+           POLARIZATION ENERGY    -0.0000407149
+             DISPERSION ENERGY    -0.0001762370
+     EXCHANGE REPULSION ENERGY     0.0000747518
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004314966
+
+
+                KINETIC ENERGY     0.0115402594
+                     INVARIANT     0.0119806648
+               TEMPERATURE (K)  1214.7086202462
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000283     0.0000073421     0.0005777288
+checking body->vels in get_kinetic_energy(),     0.0000000299    -0.0000077665    -0.0006111175
+checking body->vels in get_kinetic_energy(),    -0.0000000290     0.0000074850     0.0005776353
+checking body->vels in get_kinetic_energy(),     0.0000000307    -0.0000079175    -0.0006110186
+checking body->vels in get_kinetic_energy(),    -0.0000000297     0.0000076300     0.0005775420
+checking body->vels in get_kinetic_energy(),     0.0000000314    -0.0000080710    -0.0006109199
+    STATE AFTER 33 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063875     0.202192
+A02H2               -0.752684    -0.495440     0.267837
+A03H3                0.752620    -0.495522     0.267847
+A01N1                0.000020    -0.003087     4.715197
+A02H2               -0.466831    -0.801515     5.092978
+A03H3               -0.466883     0.814885     5.048484
+A04H4                0.933517     0.006739     5.071066
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.575071e-06   1.274959e-03   2.095395e-01  -3.141591e+00   1.168324e-01   3.141536e+00
+velocity
+  -2.968576e-08   7.630014e-06   5.775420e-04  -3.639148e-04  -3.253434e-09  -1.668267e-07
+
+fragment NH3_L
+   4.839478e-06  -1.348642e-03   4.778351e+00  -3.132862e+00   2.752073e-02   3.132897e+00
+velocity
+   3.140139e-08  -8.070976e-06  -6.109199e-04  -8.580138e-05  -8.096208e-07   1.067799e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000297     0.0000076300     0.0005775420
+checking body->vels in get_kinetic_energy(),     0.0000000314    -0.0000080710    -0.0006109199
+checking body->vels in get_kinetic_energy(),    -0.0000000297     0.0000076300     0.0005775420
+checking body->vels in get_kinetic_energy(),     0.0000000314    -0.0000080710    -0.0006109199
+checking body->vels in get_kinetic_energy(),    -0.0000000297     0.0000076300     0.0005775420
+checking body->vels in get_kinetic_energy(),     0.0000000314    -0.0000080710    -0.0006109199
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005604816
+           POLARIZATION ENERGY    -0.0000411833
+             DISPERSION ENERGY    -0.0001793621
+     EXCHANGE REPULSION ENERGY     0.0000779602
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004178964
+
+
+                KINETIC ENERGY     0.0115532951
+                     INVARIANT     0.0119806688
+               TEMPERATURE (K)  1216.0807372920
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000297     0.0000076300     0.0005775420
+checking body->vels in get_kinetic_energy(),     0.0000000314    -0.0000080710    -0.0006109199
+checking body->vels in get_kinetic_energy(),    -0.0000000304     0.0000077751     0.0005774488
+checking body->vels in get_kinetic_energy(),     0.0000000322    -0.0000082244    -0.0006108213
+checking body->vels in get_kinetic_energy(),    -0.0000000311     0.0000079224     0.0005773559
+checking body->vels in get_kinetic_energy(),     0.0000000329    -0.0000083803    -0.0006107230
+    STATE AFTER 34 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063902     0.208029
+A02H2               -0.752686    -0.494892     0.277956
+A03H3                0.752618    -0.494979     0.277967
+A01N1                0.000021    -0.003291     4.708519
+A02H2               -0.466834    -0.801037     5.087733
+A03H3               -0.466889     0.815280     5.040320
+A04H4                0.933512     0.007179     5.064386
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -4.907537e-06   1.360006e-03   2.158559e-01   3.141591e+00   1.244918e-01   3.141536e+00
+velocity
+  -3.112837e-08   7.922449e-06   5.773559e-04  -3.772622e-04  -2.516217e-09  -1.721939e-07
+
+fragment NH3_L
+   5.191158e-06  -1.438605e-03   4.771669e+00  -3.132814e+00   2.932667e-02   3.132851e+00
+velocity
+   3.292737e-08  -8.380311e-06  -6.107230e-04  -8.894547e-05  -8.473916e-07   1.100392e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000311     0.0000079224     0.0005773559
+checking body->vels in get_kinetic_energy(),     0.0000000329    -0.0000083803    -0.0006107230
+checking body->vels in get_kinetic_energy(),    -0.0000000311     0.0000079224     0.0005773559
+checking body->vels in get_kinetic_energy(),     0.0000000329    -0.0000083803    -0.0006107230
+checking body->vels in get_kinetic_energy(),    -0.0000000311     0.0000079224     0.0005773559
+checking body->vels in get_kinetic_energy(),     0.0000000329    -0.0000083803    -0.0006107230
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005461356
+           POLARIZATION ENERGY    -0.0000416510
+             DISPERSION ENERGY    -0.0001825516
+     EXCHANGE REPULSION ENERGY     0.0000812883
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0004032213
+
+
+                KINETIC ENERGY     0.0115673875
+                     INVARIANT     0.0119806728
+               TEMPERATURE (K)  1217.5640761371
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000311     0.0000079224     0.0005773559
+checking body->vels in get_kinetic_energy(),     0.0000000329    -0.0000083803    -0.0006107230
+checking body->vels in get_kinetic_energy(),    -0.0000000319     0.0000080698     0.0005772630
+checking body->vels in get_kinetic_energy(),     0.0000000337    -0.0000085362    -0.0006106247
+checking body->vels in get_kinetic_energy(),    -0.0000000326     0.0000082195     0.0005771705
+checking body->vels in get_kinetic_energy(),     0.0000000345    -0.0000086946    -0.0006105269
+    STATE AFTER 35 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063926     0.213848
+A02H2               -0.752688    -0.494292     0.288208
+A03H3                0.752616    -0.494384     0.288219
+A01N1                0.000023    -0.003503     4.701843
+A02H2               -0.466838    -0.800539     5.082541
+A03H3               -0.466895     0.815687     5.032104
+A04H4                0.933507     0.007636     5.057707
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.256064e-06   1.448277e-03   2.221703e-01   3.141588e+00   1.324290e-01   3.141535e+00
+velocity
+  -3.262373e-08   8.219549e-06   5.771705e-04  -3.907873e-04  -1.722148e-09  -1.775201e-07
+
+fragment NH3_L
+   5.559827e-06  -1.531978e-03   4.764990e+00  -3.132764e+00   3.119802e-02   3.132804e+00
+velocity
+   3.450915e-08  -8.694581e-06  -6.105269e-04  -9.212933e-05  -8.864198e-07   1.132417e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000326     0.0000082195     0.0005771705
+checking body->vels in get_kinetic_energy(),     0.0000000345    -0.0000086946    -0.0006105269
+checking body->vels in get_kinetic_energy(),    -0.0000000326     0.0000082195     0.0005771705
+checking body->vels in get_kinetic_energy(),     0.0000000345    -0.0000086946    -0.0006105269
+checking body->vels in get_kinetic_energy(),    -0.0000000326     0.0000082195     0.0005771705
+checking body->vels in get_kinetic_energy(),     0.0000000345    -0.0000086946    -0.0006105269
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005306117
+           POLARIZATION ENERGY    -0.0000421184
+             DISPERSION ENERGY    -0.0001858070
+     EXCHANGE REPULSION ENERGY     0.0000847401
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0003874263
+
+
+                KINETIC ENERGY     0.0115825814
+                     INVARIANT     0.0119806771
+               TEMPERATURE (K)  1219.1633665722
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000326     0.0000082195     0.0005771705
+checking body->vels in get_kinetic_energy(),     0.0000000345    -0.0000086946    -0.0006105269
+checking body->vels in get_kinetic_energy(),    -0.0000000334     0.0000083693     0.0005770781
+checking body->vels in get_kinetic_energy(),     0.0000000353    -0.0000088530    -0.0006104291
+checking body->vels in get_kinetic_energy(),    -0.0000000342     0.0000085214     0.0005769862
+checking body->vels in get_kinetic_energy(),     0.0000000361    -0.0000090139    -0.0006103320
+    STATE AFTER 36 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000001     0.063947     0.219647
+A02H2               -0.752690    -0.493638     0.298592
+A03H3                0.752614    -0.493736     0.298604
+A01N1                0.000025    -0.003722     4.695170
+A02H2               -0.466841    -0.800020     5.077403
+A03H3               -0.466902     0.816105     5.023834
+A04H4                0.933502     0.008109     5.051029
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -5.621243e-06   1.539824e-03   2.284826e-01   3.141585e+00   1.406475e-01   3.141535e+00
+velocity
+  -3.417443e-08   8.521415e-06   5.769862e-04  -4.044938e-04  -8.749870e-10  -1.827965e-07
+
+fragment NH3_L
+   5.946111e-06  -1.628815e-03   4.758313e+00  -3.132712e+00   3.313560e-02   3.132755e+00
+velocity
+   3.614947e-08  -9.013893e-06  -6.103320e-04  -9.535357e-05  -9.267624e-07   1.163778e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000342     0.0000085214     0.0005769862
+checking body->vels in get_kinetic_energy(),     0.0000000361    -0.0000090139    -0.0006103320
+checking body->vels in get_kinetic_energy(),    -0.0000000342     0.0000085214     0.0005769862
+checking body->vels in get_kinetic_energy(),     0.0000000361    -0.0000090139    -0.0006103320
+checking body->vels in get_kinetic_energy(),    -0.0000000342     0.0000085214     0.0005769862
+checking body->vels in get_kinetic_energy(),     0.0000000361    -0.0000090139    -0.0006103320
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0005138609
+           POLARIZATION ENERGY    -0.0000425860
+             DISPERSION ENERGY    -0.0001891300
+     EXCHANGE REPULSION ENERGY     0.0000883197
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0003704647
+
+
+                KINETIC ENERGY     0.0115989237
+                     INVARIANT     0.0119806814
+               TEMPERATURE (K)  1220.8835199715
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000342     0.0000085214     0.0005769862
+checking body->vels in get_kinetic_energy(),     0.0000000361    -0.0000090139    -0.0006103320
+checking body->vels in get_kinetic_energy(),    -0.0000000350     0.0000086736     0.0005768943
+checking body->vels in get_kinetic_energy(),     0.0000000370    -0.0000091748    -0.0006102348
+checking body->vels in get_kinetic_energy(),    -0.0000000358     0.0000088281     0.0005768032
+checking body->vels in get_kinetic_energy(),     0.0000000379    -0.0000093384    -0.0006101384
+    STATE AFTER 37 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000002     0.063965     0.225427
+A02H2               -0.752693    -0.492926     0.309111
+A03H3                0.752611    -0.493030     0.309124
+A01N1                0.000026    -0.003949     4.688499
+A02H2               -0.466845    -0.799480     5.072319
+A03H3               -0.466908     0.816534     5.015510
+A04H4                0.933497     0.008597     5.044352
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -6.003694e-06   1.634700e-03   2.347929e-01   3.141581e+00   1.491513e-01   3.141534e+00
+velocity
+  -3.578319e-08   8.828146e-06   5.768032e-04  -4.183857e-04   2.051433e-11  -1.880137e-07
+
+fragment NH3_L
+   6.350666e-06  -1.729174e-03   4.751638e+00  -3.132659e+00   3.514025e-02   3.132704e+00
+velocity
+   3.785121e-08  -9.338351e-06  -6.101384e-04  -9.861874e-05  -9.684788e-07   1.194375e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000358     0.0000088281     0.0005768032
+checking body->vels in get_kinetic_energy(),     0.0000000379    -0.0000093384    -0.0006101384
+checking body->vels in get_kinetic_energy(),    -0.0000000358     0.0000088281     0.0005768032
+checking body->vels in get_kinetic_energy(),     0.0000000379    -0.0000093384    -0.0006101384
+checking body->vels in get_kinetic_energy(),    -0.0000000358     0.0000088281     0.0005768032
+checking body->vels in get_kinetic_energy(),     0.0000000379    -0.0000093384    -0.0006101384
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0004958330
+           POLARIZATION ENERGY    -0.0000430545
+             DISPERSION ENERGY    -0.0001925222
+     EXCHANGE REPULSION ENERGY     0.0000920313
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0003522877
+
+
+                KINETIC ENERGY     0.0116164625
+                     INVARIANT     0.0119806859
+               TEMPERATURE (K)  1222.7296320959
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000358     0.0000088281     0.0005768032
+checking body->vels in get_kinetic_energy(),     0.0000000379    -0.0000093384    -0.0006101384
+checking body->vels in get_kinetic_energy(),    -0.0000000366     0.0000089827     0.0005767121
+checking body->vels in get_kinetic_energy(),     0.0000000387    -0.0000095019    -0.0006100420
+checking body->vels in get_kinetic_energy(),    -0.0000000375     0.0000091398     0.0005766218
+checking body->vels in get_kinetic_energy(),     0.0000000396    -0.0000096681    -0.0006099465
+    STATE AFTER 38 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000002     0.063978     0.231187
+A02H2               -0.752695    -0.492153     0.319765
+A03H3                0.752609    -0.492262     0.319778
+A01N1                0.000028    -0.004183     4.681831
+A02H2               -0.466849    -0.798919     5.067289
+A03H3               -0.466916     0.816974     5.007131
+A04H4                0.933491     0.009102     5.037676
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -6.404069e-06   1.732957e-03   2.411013e-01   3.141578e+00   1.579442e-01   3.141534e+00
+velocity
+  -3.745288e-08   9.139838e-06   5.766218e-04  -4.324667e-04   9.585088e-10  -1.931618e-07
+
+fragment NH3_L
+   6.774179e-06  -1.833110e-03   4.744965e+00  -3.132604e+00   3.721283e-02   3.132652e+00
+velocity
+   3.961739e-08  -9.668057e-06  -6.099465e-04  -1.019254e-04  -1.011630e-06   1.224095e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000375     0.0000091398     0.0005766218
+checking body->vels in get_kinetic_energy(),     0.0000000396    -0.0000096681    -0.0006099465
+checking body->vels in get_kinetic_energy(),    -0.0000000375     0.0000091398     0.0005766218
+checking body->vels in get_kinetic_energy(),     0.0000000396    -0.0000096681    -0.0006099465
+checking body->vels in get_kinetic_energy(),    -0.0000000375     0.0000091398     0.0005766218
+checking body->vels in get_kinetic_energy(),     0.0000000396    -0.0000096681    -0.0006099465
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0004764758
+           POLARIZATION ENERGY    -0.0000435245
+             DISPERSION ENERGY    -0.0001959854
+     EXCHANGE REPULSION ENERGY     0.0000958793
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0003328452
+
+
+                KINETIC ENERGY     0.0116352482
+                     INVARIANT     0.0119806905
+               TEMPERATURE (K)  1224.7069853101
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000375     0.0000091398     0.0005766218
+checking body->vels in get_kinetic_energy(),     0.0000000396    -0.0000096681    -0.0006099465
+checking body->vels in get_kinetic_energy(),    -0.0000000383     0.0000092969     0.0005765315
+checking body->vels in get_kinetic_energy(),     0.0000000405    -0.0000098342    -0.0006098510
+checking body->vels in get_kinetic_energy(),    -0.0000000392     0.0000094566     0.0005764422
+checking body->vels in get_kinetic_energy(),     0.0000000415    -0.0000100031    -0.0006097566
+    STATE AFTER 39 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000002     0.063987     0.236929
+A02H2               -0.752697    -0.491313     0.330555
+A03H3                0.752606    -0.491428     0.330570
+A01N1                0.000030    -0.004426     4.675165
+A02H2               -0.466853    -0.798336     5.062314
+A03H3               -0.466923     0.817425     4.998697
+A04H4                0.933485     0.009624     5.031001
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -6.823048e-06   1.834651e-03   2.474076e-01   3.141574e+00   1.670301e-01   3.141533e+00
+velocity
+  -3.918646e-08   9.456590e-06   5.764422e-04  -4.467406e-04   1.931933e-09  -1.982301e-07
+
+fragment NH3_L
+   7.217372e-06  -1.940681e-03   4.738294e+00  -3.132548e+00   3.935419e-02   3.132598e+00
+velocity
+   4.145116e-08  -1.000311e-05  -6.097566e-04  -1.052739e-04  -1.056281e-06   1.252817e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000392     0.0000094566     0.0005764422
+checking body->vels in get_kinetic_energy(),     0.0000000415    -0.0000100031    -0.0006097566
+checking body->vels in get_kinetic_energy(),    -0.0000000392     0.0000094566     0.0005764422
+checking body->vels in get_kinetic_energy(),     0.0000000415    -0.0000100031    -0.0006097566
+checking body->vels in get_kinetic_energy(),    -0.0000000392     0.0000094566     0.0005764422
+checking body->vels in get_kinetic_energy(),     0.0000000415    -0.0000100031    -0.0006097566
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0004557352
+           POLARIZATION ENERGY    -0.0000439971
+             DISPERSION ENERGY    -0.0001995214
+     EXCHANGE REPULSION ENERGY     0.0000998683
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0003120849
+
+
+                KINETIC ENERGY     0.0116553328
+                     INVARIANT     0.0119806953
+               TEMPERATURE (K)  1226.8210501034
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000392     0.0000094566     0.0005764422
+checking body->vels in get_kinetic_energy(),     0.0000000415    -0.0000100031    -0.0006097566
+checking body->vels in get_kinetic_energy(),    -0.0000000401     0.0000096162     0.0005763530
+checking body->vels in get_kinetic_energy(),     0.0000000424    -0.0000101720    -0.0006096621
+checking body->vels in get_kinetic_energy(),    -0.0000000410     0.0000097785     0.0005762648
+checking body->vels in get_kinetic_energy(),     0.0000000434    -0.0000103436    -0.0006095689
+    STATE AFTER 40 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000002     0.063992     0.242650
+A02H2               -0.752700    -0.490403     0.341483
+A03H3                0.752604    -0.490524     0.341499
+A01N1                0.000032    -0.004677     4.668502
+A02H2               -0.466858    -0.797730     5.057395
+A03H3               -0.466930     0.817886     4.990205
+A04H4                0.933479     0.010163     5.024327
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -7.261347e-06   1.939838e-03   2.537121e-01   3.141571e+00   1.764130e-01   3.141533e+00
+velocity
+  -4.098704e-08   9.778495e-06   5.762648e-04  -4.612111e-04   2.932381e-09  -2.032074e-07
+
+fragment NH3_L
+   7.681002e-06  -2.051947e-03   4.731625e+00  -3.132490e+00   4.156521e-02   3.132542e+00
+velocity
+   4.335581e-08  -1.034362e-05  -6.095689e-04  -1.086649e-04  -1.102496e-06   1.280411e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000410     0.0000097785     0.0005762648
+checking body->vels in get_kinetic_energy(),     0.0000000434    -0.0000103436    -0.0006095689
+checking body->vels in get_kinetic_energy(),    -0.0000000410     0.0000097785     0.0005762648
+checking body->vels in get_kinetic_energy(),     0.0000000434    -0.0000103436    -0.0006095689
+checking body->vels in get_kinetic_energy(),    -0.0000000410     0.0000097785     0.0005762648
+checking body->vels in get_kinetic_energy(),     0.0000000434    -0.0000103436    -0.0006095689
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0004335556
+           POLARIZATION ENERGY    -0.0000444733
+             DISPERSION ENERGY    -0.0002031322
+     EXCHANGE REPULSION ENERGY     0.0001040028
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0002899529
+
+
+                KINETIC ENERGY     0.0116767699
+                     INVARIANT     0.0119807002
+               TEMPERATURE (K)  1229.0774857891
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000410     0.0000097785     0.0005762648
+checking body->vels in get_kinetic_energy(),     0.0000000434    -0.0000103436    -0.0006095689
+checking body->vels in get_kinetic_energy(),    -0.0000000419     0.0000099407     0.0005761767
+checking body->vels in get_kinetic_energy(),     0.0000000443    -0.0000105153    -0.0006094757
+checking body->vels in get_kinetic_energy(),    -0.0000000429     0.0000101056     0.0005760899
+checking body->vels in get_kinetic_energy(),     0.0000000453    -0.0000106897    -0.0006093839
+    STATE AFTER 41 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000002     0.063990     0.248352
+A02H2               -0.752702    -0.489417     0.352549
+A03H3                0.752601    -0.489545     0.352566
+A01N1                0.000034    -0.004936     4.661842
+A02H2               -0.466863    -0.797101     5.052532
+A03H3               -0.466938     0.818357     4.981656
+A04H4                0.933473     0.010718     5.017653
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -7.719717e-06   2.048574e-03   2.600145e-01   3.141567e+00   1.860972e-01   3.141532e+00
+velocity
+  -4.285789e-08   1.010565e-05   5.760899e-04  -4.758819e-04   3.949960e-09  -2.080818e-07
+
+fragment NH3_L
+   8.165863e-06  -2.166968e-03   4.724958e+00  -3.132430e+00   4.384677e-02   3.132485e+00
+velocity
+   4.533478e-08  -1.068968e-05  -6.093839e-04  -1.120986e-04  -1.150345e-06   1.306733e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000429     0.0000101056     0.0005760899
+checking body->vels in get_kinetic_energy(),     0.0000000453    -0.0000106897    -0.0006093839
+checking body->vels in get_kinetic_energy(),    -0.0000000429     0.0000101056     0.0005760899
+checking body->vels in get_kinetic_energy(),     0.0000000453    -0.0000106897    -0.0006093839
+checking body->vels in get_kinetic_energy(),    -0.0000000429     0.0000101056     0.0005760899
+checking body->vels in get_kinetic_energy(),     0.0000000453    -0.0000106897    -0.0006093839
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0004098798
+           POLARIZATION ENERGY    -0.0000449545
+             DISPERSION ENERGY    -0.0002068195
+     EXCHANGE REPULSION ENERGY     0.0001082878
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0002663935
+
+
+                KINETIC ENERGY     0.0116996151
+                     INVARIANT     0.0119807052
+               TEMPERATURE (K)  1231.4821402419
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000429     0.0000101056     0.0005760899
+checking body->vels in get_kinetic_energy(),     0.0000000453    -0.0000106897    -0.0006093839
+checking body->vels in get_kinetic_energy(),    -0.0000000438     0.0000102705     0.0005760031
+checking body->vels in get_kinetic_energy(),     0.0000000463    -0.0000108641    -0.0006092920
+checking body->vels in get_kinetic_energy(),    -0.0000000448     0.0000104381     0.0005759178
+checking body->vels in get_kinetic_energy(),     0.0000000474    -0.0000110414    -0.0006092018
+    STATE AFTER 42 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000003     0.063983     0.254035
+A02H2               -0.752705    -0.488353     0.363755
+A03H3                0.752599    -0.488487     0.363773
+A01N1                0.000036    -0.005203     4.655184
+A02H2               -0.466868    -0.796448     5.047725
+A03H3               -0.466946     0.818839     4.973049
+A04H4                0.933466     0.011290     5.010980
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -8.198945e-06   2.160918e-03   2.663151e-01   3.141564e+00   1.960866e-01   3.141531e+00
+velocity
+  -4.480239e-08   1.043814e-05   5.759178e-04  -4.907564e-04   4.973142e-09  -2.128405e-07
+
+fragment NH3_L
+   8.672787e-06  -2.285804e-03   4.718294e+00  -3.132368e+00   4.619976e-02   3.132426e+00
+velocity
+   4.739166e-08  -1.104139e-05  -6.092018e-04  -1.155755e-04  -1.199898e-06   1.331631e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000448     0.0000104381     0.0005759178
+checking body->vels in get_kinetic_energy(),     0.0000000474    -0.0000110414    -0.0006092018
+checking body->vels in get_kinetic_energy(),    -0.0000000448     0.0000104381     0.0005759178
+checking body->vels in get_kinetic_energy(),     0.0000000474    -0.0000110414    -0.0006092018
+checking body->vels in get_kinetic_energy(),    -0.0000000448     0.0000104381     0.0005759178
+checking body->vels in get_kinetic_energy(),     0.0000000474    -0.0000110414    -0.0006092018
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0003846485
+           POLARIZATION ENERGY    -0.0000454421
+             DISPERSION ENERGY    -0.0002105855
+     EXCHANGE REPULSION ENERGY     0.0001127284
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0002413492
+
+
+                KINETIC ENERGY     0.0117239259
+                     INVARIANT     0.0119807103
+               TEMPERATURE (K)  1234.0410485176
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000448     0.0000104381     0.0005759178
+checking body->vels in get_kinetic_energy(),     0.0000000474    -0.0000110414    -0.0006092018
+checking body->vels in get_kinetic_energy(),    -0.0000000458     0.0000106057     0.0005758324
+checking body->vels in get_kinetic_energy(),     0.0000000484    -0.0000112187    -0.0006091115
+checking body->vels in get_kinetic_energy(),    -0.0000000468     0.0000107761     0.0005757488
+checking body->vels in get_kinetic_energy(),     0.0000000495    -0.0000113988    -0.0006090230
+    STATE AFTER 43 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000003     0.063969     0.259697
+A02H2               -0.752708    -0.487204     0.375100
+A03H3                0.752596    -0.487345     0.375119
+A01N1                0.000038    -0.005479     4.648528
+A02H2               -0.466874    -0.795771     5.042975
+A03H3               -0.466954     0.819330     4.964382
+A04H4                0.933459     0.011880     5.004307
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -8.699855e-06   2.276928e-03   2.726138e-01   3.141560e+00   2.063857e-01   3.141531e+00
+velocity
+  -4.682409e-08   1.077605e-05   5.757488e-04  -5.058381e-04   5.988599e-09  -2.174701e-07
+
+fragment NH3_L
+   9.202646e-06  -2.408519e-03   4.711631e+00  -3.132304e+00   4.862508e-02   3.132365e+00
+velocity
+   4.953020e-08  -1.139883e-05  -6.090230e-04  -1.190958e-04  -1.251228e-06   1.354936e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000468     0.0000107761     0.0005757488
+checking body->vels in get_kinetic_energy(),     0.0000000495    -0.0000113988    -0.0006090230
+checking body->vels in get_kinetic_energy(),    -0.0000000468     0.0000107761     0.0005757488
+checking body->vels in get_kinetic_energy(),     0.0000000495    -0.0000113988    -0.0006090230
+checking body->vels in get_kinetic_energy(),    -0.0000000468     0.0000107761     0.0005757488
+checking body->vels in get_kinetic_energy(),     0.0000000495    -0.0000113988    -0.0006090230
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0003578010
+           POLARIZATION ENERGY    -0.0000459380
+             DISPERSION ENERGY    -0.0002144323
+     EXCHANGE REPULSION ENERGY     0.0001173297
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0002147605
+
+
+                KINETIC ENERGY     0.0117497612
+                     INVARIANT     0.0119807156
+               TEMPERATURE (K)  1236.7604301785
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000468     0.0000107761     0.0005757488
+checking body->vels in get_kinetic_energy(),     0.0000000495    -0.0000113988    -0.0006090230
+checking body->vels in get_kinetic_energy(),    -0.0000000479     0.0000109464     0.0005756651
+checking body->vels in get_kinetic_energy(),     0.0000000506    -0.0000115790    -0.0006089345
+checking body->vels in get_kinetic_energy(),    -0.0000000489     0.0000111195     0.0005755833
+checking body->vels in get_kinetic_energy(),     0.0000000518    -0.0000117621    -0.0006088480
+    STATE AFTER 44 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000003     0.063949     0.265340
+A02H2               -0.752710    -0.485966     0.386586
+A03H3                0.752593    -0.486113     0.386606
+A01N1                0.000040    -0.005763     4.641875
+A02H2               -0.466880    -0.795069     5.038283
+A03H3               -0.466963     0.819831     4.955655
+A04H4                0.933452     0.012488     4.997634
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -9.223312e-06   2.396665e-03   2.789107e-01   3.141556e+00   2.169987e-01   3.141530e+00
+velocity
+  -4.892668e-08   1.111947e-05   5.755833e-04  -5.211304e-04   6.981019e-09  -2.219564e-07
+
+fragment NH3_L
+   9.756354e-06  -2.535175e-03   4.704970e+00  -3.132239e+00   5.112362e-02   3.132302e+00
+velocity
+   5.175429e-08  -1.176210e-05  -6.088480e-04  -1.226597e-04  -1.304412e-06   1.376468e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000489     0.0000111195     0.0005755833
+checking body->vels in get_kinetic_energy(),     0.0000000518    -0.0000117621    -0.0006088480
+checking body->vels in get_kinetic_energy(),    -0.0000000489     0.0000111195     0.0005755833
+checking body->vels in get_kinetic_energy(),     0.0000000518    -0.0000117621    -0.0006088480
+checking body->vels in get_kinetic_energy(),    -0.0000000489     0.0000111195     0.0005755833
+checking body->vels in get_kinetic_energy(),     0.0000000518    -0.0000117621    -0.0006088480
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0003292751
+           POLARIZATION ENERGY    -0.0000464441
+             DISPERSION ENERGY    -0.0002183619
+     EXCHANGE REPULSION ENERGY     0.0001220974
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0001865665
+
+
+                KINETIC ENERGY     0.0117771819
+                     INVARIANT     0.0119807211
+               TEMPERATURE (K)  1239.6466851286
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000489     0.0000111195     0.0005755833
+checking body->vels in get_kinetic_energy(),     0.0000000518    -0.0000117621    -0.0006088480
+checking body->vels in get_kinetic_energy(),    -0.0000000500     0.0000112926     0.0005755015
+checking body->vels in get_kinetic_energy(),     0.0000000529    -0.0000119452    -0.0006087615
+checking body->vels in get_kinetic_energy(),    -0.0000000511     0.0000114685     0.0005754218
+checking body->vels in get_kinetic_energy(),     0.0000000541    -0.0000121313    -0.0006086771
+    STATE AFTER 45 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000003     0.063920     0.270963
+A02H2               -0.752713    -0.484632     0.398213
+A03H3                0.752590    -0.484787     0.398235
+A01N1                0.000042    -0.006056     4.635225
+A02H2               -0.466886    -0.794341     5.033649
+A03H3               -0.466972     0.820341     4.946867
+A04H4                0.933445     0.013113     4.990961
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -9.770220e-06   2.520188e-03   2.852058e-01   3.141552e+00   2.279299e-01   3.141529e+00
+velocity
+  -5.111399e-08   1.146848e-05   5.754218e-04  -5.366363e-04   7.932916e-09  -2.262844e-07
+
+fragment NH3_L
+   1.033487e-05  -2.665837e-03   4.698311e+00  -3.132171e+00   5.369628e-02   3.132238e+00
+velocity
+   5.406802e-08  -1.213128e-05  -6.086771e-04  -1.262673e-04  -1.359526e-06   1.396031e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000511     0.0000114685     0.0005754218
+checking body->vels in get_kinetic_energy(),     0.0000000541    -0.0000121313    -0.0006086771
+checking body->vels in get_kinetic_energy(),    -0.0000000511     0.0000114685     0.0005754218
+checking body->vels in get_kinetic_energy(),     0.0000000541    -0.0000121313    -0.0006086771
+checking body->vels in get_kinetic_energy(),    -0.0000000511     0.0000114685     0.0005754218
+checking body->vels in get_kinetic_energy(),     0.0000000541    -0.0000121313    -0.0006086771
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0002990069
+           POLARIZATION ENERGY    -0.0000469627
+             DISPERSION ENERGY    -0.0002223768
+     EXCHANGE REPULSION ENERGY     0.0001270370
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0001567045
+
+
+                KINETIC ENERGY     0.0118062504
+                     INVARIANT     0.0119807266
+               TEMPERATURE (K)  1242.7063877425
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000511     0.0000114685     0.0005754218
+checking body->vels in get_kinetic_energy(),     0.0000000541    -0.0000121313    -0.0006086771
+checking body->vels in get_kinetic_energy(),    -0.0000000522     0.0000116444     0.0005753420
+checking body->vels in get_kinetic_energy(),     0.0000000552    -0.0000123174    -0.0006085928
+checking body->vels in get_kinetic_energy(),    -0.0000000534     0.0000118232     0.0005752646
+checking body->vels in get_kinetic_energy(),     0.0000000565    -0.0000125065    -0.0006085108
+    STATE AFTER 46 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000004     0.063883     0.276567
+A02H2               -0.752716    -0.483199     0.409982
+A03H3                0.752588    -0.483360     0.410005
+A01N1                0.000045    -0.006358     4.628577
+A02H2               -0.466892    -0.793586     5.029074
+A03H3               -0.466981     0.820860     4.938017
+A04H4                0.933437     0.013756     4.984288
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.034153e-05   2.647560e-03   2.914992e-01   3.141548e+00   2.391839e-01   3.141528e+00
+velocity
+  -5.339004e-08   1.182315e-05   5.752646e-04  -5.523588e-04   8.824418e-09  -2.304384e-07
+
+fragment NH3_L
+   1.093920e-05  -2.800570e-03   4.691654e+00  -3.132102e+00   5.634398e-02   3.132171e+00
+velocity
+   5.647561e-08  -1.250645e-05  -6.085108e-04  -1.299188e-04  -1.416650e-06   1.413414e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000534     0.0000118232     0.0005752646
+checking body->vels in get_kinetic_energy(),     0.0000000565    -0.0000125065    -0.0006085108
+checking body->vels in get_kinetic_energy(),    -0.0000000534     0.0000118232     0.0005752646
+checking body->vels in get_kinetic_energy(),     0.0000000565    -0.0000125065    -0.0006085108
+checking body->vels in get_kinetic_energy(),    -0.0000000534     0.0000118232     0.0005752646
+checking body->vels in get_kinetic_energy(),     0.0000000565    -0.0000125065    -0.0006085108
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0002669312
+           POLARIZATION ENERGY    -0.0000474965
+             DISPERSION ENERGY    -0.0002264792
+     EXCHANGE REPULSION ENERGY     0.0001321546
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0001251101
+
+
+                KINETIC ENERGY     0.0118370307
+                     INVARIANT     0.0119807323
+               TEMPERATURE (K)  1245.9462790437
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000534     0.0000118232     0.0005752646
+checking body->vels in get_kinetic_energy(),     0.0000000565    -0.0000125065    -0.0006085108
+checking body->vels in get_kinetic_energy(),    -0.0000000546     0.0000120019     0.0005751871
+checking body->vels in get_kinetic_energy(),     0.0000000577    -0.0000126955    -0.0006084289
+checking body->vels in get_kinetic_energy(),    -0.0000000558     0.0000121836     0.0005751121
+checking body->vels in get_kinetic_energy(),     0.0000000590    -0.0000128877    -0.0006083495
+    STATE AFTER 47 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000004     0.063837     0.282150
+A02H2               -0.752719    -0.481659     0.421892
+A03H3                0.752585    -0.481828     0.421917
+A01N1                0.000047    -0.006669     4.621932
+A02H2               -0.466899    -0.792805     5.024557
+A03H3               -0.466990     0.821388     4.929104
+A04H4                0.933429     0.014417     4.977615
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.093823e-05   2.778842e-03   2.977908e-01   3.141544e+00   2.507652e-01   3.141527e+00
+velocity
+  -5.575897e-08   1.218355e-05   5.751121e-04  -5.683007e-04   9.633037e-09  -2.344018e-07
+
+fragment NH3_L
+   1.157038e-05  -2.939440e-03   4.684999e+00  -3.132030e+00   5.906761e-02   3.132103e+00
+velocity
+   5.898145e-08  -1.288768e-05  -6.083495e-04  -1.336140e-04  -1.475868e-06   1.428388e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000558     0.0000121836     0.0005751121
+checking body->vels in get_kinetic_energy(),     0.0000000590    -0.0000128877    -0.0006083495
+checking body->vels in get_kinetic_energy(),    -0.0000000558     0.0000121836     0.0005751121
+checking body->vels in get_kinetic_energy(),     0.0000000590    -0.0000128877    -0.0006083495
+checking body->vels in get_kinetic_energy(),    -0.0000000558     0.0000121836     0.0005751121
+checking body->vels in get_kinetic_energy(),     0.0000000590    -0.0000128877    -0.0006083495
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0002329812
+           POLARIZATION ENERGY    -0.0000480484
+             DISPERSION ENERGY    -0.0002306716
+     EXCHANGE REPULSION ENERGY     0.0001374563
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0000917175
+
+
+                KINETIC ENERGY     0.0118695885
+                     INVARIANT     0.0119807381
+               TEMPERATURE (K)  1249.3732566694
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000558     0.0000121836     0.0005751121
+checking body->vels in get_kinetic_energy(),     0.0000000590    -0.0000128877    -0.0006083495
+checking body->vels in get_kinetic_energy(),    -0.0000000570     0.0000123652     0.0005750371
+checking body->vels in get_kinetic_energy(),     0.0000000603    -0.0000130798    -0.0006082702
+checking body->vels in get_kinetic_energy(),    -0.0000000582     0.0000125497     0.0005749648
+checking body->vels in get_kinetic_energy(),     0.0000000616    -0.0000132750    -0.0006081937
+    STATE AFTER 48 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000004     0.063782     0.287714
+A02H2               -0.752722    -0.480007     0.433945
+A03H3                0.752582    -0.480183     0.433971
+A01N1                0.000050    -0.006989     4.615289
+A02H2               -0.466907    -0.791996     5.020099
+A03H3               -0.467000     0.821923     4.920126
+A04H4                0.933420     0.015096     4.970941
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.156136e-05   2.914098e-03   3.040809e-01   3.141540e+00   2.626783e-01   3.141526e+00
+velocity
+  -5.822511e-08   1.254974e-05   5.749648e-04  -5.844644e-04   1.033343e-08  -2.381571e-07
+
+fragment NH3_L
+   1.222953e-05  -3.082513e-03   4.678345e+00  -3.131956e+00   6.186809e-02   3.132032e+00
+velocity
+   6.159012e-08  -1.327503e-05  -6.081937e-04  -1.373528e-04  -1.537264e-06   1.440704e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000582     0.0000125497     0.0005749648
+checking body->vels in get_kinetic_energy(),     0.0000000616    -0.0000132750    -0.0006081937
+checking body->vels in get_kinetic_energy(),    -0.0000000582     0.0000125497     0.0005749648
+checking body->vels in get_kinetic_energy(),     0.0000000616    -0.0000132750    -0.0006081937
+checking body->vels in get_kinetic_energy(),    -0.0000000582     0.0000125497     0.0005749648
+checking body->vels in get_kinetic_energy(),     0.0000000616    -0.0000132750    -0.0006081937
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0001970893
+           POLARIZATION ENERGY    -0.0000486218
+             DISPERSION ENERGY    -0.0002349566
+     EXCHANGE REPULSION ENERGY     0.0001429487
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0000564596
+
+
+                KINETIC ENERGY     0.0119039906
+                     INVARIANT     0.0119807439
+               TEMPERATURE (K)  1252.9943623234
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000582     0.0000125497     0.0005749648
+checking body->vels in get_kinetic_energy(),     0.0000000616    -0.0000132750    -0.0006081937
+checking body->vels in get_kinetic_energy(),    -0.0000000595     0.0000127343     0.0005748925
+checking body->vels in get_kinetic_energy(),     0.0000000629    -0.0000134702    -0.0006081172
+checking body->vels in get_kinetic_energy(),    -0.0000000608     0.0000129218     0.0005748231
+checking body->vels in get_kinetic_energy(),     0.0000000643    -0.0000136686    -0.0006080439
+    STATE AFTER 49 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000005     0.063716     0.293258
+A02H2               -0.752725    -0.478237     0.446139
+A03H3                0.752579    -0.478420     0.446167
+A01N1                0.000053    -0.007317     4.608648
+A02H2               -0.466915    -0.791158     5.015701
+A03H3               -0.467010     0.822467     4.911084
+A04H4                0.933411     0.015794     4.964266
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.221201e-05   3.053392e-03   3.103693e-01   3.141537e+00   2.749278e-01   3.141525e+00
+velocity
+  -6.079294e-08   1.292177e-05   5.748231e-04  -6.008522e-04   1.089711e-08  -2.416862e-07
+
+fragment NH3_L
+   1.291778e-05  -3.229857e-03   4.671694e+00  -3.131880e+00   6.474631e-02   3.131959e+00
+velocity
+   6.430635e-08  -1.366856e-05  -6.080439e-04  -1.411349e-04  -1.600924e-06   1.450096e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000608     0.0000129218     0.0005748231
+checking body->vels in get_kinetic_energy(),     0.0000000643    -0.0000136686    -0.0006080439
+checking body->vels in get_kinetic_energy(),    -0.0000000608     0.0000129218     0.0005748231
+checking body->vels in get_kinetic_energy(),     0.0000000643    -0.0000136686    -0.0006080439
+checking body->vels in get_kinetic_energy(),    -0.0000000608     0.0000129218     0.0005748231
+checking body->vels in get_kinetic_energy(),     0.0000000643    -0.0000136686    -0.0006080439
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0001591865
+           POLARIZATION ENERGY    -0.0000492204
+             DISPERSION ENERGY    -0.0002393367
+     EXCHANGE REPULSION ENERGY     0.0001486384
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY     0.0000192678
+
+
+                KINETIC ENERGY     0.0119403051
+                     INVARIANT     0.0119807499
+               TEMPERATURE (K)  1256.8167663968
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000608     0.0000129218     0.0005748231
+checking body->vels in get_kinetic_energy(),     0.0000000643    -0.0000136686    -0.0006080439
+checking body->vels in get_kinetic_energy(),    -0.0000000621     0.0000131093     0.0005747538
+checking body->vels in get_kinetic_energy(),     0.0000000657    -0.0000138669    -0.0006079705
+checking body->vels in get_kinetic_energy(),    -0.0000000635     0.0000132997     0.0005746877
+checking body->vels in get_kinetic_energy(),     0.0000000671    -0.0000140683    -0.0006079006
+    STATE AFTER 50 STEPS
+
+    GEOMETRY (ANGSTROMS)
+
+A01O1               -0.000005     0.063639     0.298783
+A02H2               -0.752728    -0.476342     0.458475
+A03H3                0.752576    -0.476533     0.458505
+A01N1                0.000055    -0.007655     4.602011
+A02H2               -0.466923    -0.790290     5.011364
+A03H3               -0.467020     0.823018     4.901975
+A04H4                0.933402     0.016510     4.957589
+
+
+    RESTART DATA
+
+fragment H2O_L
+  -1.289132e-05   3.196787e-03   3.166562e-01   3.141533e+00   2.875183e-01   3.141523e+00
+velocity
+  -6.346711e-08   1.329969e-05   5.746877e-04  -6.174660e-04   1.129219e-08  -2.449699e-07
+
+fragment NH3_L
+   1.363635e-05  -3.381539e-03   4.665043e+00  -3.131802e+00   6.770317e-02   3.131884e+00
+velocity
+   6.713506e-08  -1.406832e-05  -6.079006e-04  -1.449600e-04  -1.666937e-06   1.456277e-07
+
+
+checking body->vels in get_kinetic_energy(),    -0.0000000635     0.0000132997     0.0005746877
+checking body->vels in get_kinetic_energy(),     0.0000000671    -0.0000140683    -0.0006079006
+checking body->vels in get_kinetic_energy(),    -0.0000000635     0.0000132997     0.0005746877
+checking body->vels in get_kinetic_energy(),     0.0000000671    -0.0000140683    -0.0006079006
+checking body->vels in get_kinetic_energy(),    -0.0000000635     0.0000132997     0.0005746877
+checking body->vels in get_kinetic_energy(),     0.0000000671    -0.0000140683    -0.0006079006
+    ENERGY COMPONENTS (ATOMIC UNITS)
+
+          ELECTROSTATIC ENERGY     0.0001192033
+           POLARIZATION ENERGY    -0.0000498483
+             DISPERSION ENERGY    -0.0002438148
+     EXCHANGE REPULSION ENERGY     0.0001545326
+          POINT CHARGES ENERGY     0.0000000000
+     CHARGE PENETRATION ENERGY     0.0000000000
+                     QQ ENERGY     0.0000000000
+                     LJ ENERGY     0.0000000000
+
+                  TOTAL ENERGY    -0.0000199273
+
+
+                KINETIC ENERGY     0.0119786012
+                     INVARIANT     0.0119807560
+               TEMPERATURE (K)  1260.8477494024
 
 
 MOLECULAR DYNAMICS JOB COMPLETED SUCCESSFULLY
-WALL CLOCK TIME IS Mon Apr 14 12:59:37 2025
-TOTAL RUN TIME IS 41 SECONDS
+WALL CLOCK TIME IS Mon Apr 28 00:35:46 2025
+TOTAL RUN TIME IS 0 SECONDS

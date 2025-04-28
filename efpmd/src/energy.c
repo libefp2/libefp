@@ -141,11 +141,11 @@ void compute_energy(struct state *state, bool do_grad)
         if (do_grad) {
             torch_get_gradient(state->torch, state->torch_grad);
 
-	    //    if (cfg_get_int(state->cfg, "print") > 2) {
+	        if (cfg_get_int(state->cfg, "print") > 2) {
                 printf("\nTorch gradient in energy.c\n");
                 for (size_t i = 0; i < 3*n_special_atoms; i++)
                     printf("%lf ", state->torch_grad[i]);
-            //}
+            }
 
             // combine EFP and torch (atomic) gradients on special fragments
             // do not add EFP contribution on a special fragment if it is the only fragment in the system
@@ -158,22 +158,22 @@ void compute_energy(struct state *state, bool do_grad)
                 } else
                     check_fail(efp_get_frag_atomic_gradient(state->efp, spec_frag, tmp_grad));
 
-                //if (cfg_get_int(state->cfg, "print") > 2) {
+                if (cfg_get_int(state->cfg, "print") > 2) {
                     printf("\nEFP fragment atomic gradient\n");
                     for (size_t i = 0; i < 3 * n_special_atoms; i++)
                         printf("%lf ", tmp_grad[i]);
                     printf("\n");
-                //}
+                }
 
                 // adding EFP and TORCH gradients on special fragment
                 for (size_t i = 0; i < 3*n_special_atoms; i++)
                     state->torch_grad[i] += tmp_grad[i];
 
 
-		msg("\n====Torch grad + EFP grad ===\n");
-		for (size_t i = 0; i < 3*n_special_atoms; i++)
-			printf("%lf ", state->torch_grad[i]);
-		msg("\n=================================\n");
+		//msg("\n====Torch grad + EFP grad ===\n");
+		//for (size_t i = 0; i < 3*n_special_atoms; i++)
+		//	printf("%lf ", state->torch_grad[i]);
+		//msg("\n=================================\n");
 
                 // print total EFP and torch gradients
                 if (cfg_get_int(state->cfg, "print") > 2) {

@@ -1,0 +1,26 @@
+run_type md
+terms elec pol disp xr
+elec_damp overlap
+disp_damp tt
+pol_damp tt
+coord atoms
+ensemble nve
+enable_torch true
+torch_nn ani1.pt
+special_fragment 0
+time_step 1
+max_steps 1000
+fraglib_path ../fraglib
+atom_gradient frag
+
+
+fragment h2o_l
+A01O1               3.394000    -0.900000    -0.700000
+A02H2               3.517419    -0.130057    -0.174996
+A03H3               3.580284    -1.281411    -0.424198
+
+fragment h2o_l
+A01O1               4.394000    -3.900000    -0.700000
+A02H2               4.517419    -3.130057    -0.174996
+A03H3               3.580284    -4.281411    -0.424198
+

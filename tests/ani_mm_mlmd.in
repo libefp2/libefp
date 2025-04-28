@@ -1,0 +1,26 @@
+run_type md
+coord atoms
+ensemble nve
+time_step 1
+max_steps 1000
+terms qq lj
+special_terms qq lj
+elec_damp off
+disp_damp off
+fraglib_path ../fraglib
+special_fragment 0
+enable_torch true
+torch_nn ani1.pt
+atom_gradient mm
+
+
+fragment tip3p_mm_l
+A01O  -1.815220   2.663988  -0.0
+A02H  -1.617480   1.725461   0.001936
+A03H  -2.476026   2.736906  -0.714908
+
+fragment tip3p_mm_l
+A01O  -1.815220   5.663988  -0.0
+A02H  -1.617480   4.725461   0.001936
+A03H  -2.476026   5.736906  -0.714908
+

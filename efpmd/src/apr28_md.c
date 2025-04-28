@@ -780,7 +780,9 @@ static void update_step_nve(struct md *md)
         bool use_torch = cfg_get_bool(md->state->cfg, "enable_torch") && 
                          cfg_get_int(md->state->cfg, "opt_special_frag") > -1;
        
+     //   msg(" time_step = %16.10lf\n",dt);	
         if (use_torch) {
+	    //msg("Doing update_step_nve, Using Enable-Torch\n");
     	    spec_frag = cfg_get_int(md->state->cfg, "special_fragment");
             check_fail(efp_get_frag_atom_count(md->state->efp, spec_frag, &n_special_atoms));
 	}
@@ -798,6 +800,7 @@ static void update_step_nve(struct md *md)
                 body->vel.y += 0.5 * body->force.y * dt / body->mass;
                 body->vel.z += 0.5 * body->force.z * dt / body->mass;
        
+	       	//msg("body->mass %16.10lf\n",body->mass);
 		body->angmom.x += 0.5 * body->torque.x * dt;
                 body->angmom.y += 0.5 * body->torque.y * dt;
                 body->angmom.z += 0.5 * body->torque.z * dt;
@@ -822,6 +825,7 @@ static void update_step_nve(struct md *md)
 		//print_frag_info(md->state->efp, i);
 
 	}
+        //msg("Full position update.. will update special fragment\n"); 
         // Handling for the special fragment atoms if torch enabled
         if (use_torch) {
             
@@ -835,9 +839,13 @@ static void update_step_nve(struct md *md)
             // Get atomic forces from torch gradients
             for (size_t i = 0; i < n_special_atoms; i++) {
 		    
+    		//msg("special_atom-mass %16.10lf\n",special_atoms[i].mass);
+
 		(body->atoms[i]).atom_vel.x += 0.5 * (body->atoms[i]).atom_force.x * dt / (AMU_TO_AU * special_atoms[i].mass);
                 (body->atoms[i]).atom_vel.y += 0.5 * (body->atoms[i]).atom_force.y * dt / (AMU_TO_AU * special_atoms[i].mass);
                 (body->atoms[i]).atom_vel.z += 0.5 * (body->atoms[i]).atom_force.z * dt / (AMU_TO_AU * special_atoms[i].mass);
+		// is velocity correct
+		msg("In update_step_nve() part-1, (body->atoms[i]).atom_vel %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_vel.x, (body->atoms[i]).atom_vel.y, (body->atoms[i]).atom_vel.z);
             }
             
             // Update atomic positions based on forces and masses
@@ -852,10 +860,24 @@ static void update_step_nve(struct md *md)
 		atom_coords[3*i+1] = (body->atoms[i]).atom_pos.y;
 		atom_coords[3*i+2] = (body->atoms[i]).atom_pos.z;
 
+		double rx = special_atoms[i].x - (body->atoms[i]).atom_pos.x;
+                double ry = special_atoms[i].y - (body->atoms[i]).atom_pos.y;
+                double rz = special_atoms[i].z - (body->atoms[i]).atom_pos.z;
+
+		// uncomment the following lines to get geom changes	
+		//msg(" Before %16.10lf %16.10lf %16.10lf\n",special_atoms[i].x * BOHR_RADIUS, special_atoms[i].y * BOHR_RADIUS, special_atoms[i].z * BOHR_RADIUS);
+		//msg(" After position update %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_pos.x * BOHR_RADIUS, (body->atoms[i]).atom_pos.y * BOHR_RADIUS, (body->atoms[i]).atom_pos.z * BOHR_RADIUS);
+		//msg(" Diff %16.10lf %16.10lf %16.10lf\n\n", rx * BOHR_RADIUS, ry * BOHR_RADIUS, rz * BOHR_RADIUS);
+
 	    }
 
+          //  msg("Updating fragment using update_special_fragment routine()\n");
             // Update fragment with new atomic positions
 	    check_fail(update_special_fragment(md->state->efp, atom_coords));
+            //check_fail(efp_set_frag_coordinates(md->state->efp, spec_frag, EFP_COORD_TYPE_ATOMS, atom_coords)); 
+	    //msg("==================================================\n");
+	    //print_mlmd_geometry(md->state->efp);
+	    //msg("==================================================\n");
 	    free(atom_coords);
             free(special_atoms);
 	    
@@ -892,6 +914,8 @@ static void update_step_nve(struct md *md)
 		(body->atoms[i]).atom_vel.x += 0.5 * (body->atoms[i]).atom_force.x * dt / (AMU_TO_AU * special_atoms[i].mass);
                 (body->atoms[i]).atom_vel.y += 0.5 * (body->atoms[i]).atom_force.y * dt / (AMU_TO_AU * special_atoms[i].mass);
                 (body->atoms[i]).atom_vel.z += 0.5 * (body->atoms[i]).atom_force.z * dt / (AMU_TO_AU * special_atoms[i].mass);
+
+                msg("In update_step_nve() part-2, (body->atoms[i]).atom_vel %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_vel.x, (body->atoms[i]).atom_vel.y, (body->atoms[i]).atom_vel.z);
 	    }
 	    free(special_atoms);	    
 	}
@@ -908,235 +932,183 @@ static void update_step_nve(struct md *md)
  *
  * Phys. Rev. A 31, 1695 (1985)
  */
-
-/*
 static void update_step_nvt(struct md *md)
 {
-        struct nvt_data *data = (struct nvt_data *)md->data;
+	struct nvt_data *data = (struct nvt_data *)md->data;
 
-        double dt = cfg_get_double(md->state->cfg, "time_step");
-        double target = cfg_get_double(md->state->cfg, "temperature");
-        double tau = cfg_get_double(md->state->cfg, "thermostat_tau");
+	double dt = cfg_get_double(md->state->cfg, "time_step");
+	double target = cfg_get_double(md->state->cfg, "temperature");
+	double tau = cfg_get_double(md->state->cfg, "thermostat_tau");
 
-        double t0 = get_temperature(md);
+	double t0 = get_temperature(md);
 
-        for (size_t i = 0; i < md->n_bodies; i++) {
-                struct body *body = md->bodies + i;
+	size_t spec_frag = 0, n_special_atoms = 0;
+        bool use_torch = cfg_get_bool(md->state->cfg, "enable_torch") &&
+                         cfg_get_int(md->state->cfg, "opt_special_frag") > -1;
 
-                body->vel.x += 0.5 * dt * (body->force.x / body->mass -
-                                        body->vel.x * data->chi);
-                body->vel.y += 0.5 * dt * (body->force.y / body->mass -
-                                        body->vel.y * data->chi);
-                body->vel.z += 0.5 * dt * (body->force.z / body->mass -
-                                        body->vel.z * data->chi);
-
-                body->angmom.x += 0.5 * dt * (body->torque.x -
-                                        body->angmom.x * data->chi);
-                body->angmom.y += 0.5 * dt * (body->torque.y -
-                                        body->angmom.y * data->chi);
-                body->angmom.z += 0.5 * dt * (body->torque.z -
-                                        body->angmom.z * data->chi);
-
-                body->pos.x += body->vel.x * dt;
-                body->pos.y += body->vel.y * dt;
-                body->pos.z += body->vel.z * dt;
-
-                rotate_body(body, dt);
+     //   msg(" time_step = %16.10lf\n",dt);
+        if (use_torch) {
+            //msg("Doing update_step_nve, Using Enable-Torch\n");
+            spec_frag = cfg_get_int(md->state->cfg, "special_fragment");
+            check_fail(efp_get_frag_atom_count(md->state->efp, spec_frag, &n_special_atoms));
         }
 
-        data->chi += 0.5 * dt * (t0 / target - 1.0) / tau / tau;
-        data->chi_dt += 0.5 * dt * data->chi;
+	for (size_t i = 0; i < md->n_bodies; i++) {
 
-        compute_forces(md);
-
-        double chi_init = data->chi;
-        vec_t angmom_init[md->n_bodies], vel_init[md->n_bodies];
-
-        for (size_t i = 0; i < md->n_bodies; i++) {
-                angmom_init[i] = md->bodies[i].angmom;
-                vel_init[i] = md->bodies[i].vel;
-        }
-
-        for (size_t iter = 1; iter <= MAX_ITER; iter++) {
-                double chi_prev = data->chi;
-                double ratio = get_temperature(md) / target;
-
-                data->chi = chi_init + 0.5 * dt * (ratio - 1.0) / tau / tau;
-
-                for (size_t i = 0; i < md->n_bodies; i++) {
-                        struct body *body = md->bodies + i;
-
-                        body->vel.x = vel_init[i].x +
-                            0.5 * dt * (body->force.x / body->mass -
-                                vel_init[i].x * data->chi);
-                        body->vel.y = vel_init[i].y +
-                            0.5 * dt * (body->force.y / body->mass -
-                                vel_init[i].y * data->chi);
-                        body->vel.z = vel_init[i].z +
-                            0.5 * dt * (body->force.z / body->mass -
-                                vel_init[i].z * data->chi);
-
-                        body->angmom.x = angmom_init[i].x + 0.5 * dt *
-                                (body->torque.x - angmom_init[i].x * data->chi);
-                        body->angmom.y = angmom_init[i].y + 0.5 * dt *
-                                (body->torque.y - angmom_init[i].y * data->chi);
-                        body->angmom.z = angmom_init[i].z + 0.5 * dt *
-                                (body->torque.z - angmom_init[i].z * data->chi);
+		if (use_torch && i == spec_frag) {
+                    continue;
                 }
 
-                if (fabs(data->chi - chi_prev) < EPSILON)
-                        break;
+		struct body *body = md->bodies + i;
 
-                if (iter == MAX_ITER)
-                        msg("WARNING: NVT UPDATE DID NOT CONVERGE\n\n");
+		body->vel.x += 0.5 * dt * (body->force.x / body->mass -
+					body->vel.x * data->chi);
+		body->vel.y += 0.5 * dt * (body->force.y / body->mass -
+					body->vel.y * data->chi);
+		body->vel.z += 0.5 * dt * (body->force.z / body->mass -
+					body->vel.z * data->chi);
+
+		body->angmom.x += 0.5 * dt * (body->torque.x -
+					body->angmom.x * data->chi);
+		body->angmom.y += 0.5 * dt * (body->torque.y -
+					body->angmom.y * data->chi);
+		body->angmom.z += 0.5 * dt * (body->torque.z -
+					body->angmom.z * data->chi);
+
+		body->pos.x += body->vel.x * dt;
+		body->pos.y += body->vel.y * dt;
+		body->pos.z += body->vel.z * dt;
+
+		rotate_body(body, dt);
+	}
+
+	if (use_torch) {
+
+            // Get fragment atom positions and masses
+            struct efp_atom *special_atoms;
+            special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
+            check_fail(efp_get_frag_atoms(md->state->efp, spec_frag, n_special_atoms, special_atoms));
+            double *atom_coords = xmalloc(3 * n_special_atoms * sizeof(double));
+            struct body *body = md->bodies + spec_frag;
+
+            // Get atomic forces from torch gradients
+            for (size_t i = 0; i < n_special_atoms; i++) {
+
+                //msg("special_atom-mass %16.10lf\n",special_atoms[i].mass);
+
+                (body->atoms[i]).atom_vel.x += 0.5 * (body->atoms[i]).atom_force.x * dt / (AMU_TO_AU * special_atoms[i].mass);
+                (body->atoms[i]).atom_vel.y += 0.5 * (body->atoms[i]).atom_force.y * dt / (AMU_TO_AU * special_atoms[i].mass);
+                (body->atoms[i]).atom_vel.z += 0.5 * (body->atoms[i]).atom_force.z * dt / (AMU_TO_AU * special_atoms[i].mass);
+                // is velocity correct
+                msg("In update_step_nve() part-1, (body->atoms[i]).atom_vel %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_vel.x, (body->atoms[i]).atom_vel.y, (body->atoms[i]).atom_vel.z);
+            }
+
+            // Update atomic positions based on forces and masses
+            for (size_t i = 0; i < n_special_atoms; i++) {
+                // point of contentions
+                // unit issue
+                (body->atoms[i]).atom_pos.x += (body->atoms[i]).atom_vel.x * dt;
+                (body->atoms[i]).atom_pos.y += (body->atoms[i]).atom_vel.y * dt;
+                (body->atoms[i]).atom_pos.z += (body->atoms[i]).atom_vel.z * dt;
+
+                atom_coords[3*i+0] = (body->atoms[i]).atom_pos.x;
+                atom_coords[3*i+1] = (body->atoms[i]).atom_pos.y;
+                atom_coords[3*i+2] = (body->atoms[i]).atom_pos.z;
+
+                double rx = special_atoms[i].x - (body->atoms[i]).atom_pos.x;
+                double ry = special_atoms[i].y - (body->atoms[i]).atom_pos.y;
+                double rz = special_atoms[i].z - (body->atoms[i]).atom_pos.z;
+
+                // uncomment the following lines to get geom changes
+                //msg(" Before %16.10lf %16.10lf %16.10lf\n",special_atoms[i].x * BOHR_RADIUS, special_atoms[i].y * BOHR_RADIUS, special_atoms[i].z * BOHR_RADIUS);
+                //msg(" After position update %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_pos.x * BOHR_RADIUS, (body->atoms[i]).atom_pos.y * BOHR_RADIUS, (body->atoms[i]).atom_pos.z * BOHR_RADIUS);
+                //msg(" Diff %16.10lf %16.10lf %16.10lf\n\n", rx * BOHR_RADIUS, ry * BOHR_RADIUS, rz * BOHR_RADIUS);
+
+            }
+
+          //  msg("Updating fragment using update_special_fragment routine()\n");
+            // Update fragment with new atomic positions
+            check_fail(update_special_fragment(md->state->efp, atom_coords));
+            //check_fail(efp_set_frag_coordinates(md->state->efp, spec_frag, EFP_COORD_TYPE_ATOMS, atom_coords));
+            //msg("==================================================\n");
+            //print_mlmd_geometry(md->state->efp);
+            //msg("==================================================\n");
+            free(atom_coords);
+            free(special_atoms);
+
         }
 
-        data->chi_dt += 0.5 * dt * data->chi;
+	data->chi += 0.5 * dt * (t0 / target - 1.0) / tau / tau;
+	data->chi_dt += 0.5 * dt * data->chi;
+
+	compute_forces(md);
+
+	double chi_init = data->chi;
+	vec_t angmom_init[md->n_bodies], vel_init[md->n_bodies];
+
+	for (size_t i = 0; i < md->n_bodies; i++) {
+		angmom_init[i] = md->bodies[i].angmom;
+		vel_init[i] = md->bodies[i].vel;
+	}
+
+	for (size_t iter = 1; iter <= MAX_ITER; iter++) {
+		double chi_prev = data->chi;
+		double ratio = get_temperature(md) / target;
+
+		data->chi = chi_init + 0.5 * dt * (ratio - 1.0) / tau / tau;
+
+		for (size_t i = 0; i < md->n_bodies; i++) {
+		
+			if (use_torch && i == spec_frag) {
+                	    continue;
+                	}
+
+			struct body *body = md->bodies + i;
+
+			body->vel.x = vel_init[i].x +
+			    0.5 * dt * (body->force.x / body->mass -
+				vel_init[i].x * data->chi);
+			body->vel.y = vel_init[i].y +
+			    0.5 * dt * (body->force.y / body->mass -
+				vel_init[i].y * data->chi);
+			body->vel.z = vel_init[i].z +
+			    0.5 * dt * (body->force.z / body->mass -
+				vel_init[i].z * data->chi);
+
+			body->angmom.x = angmom_init[i].x + 0.5 * dt *
+				(body->torque.x - angmom_init[i].x * data->chi);
+			body->angmom.y = angmom_init[i].y + 0.5 * dt *
+				(body->torque.y - angmom_init[i].y * data->chi);
+			body->angmom.z = angmom_init[i].z + 0.5 * dt *
+				(body->torque.z - angmom_init[i].z * data->chi);
+		}
+
+		if (use_torch) {
+        	    struct body *body = md->bodies + spec_frag;
+        	    // Get fragment atom positions and masses
+        	    struct efp_atom *special_atoms;
+        	    special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
+        	    check_fail(efp_get_frag_atoms(md->state->efp, spec_frag, n_special_atoms, special_atoms));
+        	    // Update atomic forces from torch gradients
+        	    for (size_t i = 0; i < n_special_atoms; i++) {
+        	        (body->atoms[i]).atom_vel.x += 0.5 * (body->atoms[i]).atom_force.x * dt / (AMU_TO_AU * special_atoms[i].mass);
+        	        (body->atoms[i]).atom_vel.y += 0.5 * (body->atoms[i]).atom_force.y * dt / (AMU_TO_AU * special_atoms[i].mass);
+        	        (body->atoms[i]).atom_vel.z += 0.5 * (body->atoms[i]).atom_force.z * dt / (AMU_TO_AU * special_atoms[i].mass);
+	
+        	        msg("In update_step_nve() part-2, (body->atoms[i]).atom_vel %16.10lf %16.10lf %16.10lf\n", (body->atoms[i]).atom_vel.x, (body->atoms[i]).atom_vel.y, (body->atoms[i]).atom_vel.z);
+        	    }
+        	    free(special_atoms);
+        	}
+
+		if (fabs(data->chi - chi_prev) < EPSILON)
+			break;
+
+		if (iter == MAX_ITER)
+			msg("WARNING: NVT UPDATE DID NOT CONVERGE\n\n");
+	}
+
+	data->chi_dt += 0.5 * dt * data->chi;
 }
-*/
-
-static void update_step_nvt(struct md *md)
-{
-    struct nvt_data *data = (struct nvt_data *)md->data;
-
-    double dt = cfg_get_double(md->state->cfg, "time_step");
-    double target = cfg_get_double(md->state->cfg, "temperature");
-    double tau = cfg_get_double(md->state->cfg, "thermostat_tau");
-
-    double t0 = get_temperature(md);
-
-    size_t spec_frag = 0, n_special_atoms = 0;
-    bool use_torch = cfg_get_bool(md->state->cfg, "enable_torch") &&
-                     cfg_get_int(md->state->cfg, "opt_special_frag") > -1;
-
-    if (use_torch) {
-        spec_frag = cfg_get_int(md->state->cfg, "special_fragment");
-        check_fail(efp_get_frag_atom_count(md->state->efp, spec_frag, &n_special_atoms));
-    }
-
-    // First half-step update (velocities, angular momenta)
-    for (size_t i = 0; i < md->n_bodies; i++) {
-        if (use_torch && i == spec_frag)
-            continue;
-
-        struct body *body = md->bodies + i;
-
-        body->vel.x += 0.5 * dt * (body->force.x / body->mass - body->vel.x * data->chi);
-        body->vel.y += 0.5 * dt * (body->force.y / body->mass - body->vel.y * data->chi);
-        body->vel.z += 0.5 * dt * (body->force.z / body->mass - body->vel.z * data->chi);
-
-        body->angmom.x += 0.5 * dt * (body->torque.x - body->angmom.x * data->chi);
-        body->angmom.y += 0.5 * dt * (body->torque.y - body->angmom.y * data->chi);
-        body->angmom.z += 0.5 * dt * (body->torque.z - body->angmom.z * data->chi);
-    }
-
-    if (use_torch) {
-        struct body *body = md->bodies + spec_frag;
-        struct efp_atom *special_atoms;
-        special_atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
-        check_fail(efp_get_frag_atoms(md->state->efp, spec_frag, n_special_atoms, special_atoms));
-
-        for (size_t i = 0; i < n_special_atoms; i++) {
-            body->atoms[i].atom_vel.x += 0.5 * dt *
-                (body->atoms[i].atom_force.x / (AMU_TO_AU * special_atoms[i].mass) - 
-                 body->atoms[i].atom_vel.x * data->chi);
-            body->atoms[i].atom_vel.y += 0.5 * dt *
-                (body->atoms[i].atom_force.y / (AMU_TO_AU * special_atoms[i].mass) - 
-                 body->atoms[i].atom_vel.y * data->chi);
-            body->atoms[i].atom_vel.z += 0.5 * dt *
-                (body->atoms[i].atom_force.z / (AMU_TO_AU * special_atoms[i].mass) - 
-                 body->atoms[i].atom_vel.z * data->chi);
-        }
-
-        free(special_atoms);
-    }
-
-    // Position updates
-    for (size_t i = 0; i < md->n_bodies; i++) {
-        if (use_torch && i == spec_frag)
-            continue;
-
-        struct body *body = md->bodies + i;
-
-        body->pos.x += body->vel.x * dt;
-        body->pos.y += body->vel.y * dt;
-        body->pos.z += body->vel.z * dt;
-
-        rotate_body(body, dt);
-    }
-
-    if (use_torch) {
-        struct body *body = md->bodies + spec_frag;
-        double *atom_coords = xmalloc(3 * n_special_atoms * sizeof(double));
-
-        for (size_t i = 0; i < n_special_atoms; i++) {
-            body->atoms[i].atom_pos.x += body->atoms[i].atom_vel.x * dt;
-            body->atoms[i].atom_pos.y += body->atoms[i].atom_vel.y * dt;
-            body->atoms[i].atom_pos.z += body->atoms[i].atom_vel.z * dt;
-
-            atom_coords[3*i+0] = body->atoms[i].atom_pos.x;
-            atom_coords[3*i+1] = body->atoms[i].atom_pos.y;
-            atom_coords[3*i+2] = body->atoms[i].atom_pos.z;
-        }
-
-        check_fail(update_special_fragment(md->state->efp, atom_coords));
-        free(atom_coords);
-    }
-
-    // Thermostat chi half-step
-    data->chi += 0.5 * dt * (t0 / target - 1.0) / (tau * tau);
-    data->chi_dt += 0.5 * dt * data->chi;
-
-    // Compute new forces
-    compute_forces(md);
-
-    // Iterative correction
-    double chi_init = data->chi;
-    vec_t angmom_init[md->n_bodies], vel_init[md->n_bodies];
-
-    for (size_t i = 0; i < md->n_bodies; i++) {
-        angmom_init[i] = md->bodies[i].angmom;
-        vel_init[i] = md->bodies[i].vel;
-    }
-
-    for (size_t iter = 1; iter <= MAX_ITER; iter++) {
-        double chi_prev = data->chi;
-        double ratio = get_temperature(md) / target;
-
-        data->chi = chi_init + 0.5 * dt * (ratio - 1.0) / (tau * tau);
-
-        for (size_t i = 0; i < md->n_bodies; i++) {
-            if (use_torch && i == spec_frag)
-                continue;
-
-            struct body *body = md->bodies + i;
-
-            body->vel.x = vel_init[i].x +
-                0.5 * dt * (body->force.x / body->mass - vel_init[i].x * data->chi);
-            body->vel.y = vel_init[i].y +
-                0.5 * dt * (body->force.y / body->mass - vel_init[i].y * data->chi);
-            body->vel.z = vel_init[i].z +
-                0.5 * dt * (body->force.z / body->mass - vel_init[i].z * data->chi);
-
-            body->angmom.x = angmom_init[i].x +
-                0.5 * dt * (body->torque.x - angmom_init[i].x * data->chi);
-            body->angmom.y = angmom_init[i].y +
-                0.5 * dt * (body->torque.y - angmom_init[i].y * data->chi);
-            body->angmom.z = angmom_init[i].z +
-                0.5 * dt * (body->torque.z - angmom_init[i].z * data->chi);
-        }
-
-        if (fabs(data->chi - chi_prev) < EPSILON)
-            break;
-
-        if (iter == MAX_ITER)
-            msg("WARNING: NVT UPDATE DID NOT CONVERGE\n\n");
-    }
-
-    data->chi_dt += 0.5 * dt * data->chi;
-}
-
-
 
 /*
  * Reference
@@ -1147,7 +1119,6 @@ static void update_step_nvt(struct md *md)
  *
  * Mol. Phys. 78, 533 (1993)
  */
-
 static void update_step_npt(struct md *md)
 {
 	struct npt_data *data = (struct npt_data *)md->data;
@@ -1227,8 +1198,8 @@ static void update_step_npt(struct md *md)
 	}
 
 	md->box.x = md->box.x * exp(dt * data->eta);
-    	md->box.y = md->box.y * exp(dt * data->eta);
-    	md->box.z = md->box.z * exp(dt * data->eta);
+    md->box.y = md->box.y * exp(dt * data->eta);
+    md->box.z = md->box.z * exp(dt * data->eta);
 
 	// vec_scale(&md->box, exp(dt * data->eta));
 	check_fail(efp_set_periodic_box(md->state->efp,
@@ -1287,9 +1258,6 @@ static void update_step_npt(struct md *md)
 
 	data->chi_dt += 0.5 * dt * data->chi;
 }
-
-
-
 
 static void print_info(const struct md *md)
 {
