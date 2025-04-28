@@ -97,20 +97,22 @@ def compute(efpobj, do_gradient=False):
     None
 
     """
+    # efp_compute already does pairwise, enable_pairwise just saves the pairwise info
+    # 
     res = efpobj._efp_compute(do_gradient)
     _result_to_error(res)
     # If pairwise is enabled
     if efpobj.get_opts().get("enable_pairwise", False):
-        if efpobj.get_opts().get("symmetry", False):
+        #if efpobj.get_opts().get("symmetry", False):
             # If symmetry, use two-body crystal
-            res2 = efpobj._efp_compute_two_body_crystal()
-        else:
+            #res2 = efpobj._efp_compute_two_body_crystal()
+        #else:
             # If not, two-body range
-            nfrag = efpobj.get_frag_count()
-            res2 = efpobj._efp_compute_pairwise_energy_range(0, nfrag)
+        #    nfrag = efpobj.get_frag_count()
+        #    res2 = efpobj._efp_compute_pairwise_energy_range(0, nfrag)
 
-        _result_to_error(res2)
-        efpobj.print_pairwise_energies() 
+        #_result_to_error(res2)
+        efpobj.print_pairwise_energies() #  do this for enable_pairwise=true
 
 def add_potential(efpobj, potential, fragpath='LIBRARY', duplicates_ok=False):
     """Searches for EFP fragments and adds to `efpobj`.

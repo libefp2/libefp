@@ -1,6 +1,6 @@
 #!/bin/csh
 
-setenv TORCH_SWITCH ON
+setenv TORCH_SWITCH OFF
 
 setenv LIBEFP_DIR "./"
 setenv INSTALLATION_DIR "$LIBEFP_DIR"

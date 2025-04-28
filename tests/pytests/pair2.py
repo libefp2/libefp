@@ -23,12 +23,12 @@ efp.set_opts({
     "pol": False,
     "disp": True,
     "enable_pairwise": True,
-    "ligand": 1,
+    "ligand": 0,
 })  
 
 efp.compute()
 #gra = efp.get_gradient()
 ene = efp.get_energy()
 ene2 = efp.energy_summary()
-print(ene)
+print(ene2)
 #print(gra)

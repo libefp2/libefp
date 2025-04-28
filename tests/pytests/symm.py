@@ -4,7 +4,7 @@ from systems import *
 
 from qcelemental.testing import compare, compare_recursive, compare_values
 
-asdf = system_2()
+asdf = system_3()
 
 opts = asdf.set_opts({
     'elec': True,

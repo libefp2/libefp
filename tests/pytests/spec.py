@@ -21,7 +21,7 @@ efp.set_opts({
     "disp": False,
     "qq": True,
     "lj":True,
-    "spec_elec":True,
+    "spec_elec":False,
     'special_fragment':1
 })  
 
