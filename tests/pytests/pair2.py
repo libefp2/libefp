@@ -20,15 +20,16 @@ efp.set_opts({
     "elec": True,
     "disp_damp": "overlap",
     "xr": True,
-    "pol": False,
+    "pol": True,
     "disp": True,
     "enable_pairwise": True,
-    "ligand": 0,
+    "ligand": 1,
+    "print": 0,
 })  
 
 efp.compute()
 #gra = efp.get_gradient()
 ene = efp.get_energy()
 ene2 = efp.energy_summary()
-print(ene2)
+print(ene)
 #print(gra)

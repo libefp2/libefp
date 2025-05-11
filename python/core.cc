@@ -36,6 +36,24 @@ std::string _efp_banner(efp* efp) {
     return str;
 }
 
+efp_result _efp_prepare(efp* efp) {
+    enum efp_result res;
+    res = efp_prepare(efp);
+    return res;
+}
+
+efp_result _efp_compute(efp* efp, int do_gradient) {
+    enum efp_result res;
+    res = efp_compute(efp, do_gradient);
+    return res;
+}
+
+efp_result _efp_add_ligand(efp* efp, int ligand_index) {
+    enum efp_result res;
+    res = efp_add_ligand(efp, ligand_index);
+    return res;
+}
+
 py::tuple _efp_get_frag_name(efp* efp, size_t frag_idx) {
     enum efp_result res;
     char buffer[80];
@@ -51,41 +69,23 @@ efp_result _efp_set_frag_coordinates(efp* efp, size_t frag_idx, efp_coord_type c
     enum efp_result res;
 
     double* ccoords = NULL;
-    ccoords = new double[12];  // room for xyzabc (6), points (9), or rotmat (12)
+    // need to know how many atoms are in fragment for 'atoms' ctype
+    size_t n_atom = 0;
+    res = efp_get_frag_atom_count(efp, frag_idx, &n_atom);
+
+    switch (ctype) {
+        case EFP_COORD_TYPE_ATOMS:
+            ccoords = new double[3*n_atom];
+            break;
+        default:
+            ccoords = new double[12];
+            break;
+    }
     double* pcoords = ccoords;
     for (auto itm : coord) *pcoords++ = itm.cast<double>();
 
     res = efp_set_frag_coordinates(efp, frag_idx, ctype, ccoords);
     return res;
-}
-
-//SKP
-
-efp_result _efp_set_pairwise_energy(efp* efp, size_t n_frag, py::list pair_energy_list) {
-    std::vector<struct efp_energy> pair_energies(n_frag);
-
-    for (size_t i = 0; i < n_frag; ++i) {
-        py::dict py_energy = pair_energy_list[i];
-
-        pair_energies[i].electrostatic = py_energy["electrostatic"].cast<double>();
-        pair_energies[i].exchange_repulsion = py_energy["exchange_repulsion"].cast<double>();
-        pair_energies[i].polarization = py_energy["polarization"].cast<double>();
-        pair_energies[i].dispersion = py_energy["dispersion"].cast<double>();
-        pair_energies[i].total = py_energy["total"].cast<double>();
-    }
-
-    return efp_set_pairwise_energy(efp, pair_energies.data());
-}
-
-efp_result _efp_compute_pairwise_energy_range(efp* efp, size_t frag_from, size_t frag_to) {
-
-    	return efp_compute_pairwise_energy_range_range(efp, frag_from, frag_to);
-
-}
-
-efp_result _efp_compute_two_body_crystal(efp *efp) {
-
-    	return efp_compute_two_body_crystal(efp);
 }
 
 efp_result _efp_set_point_charge_values(efp* efp, size_t n_ptc, py::list ptc) {
@@ -180,7 +180,11 @@ py::list _efp_get_pairwise_energy(efp* efp, size_t n_frag) {
         energy["exchange_repulsion"] = pair_energies[i].exchange_repulsion;
         energy["polarization"] = pair_energies[i].polarization;
         energy["dispersion"] = pair_energies[i].dispersion;
-        energy["total"] = pair_energies[i].total;
+        energy["charge_penetration"] = pair_energies[i].charge_penetration;
+
+        double total = pair_energies[i].electrostatic + pair_energies[i].exchange_repulsion +
+                pair_energies[i].polarization + pair_energies[i].dispersion + pair_energies[i].charge_penetration;
+        energy["total"] = total;
         py_energies.append(energy);
     }
 
@@ -542,7 +546,7 @@ void _clean(efp* efp) {
 PYBIND11_MODULE(core, m) {
     m.doc() = "Python wrapping of parallel implementation of the Effective Fragment Potential (EFP) method";
 
-    m.attr("__copyright__") = py::str("Copyright (c) 2017-2019 The Psi4 Developers");
+    m.attr("__copyright__") = py::str("Copyright (c) 2017-2024 The Psi4 Developers, 2024-2025 The LibEFP Developers");
     py::exception<libefpException>(m, "libefpException");
 
     // clang-format off
@@ -567,13 +571,13 @@ PYBIND11_MODULE(core, m) {
         .value("EFP_TERM_AI_DISP", EFP_TERM_AI_DISP,                          "Ab initio/EFP dispersion, reserved for future.")
         .value("EFP_TERM_AI_XR", EFP_TERM_AI_XR,                              "Ab initio/EFP exchange repulsion, reserved for future.")
         .value("EFP_TERM_AI_CHTR", EFP_TERM_AI_CHTR,                          "Ab initio/EFP charge transfer, reserved for future.")
-	.value("EFP_TERM_QQ", EFP_TERM_QQ,                                    "MM-like charge-charge coulomb interaction") // SKP
+	    .value("EFP_TERM_QQ", EFP_TERM_QQ,                                    "MM-like charge-charge coulomb interaction") // SKP
         .value("EFP_TERM_LJ", EFP_TERM_LJ,                                    "MM-like Lennard-Jones interaction") // SKP
-	.value("EFP_TERM_AI_QQ", EFP_TERM_AI_QQ,                              "QM/MM coulomb interaction with MM charges") // SKP
+	    .value("EFP_TERM_AI_QQ", EFP_TERM_AI_QQ,                              "QM/MM coulomb interaction with MM charges") // SKP
         .export_values();
 // ============= SKP addition ========================== //
     py::enum_<efp_special_term>(m, "efp_special_term", py::arithmetic(), "Flags to specify EFP energy terms for a special fragment")
-	.value("EFP_SPEC_TERM_ELEC", EFP_SPEC_TERM_ELEC,                                "EFP/EFP electrostatics.")
+	    .value("EFP_SPEC_TERM_ELEC", EFP_SPEC_TERM_ELEC,                                "EFP/EFP electrostatics.")
         .value("EFP_SPEC_TERM_POL", EFP_SPEC_TERM_POL,                                  "EFP/EFP polarization.")
         .value("EFP_SPEC_TERM_DISP", EFP_SPEC_TERM_DISP,                                "EFP/EFP dispersion.")
         .value("EFP_SPEC_TERM_XR", EFP_SPEC_TERM_XR,                                    "EFP/EFP exchange repulsion.")
@@ -603,6 +607,7 @@ PYBIND11_MODULE(core, m) {
         .value("EFP_COORD_TYPE_XYZABC", EFP_COORD_TYPE_XYZABC,                "Coordinates of center of mass of a fragment and Euler angles.")
         .value("EFP_COORD_TYPE_POINTS", EFP_COORD_TYPE_POINTS,                "Coordinates of three points belonging to a fragment.")
         .value("EFP_COORD_TYPE_ROTMAT", EFP_COORD_TYPE_ROTMAT,                "Coordinates of fragment center of mass and its rotation matrix.")
+        .value("EFP_COORD_TYPE_ATOMS", EFP_COORD_TYPE_ATOMS,                  "Coordinates of all fragment atoms.")
         .export_values();
 
 
@@ -611,25 +616,37 @@ PYBIND11_MODULE(core, m) {
         .value("EFP_POL_DRIVER_DIRECT", EFP_POL_DRIVER_DIRECT,                "Direct solution of polarization equations.")
         .export_values();
 
+    py::enum_<efp_symm_frag>(m, "efp_symm_frag", "Specifies which fragments are considered identical by symmetry")
+        .value("EFP_SYMM_FRAG_FRAG", EFP_SYMM_FRAG_FRAG,                       "All same fragments are symmetry-identical (default.")
+        .value("EFP_SYMM_FRAG_LIST", EFP_SYMM_FRAG_LIST,                       "Symmetric fragments are given in a list (not implemented).")
+        .export_values();
+
     py::class_<efp_opts>(m, "efp_opts", "Options controlling EFP computation")
         .def(py::init())
         .def_readwrite("terms", &efp_opts::terms,                             "Specifies which energy terms to compute.")
+        .def_readwrite("special_terms", &efp_opts::special_terms,             "Terms for a special fragment - typically QM or ML fragment") // SKP
         .def_readwrite("disp_damp", &efp_opts::disp_damp,                     "Dispersion damping type (see #efp_disp_damp).")
         .def_readwrite("elec_damp", &efp_opts::elec_damp,                     "Electrostatic damping type (see #efp_elec_damp).")
         .def_readwrite("pol_damp", &efp_opts::pol_damp,                       "Polarization damping type (see #efp_pol_damp).")
         .def_readwrite("pol_driver", &efp_opts::pol_driver,                   "Driver used to find polarization induced dipoles.")
         .def_readwrite("enable_pbc", &efp_opts::enable_pbc,                   "Enable periodic boundary conditions if nonzero.")
+        .def_readwrite("enable_elpot", &efp_opts::enable_elpot,               "Enable switching off elpot contribution for custom torch gradient.")
         .def_readwrite("enable_cutoff", &efp_opts::enable_cutoff,             "Enable frag-fraginteraction cutoff if nonzero.")
         .def_readwrite("swf_cutoff", &efp_opts::swf_cutoff,                   "Cutoff distance for frag-frag interactions.")
-	.def_readwrite("special_terms", &efp_opts::special_terms,             "Terms for a special fragment - typically QM or ML fragment") // SKP
+        .def_readwrite("xr_cutoff", &efp_opts::xr_cutoff,                     "Cutoff distance for exchange-repulsion calculations.")
         .def_readwrite("enable_pairwise", &efp_opts::enable_pairwise,         "Enable ligand-fragment energy decomposition from total system") // SKP
+        .def_readwrite("ligand", &efp_opts::ligand,                           "Ligand number") // SKP
+        .def_readwrite("special_fragment", &efp_opts::special_fragment,       "Index of a special (QM or ML) fragment") // SKP
         .def_readwrite("symmetry", &efp_opts::symmetry,                       "Sets system symmetry option") // SKP
-	.def_readwrite("ligand", &efp_opts::ligand,                           "Ligand number") // SKP
-	.def_readwrite("special_fragment", &efp_opts::special_fragment,       "Index of a special (QM or ML) fragment"); // SKP
- 
+        .def_readwrite("symm_frag", &efp_opts::symm_frag,                     "Specifies symmetric elements of the crystal lattice. Default each unique fragment")
+        .def_readwrite("update_params", &efp_opts::update_params,             "Enables updating (shifting) library fragment parameters to match fragment geometry. Default 0 (no update). Not implemented.")
+        .def_readwrite("update_params_cutoff", &efp_opts::update_params_cutoff, "Cutoff when updating parameters is \"safe\". Default 0.0 (never safe).")
+        .def_readwrite("print", &efp_opts::print,                             "Level of print out.");
+
     py::class_<efp_energy>(m, "efp_energy", "EFP energy terms")
         .def(py::init())
         .def_readwrite("electrostatic", &efp_energy::electrostatic,           "EFP/EFP electrostatic energy.")
+        .def_readwrite("ai_electrostatic", &efp_energy::ai_electrostatic,     "AI/EFP electrostatic energy.")
         .def_readwrite("charge_penetration", &efp_energy::charge_penetration, "Charge penetration energy from"
                                                                               "overlap-based electrostatic damping."
                                                                               "Zero if overlap-based damping is turned"
@@ -641,22 +658,59 @@ PYBIND11_MODULE(core, m) {
                                                                               "Polarization is computed self-consist-"
                                                                               "ently so it can't be separated into"
                                                                               "EFP/EFP and AI/EFP parts.")
+        .def_readwrite("exs_polarization", &efp_energy::exs_polarization,     "Separate storage for polarization corresponding to the excited/correlated state."
+                                                                              "Relevant for excited state QM/EFP calculations.")
+        .def_readwrite("ai_polarization", &efp_energy::ai_polarization,       "Polarization energy storage for pairwise AI/EFP analysis.")
         .def_readwrite("dispersion", &efp_energy::dispersion,                 "EFP/EFP dispersion energy.")
         .def_readwrite("ai_dispersion", &efp_energy::ai_dispersion,           "AI/EFP dispersion energy.")
         .def_readwrite("exchange_repulsion", &efp_energy::exchange_repulsion, "EFP/EFP exchange-repulsion energy.")
-	.def_readwrite("qq", &efp_energy::qq, 				      "EFP/EFP charge-charge energy.")
-	.def_readwrite("lj", &efp_energy::lj, 				      "EFP/EFP lennard-jones energy.")	
-	.def_readwrite("total", &efp_energy::total,                           "Sum of all the above energy terms.");
+	    .def_readwrite("qq", &efp_energy::qq, 				                  "EFP/EFP charge-charge energy.")
+	    .def_readwrite("lj", &efp_energy::lj, 				                  "EFP/EFP lennard-jones energy.")
+	    .def_readwrite("total", &efp_energy::total,                           "Sum of all the above energy terms.");
 
     py::class_<efp_atom>(m, "efp_atom", "EFP atom info")
         .def(py::init())
-        //.def_readonly("label", &efp_atom::label,                            "Atom label.")  // char label[32]
+//        .def_readwrite("label", &efp_atom::label,                             "Atom label.")  // char label[32]
         .def_readwrite("x", &efp_atom::x,                                     "X coordinate of atom position.")
         .def_readwrite("y", &efp_atom::y,                                     "Y coordinate of atom position.")
         .def_readwrite("z", &efp_atom::z,                                     "Z coordinate of atom position.")
+        .def_readwrite("gx", &efp_atom::gx,                                   "X component of gradient.")
+        .def_readwrite("gy", &efp_atom::gy,                                   "Y component of gradient.")
+        .def_readwrite("gz", &efp_atom::gz,                                   "Z component of gradient.")
         .def_readwrite("mass", &efp_atom::mass,                               "Atom mass.")
-        .def_readwrite("znuc", &efp_atom::znuc,                               "Nuclear charge.");
-    // clang-format on
+        .def_readwrite("znuc", &efp_atom::znuc,                               "Nuclear charge.")
+        .def_readwrite("mm_charge", &efp_atom::mm_charge,                     "Classical charge.")
+        .def_readwrite("sigma", &efp_atom::sigma,                             "vdW parameter.")
+        .def_readwrite("epsilon", &efp_atom::epsilon,                         "vdW parameter.");
+//        .def_readwrite("ff_label", &efp_atom::ff_label,                       "Force field atom type.");
+
+/**
+    py::class_<efp_mult_pt>(m, "efp_mult_pt", "EFP Multipole point for working with external programs")
+        .def(py::init())
+        .def_readwrite("x", &efp_mult_pt::x,                                  "X coordinate.")
+        .def_readwrite("y", &efp_mult_pt::y,                                  "Y coordinate.")
+        .def_readwrite("z", &efp_mult_pt::z,                                  "Z coordinate.")
+        .def_readwrite("znuc", &efp_mult_pt::znuc,                            "Nuclear charge.")
+        .def_readwrite("monopole", &efp_mult_pt::monopole,                    "Monopole.")
+        .def_readwrite("dipole", &efp_mult_pt::dipole,                        "Dipole.")  // array!
+        .def_readwrite("quadrupole", &efp_mult_pt::quadrupole,                "Quadrupole.")
+        .def_readwrite("octupole", &efp_mult_pt::octupole,                    "Octupole.")
+        .def_readwrite("rank", &efp_mult_pt::rank,                            "Highest non-zero multipole: 0 - monopole, 1 - dipole, 2 - quad, 3 - oct.")
+        .def_readwrite("screen0", &efp_mult_pt::screen0,                      "AI-EFP screening parameter.")
+        .def_readwrite("if_screen", &efp_mult_pt::if_screen,                  "If screen0 parameter exists and meaningful.");
+
+    py::class_<efp_pol_pt>(m, "efp_pol_pt", "EFP polarizability point for working with external programs")
+        .def(py::init())
+        .def_readwrite("x", &efp_pol_pt::x,                                  "X coordinate.")
+        .def_readwrite("y", &efp_pol_pt::y,                                  "Y coordinate.")
+        .def_readwrite("z", &efp_pol_pt::z,                                  "Z coordinate.")
+        .def_readwrite("indip", &efp_pol_pt::indip,                          "Induced dipole.")  // array!
+        .def_readwrite("indipconj", &efp_pol_pt::indipconj,                  "Conjugated induced dipole.")  // array!
+        .def_readwrite("indip_gs", &efp_pol_pt::indip_gs,                    "Induced dipole of the ground electronic state.")  // array!
+        .def_readwrite("indipconj_gs", &efp_pol_pt::indipconj_gs,            "Conjugated induced dipole of the ground electronic state.")  // array!
+        .def_readwrite("ai_field", &efp_pol_pt::ai_field,                    "Field due to QM wavefunction.");  // array!
+// clang-format on
+**/
 
     py::class_<efp, std::unique_ptr<efp, py::nodelete>>(m, "efp", py::dynamic_attr(), "Main libefp opaque structure")
         // dynamic_attr for stashing input_units_to_au
@@ -666,6 +720,7 @@ PYBIND11_MODULE(core, m) {
         .def("_efp_get_opts", &efp_get_opts, "Gets currently set computation options")
         .def("_efp_add_potential", &efp_add_potential, "Wrapped adds EFP potential from full file path")
         .def("_efp_add_fragment", &efp_add_fragment, "Wrapped adds a new fragment to the EFP subsystem")
+        .def("_efp_add_ligand", &efp_add_ligand, "Wrapped adds a a ligand fragment to the system")
         .def("_efp_prepare", &efp_prepare, "Wrapped prepares the calculation")
         .def("set_electron_density_field_fn", &_efp_set_electron_density_field_fn,
              "Sets the callback function which computes electric field from electrons in ab initio subsystem")
@@ -723,10 +778,8 @@ PYBIND11_MODULE(core, m) {
         .def("_efp_get_energy", &efp_get_energy, "Gets computed energy components")
         .def("_efp_get_gradient", &_efp_get_gradient, "Gets computed EFP energy gradient")
         .def("_efp_get_pairwise_energy", &_efp_get_pairwise_energy, "Gets pairwise energies")
-	.def("_efp_set_pairwise_energy", &_efp_set_pairwise_energy, "Sets pairwise energies")
-	.def("_efp_compute_pairwise_energy_range", &_efp_compute_pairwise_energy_range, "Computes pairwise_energy_range")
-        .def("_efp_compute_two_body_crystal", &_efp_compute_two_body_crystal, "Computes two body crystal for symmetric systems")	
-	.def("_efp_get_frag_count", &_efp_get_frag_count, "Gets the number of fragments in this computation")
+        .def("_efp_set_symmlist", &efp_set_symmlist, "Prepares information for computing symmetric crystals")
+	    .def("_efp_get_frag_count", &_efp_get_frag_count, "Gets the number of fragments in this computation")
         .def("_efp_get_frag_name", &_efp_get_frag_name, "Gets the name of the specified effective fragment")
         .def("_efp_get_frag_atom_count", &_efp_get_frag_atom_count, "Gets the number of atoms on fragment")
         .def("_efp_get_frag_atoms", &_efp_get_frag_atoms,

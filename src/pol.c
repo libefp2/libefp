@@ -408,7 +408,7 @@ compute_elec_field(struct efp *efp) {
 
     efp_balance_work(efp, compute_elec_field_range, NULL);
 
-	if (efp->opts.enable_pairwise) {
+    if (efp->opts.enable_pairwise) {
 		// this is field due to ligand on a fragment point
 		// for QM ligand this is a field due to QM nuclei
 		efp_balance_work(efp, compute_ligand_field_range, NULL);
@@ -433,7 +433,7 @@ compute_elec_field_crystal(struct efp *efp)
     int do_pairwise = (efp->opts.enable_pairwise && efp->opts.ligand > -1) ? 1 : 0;
     enum efp_result res;
 
-    int nsymm = efp->nsymm_frag;
+    size_t nsymm = efp->nsymm_frag;
     size_t *unique_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     unique_symm_frag(efp, unique_frag);
 
@@ -957,12 +957,11 @@ efp_compute_pol_energy(struct efp *efp, double *energy)
 {
 	enum efp_result res;
 
-	assert(energy);
+    assert(energy);
 
 	// counter to know when to zero out induced dipoles and static field
 	// need to be explored further
 	static int counter = 0;
-
     // think how to skip recomputing static field in qm scf iterations
     // check on efp->do_gradient breaks gtests...
     if ((res = compute_elec_field(efp)))
@@ -1290,7 +1289,7 @@ efp_compute_pol(struct efp *efp)
 	    !(efp->opts.terms & EFP_TERM_AI_POL))
 		return EFP_RESULT_SUCCESS;
 
-	// this is standard non-symmetric case
+    // this is standard non-symmetric case
 	if (! efp->opts.symmetry) {
         if ((res = efp_compute_pol_energy(efp, &efp->energy.polarization)))
             return res;

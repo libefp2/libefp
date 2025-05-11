@@ -1,4 +1,9 @@
 import sys
+import numpy as np
+
+# Get the absolute path to the directory containing the module
+sys.path.insert(0, '/Users/lyuda/LIBEFP/libefp_skp_may2025/lib')
+
 import pylibefp
 from systems import *
 
