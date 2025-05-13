@@ -146,7 +146,7 @@ def add_potential(efpobj, potential, fragpath='LIBRARY', duplicates_ok=False):
             for lst in [paths, library_paths]:
                 for spth in '@libefp_FRAGLIB_DIRS@'.split(';'):
                     lst.append(spth)
-                #lst.append('/scratch/gilbreth/paulsk/backup/branch_pylib/libefp/fraglib')
+                lst.append('/scratch/gilbreth/paulsk/ls_pylib/libefp/fraglib')
                 #lst.append('/opt/anaconda1anaconda2anaconda3/share/libefp/fraglib')
                 #lst.append('/opt/anaconda1anaconda2anaconda3/share/libefp/fraglib/databases')
                 #lst.append('/opt/anaconda1anaconda2anaconda3/Library/share/libefp/fraglib')

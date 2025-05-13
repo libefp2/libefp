@@ -1,4 +1,7 @@
+import sys
 import libefp2py
+
+sys.path.insert(0, '/scratch/gilbreth/paulsk/ls_pylib/libefp')
 
 import pylibefp
 

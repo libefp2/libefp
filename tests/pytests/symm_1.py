@@ -3,7 +3,7 @@ import numpy as np
 import libefp2py
 
 # Get the absolute path to the directory containing the module
-sys.path.insert(0, '/Users/lyuda/LIBEFP/libefp_skp_may2025/lib')
+sys.path.insert(0, '/scratch/gilbreth/paulsk/ls_pylib/libefp')
 
 import pylibefp
 
@@ -50,4 +50,5 @@ efp.set_periodic_box([10.66 * a2b, 12.03 * a2b, 10.872 * a2b], 90.0, 115.83, 90.
 
 efp.compute()
 ene = efp.get_energy()
-print(ene)
+ene2 = efp.energy_summary()
+print(ene2)
