@@ -188,6 +188,14 @@ struct frag {
 	/* offset of polarizable points for this fragment */
 	size_t polarizable_offset;
 
+	/* multipolar rank of the fragment */
+	int multipole_rank;
+
+	/* if fragment has QM-EFP electrostatic screening */
+	bool if_qm_screen;
+
+	/* if classical (partial charges only and no QM-EFP screening) fragment */
+	bool if_mm_frag;
 };
 
 /* structure derived from struct frag for describing ligand */

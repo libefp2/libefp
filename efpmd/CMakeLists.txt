@@ -84,8 +84,10 @@ if(torch_switch)
   message("TORCH_INCLUDE_DIRS =  ${TORCH_INCLUDE_DIRS}")
 endif()
 
+#CXX_STANDARD 14
+
 set_target_properties(efpmd PROPERTIES
-  CXX_STANDARD 14
+  CXX_STANDARD 17
   CXX_STANDARD_REQUIRED YES
 )
 
