@@ -371,8 +371,18 @@ matrix_to_euler(const mat_t *rotmat, double *ea, double *eb, double *ec)
 {
 	double a, b, c, sinb;
 
+	if (fabs(rotmat->zz - 1.0) < 1.0e-7) {
+		b = 0.0;
+		sinb = 0.0;
+	}
+	else if (fabs(rotmat->zz + 1.0) < 1.0e-7) {
+		b = PI;
+		sinb = 0.0;
+	}
+	else {
 	b = acos(rotmat->zz);
 	sinb = sqrt(1.0 - rotmat->zz * rotmat->zz);
+	}
 
 	if (fabs(sinb) < 1.0e-7) {
 		a = atan2(-rotmat->xy, rotmat->xx);

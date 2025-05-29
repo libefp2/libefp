@@ -496,7 +496,7 @@ check_params(struct efp *efp)
 	enum efp_result res;
 
 	for (size_t i = 0; i < efp->n_frag; i++) {
-        if (efp->opts.print > 1)
+        if (efp->opts.print > 2)
             print_frag_info(efp, i);
         if ((res = check_frag_params(&efp->opts, efp->frags + i))) {
             efp_log("check_params() failure");
@@ -607,6 +607,10 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 				if ((do_elec(&efp->opts) || special_elec) && efp->frags[i].n_multipole_pts > 0 &&
 				    efp->frags[fr_j].n_multipole_pts > 0) {
 					e_elec_tmp = efp_frag_frag_elec(efp, i, fr_j);
+
+                    if (efp->opts.print > 0 && fabs(e_elec_tmp) > 1.0) 
+                        printf(" WARNING: elec energy between fragments %zu and %zu is %lf \n", i, fr_j, e_elec_tmp);
+
                     // zeroing the energy contribution on the special fragment in torch custom models
                     if (efp->opts.enable_elpot && if_special_fragment) e_elec_tmp = 0.0;
                         //e_elec_tmp = efp_frag_frag_elec(efp, i, fr_j);
@@ -662,9 +666,9 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
     if (efp->opts.print > 1) {
         printf(" In compute_two_body_range() \n");
         print_ene(&efp->energy);
-        if (efp->opts.enable_pairwise)
-            print_energies(efp);
     }
+    if (efp->opts.print > 2 && efp->opts.enable_pairwise)
+            print_energies(efp);
 }
 
 EFP_EXPORT enum efp_result
@@ -1559,6 +1563,7 @@ efp_get_frag_ai_screen(struct efp *efp, size_t frag_idx, double *screen, int if_
 	return EFP_RESULT_SUCCESS;
 }
 
+/*
 EFP_EXPORT enum efp_result
 efp_get_all_ai_screen(struct efp *efp, double *screen)
 {
@@ -1576,6 +1581,27 @@ efp_get_all_ai_screen(struct efp *efp, double *screen)
 
     return EFP_RESULT_SUCCESS;
 }
+*/
+
+EFP_EXPORT enum efp_result
+efp_get_ho_ai_screen(struct efp *efp, double *screen)
+{
+    assert(efp);
+    assert(screen);
+
+    for (size_t i = 0; i < efp->n_frag; i++) 
+        if (efp->frags[i].multipole_rank > 0) {
+            struct frag *frag = efp->frags + i;
+
+            for (size_t j = 0; j < frag->n_multipole_pts; j++) {
+                struct multipole_pt *pt = frag->multipole_pts + j;
+                *screen++ = pt->screen0;
+            }
+        }
+
+    return EFP_RESULT_SUCCESS;
+}
+
 /*
 EFP_EXPORT enum efp_result
 efp_get_ai_screen(struct efp *efp, size_t frag_idx, double *screen)
@@ -1729,7 +1755,7 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_balance_work(efp, compute_two_body_range, NULL);
 	}
 	else {  // high-symmetry crystals
-	    if ((res = compute_two_body_crystal(efp))) {
+	    if ((res = compute_two_body_crystal(efp))){
             efp_log("compute_two_body_crystal() failure");
             return res;
         }
@@ -1739,11 +1765,11 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_log("efp_compute_pol() failure");
         return res;
     }
-	if ((res = efp_compute_ai_elec(efp))) {
+	if ((res = efp_compute_ai_elec(efp))){
         efp_log("efp_compute_ai_elec() failure");
         return res;
     }
-	if ((res = efp_compute_ai_disp(efp))) {
+	if ((res = efp_compute_ai_disp(efp))){
         efp_log("efp_compute_ai_disp() failure");
         return res;
     }
@@ -1856,7 +1882,7 @@ efp_get_frag_rank(struct efp *efp, size_t frag_idx, size_t *rank)
 */
 
 EFP_EXPORT enum efp_result
-efp_get_frag_rank(struct efp *efp, size_t frag_idx, size_t *rank)
+efp_get_frag_rank(struct efp *efp, size_t frag_idx, int *rank)
 {
     assert(efp);
     assert(rank);
@@ -1864,25 +1890,12 @@ efp_get_frag_rank(struct efp *efp, size_t frag_idx, size_t *rank)
 
     struct frag *frag = efp->frags + frag_idx;
 
-    *rank = 0;
-    for (size_t i=0; i<frag->n_multipole_pts; i++) {
-        struct multipole_pt *pt = frag->multipole_pts + i;
-        size_t rank_tmp = 0;
-        if (pt->if_dip)
-            rank_tmp = 1;
-        if (pt->if_quad)
-            rank_tmp = 2;
-        if (pt->if_oct)
-            rank_tmp = 3;
-        if (rank_tmp > *rank)
-            *rank = rank_tmp;
-        if (*rank == 3)
-            break;
-    }
+    *rank = frag->multipole_rank;  
 
     return EFP_RESULT_SUCCESS;
 }
 
+/*
 EFP_EXPORT enum efp_result
 efp_get_multipole_count(struct efp *efp, size_t *n_mult)
 {
@@ -1897,7 +1910,41 @@ efp_get_multipole_count(struct efp *efp, size_t *n_mult)
 	*n_mult = sum;
 	return EFP_RESULT_SUCCESS;
 }
+*/
 
+EFP_EXPORT enum efp_result
+efp_get_ho_multipole_count(struct efp *efp, size_t *n_mult)
+{
+	size_t sum = 0;
+
+	assert(efp);
+	assert(n_mult);
+
+	for (size_t i = 0; i < efp->n_frag; i++)
+        if (efp->frags[i].multipole_rank > 0)
+		    sum += efp->frags[i].n_multipole_pts;
+
+	*n_mult = sum;
+	return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+efp_get_mm_multipole_count(struct efp *efp, size_t *n_mult)
+{
+	size_t sum = 0;
+
+	assert(efp);
+	assert(n_mult);
+
+	for (size_t i = 0; i < efp->n_frag; i++)
+        if (efp->frags[i].multipole_rank == 0)
+		    sum += efp->frags[i].n_multipole_pts;
+
+	*n_mult = sum;
+	return EFP_RESULT_SUCCESS;
+}
+
+/*
 EFP_EXPORT enum efp_result
 efp_get_multipole_coordinates(struct efp *efp, double *xyz)
 {
@@ -1915,7 +1962,47 @@ efp_get_multipole_coordinates(struct efp *efp, double *xyz)
 	}
 	return EFP_RESULT_SUCCESS;
 }
+*/
 
+EFP_EXPORT enum efp_result
+efp_get_ho_multipole_coordinates(struct efp *efp, double *xyz)
+{
+	assert(efp);
+	assert(xyz);
+
+	for (size_t i = 0; i < efp->n_frag; i++) 
+        if (efp->frags[i].multipole_rank > 0) {
+            struct frag *frag = efp->frags + i;
+
+            for (size_t j = 0; j < frag->n_multipole_pts; j++) {
+                *xyz++ = frag->multipole_pts[j].x;
+                *xyz++ = frag->multipole_pts[j].y;
+                *xyz++ = frag->multipole_pts[j].z;
+		}
+	}
+	return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+efp_get_mm_multipole_coordinates(struct efp *efp, double *xyz)
+{
+	assert(efp);
+	assert(xyz);
+
+	for (size_t i = 0; i < efp->n_frag; i++) 
+        if (efp->frags[i].multipole_rank == 0) {
+            struct frag *frag = efp->frags + i;
+
+            for (size_t j = 0; j < frag->n_multipole_pts; j++) {
+                *xyz++ = frag->multipole_pts[j].x;
+                *xyz++ = frag->multipole_pts[j].y;
+                *xyz++ = frag->multipole_pts[j].z;
+		}
+	}
+	return EFP_RESULT_SUCCESS;
+}
+
+/*
 EFP_EXPORT enum efp_result
 efp_get_multipole_values(struct efp *efp, double *mult)
 {
@@ -1928,7 +2015,8 @@ efp_get_multipole_values(struct efp *efp, double *mult)
 		for (size_t j = 0; j < frag->n_multipole_pts; j++) {
 			struct multipole_pt *pt = frag->multipole_pts + j;
 
-			*mult++ = pt->monopole;
+            // monopole and nuclear charges are added together as of 2025: LVS
+			*mult++ = pt->monopole + pt->znuc;
 
 			*mult++ = pt->dipole.x;
 			*mult++ = pt->dipole.y;
@@ -1942,7 +2030,97 @@ efp_get_multipole_values(struct efp *efp, double *mult)
 	}
 	return EFP_RESULT_SUCCESS;
 }
+*/
 
+EFP_EXPORT enum efp_result
+efp_get_ho_multipole_values(struct efp *efp, double *mult)
+{
+	assert(efp);
+	assert(mult);
+
+	for (size_t i = 0; i < efp->n_frag; i++) 
+        if (efp->frags[i].multipole_rank > 0) {
+            struct frag *frag = efp->frags + i;
+
+            for (size_t j = 0; j < frag->n_multipole_pts; j++) {
+                struct multipole_pt *pt = frag->multipole_pts + j;
+
+                // monopole and nuclear charges are added together as of 2025: LVS
+                *mult++ = pt->monopole + pt->znuc;
+
+                *mult++ = pt->dipole.x;
+                *mult++ = pt->dipole.y;
+                *mult++ = pt->dipole.z;
+
+                for (size_t t = 0; t < 6; t++)
+                    *mult++ = pt->quadrupole[t];
+                for (size_t t = 0; t < 10; t++)
+                    *mult++ = pt->octupole[t];
+		}
+	}
+	return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+efp_get_mm_multipole_values(struct efp *efp, double *mult)
+{
+	assert(efp);
+	assert(mult);
+
+	for (size_t i = 0; i < efp->n_frag; i++) 
+        if (efp->frags[i].multipole_rank == 0) {
+            struct frag *frag = efp->frags + i;
+
+            for (size_t j = 0; j < frag->n_multipole_pts; j++) {
+                struct multipole_pt *pt = frag->multipole_pts + j;
+
+                // monopole and nuclear charges are added together as of 2025: LVS
+                *mult++ = pt->monopole + pt->znuc;
+		}
+	}
+	return EFP_RESULT_SUCCESS;
+}
+
+/*
+EFP_EXPORT enum efp_result
+efp_get_mono_values(struct efp *efp, double *monopoles)
+{
+    assert(efp);
+    assert(monopoles);
+
+    for (size_t i = 0; i < efp->n_frag; i++) {
+        struct frag *frag = efp->frags + i;
+
+        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
+            struct multipole_pt *pt = frag->multipole_pts + j;
+
+            *monopoles++ = pt->monopole;
+		}
+	}
+	return EFP_RESULT_SUCCESS;
+}
+*/
+
+EFP_EXPORT enum efp_result
+efp_get_ho_mono_values(struct efp *efp, double *monopoles)
+{
+    assert(efp);
+    assert(monopoles);
+
+    for (size_t i = 0; i < efp->n_frag; i++) 
+        if (efp->frags[i].multipole_rank > 0) {
+            struct frag *frag = efp->frags + i;
+
+            for (size_t j = 0; j < frag->n_multipole_pts; j++) {
+                struct multipole_pt *pt = frag->multipole_pts + j;
+
+                *monopoles++ = pt->monopole;
+		}
+	}
+	return EFP_RESULT_SUCCESS;
+}
+
+/*
 EFP_EXPORT enum efp_result
 efp_get_dipole_values(struct efp *efp, double *dipoles)
 {
@@ -1998,6 +2176,7 @@ efp_get_octupole_values(struct efp *efp, double *oct)
     }
     return EFP_RESULT_SUCCESS;
 }
+*/
 
 EFP_EXPORT enum efp_result
 efp_get_frag_induced_dipole_count(struct efp *efp, size_t frag_idx, size_t *n_dip)
@@ -2653,12 +2832,34 @@ save_ai_field_pol_pt(struct efp *efp, struct efp_pol_pt *pol_pt, size_t frag_idx
     pt->elec_field_wf.y = pol_pt->ai_field[1];
     pt->elec_field_wf.z = pol_pt->ai_field[2];
 
-    if (efp->opts.print > 1)
+    if (efp->opts.print > 3)
         print_pol_pt(efp,frag_idx,pt_idx);
 
     return EFP_RESULT_SUCCESS;
 }
 
+EFP_EXPORT enum efp_result
+save_ai_field(struct efp *efp, double *field) {
+    assert(efp);
+    assert(field);
+
+    size_t k = 0;
+    for (size_t i = 0; i < efp->n_frag; i++) {
+        struct frag *frag = efp->frags + i;
+
+        for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
+            struct polarizable_pt *pt = frag->polarizable_pts + j;
+
+            pt->elec_field_wf.x = -field[k];
+            pt->elec_field_wf.y = -field[k+1];
+            pt->elec_field_wf.z = -field[k+2];
+            k = k+3;
+
+            //print_pol_pt(efp,i,j);
+        }
+    }
+    return EFP_RESULT_SUCCESS;
+}
 
 EFP_EXPORT void
 efp_torque_to_derivative(const double *euler, const double *torque,
@@ -2688,7 +2889,7 @@ efp_banner(void)
 	static const char banner[] =
 		"LIBEFP ver. " LIBEFP_VERSION_STRING "\n"
 		"Copyright (c) 2012-2017 Ilya Kaliman\n"
-        "              2018-2022 Lyudmila Slipchenko\n"
+        "              2018-2025 Lyudmila Slipchenko\n"
 		"\n"
 		"Journal References:\n"
 		"  - Kaliman and Slipchenko, JCC 2013.\n"

@@ -10,17 +10,10 @@
 #include <ShellsStatsDef.h>
 #include <TokenList.h>
 #include <qchem.h>
+#include <libmdc/libmdc.h>
 
 #include "EFP2.h"
 #include "libefp/src/efp.h"
-
-struct user_data
-{
-    double *density_matrix;
-    double *qm_field_save;
-	INTEGER code;
-	size_t dm_size;
-};
 
 struct EFP2_impl
 {
@@ -28,10 +21,8 @@ struct EFP2_impl
 	double integral_ene;
     double Escf;
     double state_energy;
-	double *id_gs;
-	double *idt_gs;
-	double *qm_field_es;
-	struct user_data user_data;
+    double *density_matrix;
+    INTEGER code;
 	struct efp *efp;
     /* True if field due to EFP multipoles need to be (re)computed. */
     bool if_multipole_field;
@@ -60,37 +51,123 @@ static int string_compare(const void *a, const void *b)
     return strcmp(s1, s2);
 }
 
-// calculate electrostatic field from electrons in qm subsystem
-static enum efp_result get_electron_density_field(size_t n_pt,
-    const double *xyz, double *field, void *user_data)
-{
-    if (!user_data)
+/*
+// calculates electrostatic field due to electrons of QM subsystem
+static enum efp_result compute_electron_density_field(struct efp *efp, double *densityMatrix) {
+
+    if (densityMatrix == NULL)
         return EFP_RESULT_FATAL;
-
-    double *densityMatrix = ((struct user_data *)user_data)->density_matrix;
-    double *pef_ab = new double[n_pt*3];
-
-    memset(field, 0, n_pt*3*sizeof(double));
-    memset(pef_ab, 0, n_pt*3*sizeof(double));
 
     ShlPrs s2BraOrg(DEF_ID);
     ShlPrs s2KetOrg = s2BraOrg;
     ShlPrs s2Bra(s2BraOrg.code(), SHLPR_CFMM);
     ShlPrs s2Ket(s2KetOrg.code(), SHLPR_CFMM);
 
-    int n_pt_int = (int)n_pt;
-    AOints(pef_ab, NULL, NULL, NULL, densityMatrix, xyz, NULL, NULL,
-        &n_pt_int, 112, s2Bra, s2Ket);
+    size_t n_frag;
+    check_fail(efp_get_frag_count(efp, &n_frag));
 
-    VRneg(pef_ab, 3*n_pt);
-    VRadd2(field, pef_ab, 3*n_pt);
+    for (size_t fr_i = 0; fr_i < n_frag; fr_i++) {
+        size_t n_pt;
+        check_fail(efp_get_frag_induced_dipole_count(efp, fr_i, &n_pt));
 
-    double *qm_field_save = ((struct user_data *)user_data)->qm_field_save;
+        for (size_t j = 0; j < n_pt; j++) {
+            struct efp_pol_pt *pt;
+            pt = (struct efp_pol_pt *) malloc(sizeof(struct efp_pol_pt));
+            check_fail(efp_get_frag_pol_pt(efp, fr_i, j, pt));
 
-    if (qm_field_save)
-        memcpy(qm_field_save, pef_ab, 3 * n_pt * sizeof(double));
+            double xyz[3] = {pt->x, pt->y, pt->z};
+            double pef_ab[3] = {0.0, 0.0, 0.0};
+            size_t n_1 = 1;
+            int n_1_int = (int)n_1;
 
-    delete[] pef_ab;
+            AOints(pef_ab, NULL, NULL, NULL, densityMatrix, xyz, NULL, NULL,
+                   &n_1_int, 112, s2Bra, s2Ket);
+
+            pt->ai_field[0] = -pef_ab[0];
+            pt->ai_field[1] = -pef_ab[1];
+            pt->ai_field[2] = -pef_ab[2];
+
+            check_fail(save_ai_field_pol_pt(efp, pt, fr_i, j));
+        }
+    }
+    return EFP_RESULT_SUCCESS;
+}
+*/
+
+// calculates electrostatic field due to electrons of QM subsystem
+static enum efp_result compute_electron_density_field(struct efp *efp, double *densityMatrix) {
+
+    if (densityMatrix == NULL)
+        return EFP_RESULT_FATAL;
+
+    qtime_t Timer = QTimerOn();
+    double TimeForElField[3];
+
+    ShlPrs s2BraOrg(DEF_ID);
+    ShlPrs s2KetOrg = s2BraOrg;
+    ShlPrs s2Bra(s2BraOrg.code(), SHLPR_CFMM);
+    ShlPrs s2Ket(s2KetOrg.code(), SHLPR_CFMM);
+
+    size_t n_frag = 0, n_id = 0;
+    check_fail(efp_get_frag_count(efp, &n_frag));
+    check_fail(efp_get_induced_dipole_count(efp, &n_id));
+
+    double *xyz_id = new double[n_id * 3];
+    check_fail(efp_get_induced_dipole_coordinates(efp, xyz_id));
+    //double *pef_ab = new double[n_id * 3];
+    double *pef_ab;
+    pef_ab = (double*)calloc(n_id * 3, sizeof(double));
+
+    int n_id_int = (int)n_id;
+
+    AOints(pef_ab, NULL, NULL, NULL, densityMatrix, xyz_id, NULL, NULL,
+           &n_id_int, 112, s2Bra, s2Ket);
+
+    check_fail(save_ai_field(efp, pef_ab));
+    free(pef_ab);
+
+    QTimerOff(TimeForElField,Timer);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP compute_electron_density_field(): %.1f s (CPU) %.1f s (wall)\n",TimeForElField[0],TimeForElField[2]);
+
+    return EFP_RESULT_SUCCESS;
+}
+
+static enum efp_result compute_qmmm_electronic_gradient(struct efp *efp, double *densityMatrix, double *grad) {
+
+    if (densityMatrix == NULL) {
+        printf("\n No density matrix found in compute_qmmm_gradient(). Abort. \n ");
+        return EFP_RESULT_FATAL;
+    }
+
+    size_t n_frag;
+    check_fail(efp_get_frag_count(efp, &n_frag));
+
+    size_t NAtoms = 0;
+    for (size_t fr_i = 0; fr_i < n_frag; fr_i++) {
+        if (rem_read(REM_EFP_QM_FRAGMENT) == fr_i) continue;
+        size_t n_atom;
+        check_fail(efp_get_frag_atom_count(efp, fr_i, &n_atom));
+        NAtoms += n_atom;
+    }
+
+    double *charges = (double *)malloc(NAtoms * sizeof(double));
+    double *coords = (double *)malloc( 3*NAtoms * sizeof(double));
+
+    check_fail(efp_get_atom_mm_info(efp, charges, coords));
+    int NAT = (int)NAtoms;
+
+    //size_t QM_atoms;
+    //check_fail(efp_get_point_charge_count(efp, &QM_atoms));
+    //double *jEx = QAllocDoubleWithInit(3*QM_atoms);
+
+    AOints(grad, NULL, NULL, NULL, densityMatrix, coords, charges, NULL, &NAT, -111);
+
+    //memcpy( jEx, grad, sizeof(double)*3*QM_atoms);
+    //printf("\n QM_atoms = %u \n", QM_atoms);
+    //for (size_t i=0; i<3*QM_atoms; i++) {
+    //   printf("grad %lf\n", jEx[i]);
+    //}
     return EFP_RESULT_SUCCESS;
 }
 
@@ -221,6 +298,12 @@ static void set_rem_defaults()
         rem_write(0, REM_EFP_QM_DISP_DAMP);
     if (RemUninitialized(REM_EFP_QM_EXREP_DAMP))
         rem_write(0, REM_EFP_QM_EXREP_DAMP);
+
+    if (RemUninitialized(REM_EFP_QMMM))
+        rem_write(0, REM_EFP_QMMM);
+    if (RemUninitialized(REM_EFP_QM_FRAGMENT))
+        rem_write(-100, REM_EFP_QM_FRAGMENT);
+
     if (RemUninitialized(REM_EFP_DIRECT_POLARIZATION_DRIVER))
         rem_write(0, REM_EFP_DIRECT_POLARIZATION_DRIVER);
     if (RemUninitialized(REM_EFP_ENABLE_LINKS))
@@ -231,6 +314,10 @@ static void set_rem_defaults()
 	    rem_write(0, REM_EFP_PAIRWISE);
     if (RemUninitialized(REM_EFP_ORDER))
         rem_write(2, REM_EFP_ORDER);
+    if (RemUninitialized(REM_EFP_PRINT))
+        rem_write(0, REM_EFP_PRINT);
+    if (RemUninitialized(REM_EFP_POL_FIELD_UPDATE))
+        rem_write(1, REM_EFP_POL_FIELD_UPDATE);
 }
 
 EFP2::EFP2()
@@ -243,10 +330,7 @@ EFP2::~EFP2()
 {
     if (impl_) {
         efp_shutdown(impl_->efp);
-        delete[] impl_->id_gs;
-        delete[] impl_->idt_gs;
-        delete[] impl_->qm_field_es;
-        free(impl_->user_data.density_matrix);
+        free(impl_->density_matrix);
     }
     delete impl_;
 }
@@ -294,7 +378,7 @@ void EFP2::init(InputSection& is)
                     coord.push_back(tl[1].GetDouble() * unitconv);
                     coord.push_back(tl[2].GetDouble() * unitconv);
                     coord.push_back(tl[3].GetDouble() * unitconv);
-                }
+                 }
             } else if (rem_read(REM_EFP_INPUT) < 0) {
                 coord.push_back(tl[1].GetDouble() * unitconv);
                 coord.push_back(tl[2].GetDouble() * unitconv);
@@ -376,6 +460,11 @@ void EFP2::init(InputSection& is)
     case 1:
         opts.pol_damp = EFP_POL_DAMP_TT;
         printf("EFP polarization damping is Tang-Toennies damping\n");
+        opts.pol_damp_tt_value = 0.6;
+        if (rem_read(REM_EFP_POL_DAMP_TT_VALUE) > 0) {
+            opts.pol_damp_tt_value = rem_read(REM_EFP_POL_DAMP_TT_VALUE)/1000.0;
+        }
+        printf("EFP polarization damping factor = %f", opts.pol_damp_tt_value);
         break;
     default:
         QCrash("unknown EFP_POL_DAMP value");
@@ -415,9 +504,120 @@ void EFP2::init(InputSection& is)
         opts.terms &= ~EFP_TERM_AI_XR;
     }
 
+    switch (rem_read(REM_EFP_QMMM)) {
+        //keyword not active
+        case 0:
+            opts.terms &= ~EFP_TERM_QQ;
+            opts.terms &= ~EFP_TERM_LJ;
+            opts.terms &= ~EFP_TERM_AI_QQ;
+            opts.special_terms &= ~EFP_SPEC_TERM_ELEC;
+            opts.special_terms &= ~EFP_SPEC_TERM_POL;
+            opts.special_terms &= ~EFP_SPEC_TERM_DISP;
+            opts.special_terms &= ~EFP_SPEC_TERM_XR;
+            opts.special_terms &= ~EFP_SPEC_TERM_QQ;
+            opts.special_terms &= ~EFP_SPEC_TERM_LJ;
+            opts.special_fragment = -100;
+            break;
+        // turn off all efp terms, do mechanical embedding QM/MM
+        case 1:
+            opts.terms |= EFP_TERM_QQ;
+            opts.terms |= EFP_TERM_LJ;
+            opts.special_terms |= EFP_SPEC_TERM_QQ;
+            opts.special_terms |= EFP_SPEC_TERM_LJ;
+            // and turn off everything EFP-related
+            opts.terms &= ~EFP_TERM_AI_QQ;
+            opts.terms &= ~EFP_TERM_ELEC;
+            opts.terms &= ~EFP_TERM_POL;
+            opts.terms &= ~EFP_TERM_DISP;
+            opts.terms &= ~EFP_TERM_XR;
+            opts.terms &= ~EFP_TERM_AI_ELEC;
+            opts.terms &= ~EFP_TERM_AI_POL;
+            opts.terms &= ~EFP_TERM_AI_DISP;
+            opts.terms &= ~EFP_TERM_AI_XR;
+            opts.special_terms &= ~EFP_SPEC_TERM_ELEC;
+            opts.special_terms &= ~EFP_SPEC_TERM_POL;
+            opts.special_terms &= ~EFP_SPEC_TERM_DISP;
+            opts.special_terms &= ~EFP_SPEC_TERM_XR;
+            opts.special_fragment = rem_read(REM_EFP_QM_FRAGMENT);
+            break;
+
+        // standard electrostatic embedding QM/MM with LJ terms between QM and MM
+        // and between EFPs;
+        case 2:
+            opts.terms |= EFP_TERM_AI_QQ;  // QM-MM-like electrostatics
+            opts.terms |= EFP_TERM_QQ;  // MM-MM electrostatics between fragments
+            opts.terms |= EFP_TERM_LJ;  // LJ between fragments
+            opts.special_terms &= ~EFP_SPEC_TERM_QQ;  // exclude MM-MM electrostatics between "QM" frag and rest
+            opts.special_terms |= EFP_SPEC_TERM_LJ;   // LJ between "QM" fragment and rest
+
+            // and turn off everything EFP-related
+            opts.terms &= ~EFP_TERM_ELEC;
+            opts.terms &= ~EFP_TERM_POL;
+            opts.terms &= ~EFP_TERM_DISP;
+            opts.terms &= ~EFP_TERM_XR;
+            opts.terms &= ~EFP_TERM_AI_ELEC;
+            opts.terms &= ~EFP_TERM_AI_POL;
+            opts.terms &= ~EFP_TERM_AI_DISP;
+            opts.terms &= ~EFP_TERM_AI_XR;
+            opts.special_terms &= ~EFP_SPEC_TERM_ELEC;
+            opts.special_terms &= ~EFP_SPEC_TERM_POL;
+            opts.special_terms &= ~EFP_SPEC_TERM_DISP;
+            opts.special_terms &= ~EFP_SPEC_TERM_XR;
+
+            opts.special_fragment = rem_read(REM_EFP_QM_FRAGMENT);
+            break;
+
+            // electrostatic embedding QM/MM with LJ term between QM and MM;
+            // EFP-EFP terms as given in input
+        case 3:
+            opts.terms |= EFP_TERM_AI_QQ;  // QM-MM-like electrostatics
+            opts.terms &= ~EFP_TERM_QQ;  // turn off MM-MM electrostatics between fragments
+            opts.terms &= ~EFP_TERM_LJ;  // turn off LJ between fragments
+            opts.special_terms &= ~EFP_SPEC_TERM_QQ;  // exclude MM-MM electrostatics between "QM" frag and rest
+            opts.special_terms |= EFP_SPEC_TERM_LJ;   // LJ between "QM" fragment and rest
+
+            // and turn off QM-EFP couplings
+            opts.terms &= ~EFP_TERM_AI_ELEC;
+            opts.terms &= ~EFP_TERM_AI_POL;
+            opts.terms &= ~EFP_TERM_AI_DISP;
+            opts.terms &= ~EFP_TERM_AI_XR;
+            opts.special_terms &= ~EFP_SPEC_TERM_ELEC;
+            opts.special_terms &= ~EFP_SPEC_TERM_POL;
+            opts.special_terms &= ~EFP_SPEC_TERM_DISP;
+            opts.special_terms &= ~EFP_SPEC_TERM_XR;
+
+            opts.special_fragment = rem_read(REM_EFP_QM_FRAGMENT);
+            break;
+
+        // QM/EFP with LJ between QM and EFP region added;
+        // other terms as given in input
+        case 4:
+            opts.terms &= ~EFP_TERM_AI_QQ;  // turn off QM-MM-like electrostatics
+            opts.terms &= ~EFP_TERM_QQ;  // turn off MM-MM electrostatics between fragments
+            opts.terms &= ~EFP_TERM_LJ;  // turn off LJ between fragments
+            opts.special_terms &= ~EFP_SPEC_TERM_QQ;  // turn off MM-MM electrostatics between "QM" frag and rest
+            opts.special_terms |= EFP_SPEC_TERM_LJ;   // LJ between "QM" fragment and rest
+
+            // turn off QM-EFP dispersion and exchange
+            opts.terms &= ~EFP_TERM_AI_DISP;
+            opts.terms &= ~EFP_TERM_AI_XR;
+            // and turn off things between "QM" fragments and the rest
+            opts.special_terms &= ~EFP_SPEC_TERM_ELEC;
+            opts.special_terms &= ~EFP_SPEC_TERM_POL;
+            opts.special_terms &= ~EFP_SPEC_TERM_DISP;
+            opts.special_terms &= ~EFP_SPEC_TERM_XR;
+
+            opts.special_fragment = rem_read(REM_EFP_QM_FRAGMENT);
+            break;
+    }
+
     if (rem_read(REM_EFP_PAIRWISE)) {
         opts.enable_pairwise = 1;
         opts.ligand = -1;
+    }
+
+    if (rem_read(REM_EFP_PRINT)) {
+        opts.print = rem_read(REM_EFP_PRINT);
     }
 
     if (rem_read(REM_EFP_ORDER) == 1) {
@@ -459,7 +659,6 @@ void EFP2::init(InputSection& is)
     for (size_t i = 0; i < n_frags; i++)
         check_fail(efp_add_fragment(impl_->efp, fragname[i].c_str()));
 
-    check_fail(efp_set_electron_density_field_fn(impl_->efp, get_electron_density_field));
     check_fail(efp_prepare(impl_->efp));
 
     if (rem_read(REM_EFP_ENABLE_LINKS))
@@ -471,80 +670,102 @@ void EFP2::init(InputSection& is)
         //check_fail(efp_set_coordinates(impl_->efp, EFP_COORD_TYPE_ATOMS, &coord.front()));
         check_fail(efp_set_coordinates(impl_->efp, EFP_COORD_TYPE_POINTS, &coord.front()));
 
-    size_t n_dip;
-    check_fail(efp_get_induced_dipole_count(impl_->efp, &n_dip));
-
-    impl_->id_gs = new double[n_dip * 3];
-    impl_->idt_gs = new double[n_dip * 3];
-    impl_->qm_field_es = new double[n_dip * 3];
-
+    // Q-Chem computes hcore integrals twice, but we do not want to compute them first time 
     impl_->if_multipole_field = true;
     impl_->if_pol_field = true;
 
-    printf("\n\nGEOMETRY OF EFP SUBSYSTEM\n\n");
-    print_geometry();
+    if (rem_read(REM_EFP_PRINT) > 0) {
+        printf("\n\nGEOMETRY OF EFP SUBSYSTEM\n\n");
+        print_geometry();
+    }
 }
-
 
 void EFP2::reorient_geometry()
 {
     if (rem_read(REM_EFP_FRAGMENTS_ONLY))
         return;
 
-    size_t n_frags;
-    std::vector<double> coord;
-    GenMatrix qcorigin(3, 1);
-    GenMatrix qcrotmat(3, 3);
+    if (rem_read(REM_EFP_PRINT) > 1) {
+        printf("\n\n in EFP2::reorient_geometry()\n\n");
+    }
+    
+    static int counter = 0;
 
-    check_fail(efp_get_frag_count(impl_->efp, &n_frags));
+    // we assume QM origin and orientation are not changed in q-chem run...
+    // so arrange EFP region with respect to QM region only once
+    if (counter == 0) {
+        size_t n_frags;
+        std::vector<double> coord;
+        GenMatrix qcorigin(3, 1);
+        GenMatrix qcrotmat(3, 3);
 
-    FileMan_Open_Read(FILE_NEW_GEOM_ORIGIN);
-    qcorigin.ReadFromDisk(FILE_NEW_GEOM_ORIGIN);
-    FileMan_Close(FILE_NEW_GEOM_ORIGIN);
+        check_fail(efp_get_frag_count(impl_->efp, &n_frags));
 
-    FileMan_Open_Read(FILE_ORIENT_MATRIX);
-    qcrotmat.ReadFromDisk(FILE_ORIENT_MATRIX);
-    FileMan_Close(FILE_ORIENT_MATRIX);
+        FileMan_Open_Read(FILE_NEW_GEOM_ORIGIN);
+        qcorigin.ReadFromDisk(FILE_NEW_GEOM_ORIGIN);
+        FileMan_Close(FILE_NEW_GEOM_ORIGIN);
 
-    coord.resize(6 * n_frags);
-    check_fail(efp_get_coordinates(impl_->efp, &coord.front()));
+        FileMan_Open_Read(FILE_ORIENT_MATRIX);
+        qcrotmat.ReadFromDisk(FILE_ORIENT_MATRIX);
+        FileMan_Close(FILE_ORIENT_MATRIX);
 
-    for (size_t i = 0; i < n_frags; i++) {
-        GenMatrix pos(3, 1), posrot(3, 1);
+        coord.resize(6 * n_frags);
+        check_fail(efp_get_coordinates(impl_->efp, &coord.front()));
 
-        pos(0, 0) = coord[6 * i + 0] - qcorigin(0, 0);
-        pos(1, 0) = coord[6 * i + 1] - qcorigin(1, 0);
-        pos(2, 0) = coord[6 * i + 2] - qcorigin(2, 0);
+        for (size_t i = 0; i < n_frags; i++) {
+            GenMatrix pos(3, 1), posrot(3, 1);
 
-        MatMult(posrot, qcrotmat, pos);
+            pos(0, 0) = coord[6 * i + 0] - qcorigin(0, 0);
+            pos(1, 0) = coord[6 * i + 1] - qcorigin(1, 0);
+            pos(2, 0) = coord[6 * i + 2] - qcorigin(2, 0);
 
-        coord[6 * i + 0] = posrot(0, 0);
-        coord[6 * i + 1] = posrot(1, 0);
-        coord[6 * i + 2] = posrot(2, 0);
+            MatMult(posrot, qcrotmat, pos);
 
-        double a = coord[6 * i + 3];
-        double b = coord[6 * i + 4];
-        double c = coord[6 * i + 5];
+            coord[6 * i + 0] = posrot(0, 0);
+            coord[6 * i + 1] = posrot(1, 0);
+            coord[6 * i + 2] = posrot(2, 0);
 
-        GenMatrix rotmat(3, 3), prod(3, 3);
-        euler_to_matrix(a, b, c, rotmat);
-        MatMult(prod, qcrotmat, rotmat);
-        matrix_to_euler(prod, &a, &b, &c);
+            double a = coord[6 * i + 3];
+            double b = coord[6 * i + 4];
+            double c = coord[6 * i + 5];
 
-        coord[6 * i + 3] = a;
-        coord[6 * i + 4] = b;
-        coord[6 * i + 5] = c;
+            GenMatrix rotmat(3, 3), prod(3, 3);
+            euler_to_matrix(a, b, c, rotmat);
+            MatMult(prod, qcrotmat, rotmat);
+            matrix_to_euler(prod, &a, &b, &c);
+
+            coord[6 * i + 3] = a;
+            coord[6 * i + 4] = b;
+            coord[6 * i + 5] = c;
+        }
+
+        check_fail(efp_set_coordinates(impl_->efp, EFP_COORD_TYPE_XYZABC,
+                                       &coord.front()));
+
+        rem_write(0, REM_ISYM_RQ);
+        rem_write(0, REM_CC_SYMMETRY);
+        rem_write(1, REM_SYM_IGNORE);
     }
 
-    check_fail(efp_set_coordinates(impl_->efp, EFP_COORD_TYPE_XYZABC,
-        &coord.front()));
+    // update position of a special fragment
+    if (rem_read(REM_EFP_QM_FRAGMENT) > -1) {
 
-    rem_write(0, REM_ISYM_RQ);
-    rem_write(0, REM_CC_SYMMETRY);
-    rem_write(1, REM_SYM_IGNORE);
+        double *jA, *nucChg;
+        INTEGER *iAtNo, NAtoms;
 
-    printf("\n\nREORIENTED EFP GEOMETRY\n\n");
-    print_geometry();
+        get_carts(NULL, &jA, &iAtNo, &NAtoms);
+        nucChg = effectiveNucCharges();
+
+        check_fail(efp_set_point_charges(impl_->efp, NAtoms, nucChg, jA));
+        check_fail(update_special_fragment(impl_->efp, jA));
+    }
+
+    counter++;
+
+    if (rem_read(REM_EFP_PRINT) > 0) {
+        printf("\n\nREORIENTED EFP GEOMETRY\n\n");
+        print_geometry();
+    }
 }
 
 void EFP2::print_geometry()
@@ -581,13 +802,11 @@ bool EFP2::get_if_multipole_field() {
     return impl_->if_multipole_field;
 }
 
-void EFP2::update_multipole_field() {
-    // printf("\n in update_multipole_field");
-    // if (impl_->if_multipole_field) impl_->if_multipole_field = false;
-    // need to compute two times: why???
-    static int counter = 0;
-    counter++;
-    if (counter > 1) impl_->if_multipole_field = false;
+void EFP2::update_multipole_field(bool true_false) {
+    if (true_false)
+        impl_->if_multipole_field = true;
+    else 
+        impl_->if_multipole_field = false;
 }
 
 bool EFP2::get_if_pol_field() {
@@ -595,72 +814,49 @@ bool EFP2::get_if_pol_field() {
     return impl_->if_pol_field;
 }
 
+void EFP2::set_if_pol_field(bool true_false) {
+    // printf("\n pol_field %s", impl_->if_pol_field ? "true":"false");
+    impl_->if_pol_field = true_false;
+}
+
 void EFP2::update_pol_field() {
-    // compute every other time
-    // printf("\n in update_pol_field");
-    impl_->if_pol_field = !impl_->if_pol_field;
+
+    static int pol_field_counter = 0;
+    impl_->if_pol_field = true;
+
+    if (pol_field_counter % rem_read(REM_EFP_POL_FIELD_UPDATE) != 0)
+        impl_->if_pol_field = false;
+
+    pol_field_counter++;
 }
 
 double EFP2::get_excited_state_energy_correction(double *w, size_t n_elem, double Ecis)
 {
 	double energy = 0.0;
-	size_t size = n_elem * sizeof(double);
 
-    impl_->user_data.qm_field_save = impl_->qm_field_es;
-    impl_->user_data.density_matrix = (double *)realloc(impl_->user_data.density_matrix, size);
-    memcpy(impl_->user_data.density_matrix, w, size);
+    size_t size = n_elem * sizeof(double);
+    impl_->density_matrix = (double *)realloc(impl_->density_matrix, size);
+    memcpy(impl_->density_matrix, w, size);
 
-	// calling it here before updating the induced dipoles
-    if (rem_read(REM_EFP_ORDER)!=0)
-        get_pairwise_energy(Ecis, 1);
+	// compute elec and pol integral pairwise contributions before updating the induced dipoles
+    if (rem_read(REM_EFP_PAIRWISE) && rem_read(REM_EFP_ORDER) > 0)
+        compute_integral_pairwise_energy(Ecis, 1);
 
-    // do not bother about polarization correction for efp_order = 1
-    if (rem_read(REM_EFP_ORDER)!=1) {
-        check_fail(efp_set_electron_density_field_user_data(impl_->efp, &impl_->user_data));
+    // do not bother about polarization correction for efp_order = 1 or if no polarization
+    if (rem_read(REM_EFP_ORDER) > 1 && rem_read(REM_EFP_POL) != 0 && rem_read(REM_EFP_QM_POL) != 0) {
+        check_fail(compute_electron_density_field(impl_->efp, w));
         check_fail(efp_get_wavefunction_dependent_energy_correction(impl_->efp, &energy));
     }
 
-	/*
-    size_t n_dip;
-	check_fail(efp_get_induced_dipole_count(impl_->efp, &n_dip));
-
-    double *id = new double[3 * n_dip];
-    double *idt = new double[3 * n_dip];
-    double *did = new double[3 * n_dip];
-    double *didt = new double[3 * n_dip];
-
-    check_fail(efp_get_induced_dipole_values(impl_->efp, id));
-    check_fail(efp_get_induced_dipole_conj_values(impl_->efp, idt));
-
-    VRsub(did, id, impl_->id_gs, n_dip * 3);
-    VRsub(didt, idt, impl_->idt_gs, n_dip * 3);
-
-    // correction to CI energy: difference in CI/EOM and HF AI polarization energies
-    double dE_CI1 = energy - impl_->wf_dep_energy_gs;
-    // correction to CI energy: (ind_CI-ind_HF)*field_CI
-    double dE_CI2 = 0.0;
-
-    for (size_t i = 0; i < n_dip; i++) {
-        dE_CI2 -= 0.5 * (did[3 * i + 0] + didt[3 * i + 0]) * impl_->qm_field_es[3 * i + 0];
-        dE_CI2 -= 0.5 * (did[3 * i + 1] + didt[3 * i + 1]) * impl_->qm_field_es[3 * i + 1];
-        dE_CI2 -= 0.5 * (did[3 * i + 2] + didt[3 * i + 2]) * impl_->qm_field_es[3 * i + 2];
-    }
-
-    delete[] id;
-	delete[] idt;
-	delete[] did;
-	delete[] didt;
-*/
-    // calling second time - beware
-    if (rem_read(REM_EFP_ORDER)!=0) {
-        //get_pairwise_energy(Ecis + energy, 1);
+    // print pairwise energies if requested
+    if (rem_read(REM_EFP_PAIRWISE) && rem_read(REM_EFP_ORDER) > 0) {
         print_pairwise_energy(1);
     }
 
-    //return (dE_CI1 + dE_CI2);
     return (energy);
 }
 
+/*
 #include <iostream>
 #include <sstream>
 #include <libqints/algorithms/gto/gto_order.h>
@@ -849,192 +1045,671 @@ void EFP2::update_wf_qints(double *h, INTEGER code)
         xyz_ptr = NULL;
     }
 
-    VRadd(h, h, pkd_vmul.memptr(), NB2);
-}
-
-/*
-void EFP2::update_mult_ints(double *h, INTEGER code)
-{
-    impl_->user_data.code = code;
-    if (rem_read(REM_EFP_FRAGMENTS_ONLY) || rem_read(REM_EFP_QM_ELEC) == 0 || rem_read(REM_EFP_ORDER) != 2)
-        return;
-    printf("Compute multipole integrals \n");
-    INTEGER NB2 = rem_read(REM_NB2);
-
-
-    threading_policy::enable_omp_only();
-    libqints::dev_omp dev;
-    dev.init(1024);
-    threading_policy::pop();
-
-    if ((rem_read(REM_USE_LIBQINTS) != 0 && dev.nthreads > 1) || (rem_read(REM_USE_LIBQINTS) > 0)) // && rem_read(REM_EFP_PAIRWISE) == 0)
-    {
-        update_wf_qints(h, code);
-        return;
-    }
-
-    size_t n_mult;
-    check_fail(efp_get_multipole_count(impl_->efp, &n_mult));
-    double *xyz_mult = new double[n_mult * 3];
-    check_fail(efp_get_multipole_coordinates(impl_->efp, xyz_mult));
-    double *mult = new double[n_mult * (1 + 3 + 6 + 10)];
-    check_fail(efp_get_multipole_values(impl_->efp, mult));
-
-    // size_t n_frag;
-    // check_fail(efp_get_frag_count(impl_->efp, &n_frag));
-
-    size_t n_atoms = 0;
-    for (size_t i = 0; i < n_frag; i++) {
-        size_t nat;
-        check_fail(efp_get_frag_atom_count(impl_->efp, i, &nat));
-        n_atoms += nat;
-    }
-
-    double *z_ptr, *xyz_ptr, *ai_screen_ptr, *ai_screen_ptr2;
-
-    INTEGER n_charges = n_atoms + n_mult;
-    double *z_c = new double[n_charges];
-    double *xyz_c = new double[3 * n_charges];
-    double *ai_screen = new double[n_charges];
-
-    memset(ai_screen, 0, n_charges * sizeof(double));
-
-    for (size_t i = 0; i < n_mult; i++) {
-        z_c[i] = mult[i * 20];
-        xyz_c[3 * i + 0] = xyz_mult[3 * i + 0];
-        xyz_c[3 * i + 1] = xyz_mult[3 * i + 1];
-        xyz_c[3 * i + 2] = xyz_mult[3 * i + 2];
-    }
-
-    z_ptr = z_c + n_mult;
-    xyz_ptr = xyz_c + n_mult * 3;
-    ai_screen_ptr = ai_screen;
-    ai_screen_ptr2 = ai_screen + n_mult;
-
-    for (size_t i = 0; i < n_frag; i++) {
-        size_t nat, nfragmult;
-        check_fail(efp_get_frag_atom_count(impl_->efp, i, &nat));
-
-        struct efp_atom *atoms = new struct efp_atom[nat];
-        check_fail(efp_get_frag_atoms(impl_->efp, i, nat, atoms));
-
-        check_fail(efp_get_frag_multipole_count(impl_->efp, i,
-                                                &nfragmult));
-        if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0) {
-            check_fail(efp_get_ai_screen(impl_->efp, i,
-                                         ai_screen_ptr));
-        }
-
-        for (size_t j = 0; j < nat; j++) {
-            *z_ptr++ = atoms[j].znuc;
-            *xyz_ptr++ = atoms[j].x;
-            *xyz_ptr++ = atoms[j].y;
-            *xyz_ptr++ = atoms[j].z;
-        }
-
-        ai_screen_ptr += nfragmult;
-        delete[] atoms;
-    }
-
-    // charges
-    xyz_ptr = xyz_c;
-    for (size_t j1 = 0; j1 < n_charges; j1++, xyz_ptr += 3) {
-        double damp = ai_screen[j1];
-        //that should only compute integrals for the first point
-        MakeFld(Z, xyz_ptr, LXmax, S2.code(), S2, 0.0);
-
-        for (int i = 0; i < NB2; i++) {
-            V[i] -= Z[i] * z_c[j1];
-        }
-
-        if (damp > 1.0e-6) {
-            MakeFld(Z, xyz_ptr, LXmax, S2.code(), S2, damp);
-            for (int i = 0; i < NB2; i++) {
-                V[i] += Z[i] * z_c[j1];
-            }
-        }
-    }
-    QFree(Z);
-
-    // dipoles, quadrupoles, octupoles
-    LXmax = 3;
-    Kmax = LFuncC(0, LXmax);
-    Z = QAllocDouble(Kmax * NB2car);
-
-    //find quadrupoles indices in Z array
-    int nxx, nyy, nzz, nxy, nxz, nyz;
-    KonL2K(&nxx, 2, 0, 0);
-    KonL2K(&nyy, 0, 2, 0);
-    KonL2K(&nzz, 0, 0, 2);
-    KonL2K(&nxy, 1, 1, 0);
-    KonL2K(&nxz, 1, 0, 1);
-    KonL2K(&nyz, 0, 1, 1);
-    nxx--; nyy--; nzz--; nxy--; nxz--; nyz--;
-
-    //find ocupole indices in Z array
-    int nxxx, nyyy, nzzz, nxxy, nxxz, nxyy, nyyz, nxzz, nyzz, nxyz;
-    KonL2K(&nxxx, 3, 0, 0);
-    KonL2K(&nyyy, 0, 3, 0);
-    KonL2K(&nzzz, 0, 0, 3);
-    KonL2K(&nxxy, 2, 1, 0);
-    KonL2K(&nxxz, 2, 0, 1);
-    KonL2K(&nxyy, 1, 2, 0);
-    KonL2K(&nyyz, 0, 2, 1);
-    KonL2K(&nxzz, 1, 0, 2);
-    KonL2K(&nyzz, 0, 1, 2);
-    KonL2K(&nxyz, 1, 1, 1);
-    nxxx--;nyyy--;nzzz--;nxxy--;nxxz--;
-    nxyy--;nyyz--;nxzz--;nyzz--;nxyz--;
-
-    z_ptr = mult, xyz_ptr = xyz_mult;
-    for (size_t i1 = 0; i1 < n_mult; i1++, z_ptr += 20, xyz_ptr += 3) {
-        //that should only compute integrals for the first point
-        MakeFld(Z, xyz_ptr, LXmax, S2.code(), S2, 0);
-        for (int i = 0; i < NB2; i++) {
-            //dipole
-            V[i] -= Z[i+1*NB2car]*z_ptr[1] +
-                    Z[i+2*NB2car]*z_ptr[2] +
-                    Z[i+3*NB2car]*z_ptr[3];
-            //quadrupole
-            V[i] -= (   Z[i+nxx*NB2car]*z_ptr[4]
-                        +   Z[i+nyy*NB2car]*z_ptr[5]
-                        +   Z[i+nzz*NB2car]*z_ptr[6]
-                        + 2*Z[i+nxy*NB2car]*z_ptr[7]
-                        + 2*Z[i+nxz*NB2car]*z_ptr[8]
-                        + 2*Z[i+nyz*NB2car]*z_ptr[9]) / 3.0;
-            //octupole
-            V[i] -= (   Z[i+nxxx*NB2car]*z_ptr[10]
-                        +   Z[i+nyyy*NB2car]*z_ptr[11]
-                        +   Z[i+nzzz*NB2car]*z_ptr[12]
-                        + 3*Z[i+nxxy*NB2car]*z_ptr[13]
-                        + 3*Z[i+nxxz*NB2car]*z_ptr[14]
-                        + 3*Z[i+nxyy*NB2car]*z_ptr[15]
-                        + 3*Z[i+nyyz*NB2car]*z_ptr[16]
-                        + 3*Z[i+nxzz*NB2car]*z_ptr[17]
-                        + 3*Z[i+nyzz*NB2car]*z_ptr[18]
-                        + 6*Z[i+nxyz*NB2car]*z_ptr[19]) / 15.0;
-        }
-    }
-    VRadd(h, h, V, NB2);
-
-    QFree(V);
-    QFree(Z);
-
-    delete[] mult;
-    delete[] xyz_mult;
-    delete[] z_c;
-    delete[] xyz_c;
-    delete[] ai_screen;
+    VRadd(h , h, pkd_vmul.memptr(), NB2);
 }
 */
 
+#include <iostream>
+#include <sstream>
+#include <libqints/algorithms/gto/gto_order.h>
+#include <libqints/qchem/aobasis.h>
+#include <libfock/stv/vmul.h>
+#include <libmdc/threading_policy.h>
+using libqints::qchem::aobasis;
+
+/*
+void EFP2::update_mult_qints(double *h, INTEGER code)
+{
+    threading_policy::enable_omp_only();
+    libqints::dev_omp dev;
+    dev.init(1024);
+    dev.memory = (size_t)(rem_read(REM_MEM_TOTAL)) * 1024 * 1024 / dev.nthreads;
+
+    qtime_t Timer = QTimerOn();
+    double TimeForMultInt[3];
+
+    // Get sizes of all objects and initialize
+    size_t nbsf = aobasis.b1.get_nbsf();
+    size_t n_mult = 0, n_frag = 0;
+    check_fail(efp_get_multipole_count(impl_->efp, &n_mult));
+    check_fail(efp_get_frag_count(impl_->efp, &n_frag));
+
+    arma::vec mono; // monopole (used when damping is required)
+    arma::vec mono_screen; // damping parameters for all monopole
+    arma::mat mono_coord;  // Cartesian coordinate of all monopole
+    if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0)
+    {
+        mono.set_size(n_mult);
+        mono_screen.set_size(n_mult);
+        mono_coord.set_size(3, n_mult);
+    }
+
+    // // Read and compute atoms
+    // arma::mat vmul_atm(nbsf, nbsf, arma::fill::zeros);
+    // {
+    //     std::vector<libqints::ftype_multipole> vfm(n_mult);
+    //     double *ai_screen_ptr = NULL;
+    //     if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0) ai_screen_ptr = mono_screen.memptr();
+    //     arma::vec mom(n_atoms);
+    //     for (size_t i = 0, iatom = 0; i < n_frag; i++)
+    //     {
+    //         size_t nat, nfragmult;
+    //         check_fail(efp_get_frag_atom_count(impl_->efp, i, &nat));
+    //         check_fail(efp_get_frag_multipole_count(impl_->efp, i, &nfragmult));
+    //         if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0)
+    //         {
+    //             check_fail(efp_get_ai_screen(impl_->efp, i, ai_screen_ptr));
+    //             ai_screen_ptr += nfragmult;
+    //         }
+    //         struct efp_atom *atoms = new struct efp_atom[nat];
+    //         check_fail(efp_get_frag_atoms(impl_->efp, i, nat, atoms));
+    //         for (size_t j = 0; j < nat; j++, iatom++)
+    //         {
+    //             vfm[iatom].k = 0;
+    //             vfm[iatom].x = atoms[j].x;
+    //             vfm[iatom].y = atoms[j].y;
+    //             vfm[iatom].z = atoms[j].z;
+    //             mom(iatom) = atoms[j].znuc;
+    //         }
+    //         delete[] atoms;
+    //     }
+    //     ai_screen_ptr = NULL;
+    //     libqints::basis_1e1c_multipole bm(vfm);
+    //     vfm = std::vector<libqints::ftype_multipole>();
+    //     libaview::array_view<double> av_vmul(vmul_atm.memptr(), vmul_atm.n_elem);
+    //     libaview::array_view<double> av_mom(mom.memptr(), mom.n_elem);
+    //     libfock::vmul<double>(aobasis.b1, bm, dev).compute(av_mom, av_vmul);
+    // }
+     
+
+    // Read and compute multipoles
+    arma::mat vmul_mult(nbsf, nbsf, arma::fill::zeros);
+    {
+        std::vector<libqints::ftype_multipole> vfm(n_mult);
+        double *xyz_mult = new double[n_mult * 3];
+        check_fail(efp_get_multipole_coordinates(impl_->efp, xyz_mult));
+        double *mult = new double[n_mult * (1 + 3 + 6 + 10)];
+        check_fail(efp_get_multipole_values(impl_->efp, mult));  // monopole and nuclear charges are summed up
+        arma::vec mom_mult(n_mult * 20);
+        for (size_t i = 0, imom = 0, ifm = 0; i < n_mult; i++, ifm++)
+        {
+            vfm[ifm].k = 3;
+            vfm[ifm].x = xyz_mult[3 * i + 0];
+            vfm[ifm].y = xyz_mult[3 * i + 1];
+            vfm[ifm].z = xyz_mult[3 * i + 2];
+            double *c_mult = mult + i * 20;
+            size_t jj = 0;
+            for (size_t j = 0; j < 4; j++, jj++, imom++) // monopole and dipole
+                mom_mult(imom) = c_mult[jj];
+            // quadrupole (different ordering in qints)
+            mom_mult(imom++) = c_mult[4]; // xx
+            mom_mult(imom++) = c_mult[7]; // xy
+            mom_mult(imom++) = c_mult[8]; // xz
+            mom_mult(imom++) = c_mult[5]; // yy
+            mom_mult(imom++) = c_mult[9]; // yz
+            mom_mult(imom++) = c_mult[6]; // zz
+            // octupole (different ordering in qints)
+            mom_mult(imom++) = c_mult[10]; // xxx
+            mom_mult(imom++) = c_mult[13]; // xxy
+            mom_mult(imom++) = c_mult[14]; // xxz
+            mom_mult(imom++) = c_mult[15]; // xyy
+            mom_mult(imom++) = c_mult[19]; // xyz
+            mom_mult(imom++) = c_mult[17]; // xzz
+            mom_mult(imom++) = c_mult[11]; // yyy
+            mom_mult(imom++) = c_mult[16]; // yyz
+            mom_mult(imom++) = c_mult[18]; // yzz
+            mom_mult(imom++) = c_mult[12]; // zzz
+
+            if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0)
+            {
+                mono_coord(0, i) = vfm[ifm].x;
+                mono_coord(1, i) = vfm[ifm].y;
+                mono_coord(2, i) = vfm[ifm].z;
+            }
+        }
+        delete[] mult;
+        delete[] xyz_mult;
+        libqints::basis_1e1c_multipole bm(vfm);
+        vfm = std::vector<libqints::ftype_multipole>();
+        libaview::array_view<double> av_vmul(vmul_mult.memptr(), vmul_mult.n_elem);
+        libaview::array_view<double> av_mom(mom_mult.memptr(), mom_mult.n_elem);
+        libfock::vmul<double>(aobasis.b1, bm, dev).compute(av_mom, av_vmul);
+    }
+
+    // Call vmul
+    arma::mat vmul = vmul_mult;
+    libqints::gto::reorder_cc(vmul, aobasis.b1, true, true, libqints::gto::lex, libqints::gto::korder);
+    threading_policy::pop();
+
+    // Pack
+    INTEGER NB2 = rem_read(REM_NB2);
+    ShlPrs S2(code);
+    INTEGER NB2car = S2.getNB2car();
+    arma::vec pkd_vmul(NB2car, arma::fill::zeros);
+    ScaV2M(vmul.memptr(), pkd_vmul.memptr(), 1, 0);
+
+    if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0)
+    {
+        check_fail(efp_get_mono_values(impl_->efp, mono.memptr()));
+        check_fail(efp_get_all_ai_screen(impl_->efp, mono_screen.memptr()));
+        arma::vec Z(NB2car, arma::fill::zeros);
+        double *xyz_ptr = mono_coord.memptr();
+        for (size_t j1 = 0; j1 < mono_screen.n_elem; j1++, xyz_ptr += 3) {
+            double damp = mono_screen(j1);
+            if (damp > 1.0e-6 && damp < 10.0) {
+                MakeFld(Z.memptr(), xyz_ptr, 0, S2.code(), S2, damp);
+                for (int i = 0; i < NB2; i++) {
+                    pkd_vmul(i) += Z(i) * mono(j1);
+                }
+            }
+        }
+        xyz_ptr = NULL;
+    }
+
+    VRadd(h , h, pkd_vmul.memptr(), NB2);
+
+    QTimerOff(TimeForMultInt,Timer);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP multipole integrals with libqints: %.1f s (CPU) %.1f s (wall)\n",TimeForMultInt[0],TimeForMultInt[2]);
+}
+*/
+
+void EFP2::update_mult_qints(double *h, INTEGER code)
+{
+    threading_policy::enable_omp_only();
+    libqints::dev_omp dev;
+    dev.init(1024);
+    dev.memory = (size_t)(rem_read(REM_MEM_TOTAL)) * 1024 * 1024 / dev.nthreads;
+
+    qtime_t Timer = QTimerOn();
+    double TimeForMultInt[3];
+
+    // Get sizes of all objects and initialize
+    size_t nbsf = aobasis.b1.get_nbsf();
+    size_t n_ho_mult = 0, n_mm_mult = 0;
+    check_fail(efp_get_ho_multipole_count(impl_->efp, &n_ho_mult));
+    check_fail(efp_get_mm_multipole_count(impl_->efp, &n_mm_mult));
+
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP is going to compute %zu high-order multipole integrals and %zu charge integrals with libqints\n", 
+            n_ho_mult, n_mm_mult);
+
+    arma::vec mono; // monopole (used when damping is required)
+    arma::vec mono_screen; // damping parameters for all monopole
+    arma::mat mono_coord;  // Cartesian coordinate of all monopole
+    if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0 && n_ho_mult > 0)
+    {
+        mono.set_size(n_ho_mult);
+        mono_screen.set_size(n_ho_mult);
+        mono_coord.set_size(3, n_ho_mult);
+    }
+
+    // Read and compute higher_order multipoles
+    arma::mat vmul_mult(nbsf, nbsf, arma::fill::zeros);
+    do {
+        if (n_ho_mult == 0) break;
+
+        qtime_t TimerMult = QTimerOn();
+        double TimeForMult[3];
+        
+        std::vector<libqints::ftype_multipole> vfm(n_ho_mult);
+        double *xyz_mult = new double[n_ho_mult * 3];
+        check_fail(efp_get_ho_multipole_coordinates(impl_->efp, xyz_mult));
+        double *mult = new double[n_ho_mult * (1 + 3 + 6 + 10)];
+        check_fail(efp_get_ho_multipole_values(impl_->efp, mult));  // monopole and nuclear charges are summed up
+        arma::vec mom_mult(n_ho_mult * 20);
+        for (size_t i = 0, imom = 0, ifm = 0; i < n_ho_mult; i++, ifm++)
+        {
+            vfm[ifm].k = 3;
+            vfm[ifm].x = xyz_mult[3 * i + 0];
+            vfm[ifm].y = xyz_mult[3 * i + 1];
+            vfm[ifm].z = xyz_mult[3 * i + 2];
+            double *c_mult = mult + i * 20;
+            size_t jj = 0;
+            for (size_t j = 0; j < 4; j++, jj++, imom++) // monopole and dipole
+                mom_mult(imom) = c_mult[jj];
+            // quadrupole (different ordering in qints)
+            mom_mult(imom++) = c_mult[4]; // xx
+            mom_mult(imom++) = c_mult[7]; // xy
+            mom_mult(imom++) = c_mult[8]; // xz
+            mom_mult(imom++) = c_mult[5]; // yy
+            mom_mult(imom++) = c_mult[9]; // yz
+            mom_mult(imom++) = c_mult[6]; // zz
+            // octupole (different ordering in qints)
+            mom_mult(imom++) = c_mult[10]; // xxx
+            mom_mult(imom++) = c_mult[13]; // xxy
+            mom_mult(imom++) = c_mult[14]; // xxz
+            mom_mult(imom++) = c_mult[15]; // xyy
+            mom_mult(imom++) = c_mult[19]; // xyz
+            mom_mult(imom++) = c_mult[17]; // xzz
+            mom_mult(imom++) = c_mult[11]; // yyy
+            mom_mult(imom++) = c_mult[16]; // yyz
+            mom_mult(imom++) = c_mult[18]; // yzz
+            mom_mult(imom++) = c_mult[12]; // zzz
+
+            if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0)
+            {
+                mono_coord(0, i) = vfm[ifm].x;
+                mono_coord(1, i) = vfm[ifm].y;
+                mono_coord(2, i) = vfm[ifm].z;
+            }
+        }
+        delete[] mult;
+        delete[] xyz_mult;
+        libqints::basis_1e1c_multipole bm(vfm);
+        vfm = std::vector<libqints::ftype_multipole>();
+        libaview::array_view<double> av_vmul(vmul_mult.memptr(), vmul_mult.n_elem);
+        libaview::array_view<double> av_mom(mom_mult.memptr(), mom_mult.n_elem);
+        libfock::vmul<double>(aobasis.b1, bm, dev).compute(av_mom, av_vmul);
+
+        QTimerOff(TimeForMult,TimerMult);
+        if (rem_read(REM_EFP_PRINT) > 0)
+            printf(" EFP multipole integrals with libqints: %.1f s (CPU) %.1f s (wall)\n",TimeForMult[0],TimeForMult[2]);
+
+    } while (0);
+
+
+    // Read and compute simple moonopoles
+    arma::mat vmul_mm(nbsf, nbsf, arma::fill::zeros);
+    do {
+        if (n_mm_mult == 0) break;
+
+        qtime_t TimerMM = QTimerOn();
+        double TimeForMM[3];    
+
+         std::vector<libqints::ftype_multipole> vfm(n_mm_mult);
+
+         double *xyz_mult = new double[n_mm_mult * 3];
+         check_fail(efp_get_mm_multipole_coordinates(impl_->efp, xyz_mult));
+         double *mult = new double[n_mm_mult];
+         check_fail(efp_get_mm_multipole_values(impl_->efp, mult));  // monopole and nuclear charges are summed up
+         arma::vec mom_mult(n_mm_mult);
+ 
+         for (size_t i = 0; i < n_mm_mult; i++)
+         {
+            vfm[i].k = 0;
+            vfm[i].x = xyz_mult[3 * i + 0];
+            vfm[i].y = xyz_mult[3 * i + 1];
+            vfm[i].z = xyz_mult[3 * i + 2];
+            mom_mult(i) = mult[i];
+         }
+
+         delete[] mult;
+         delete[] xyz_mult;
+         libqints::basis_1e1c_multipole bm(vfm);
+         vfm = std::vector<libqints::ftype_multipole>();
+         libaview::array_view<double> av_vmul(vmul_mm.memptr(), vmul_mm.n_elem);
+         libaview::array_view<double> av_mom(mom_mult.memptr(), mom_mult.n_elem);
+         libfock::vmul<double>(aobasis.b1, bm, dev).compute(av_mom, av_vmul);
+
+         QTimerOff(TimeForMM,TimerMM);
+         if (rem_read(REM_EFP_PRINT) > 0)
+             printf(" EFP charge integrals with libqints: %.1f s (CPU) %.1f s (wall)\n",TimeForMM[0],TimeForMM[2]);
+     
+    } while (0);
+
+    // Call vmul
+    arma::mat vmul = vmul_mult + vmul_mm;
+    libqints::gto::reorder_cc(vmul, aobasis.b1, true, true, libqints::gto::lex, libqints::gto::korder);
+    threading_policy::pop();
+
+    qtime_t TimerDamp = QTimerOn();
+    double TimeForDamp[3];
+
+    // Pack
+    INTEGER NB2 = rem_read(REM_NB2);
+    ShlPrs S2(code);
+    INTEGER NB2car = S2.getNB2car();
+    arma::vec pkd_vmul(NB2car, arma::fill::zeros);
+    ScaV2M(vmul.memptr(), pkd_vmul.memptr(), 1, 0);
+
+    if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0)
+    {
+        check_fail(efp_get_ho_mono_values(impl_->efp, mono.memptr()));
+        check_fail(efp_get_ho_ai_screen(impl_->efp, mono_screen.memptr()));
+        arma::vec Z(NB2car, arma::fill::zeros);
+        double *xyz_ptr = mono_coord.memptr();
+        for (size_t j1 = 0; j1 < mono_screen.n_elem; j1++, xyz_ptr += 3) {
+            double damp = mono_screen(j1);
+            if (damp > 1.0e-6 && damp < 10.0) {
+                MakeFld(Z.memptr(), xyz_ptr, 0, S2.code(), S2, damp);
+                for (int i = 0; i < NB2; i++) {
+                    pkd_vmul(i) += Z(i) * mono(j1);
+                }
+            }
+        }
+        xyz_ptr = NULL;
+    }
+
+    VRadd(h , h, pkd_vmul.memptr(), NB2);
+
+    QTimerOff(TimeForDamp,TimerDamp);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP charge damping integrals with MakeFld: %.1f s (CPU) %.1f s (wall)\n",TimeForDamp[0],TimeForDamp[2]);
+
+    QTimerOff(TimeForMultInt,Timer);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" Total EFP electrostatic integrals: %.1f s (CPU) %.1f s (wall)\n",TimeForMultInt[0],TimeForMultInt[2]);
+}
+
+void EFP2::update_mm_qints(double *h, INTEGER code)
+{
+    threading_policy::enable_omp_only();
+    libqints::dev_omp dev;
+    dev.init(1024);
+    dev.memory = (size_t)(rem_read(REM_MEM_TOTAL)) * 1024 * 1024 / dev.nthreads;
+
+    qtime_t Timer = QTimerOn();
+    double TimeForMMInt[3];
+
+    // Get sizes of all objects and initialize
+    size_t nbsf = aobasis.b1.get_nbsf();
+
+    size_t n_frag = 0;
+    check_fail(efp_get_frag_count(impl_->efp, &n_frag));
+
+    size_t n_atom = 0;
+    for (size_t i = 0; i < n_frag; i++) {
+        // skip interactions with QM fragment
+        if (rem_read(REM_EFP_QM_FRAGMENT) == i) continue;
+        size_t nat;
+        check_fail(efp_get_frag_atom_count(impl_->efp, i, &nat));
+        n_atom += nat;
+    }
+
+    // Read and compute atoms
+    arma::mat vmul_atm(nbsf, nbsf, arma::fill::zeros);
+    {
+        std::vector<libqints::ftype_multipole> vfm(n_atom);
+        arma::vec mom(n_atom);
+        for (size_t i = 0, iatom = 0; i < n_frag; i++)
+        {
+            // skip interactions with QM fragment
+            if (rem_read(REM_EFP_QM_FRAGMENT) == i) continue;
+            size_t nat;
+            check_fail(efp_get_frag_atom_count(impl_->efp, i, &nat));
+            struct efp_atom *atoms = new struct efp_atom[nat];
+            check_fail(efp_get_frag_atoms(impl_->efp, i, nat, atoms));
+            for (size_t j = 0; j < nat; j++, iatom++)
+            {
+                vfm[iatom].k = 0;
+                vfm[iatom].x = atoms[j].x;
+                vfm[iatom].y = atoms[j].y;
+                vfm[iatom].z = atoms[j].z;
+                mom(iatom) = atoms[j].mm_charge;
+            }
+            delete[] atoms;
+        }
+        libqints::basis_1e1c_multipole bm(vfm);
+        vfm = std::vector<libqints::ftype_multipole>();
+        libaview::array_view<double> av_vmul(vmul_atm.memptr(), vmul_atm.n_elem);
+        libaview::array_view<double> av_mom(mom.memptr(), mom.n_elem);
+        libfock::vmul<double>(aobasis.b1, bm, dev).compute(av_mom, av_vmul);
+    }
+
+    // Call vmul
+    arma::mat vmul = vmul_atm;
+    libqints::gto::reorder_cc(vmul, aobasis.b1, true, true, libqints::gto::lex, libqints::gto::korder);
+    threading_policy::pop();
+
+    // Pack
+    INTEGER NB2 = rem_read(REM_NB2);
+    ShlPrs S2(code);
+    INTEGER NB2car = S2.getNB2car();
+    arma::vec pkd_vmul(NB2car, arma::fill::zeros);
+    ScaV2M(vmul.memptr(), pkd_vmul.memptr(), 1, 0);
+
+    VRadd(h , h, pkd_vmul.memptr(), NB2);
+
+    QTimerOff(TimeForMMInt,Timer);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP MM integrals with libqints: %.1f s (CPU) %.1f s (wall)\n",TimeForMMInt[0],TimeForMMInt[2]);
+}
+
 void EFP2::update_mult_ints(double *h, INTEGER code)
 {
-    impl_->user_data.code = code;  // save code value for future use
+    impl_->code = code;  // save code value for future use
+    if (rem_read(REM_EFP_FRAGMENTS_ONLY) || rem_read(REM_EFP_ORDER) != 2)
+        return;
+    // mechanical embedding
+    if (rem_read(REM_EFP_QMMM) == 1)
+        return;
+    // electrostatic embedding - might continue
+    bool do_qmmm = rem_read(REM_EFP_QMMM) == 2 || rem_read(REM_EFP_QMMM) == 3;
+    if (rem_read(REM_EFP_QM_ELEC) == 0 && !do_qmmm)
+        return;
+
+    INTEGER NB2 = rem_read(REM_NB2);
+
+
+threading_policy::enable_omp_only();
+libqints::dev_omp dev;
+dev.init(1024);
+threading_policy::pop();
+//    if (( rem_read(REM_USE_LIBQINTS) != 0 && dev.nthreads > 1) || (rem_read(REM_USE_LIBQINTS) > 0))
+    if ( dev.nthreads > 1 )  // always use libqints in parallel jobs
+    {
+        if (do_qmmm)
+            update_mm_qints(h, code);
+        else
+            update_mult_qints(h, code);
+        return;
+    }
+
+    qtime_t Timer = QTimerOn();
+    double TimeForMultInt[3];
+
+    //printf("\n Compute EFP multipole integrals with MakeFld\n");
+    ShlPrs S2(code);
+    double *V, *Z0, *Z;
+    INTEGER K0, Kmax;
+    INTEGER NB2car = S2.getNB2car();
+
+    size_t n_frag;
+    check_fail(efp_get_frag_count(impl_->efp, &n_frag));
+
+    // electrostatic QM/MM embedding
+    if (do_qmmm) {
+
+        V = QAllocDouble(NB2car > NB2 ? NB2car : NB2);
+        VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
+
+        // storage for rank=0 (charge) integrals
+        K0 = LFuncC(0, 0);
+        Z0 = QAllocDouble(K0 * NB2car);
+
+        for (size_t fr_i = 0; fr_i < n_frag; fr_i++) {
+
+            // skip interactions with QM fragment
+            if (rem_read(REM_EFP_QM_FRAGMENT) == fr_i) continue;
+
+            size_t n_atom;
+            check_fail(efp_get_frag_atom_count(impl_->efp, fr_i, &n_atom));
+
+            struct efp_atom *atoms = new struct efp_atom[n_atom];
+            check_fail(efp_get_frag_atoms(impl_->efp, fr_i, n_atom, atoms));
+
+            for (size_t j = 0; j < n_atom; j++) {
+                double xyz[3] = {atoms[j].x, atoms[j].y, atoms[j].z};
+                double qi = atoms[j].mm_charge;
+
+                // no screening
+                MakeFld(Z0, xyz, 0, S2.code(), S2, 0);
+                for (int i = 0; i < NB2; i++) {
+                    // charge-monopole
+                    V[i] -= Z0[i] * qi;
+                }
+            }
+            delete[] atoms;
+        }
+        VRadd(h, h, V, NB2);
+        QFree(Z0);
+        QFree(V);
+    }
+
+    // normal EFP multipole integrals
+    else {
+
+        // work with multipoles - normal EFP stuff
+        //find quadrupoles indices in Z array
+        int nxx, nyy, nzz, nxy, nxz, nyz;
+        KonL2K(&nxx, 2, 0, 0);
+        KonL2K(&nyy, 0, 2, 0);
+        KonL2K(&nzz, 0, 0, 2);
+        KonL2K(&nxy, 1, 1, 0);
+        KonL2K(&nxz, 1, 0, 1);
+        KonL2K(&nyz, 0, 1, 1);
+        nxx--;
+        nyy--;
+        nzz--;
+        nxy--;
+        nxz--;
+        nyz--;
+
+        //find ocupole indices in Z array
+        int nxxx, nyyy, nzzz, nxxy, nxxz, nxyy, nyyz, nxzz, nyzz, nxyz;
+        KonL2K(&nxxx, 3, 0, 0);
+        KonL2K(&nyyy, 0, 3, 0);
+        KonL2K(&nzzz, 0, 0, 3);
+        KonL2K(&nxxy, 2, 1, 0);
+        KonL2K(&nxxz, 2, 0, 1);
+        KonL2K(&nxyy, 1, 2, 0);
+        KonL2K(&nyyz, 0, 2, 1);
+        KonL2K(&nxzz, 1, 0, 2);
+        KonL2K(&nyzz, 0, 1, 2);
+        KonL2K(&nxyz, 1, 1, 1);
+        nxxx--;
+        nyyy--;
+        nzzz--;
+        nxxy--;
+        nxxz--;
+        nxyy--;
+        nyyz--;
+        nxzz--;
+        nyzz--;
+        nxyz--;
+
+        V = QAllocDouble(NB2car > NB2 ? NB2car : NB2);
+        VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);    
+    
+        // assuming octopoles are the highest rank
+        Kmax = LFuncC(0, 3);
+        Z = QAllocDouble(Kmax * NB2car);
+
+        // storage for rank=0 (charge) integrals
+        K0 = LFuncC(0, 0);
+        Z0 = QAllocDouble(K0 * NB2car);
+
+        for (size_t fr_i = 0; fr_i < n_frag; fr_i++) {
+
+            size_t n_pt;
+            check_fail(efp_get_frag_multipole_count(impl_->efp, fr_i, &n_pt));
+
+            // compute integrals based on the highest rank of multipoles in fragment:
+            // 0 - charge, 1 - dipole, 2 - quad, 3 - oct
+            int rank;
+            check_fail(efp_get_frag_rank(impl_->efp, fr_i, &rank));
+            if (rank < 0) continue;
+            if (rank > 3) QCrash("EFP fragment with multipoles higher than octopoles detected! Exit.");
+            
+
+            for (size_t j = 0; j < n_pt; j++) {
+
+                struct efp_mult_pt *pt;
+                pt = (struct efp_mult_pt *) malloc(sizeof(struct efp_mult_pt));
+                check_fail(efp_get_frag_mult_pt(impl_->efp, fr_i, j, pt));
+
+                double xyz[3] = {pt->x, pt->y, pt->z};
+
+                double qi;
+                qi = pt->znuc + pt->monopole;
+
+                //printf(" Point %d on fragment %d\n", j, fr_i);
+                //print_efp_mult_pt(pt);
+
+                // all multipoles - no screening
+                MakeFld(Z, xyz, rank, S2.code(), S2, 0);
+
+                for (int i = 0; i < NB2; i++) {
+                    // charge-monopole
+                    V[i] -= Z[i] * qi;
+
+                    //dipole
+                    if (rank > 0)
+                        V[i] -= Z[i + 1 * NB2car] * pt->dipole[0] +
+                                Z[i + 2 * NB2car] * pt->dipole[1] +
+                                Z[i + 3 * NB2car] * pt->dipole[2];
+                    //quadrupole
+                    if (rank > 1)
+                        V[i] -= (Z[i + nxx * NB2car] * pt->quadrupole[0]
+                                + Z[i + nyy * NB2car] * pt->quadrupole[1]
+                                + Z[i + nzz * NB2car] * pt->quadrupole[2]
+                                + 2 * Z[i + nxy * NB2car] * pt->quadrupole[3]
+                                + 2 * Z[i + nxz * NB2car] * pt->quadrupole[4]
+                                + 2 * Z[i + nyz * NB2car] * pt->quadrupole[5]) / 3.0;
+                    //octupole
+                    if (rank > 2)
+                        V[i] -= (Z[i + nxxx * NB2car] * pt->octupole[0]
+                                + Z[i + nyyy * NB2car] * pt->octupole[1]
+                                + Z[i + nzzz * NB2car] * pt->octupole[2]
+                                + 3 * Z[i + nxxy * NB2car] * pt->octupole[3]
+                                + 3 * Z[i + nxxz * NB2car] * pt->octupole[4]
+                                + 3 * Z[i + nxyy * NB2car] * pt->octupole[5]
+                                + 3 * Z[i + nyyz * NB2car] * pt->octupole[6]
+                                + 3 * Z[i + nxzz * NB2car] * pt->octupole[7]
+                                + 3 * Z[i + nyzz * NB2car] * pt->octupole[8]
+                                + 6 * Z[i + nxyz * NB2car] * pt->octupole[9]) / 15.0;
+                }
+
+                // second call for integrals - taking care of screened monopoles
+                if (pt->if_screen) {
+                    double screen = pt->screen0;
+                    double q_mon = pt->monopole;
+                    if (screen > 1.0e-6 && screen < 10.0) {
+                        MakeFld(Z0, xyz, 0, S2.code(), S2, screen);
+                        for (int i = 0; i < NB2; i++) {
+                            // charge-monopole
+                            V[i] += Z0[i] * q_mon;
+                        }
+                    }
+                }
+
+                free(pt);
+            }
+        }
+        QFree(Z);
+        QFree(Z0);
+        VRadd(h, h, V, NB2);
+        QFree(V);
+    }
+
+    QTimerOff(TimeForMultInt,Timer);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP multipole integrals with AOints: %.1f s (CPU) %.1f s (wall)\n",TimeForMultInt[0],TimeForMultInt[2]);
+}
+
+
+/*
+void EFP2::update_mult_ints_OLD(double *h, INTEGER code)
+{
+    impl_->code = code;  // save code value for future use
     if (rem_read(REM_EFP_FRAGMENTS_ONLY) || rem_read(REM_EFP_QM_ELEC) == 0 || rem_read(REM_EFP_ORDER) != 2)
         return;
-    printf(" Compute multipole integrals in update_mult_ints_new() \n");
+
+    printf("\n Compute EFP multipole integrals \n");
+
     INTEGER NB2 = rem_read(REM_NB2);
+
+//threading_policy::enable_omp_only();
+//libqints::dev_omp dev;
+//dev.init(1024);
+//threading_policy::pop();
+
+//if (( rem_read(REM_USE_LIBQINTS) != 0 && dev.nthreads > 1) || (rem_read(REM_USE_LIBQINTS) > 0))
+//{
+//    update_mult_qints(h, code);
+//    return;
+//}
 
     ShlPrs S2(code);
     double *V, *Z0, *Z;
@@ -1075,37 +1750,38 @@ void EFP2::update_mult_ints(double *h, INTEGER code)
     size_t n_frag;
     check_fail(efp_get_frag_count(impl_->efp, &n_frag));
 
-    for (size_t i = 0; i < n_frag; i++) {
+    for (size_t fr_i = 0; fr_i < n_frag; fr_i++) {
 
         size_t n_pt;
-        check_fail(efp_get_frag_multipole_count(impl_->efp, i, &n_pt));
+        check_fail(efp_get_frag_multipole_count(impl_->efp, fr_i, &n_pt));
 
         // compute integrals based on the highest rank of multipoles in fragment:
         // 0 - charge, 1 - dipole, 2 - quad, 3 - oct
         size_t rank;
-        check_fail(efp_get_frag_rank(impl_->efp, i, &rank));
+        check_fail(efp_get_frag_rank(impl_->efp, fr_i, &rank));
         Kmax = LFuncC(0, rank);
+
         Z = QAllocDouble(Kmax * NB2car);
 
         for (size_t j = 0; j < n_pt; j++) {
 
             struct efp_mult_pt *pt;
-            check_fail(efp_get_frag_mult_pt(impl_->efp, i, j, pt));
+            pt = (struct efp_mult_pt *)malloc(sizeof(struct efp_mult_pt));
+            check_fail(efp_get_frag_mult_pt(impl_->efp, fr_i, j, pt));
 
             double xyz[3] = {pt->x, pt->y, pt->z};
 
             double qi;
-            // compute integrals with screened monopoles separately
-            if (pt->if_screen0)
-                qi = pt->znuc;
-            else
-                qi = pt->znuc + pt->monopole;
+            qi = pt->znuc + pt->monopole;
+
+            //printf(" Point %d on fragment %d\n", j, fr_i);
+            //print_efp_mult_pt(pt);
 
             // all multipoles - no screening
             MakeFld(Z, xyz, rank, S2.code(), S2, 0);
             for (int i = 0; i < NB2; i++) {
                 // charge-monopole
-                V[i] += Z[i] * qi;
+                V[i] -= Z[i] * qi;
                 //dipole
                 if (rank > 0)
                     V[i] -= Z[i + 1 * NB2car] * pt->dipole[0] +
@@ -1134,17 +1810,19 @@ void EFP2::update_mult_ints(double *h, INTEGER code)
             }
 
             // second call for integrals - taking care of screened monopoles
-            if (pt->if_screen0) {
+            if (pt->if_screen) {
 
                 double screen = pt->screen0;
                 double q_mon = pt->monopole;
 
-                MakeFld(Z, xyz, 0, S2.code(), S2, screen);
+                MakeFld(Z0, xyz, 0, S2.code(), S2, screen);
                 for (int i = 0; i < NB2; i++) {
                     // charge-monopole
-                    V[i] += Z[i] * q_mon;
+                    V[i] += Z0[i] * q_mon;
                 }
             }
+
+            free(pt);
         }
         QFree(Z);
     }
@@ -1153,32 +1831,113 @@ void EFP2::update_mult_ints(double *h, INTEGER code)
     QFree(Z0);
     QFree(V);
 }
+*/
+
+#include <iostream>
+#include <sstream>
+#include <libqints/algorithms/gto/gto_order.h>
+#include <libqints/qchem/aobasis.h>
+#include <libfock/stv/vmul.h>
+#include <libmdc/threading_policy.h>
+using libqints::qchem::aobasis;
+
+void EFP2::update_pol_qints(double *h, INTEGER code)
+{
+    threading_policy::enable_omp_only();
+    libqints::dev_omp dev;
+    dev.init(1024);
+    dev.memory = (size_t)(rem_read(REM_MEM_TOTAL)) * 1024 * 1024 / dev.nthreads;
+
+    qtime_t Timer = QTimerOn();
+    double TimeForPolInt[3];
+
+    // Get sizes of all objects and initialize
+    size_t nbsf = aobasis.b1.get_nbsf();
+    size_t n_id = 0;
+    check_fail(efp_get_induced_dipole_count(impl_->efp, &n_id));
+
+    // Read and compute induced dipoles
+    arma::mat vmul_id(nbsf, nbsf, arma::fill::zeros);
+    {
+        std::vector<libqints::ftype_multipole> vfm(n_id);
+        double *xyz_id = new double[n_id * 3];
+        check_fail(efp_get_induced_dipole_coordinates(impl_->efp, xyz_id));
+        double *id = new double[n_id * 3];
+        check_fail(efp_get_induced_dipole_values(impl_->efp, id));
+        double *idt = new double[n_id * 3];
+        check_fail(efp_get_induced_dipole_conj_values(impl_->efp, idt));
+        arma::vec mom(n_id * 4);
+        for (size_t i = 0, ifm = 0, imom = 0; i < n_id; i++, ifm++)
+        {
+            vfm[ifm].k = 1;
+            vfm[ifm].x = xyz_id[3 * i + 0];
+            vfm[ifm].y = xyz_id[3 * i + 1];
+            vfm[ifm].z = xyz_id[3 * i + 2];
+            mom(imom++) = 0.0; // Zero charges
+            for (size_t j = 0, jj = i * 3; j < 3; j++, imom++, jj++)
+                mom(imom) = (id[jj] + idt[jj]) * 0.5;
+        }
+        delete[] id;
+        delete[] idt;
+        delete[] xyz_id;
+        libqints::basis_1e1c_multipole bm(vfm);
+        vfm = std::vector<libqints::ftype_multipole>();
+        libaview::array_view<double> av_vmul(vmul_id.memptr(), vmul_id.n_elem);
+        libaview::array_view<double> av_mom(mom.memptr(), mom.n_elem);
+        libfock::vmul<double>(aobasis.b1, bm, dev).compute(av_mom, av_vmul);
+    }
+
+    // Call vmul
+    arma::mat vmul = vmul_id;
+    libqints::gto::reorder_cc(vmul, aobasis.b1, true, true, libqints::gto::lex, libqints::gto::korder);
+    threading_policy::pop();
+
+    // Pack
+    INTEGER NB2 = rem_read(REM_NB2);
+    ShlPrs S2(code);
+    INTEGER NB2car = S2.getNB2car();
+    arma::vec pkd_vmul(NB2car, arma::fill::zeros);
+    ScaV2M(vmul.memptr(), pkd_vmul.memptr(), 1, 0);
+
+    VRadd(h , h, pkd_vmul.memptr(), NB2);
+
+    QTimerOff(TimeForPolInt,Timer);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP polarization integrals with libqints: %.1f s (CPU) %.1f s (wall)\n",TimeForPolInt[0],TimeForPolInt[2]);
+}
 
 
 void EFP2::update_pol_ints(double *h, INTEGER code)
 {
-    impl_->user_data.code = code;
+    impl_->code = code;
 
-    if (rem_read(REM_EFP_FRAGMENTS_ONLY) || rem_read(REM_EFP_QM_ELEC) == 0 || rem_read(REM_EFP_ORDER) != 2)
+    if (rem_read(REM_EFP_FRAGMENTS_ONLY) || rem_read(REM_EFP_QM_POL) == 0 || rem_read(REM_EFP_ORDER) != 2)
         return;
-    printf("Compute polarization integrals \n");
+
+    // mechanical or electrostatic embedding QM/MM
+    bool do_qmmm = rem_read(REM_EFP_QMMM) == 1 || rem_read(REM_EFP_QMMM) == 2 || rem_read(REM_EFP_QMMM) == 3;
+    if (do_qmmm)
+        return;
+
     INTEGER NB2 = rem_read(REM_NB2);
 
-    /*
+
     threading_policy::enable_omp_only();
     libqints::dev_omp dev;
     dev.init(1024);
     threading_policy::pop();
-
-    if ((rem_read(REM_USE_LIBQINTS) != 0 && dev.nthreads > 1) || (rem_read(REM_USE_LIBQINTS) > 0)) // && rem_read(REM_EFP_PAIRWISE) == 0)
+    //if ((rem_read(REM_USE_LIBQINTS) != 0 && dev.nthreads > 1) || (rem_read(REM_USE_LIBQINTS) > 0)) // && rem_read(REM_EFP_PAIRWISE) == 0)
+    if ( dev.nthreads > 1 ) // always use libqints in parallel jobs 
     {
-        update_wf_qints(h, code);
+        //printf("\n Computed EFP polarization integrals with libqints\n");
+        update_pol_qints(h, code);
         return;
     }
-*/
-    size_t n_frag;
-    check_fail(efp_get_frag_count(impl_->efp, &n_frag));
 
+    qtime_t Timer = QTimerOn();
+    double TimeForPolInt[3];
+
+    //printf("\n Compute EFP polarization integrals with MakeFld\n");
     ShlPrs S2(code);
     double *V, *Z;
     INTEGER Kmax;
@@ -1186,314 +1945,34 @@ void EFP2::update_pol_ints(double *h, INTEGER code)
     V = QAllocDouble(NB2car > NB2 ? NB2car : NB2);
     VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
 
-    // induced dipoles
-    size_t n_id;
-    check_fail(efp_get_induced_dipole_count(impl_->efp, &n_id));
-    double *xyz_id = new double[n_id * 3];
-    check_fail(efp_get_induced_dipole_coordinates(impl_->efp, xyz_id));
-    double *id = new double[n_id * 3];
-    check_fail(efp_get_induced_dipole_values(impl_->efp, id));
-    double *idt = new double[n_id * 3];
-    check_fail(efp_get_induced_dipole_conj_values(impl_->efp, idt));
-
     Kmax = LFuncC(0, 1);
     Z = QAllocDouble(Kmax * NB2car);
 
-    double *xyz_ptr;
-    xyz_ptr = xyz_id;
-    for (size_t j1 = 0; j1 < n_id; j1++, xyz_ptr += 3) {
-        //that should only compute integrals for the first point
-        MakeFld(Z, xyz_ptr, 1, S2.code(), S2, 0);
-        for (int i = 0; i < NB2; i++) {
-            //dipole
-            V[i] -= 0.5 * (Z[i+1*NB2car] * (id[j1 * 3 + 0] +
-                                            idt[j1 * 3 + 0]) +
-                           Z[i+2*NB2car] * (id[j1 * 3 + 1] +
-                                            idt[j1 * 3 + 1]) +
-                           Z[i+3*NB2car] * (id[j1 * 3 + 2] +
-                                            idt[j1 * 3 + 2]));
-        }
-    }
-    VRadd(h, h, V, NB2);
-
-    QFree(V);
-    QFree(Z);
-    delete[] id;
-    delete[] idt;
-    delete[] xyz_id;
-}
-
-/*
-void EFP2::update_pol_ints(double *h, INTEGER code)
-{
-    impl_->user_data.code = code;
-    if (rem_read(REM_EFP_FRAGMENTS_ONLY) || rem_read(REM_EFP_QM_ELEC) == 0 || rem_read(REM_EFP_ORDER) != 2)
-        return;
-    printf("Compute polarization integrals \n");
-    INTEGER NB2 = rem_read(REM_NB2);
-
-
-    threading_policy::enable_omp_only();
-    libqints::dev_omp dev;
-    dev.init(1024);
-    threading_policy::pop();
-
-    if ((rem_read(REM_USE_LIBQINTS) != 0 && dev.nthreads > 1) || (rem_read(REM_USE_LIBQINTS) > 0)) // && rem_read(REM_EFP_PAIRWISE) == 0)
-    {
-        update_wf_qints(h, code);
-        return;
-    }
-
     size_t n_frag;
     check_fail(efp_get_frag_count(impl_->efp, &n_frag));
 
-    ShlPrs S2(code);
-    double *V, *Z;
-    INTEGER LXmax, Kmax;
-    INTEGER NB2car = S2.getNB2car();
-    V = QAllocDouble(NB2car > NB2 ? NB2car : NB2);
-    VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
+    for (size_t fr_i = 0; fr_i < n_frag; fr_i++) {
 
-    // induced dipoles
-    size_t n_id;
-    check_fail(efp_get_induced_dipole_count(impl_->efp, &n_id));
-    double *xyz_id = new double[n_id * 3];
-    check_fail(efp_get_induced_dipole_coordinates(impl_->efp, xyz_id));
-    double *id = new double[n_id * 3];
-    check_fail(efp_get_induced_dipole_values(impl_->efp, id));
-    double *idt = new double[n_id * 3];
-    check_fail(efp_get_induced_dipole_conj_values(impl_->efp, idt));
+        size_t n_pt;
+        check_fail(efp_get_frag_induced_dipole_count(impl_->efp, fr_i, &n_pt));
 
-    LXmax = 1;
-    Kmax = LFuncC(0, LXmax);
-    Z = QAllocDouble(Kmax * NB2car);
+        for (size_t j = 0; j < n_pt; j++) {
 
-    double *xyz_ptr;
-    xyz_ptr = xyz_id;
-    for (size_t j1 = 0; j1 < n_id; j1++, xyz_ptr += 3) {
-        //that should only compute integrals for the first point
-        MakeFld(Z, xyz_ptr, LXmax, S2.code(), S2, 0);
-        for (int i = 0; i < NB2; i++) {
-            //dipole
-            V[i] -= 0.5 * (Z[i+1*NB2car] * (id[j1 * 3 + 0] +
-                                            idt[j1 * 3 + 0]) +
-                           Z[i+2*NB2car] * (id[j1 * 3 + 1] +
-                                            idt[j1 * 3 + 1]) +
-                           Z[i+3*NB2car] * (id[j1 * 3 + 2] +
-                                            idt[j1 * 3 + 2]));
-        }
-    }
-    VRadd(h, h, V, NB2);
+            struct efp_pol_pt *pt;
+            pt = (struct efp_pol_pt *)malloc(sizeof(struct efp_pol_pt));
+            check_fail(efp_get_frag_pol_pt(impl_->efp, fr_i, j, pt));
 
-    QFree(V);
-    QFree(Z);
-    delete[] id;
-    delete[] idt;
-    delete[] xyz_id;
-}
-*/
+            double xyz[3] = {pt->x, pt->y, pt->z};
 
-/*
-void EFP2::update_wf(double *h, INTEGER code)
-{
-    impl_->user_data.code = code;
-    if (rem_read(REM_EFP_FRAGMENTS_ONLY) || rem_read(REM_EFP_QM_ELEC) == 0 || rem_read(REM_EFP_ORDER) != 2)
-        return;
-    printf("\n In update_wf() \n");
-
-    threading_policy::enable_omp_only();
-    libqints::dev_omp dev;
-    dev.init(1024);
-    threading_policy::pop();
-    INTEGER NB2 = rem_read(REM_NB2);
-
-    if ((rem_read(REM_USE_LIBQINTS) != 0 && dev.nthreads > 1) || (rem_read(REM_USE_LIBQINTS) > 0)) // && rem_read(REM_EFP_PAIRWISE) == 0)
-    {
-        update_wf_qints(h, code);
-        return;
-    }
-
-    size_t n_mult;
-    check_fail(efp_get_multipole_count(impl_->efp, &n_mult));
-    double *xyz_mult = new double[n_mult * 3];
-    check_fail(efp_get_multipole_coordinates(impl_->efp, xyz_mult));
-    double *mult = new double[n_mult * (1 + 3 + 6 + 10)];
-    check_fail(efp_get_multipole_values(impl_->efp, mult));
-
-    size_t n_frag;
-    check_fail(efp_get_frag_count(impl_->efp, &n_frag));
-
-    size_t n_atoms = 0;
-    for (size_t i = 0; i < n_frag; i++) {
-        size_t nat;
-        check_fail(efp_get_frag_atom_count(impl_->efp, i, &nat));
-        n_atoms += nat;
-    }
-
-    double *z_ptr, *xyz_ptr, *ai_screen_ptr, *ai_screen_ptr2;
-
-    INTEGER n_charges = n_atoms + n_mult;
-    double *z_c = new double[n_charges];
-    double *xyz_c = new double[3 * n_charges];
-    double *ai_screen = new double[n_charges];
-
-    memset(ai_screen, 0, n_charges * sizeof(double));
-
-    for (size_t i = 0; i < n_mult; i++) {
-        z_c[i] = mult[i * 20];
-        xyz_c[3 * i + 0] = xyz_mult[3 * i + 0];
-        xyz_c[3 * i + 1] = xyz_mult[3 * i + 1];
-        xyz_c[3 * i + 2] = xyz_mult[3 * i + 2];
-    }
-
-    z_ptr = z_c + n_mult;
-    xyz_ptr = xyz_c + n_mult * 3;
-    ai_screen_ptr = ai_screen;
-    ai_screen_ptr2 = ai_screen + n_mult;
-
-    for (size_t i = 0; i < n_frag; i++) {
-        size_t nat, nfragmult;
-        check_fail(efp_get_frag_atom_count(impl_->efp, i, &nat));
-
-        struct efp_atom *atoms = new struct efp_atom[nat];
-        check_fail(efp_get_frag_atoms(impl_->efp, i, nat, atoms));
-
-        check_fail(efp_get_frag_multipole_count(impl_->efp, i,
-            &nfragmult));
-        if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0) {
-            check_fail(efp_get_ai_screen(impl_->efp, i,
-                ai_screen_ptr));
-        }
-
-        for (size_t j = 0; j < nat; j++) {
-            *z_ptr++ = atoms[j].znuc;
-            *xyz_ptr++ = atoms[j].x;
-            *xyz_ptr++ = atoms[j].y;
-            *xyz_ptr++ = atoms[j].z;
-        }
-
-        ai_screen_ptr += nfragmult;
-        delete[] atoms;
-    }
-
-    ShlPrs S2(code);
-    double *V, *Z;
-    INTEGER LXmax, Kmax;
-    INTEGER NB2car = S2.getNB2car();
-    V = QAllocDouble(NB2car > NB2 ? NB2car : NB2);
-    VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
-
-    LXmax = 0;
-    Kmax = LFuncC(0, LXmax);
-    Z = QAllocDouble(Kmax * NB2car);
-
-    // charges
-    xyz_ptr = xyz_c;
-    for (size_t j1 = 0; j1 < n_charges; j1++, xyz_ptr += 3) {
-        double damp = ai_screen[j1];
-        //that should only compute integrals for the first point
-        MakeFld(Z, xyz_ptr, LXmax, S2.code(), S2, 0.0);
-
-        for (int i = 0; i < NB2; i++) {
-            V[i] -= Z[i] * z_c[j1];
-        }
-
-        if (damp > 1.0e-6) {
-            MakeFld(Z, xyz_ptr, LXmax, S2.code(), S2, damp);
+            MakeFld(Z, xyz, 1, S2.code(), S2, 0);
             for (int i = 0; i < NB2; i++) {
-                V[i] += Z[i] * z_c[j1];
+                //induced dipole
+                V[i] -= 0.5 * (Z[i + 1 * NB2car] * (pt->indip[0] + pt->indipconj[0]) +
+                               Z[i + 2 * NB2car] * (pt->indip[1] + pt->indipconj[1]) +
+                               Z[i + 3 * NB2car] * (pt->indip[2] + pt->indipconj[2]));
             }
-        }
-    }
-    QFree(Z);
 
-    // induced dipoles
-    size_t n_id;
-    check_fail(efp_get_induced_dipole_count(impl_->efp, &n_id));
-    double *xyz_id = new double[n_id * 3];
-    check_fail(efp_get_induced_dipole_coordinates(impl_->efp, xyz_id));
-    double *id = new double[n_id * 3];
-    check_fail(efp_get_induced_dipole_values(impl_->efp, id));
-    double *idt = new double[n_id * 3];
-    check_fail(efp_get_induced_dipole_conj_values(impl_->efp, idt));
-
-    LXmax = 1;
-    Kmax = LFuncC(0, LXmax);
-    Z = QAllocDouble(Kmax * NB2car);
-
-    xyz_ptr = xyz_id;
-    for (size_t j1 = 0; j1 < n_id; j1++, xyz_ptr += 3) {
-        //that should only compute integrals for the first point
-        MakeFld(Z, xyz_ptr, LXmax, S2.code(), S2, 0);
-        for (int i = 0; i < NB2; i++) {
-            //dipole
-            V[i] -= 0.5 * (Z[i+1*NB2car] * (id[j1 * 3 + 0] +
-                            idt[j1 * 3 + 0]) +
-                       Z[i+2*NB2car] * (id[j1 * 3 + 1] +
-                            idt[j1 * 3 + 1]) +
-                       Z[i+3*NB2car] * (id[j1 * 3 + 2] +
-                            idt[j1 * 3 + 2]));
-        }
-    }
-    QFree(Z);
-
-    // dipoles, quadrupoles, octupoles
-    LXmax = 3;
-    Kmax = LFuncC(0, LXmax);
-    Z = QAllocDouble(Kmax * NB2car);
-
-    //find quadrupoles indices in Z array
-    int nxx, nyy, nzz, nxy, nxz, nyz;
-    KonL2K(&nxx, 2, 0, 0);
-    KonL2K(&nyy, 0, 2, 0);
-    KonL2K(&nzz, 0, 0, 2);
-    KonL2K(&nxy, 1, 1, 0);
-    KonL2K(&nxz, 1, 0, 1);
-    KonL2K(&nyz, 0, 1, 1);
-    nxx--; nyy--; nzz--; nxy--; nxz--; nyz--;
-
-    //find ocupole indices in Z array
-    int nxxx, nyyy, nzzz, nxxy, nxxz, nxyy, nyyz, nxzz, nyzz, nxyz;
-    KonL2K(&nxxx, 3, 0, 0);
-    KonL2K(&nyyy, 0, 3, 0);
-    KonL2K(&nzzz, 0, 0, 3);
-    KonL2K(&nxxy, 2, 1, 0);
-    KonL2K(&nxxz, 2, 0, 1);
-    KonL2K(&nxyy, 1, 2, 0);
-    KonL2K(&nyyz, 0, 2, 1);
-    KonL2K(&nxzz, 1, 0, 2);
-    KonL2K(&nyzz, 0, 1, 2);
-    KonL2K(&nxyz, 1, 1, 1);
-    nxxx--;nyyy--;nzzz--;nxxy--;nxxz--;
-    nxyy--;nyyz--;nxzz--;nyzz--;nxyz--;
-
-    z_ptr = mult, xyz_ptr = xyz_mult;
-    for (size_t i1 = 0; i1 < n_mult; i1++, z_ptr += 20, xyz_ptr += 3) {
-        //that should only compute integrals for the first point
-        MakeFld(Z, xyz_ptr, LXmax, S2.code(), S2, 0);
-        for (int i = 0; i < NB2; i++) {
-            //dipole
-            V[i] -= Z[i+1*NB2car]*z_ptr[1] +
-                Z[i+2*NB2car]*z_ptr[2] +
-                Z[i+3*NB2car]*z_ptr[3];
-            //quadrupole
-            V[i] -= (   Z[i+nxx*NB2car]*z_ptr[4]
-                +   Z[i+nyy*NB2car]*z_ptr[5]
-                +   Z[i+nzz*NB2car]*z_ptr[6]
-                + 2*Z[i+nxy*NB2car]*z_ptr[7]
-                + 2*Z[i+nxz*NB2car]*z_ptr[8]
-                + 2*Z[i+nyz*NB2car]*z_ptr[9]) / 3.0;
-            //octupole
-            V[i] -= (   Z[i+nxxx*NB2car]*z_ptr[10]
-                +   Z[i+nyyy*NB2car]*z_ptr[11]
-                +   Z[i+nzzz*NB2car]*z_ptr[12]
-                + 3*Z[i+nxxy*NB2car]*z_ptr[13]
-                + 3*Z[i+nxxz*NB2car]*z_ptr[14]
-                + 3*Z[i+nxyy*NB2car]*z_ptr[15]
-                + 3*Z[i+nyyz*NB2car]*z_ptr[16]
-                + 3*Z[i+nxzz*NB2car]*z_ptr[17]
-                + 3*Z[i+nyzz*NB2car]*z_ptr[18]
-                + 6*Z[i+nxyz*NB2car]*z_ptr[19]) / 15.0;
+            free(pt);
         }
     }
     VRadd(h, h, V, NB2);
@@ -1501,20 +1980,15 @@ void EFP2::update_wf(double *h, INTEGER code)
     QFree(V);
     QFree(Z);
 
-    delete[] mult;
-    delete[] xyz_mult;
-    delete[] z_c;
-    delete[] xyz_c;
-    delete[] id;
-    delete[] idt;
-    delete[] xyz_id;
-    delete[] ai_screen;
+    QTimerOff(TimeForPolInt,Timer);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP polarization integrals with AOints: %.1f s (CPU) %.1f s (wall)\n",TimeForPolInt[0],TimeForPolInt[2]);
 }
-*/
 
 void EFP2::update_qm_atoms()
 {
-    if (rem_read(REM_EFP_FRAGMENTS_ONLY) || rem_read(REM_EFP_QM_ELEC) == 0)
+    bool if_qmmm = rem_read(REM_EFP_QMMM) > 0;
+    if (rem_read(REM_EFP_FRAGMENTS_ONLY) || (rem_read(REM_EFP_QM_ELEC) == 0 && !if_qmmm))
         return;
 
     double *jA, *nucChg;
@@ -1634,25 +2108,47 @@ void EFP2::compute(int do_grad)
 
 double EFP2::get_wf_dependent_energy(double *w, double n_elem)
 {
-	double energy = 0.0;
-    if (rem_read(REM_EFP_ORDER) != 0) {
-    	size_t size = n_elem * sizeof(double);
-	    impl_->user_data.qm_field_save = NULL;
-	    impl_->user_data.density_matrix =
-	        (double *)realloc(impl_->user_data.density_matrix, size);
-	    memcpy(impl_->user_data.density_matrix, w, size);
-	    impl_->user_data.dm_size = n_elem;
-        check_fail(efp_set_electron_density_field_user_data(impl_->efp,
-                                                            &impl_->user_data));
-        check_fail(efp_get_wavefunction_dependent_energy(impl_->efp, &energy));
-        check_fail(efp_get_induced_dipole_values(impl_->efp, impl_->id_gs));
-        check_fail(efp_get_induced_dipole_conj_values(impl_->efp,
-                                                      impl_->idt_gs));
-    }
+    double energy = 0.0;
+    if (rem_read(REM_EFP_ORDER) == 0 || rem_read(REM_EFP_POL) == 0 || rem_read(REM_EFP_QM_POL) == 0 || rem_read(REM_EFP_FRAGMENTS_ONLY))
+        return energy;
+
+    // mechanical or electrostatic embedding
+    bool do_qmmm = rem_read(REM_EFP_QMMM) == 1 || rem_read(REM_EFP_QMMM) == 2 || rem_read(REM_EFP_QMMM) == 3;
+    if (do_qmmm)
+        return energy;
+
+    size_t size = n_elem * sizeof(double);
+    impl_->density_matrix = (double *)realloc(impl_->density_matrix, size);
+    memcpy(impl_->density_matrix, w, size);
+
+    // do not need to go further with efp order 0 or 1
+    if (rem_read(REM_EFP_ORDER) < 2)
+        return energy;
+
+    // compute electric field integrals on polarizability points due to density w
+    check_fail(compute_electron_density_field(impl_->efp, w));
+
+    qtime_t Timer = QTimerOn();
+    double TimeForWFdepEne[3];
+
+    // compute polarization energy self-consistent with density w
+    check_fail(efp_get_wavefunction_dependent_energy(impl_->efp, &energy));
+
+    QTimerOff(TimeForWFdepEne,Timer);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP wavefunction dependent energy: %.1f s (CPU) %.1f s (wall)\n",TimeForWFdepEne[0],TimeForWFdepEne[2]);
 
     impl_->wf_dep_energy_gs = energy;
 
     return energy;
+}
+
+void EFP2::get_qmmm_electronic_gradient(double *w, double *grad)
+{
+    if (rem_read(REM_EFP_FRAGMENTS_ONLY) || rem_read(REM_EFP_QMMM) == 0)
+        return;
+
+    check_fail(compute_qmmm_electronic_gradient(impl_->efp, w, grad));
 }
 
 double EFP2::get_total_energy()
@@ -1660,21 +2156,23 @@ double EFP2::get_total_energy()
     struct efp_energy energy;
 
     check_fail(efp_get_energy(impl_->efp, &energy));
-
+    //print_energy();
     return energy.total;
 }
 
-//void EFP2::get_pairwise_energy(double *densityMatrix, size_t n_elem, double *Escf)
-void EFP2::get_pairwise_energy(double Estate, int if_excited)
+void EFP2::compute_integral_pairwise_energy(double Estate, int if_excited)
 {
     if (rem_read(REM_EFP_FRAGMENTS_ONLY)  || !rem_read(REM_EFP_PAIRWISE) || rem_read(REM_EFP_ORDER) == 0)
         return;
 
     INTEGER NB2 = rem_read(REM_NB2);
 
+    qtime_t Timer = QTimerOn();
+    double TimeForPairInt[3];
+
     double *densityMatrix2;
-    if (impl_->user_data.density_matrix != NULL)
-        densityMatrix2 = impl_->user_data.density_matrix;
+    if (impl_->density_matrix != NULL)
+        densityMatrix2 = impl_->density_matrix;
     else
         printf("density matrix is empty");
 
@@ -1688,23 +2186,24 @@ void EFP2::get_pairwise_energy(double Estate, int if_excited)
     size_t n_frag;
     check_fail(efp_get_frag_count(impl_->efp, &n_frag));
 
-    struct efp_energy *pair_energies = new struct efp_energy[n_frag];
+    struct efp_energy *pair_energies; // = new struct efp_energy[n_frag];
+    pair_energies = (struct efp_energy *)malloc(n_frag * sizeof(struct efp_energy));
     check_fail(efp_get_pairwise_energy(impl_->efp, pair_energies));
 
     // energy of QM-EFP integrals
     double Eint = 0.0;
 
-    INTEGER code = impl_->user_data.code;
+    // INTEGER code = impl_->user_data.code;
+    INTEGER code = impl_->code;
     ShlPrs S2(code);
     double *V, *Z, *Z0;
     INTEGER K0, Kmax;
     INTEGER NB2car = S2.getNB2car();
     V = QAllocDouble(NB2car > NB2 ? NB2car : NB2);
-    //VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
 
     // charges
     K0 = LFuncC(0, 0);
-    Z = QAllocDouble(K0 * NB2car);
+    Z0 = QAllocDouble(K0 * NB2car);
 
     //find quadrupoles indices in Z array
     int nxx, nyy, nzz, nxy, nxz, nyz;
@@ -1731,38 +2230,43 @@ void EFP2::get_pairwise_energy(double Estate, int if_excited)
     nxxx--;nyyy--;nzzz--;nxxy--;nxxz--;
     nxyy--;nyyz--;nxzz--;nyzz--;nxyz--;
 
-    for (size_t i = 0; i < n_frag; i++) {
-        VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
+    qtime_t TimerMult = QTimerOn();
+    double TimeForMultInt[3];
 
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP pairwise integrals for %zu fragments will be computed \n", n_frag);
+
+    for (size_t fr_i = 0; fr_i < n_frag; fr_i++) {
+        VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
+        
         size_t n_pt;
-        check_fail(efp_get_frag_multipole_count(impl_->efp, i, &n_pt));
+        check_fail(efp_get_frag_multipole_count(impl_->efp, fr_i, &n_pt));
+
+        if (rem_read(REM_EFP_PRINT) > 1)
+        printf("    EFP pairwise integrals for fragment %zu containing %zu multipole points ......\n", fr_i, n_pt);
 
         // compute integrals based on the highest rank of multipoles in fragment:
         // 0 - charge, 1 - dipole, 2 - quad, 3 - oct
-        size_t rank;
-        check_fail(efp_get_frag_rank(impl_->efp, i, &rank));
+        int rank;
+        check_fail(efp_get_frag_rank(impl_->efp, fr_i, &rank));
         Kmax = LFuncC(0, rank);
         Z = QAllocDouble(Kmax * NB2car);
 
         for (size_t j = 0; j < n_pt; j++) {
 
             struct efp_mult_pt *pt;
-            check_fail(efp_get_frag_mult_pt(impl_->efp, i, j, pt));
+            pt = (struct efp_mult_pt *)malloc(sizeof(struct efp_mult_pt));
+            check_fail(efp_get_frag_mult_pt(impl_->efp, fr_i, j, pt));
 
             double xyz[3] = {pt->x, pt->y, pt->z};
-
             double qi;
-            // compute integrals with screened monopoles separately
-            if (pt->if_screen0)
-                qi = pt->znuc;
-            else
-                qi = pt->znuc + pt->monopole;
+            qi = pt->znuc + pt->monopole;
 
             // all multipoles - no screening
             MakeFld(Z, xyz, rank, S2.code(), S2, 0);
             for (int i = 0; i < NB2; i++) {
                 // charge-monopole
-                V[i] += Z[i] * qi;
+                V[i] -= Z[i] * qi;
                 //dipole
                 if (rank > 0)
                     V[i] -= Z[i + 1 * NB2car] * pt->dipole[0] +
@@ -1791,15 +2295,16 @@ void EFP2::get_pairwise_energy(double Estate, int if_excited)
             }
 
             // second call for integrals - taking care of screened monopoles
-            if (pt->if_screen0) {
+            if (pt->if_screen) {
 
                 double screen = pt->screen0;
                 double q_mon = pt->monopole;
-
-                MakeFld(Z, xyz, 0, S2.code(), S2, screen);
-                for (int i = 0; i < NB2; i++) {
-                    // charge-monopole
-                    V[i] += Z[i] * q_mon;
+                if (screen > 1.0e-6 && screen < 10.0) {
+                    MakeFld(Z0, xyz, 0, S2.code(), S2, screen);
+                    for (int i = 0; i < NB2; i++) {
+                        // charge-monopole
+                        V[i] += Z0[i] * q_mon;
+                    }
                 }
             }
         }
@@ -1813,336 +2318,78 @@ void EFP2::get_pairwise_energy(double Estate, int if_excited)
         double ene_tmp = 0.0;
         //printf("size of density matrix %d, size of V %d\n", size, (NB2car > NB2 ? NB2car : NB2));
         VMtrace(&ene_tmp, densityMatrix2, V, TRUE);
-        //printf("elec pair_energy %lf\n",ene_tmp);
+        // printf("elec pair_energy %lf\n",ene_tmp);
+
         // efp_order = 1:  <psi_0 | V_elec | psi_0 > is a purely electrostatic component
         // efp_order = 2:  <psi_sol | V_elec | psi_sol > includes electrostatics and solute polarization
-        // POTENTIAL BUG: maybe need to clean pair_energies properly...
+        // maybe need to store these pair_energies in different locations...
         pair_energies[fr_i].ai_electrostatic = ene_tmp;
         Eint += ene_tmp;
     }
     QFree(Z0);
 
+    QTimerOff(TimeForMultInt,TimerMult);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP multipole pairwise integrals: %.1f s (CPU) %.1f s (wall)\n",TimeForMultInt[0],TimeForMultInt[2]);
+
+    qtime_t TimerPol = QTimerOn();
+    double TimeForPolInt[3];
+    
     // only do polarization integrals for efp_order = 2
     if (rem_read(REM_EFP_ORDER) == 2) {
-        // induced dipoles
-        size_t n_id;
-        check_fail(efp_get_induced_dipole_count(impl_->efp, &n_id));
-        double *xyz_id = new double[n_id * 3];
-        check_fail(efp_get_induced_dipole_coordinates(impl_->efp, xyz_id));
-        // Get induced dipoles from the ground state (aka old)
-        double *id = new double[n_id * 3];
-        check_fail(efp_get_old_induced_dipole_values(impl_->efp, id));
-        double *idt = new double[n_id * 3];
-        check_fail(efp_get_old_induced_dipole_conj_values(impl_->efp, idt));
 
         Kmax = LFuncC(0, 1);
         Z = QAllocDouble(Kmax * NB2car);
 
-        xyz_ptr = xyz_id;
-        int dip_count = 0;
         for (size_t fr_i = 0; fr_i < n_frag; fr_i++) {
             VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
-            size_t ndip;
-            check_fail(efp_get_frag_induced_dipole_count(impl_->efp, fr_i, &ndip));
+            size_t n_pt;
+            check_fail(efp_get_frag_induced_dipole_count(impl_->efp, fr_i, &n_pt));
 
-            for (size_t j1 = 0; j1 < ndip; j1++, xyz_ptr += 3) {
-                MakeFld(Z, xyz_ptr, 1, S2.code(), S2, 0);
+            for (size_t j = 0; j < n_pt; j++) {
+
+                struct efp_pol_pt *pt;
+                pt = (struct efp_pol_pt *)malloc(sizeof(struct efp_pol_pt));
+                check_fail(efp_get_frag_pol_pt(impl_->efp, fr_i, j, pt));
+
+                double xyz[3] = {pt->x, pt->y, pt->z};
+
+                MakeFld(Z, xyz, 1, S2.code(), S2, 0);
+
+                // use ground state induced dipoles in integral calculations
                 for (int i = 0; i < NB2; i++) {
-                    //dipole
-                    V[i] -= 0.5 * (Z[i + 1 * NB2car] * (id[(dip_count+j1) * 3 + 0] + idt[(dip_count+j1) * 3 + 0]) +
-                                   Z[i + 2 * NB2car] * (id[(dip_count+j1) * 3 + 1] + idt[(dip_count+j1) * 3 + 1]) +
-                                   Z[i + 3 * NB2car] * (id[(dip_count+j1) * 3 + 2] + idt[(dip_count+j1) * 3 + 2]));
+                    V[i] -= 0.5 * (Z[i + 1 * NB2car] * (pt->indip_gs[0] + pt->indipconj_gs[0]) +
+                            Z[i + 2 * NB2car] * (pt->indip_gs[1] + pt->indipconj_gs[1]) +
+                            Z[i + 3 * NB2car] * (pt->indip_gs[2] + pt->indipconj_gs[2]));
                 }
+
+                free(pt);
             }
-            dip_count += ndip;
 
             double ene_tmp = 0.0;
             VMtrace(&ene_tmp, densityMatrix2, V, TRUE);
-            //printf("pol pair energy %lf\n", ene_tmp);
+            // printf("pol pair energy %lf\n", ene_tmp);
             pair_energies[fr_i].ai_polarization = ene_tmp;
             Eint += ene_tmp;
         }
         QFree(Z);
-        delete[] id;
-        delete[] idt;
-        delete[] xyz_id;
     }
     QFree(V);
+
+    QTimerOff(TimeForPolInt,TimerPol);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" EFP polarization pairwise integrals: %.1f s (CPU) %.1f s (wall)\n",TimeForPolInt[0],TimeForPolInt[2]);
+
     check_fail(efp_set_pairwise_energy(impl_->efp, pair_energies));
     delete[] pair_energies;
 
     impl_->integral_ene = Eint;
+
+    QTimerOff(TimeForPairInt,Timer);
+    if (rem_read(REM_EFP_PRINT) > 0)
+        printf(" Total EFP pairwise integrals: %.1f s (CPU) %.1f s (wall)\n",TimeForPairInt[0],TimeForPairInt[2]);
+
 }
-
-/*
-void EFP2::get_pairwise_energy(double Estate, int if_excited)
-{
-    if (rem_read(REM_EFP_FRAGMENTS_ONLY)  || !rem_read(REM_EFP_PAIRWISE) || rem_read(REM_EFP_ORDER) == 0)
-        return;
-
-    INTEGER NB2 = rem_read(REM_NB2);
-
-    double *densityMatrix2;
-    if (impl_->user_data.density_matrix != NULL)
-        densityMatrix2 = impl_->user_data.density_matrix;
-    else
-        printf("density matrix is empty");
-
-    if (if_excited == 0) {  // ground state
-        impl_->Escf = Estate;
-        impl_->state_energy = Estate;
-    }
-    else   // excited state
-        impl_->state_energy = impl_->Escf + Estate;
-
-    size_t n_mult;
-    check_fail(efp_get_multipole_count(impl_->efp, &n_mult));
-    double *xyz_mult = new double[n_mult * 3];
-    check_fail(efp_get_multipole_coordinates(impl_->efp, xyz_mult));
-    double *mult = new double[n_mult * (1 + 3 + 6 + 10)];
-    check_fail(efp_get_multipole_values(impl_->efp, mult));
-    double *ai_screen = new double[n_mult];
-    memset(ai_screen, 0, n_mult * sizeof(double));
-
-    size_t n_frag;
-    check_fail(efp_get_frag_count(impl_->efp, &n_frag));
-
-    size_t n_atoms = 0;
-    for (size_t i = 0; i < n_frag; i++) {
-        size_t nat;
-        check_fail(efp_get_frag_atom_count(impl_->efp, i, &nat));
-        n_atoms += nat;
-    }
-
-    double *z_atom = new double[n_atoms];
-    double *xyz_atom = new double [n_atoms * 3];
-    //double *ai_screen_ptr;
-    //ai_screen_ptr = ai_screen;
-    int nat_count = 0;
-    int screen_count = 0;
-    for (size_t i = 0; i < n_frag; i++) {
-        size_t nat, nfragmult;
-        check_fail(efp_get_frag_atom_count(impl_->efp, i, &nat));
-        check_fail(efp_get_frag_multipole_count(impl_->efp, i, &nfragmult));
-
-        struct efp_atom *atoms = new struct efp_atom[nat];
-        check_fail(efp_get_frag_atoms(impl_->efp, i, nat, atoms));
-
-        for (size_t j = 0; j < nat; j++) {
-            z_atom[j + nat_count] = atoms[j].znuc;
-            xyz_atom[j*3 + 0 + nat_count*3] = atoms[j].x;
-            xyz_atom[j*3 + 1 + nat_count*3] = atoms[j].y;
-            xyz_atom[j*3 + 2 + nat_count*3] = atoms[j].z;
-        }
-
-        if (rem_read(REM_EFP_QM_ELEC_DAMP) != 0) {
-            check_fail(efp_get_ai_screen(impl_->efp, i, ai_screen + screen_count));
-        }
-        //ai_screen_ptr += nfragmult;
-        nat_count += nat;
-        screen_count += nfragmult;
-        delete[] atoms;
-    }
-
-    struct efp_energy *pair_energies = new struct efp_energy[n_frag];
-    check_fail(efp_get_pairwise_energy(impl_->efp, pair_energies));
-
-    // energy of QM-EFP integrals
-    double Eint = 0.0;
-
-    INTEGER code = impl_->user_data.code;
-    ShlPrs S2(code);
-    double *V, *Z, *Z3;
-    INTEGER LXmax, Kmax;
-    INTEGER NB2car = S2.getNB2car();
-    V = QAllocDouble(NB2car > NB2 ? NB2car : NB2);
-    //VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
-
-    // charges
-    LXmax = 0;
-    Kmax = LFuncC(0, LXmax);
-    Z = QAllocDouble(Kmax * NB2car);
-
-    // multipoles up to octupoles
-    LXmax = 3;
-    Kmax = LFuncC(0, LXmax);
-    Z3 = QAllocDouble(Kmax * NB2car);
-
-    //find quadrupoles indices in Z array
-    int nxx, nyy, nzz, nxy, nxz, nyz;
-    KonL2K(&nxx, 2, 0, 0);
-    KonL2K(&nyy, 0, 2, 0);
-    KonL2K(&nzz, 0, 0, 2);
-    KonL2K(&nxy, 1, 1, 0);
-    KonL2K(&nxz, 1, 0, 1);
-    KonL2K(&nyz, 0, 1, 1);
-    nxx--; nyy--; nzz--; nxy--; nxz--; nyz--;
-
-    //find ocupole indices in Z array
-    int nxxx, nyyy, nzzz, nxxy, nxxz, nxyy, nyyz, nxzz, nyzz, nxyz;
-    KonL2K(&nxxx, 3, 0, 0);
-    KonL2K(&nyyy, 0, 3, 0);
-    KonL2K(&nzzz, 0, 0, 3);
-    KonL2K(&nxxy, 2, 1, 0);
-    KonL2K(&nxxz, 2, 0, 1);
-    KonL2K(&nxyy, 1, 2, 0);
-    KonL2K(&nyyz, 0, 2, 1);
-    KonL2K(&nxzz, 1, 0, 2);
-    KonL2K(&nyzz, 0, 1, 2);
-    KonL2K(&nxyz, 1, 1, 1);
-    nxxx--;nyyy--;nzzz--;nxxy--;nxxz--;
-    nxyy--;nyyz--;nxzz--;nyzz--;nxyz--;
-
-    double *xyz_ptr, *mxyz_ptr, *mult_ptr;
-    int ai_screen_count = 0, atom_count = 0;
-    xyz_ptr = xyz_atom;
-    mxyz_ptr = xyz_mult;
-    mult_ptr = mult;
-    for (size_t fr_i = 0; fr_i < n_frag; fr_i++) {
-        VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
-        size_t nat, nfragmult;
-        check_fail(efp_get_frag_atom_count(impl_->efp, fr_i, &nat));
-        check_fail(efp_get_frag_multipole_count(impl_->efp, fr_i, &nfragmult));
-
-        // charges
-        for (size_t j1 = 0; j1 < nat; j1++, xyz_ptr += 3) {
-            //that should only compute integrals for the first point
-            MakeFld(Z, xyz_ptr, 0, S2.code(), S2, 0.0);
-            for (int i = 0; i < NB2; i++) {
-                V[i] -= Z[i] * z_atom[atom_count + j1];
-            }
-        }
-        atom_count += nat;
-
-        for (size_t i1 = 0; i1 < nfragmult; i1++, mult_ptr += 20, mxyz_ptr += 3) {
-            // trying to skip integral computing if higher multipoles are not present...
-            size_t rank;
-            check_fail(efp_get_frag_mult_rank(impl_->efp, fr_i, i1, &rank));
-
-            // if higher multipoles are there
-            if (rank > 0) {
-                MakeFld(Z3, mxyz_ptr, 3, S2.code(), S2, 0);
-                for (int i = 0; i < NB2; i++) {
-                    // charges
-                    V[i] -= Z3[i] * mult_ptr[0];
-                    //dipole
-                    V[i] -= Z3[i + 1 * NB2car] * mult_ptr[1] +
-                            Z3[i + 2 * NB2car] * mult_ptr[2] +
-                            Z3[i + 3 * NB2car] * mult_ptr[3];
-                    //quadrupole
-                    V[i] -= (Z3[i + nxx * NB2car] * mult_ptr[4]
-                             + Z3[i + nyy * NB2car] * mult_ptr[5]
-                             + Z3[i + nzz * NB2car] * mult_ptr[6]
-                             + 2 * Z3[i + nxy * NB2car] * mult_ptr[7]
-                             + 2 * Z3[i + nxz * NB2car] * mult_ptr[8]
-                             + 2 * Z3[i + nyz * NB2car] * mult_ptr[9]) / 3.0;
-                    //octupole
-                    V[i] -= (Z3[i + nxxx * NB2car] * mult_ptr[10]
-                             + Z3[i + nyyy * NB2car] * mult_ptr[11]
-                             + Z3[i + nzzz * NB2car] * mult_ptr[12]
-                             + 3 * Z3[i + nxxy * NB2car] * mult_ptr[13]
-                             + 3 * Z3[i + nxxz * NB2car] * mult_ptr[14]
-                             + 3 * Z3[i + nxyy * NB2car] * mult_ptr[15]
-                             + 3 * Z3[i + nyyz * NB2car] * mult_ptr[16]
-                             + 3 * Z3[i + nxzz * NB2car] * mult_ptr[17]
-                             + 3 * Z3[i + nyzz * NB2car] * mult_ptr[18]
-                             + 6 * Z3[i + nxyz * NB2car] * mult_ptr[19]) / 15.0;
-                }
-            }
-                // only charges are there
-            else {
-                MakeFld(Z, mxyz_ptr, 0, S2.code(), S2, 0);
-                for (int i = 0; i < NB2; i++) {
-                    // charges
-                    V[i] -= Z[i] * mult_ptr[0];
-                }
-            }
-            // charge damping
-            double damp = ai_screen[ai_screen_count + i1];
-            if (damp > 1.0e-6) {
-                MakeFld(Z, mxyz_ptr, 0, S2.code(), S2, damp);
-                for (int i = 0; i < NB2; i++) {
-                    V[i] += Z[i] * mult_ptr[0];
-                }
-            }
-        }
-        ai_screen_count += nfragmult;
-
-        /*
-        printf("\n V ints \n");
-        for (int k= 0; k<NB2car; k++) {
-            printf(" %lf ", V[k]);
-        } */
-        double ene_tmp = 0.0;
-        //printf("size of density matrix %d, size of V %d\n", size, (NB2car > NB2 ? NB2car : NB2));
-        VMtrace(&ene_tmp, densityMatrix2, V, TRUE);
-        //printf("elec pair_energy %lf\n",ene_tmp);
-        // efp_order = 1:  <psi_0 | V_elec | psi_0 > is a purely electrostatic component
-        // efp_order = 2:  <psi_sol | V_elec | psi_sol > includes electrostatics and solute polarization
-        // POTENTIAL BUG: maybe need to clean pair_energies properly...
-        pair_energies[fr_i].ai_electrostatic = ene_tmp;
-        Eint += ene_tmp;
-    }
-    QFree(Z);
-    QFree(Z3);
-    delete[] mult;
-    delete[] xyz_mult;
-    delete[] ai_screen;
-
-    // only do polarization integrals for efp_order = 2
-    if (rem_read(REM_EFP_ORDER) == 2) {
-        // induced dipoles
-        size_t n_id;
-        check_fail(efp_get_induced_dipole_count(impl_->efp, &n_id));
-        double *xyz_id = new double[n_id * 3];
-        check_fail(efp_get_induced_dipole_coordinates(impl_->efp, xyz_id));
-        // Get induced dipoles from the ground state (aka old)
-        double *id = new double[n_id * 3];
-        check_fail(efp_get_old_induced_dipole_values(impl_->efp, id));
-        double *idt = new double[n_id * 3];
-        check_fail(efp_get_old_induced_dipole_conj_values(impl_->efp, idt));
-
-        LXmax = 1;
-        Kmax = LFuncC(0, LXmax);
-        Z = QAllocDouble(Kmax * NB2car);
-
-        xyz_ptr = xyz_id;
-        int dip_count = 0;
-        for (size_t fr_i = 0; fr_i < n_frag; fr_i++) {
-            VRload(V, NB2car > NB2 ? NB2car : NB2, 0.0);
-            size_t ndip;
-            check_fail(efp_get_frag_induced_dipole_count(impl_->efp, fr_i, &ndip));
-
-            for (size_t j1 = 0; j1 < ndip; j1++, xyz_ptr += 3) {
-                MakeFld(Z, xyz_ptr, LXmax, S2.code(), S2, 0);
-                for (int i = 0; i < NB2; i++) {
-                    //dipole
-                    V[i] -= 0.5 * (Z[i + 1 * NB2car] * (id[(dip_count+j1) * 3 + 0] + idt[(dip_count+j1) * 3 + 0]) +
-                                   Z[i + 2 * NB2car] * (id[(dip_count+j1) * 3 + 1] + idt[(dip_count+j1) * 3 + 1]) +
-                                   Z[i + 3 * NB2car] * (id[(dip_count+j1) * 3 + 2] + idt[(dip_count+j1) * 3 + 2]));
-                }
-            }
-            dip_count += ndip;
-
-            double ene_tmp = 0.0;
-            VMtrace(&ene_tmp, densityMatrix2, V, TRUE);
-            //printf("pol pair energy %lf\n", ene_tmp);
-            pair_energies[fr_i].ai_polarization = ene_tmp;
-            Eint += ene_tmp;
-        }
-        QFree(Z);
-        delete[] id;
-        delete[] idt;
-        delete[] xyz_id;
-    }
-    QFree(V);
-    check_fail(efp_set_pairwise_energy(impl_->efp, pair_energies));
-    delete[] pair_energies;
-
-    impl_->integral_ene = Eint;
-}
-*/
-
 
 void EFP2::print_energy()
 {
@@ -2157,6 +2404,8 @@ void EFP2::print_energy()
         energy.exchange_repulsion);
     printf("%35s %16.10lf\n", "OVERLAP-BASED CHARGE PENETRATION",
         energy.charge_penetration);
+    printf("%35s %16.10lf\n", "MM COULOMB ENERGY", energy.qq);
+    printf("%35s %16.10lf\n", "MM LJ ENERGY", energy.lj);
     printf("\n");
 
     if (!rem_read(REM_EFP_FRAGMENTS_ONLY)) {
@@ -2183,6 +2432,10 @@ void EFP2::print_energy()
 void EFP2::print_pairwise_energy(int if_excited)
 {
     if (rem_read(REM_EFP_FRAGMENTS_ONLY) || !rem_read(REM_EFP_PAIRWISE) || rem_read(REM_EFP_ORDER) == 0)
+        return;
+
+    // QM/MM: not implemented so far
+    if (rem_read(REM_EFP_QMMM) > 0)
         return;
 
     printf("\n ------ QM---EFP PAIRWISE ENERGY ANALYSIS FOLLOWS ------------------------\n\n");
@@ -2218,8 +2471,10 @@ void EFP2::print_pairwise_energy(int if_excited)
         printf("\n");
 
         if (rem_read(REM_EFP_ORDER) == 1) {
+            //printf("%56s %16.10lf\n", "QM NUC/EFP ELEC ENERGY",
+            //        energies[i].electrostatic);
             printf("%56s %16.10lf\n", "ELEC ENERGY <Psi_0|Vcoul|Psi_0>",
-                    energies[i].electrostatic + energies[i].ai_electrostatic);
+                   energies[i].electrostatic + energies[i].ai_electrostatic);
         }
         if (rem_read(REM_EFP_ORDER) == 2) {
             printf("%56s %16.10lf\n", "ELEC + SOLUTE POL ENERGY <Psi_sol|Vcoul|Psi_sol>",
@@ -2281,7 +2536,6 @@ void EFP2::print_pairwise_energy(int if_excited)
     check_fail(efp_get_energy(impl_->efp, &energy));
     Eefp = energy.total;
 
-    //check_fail(efp_get_wavefunction_dependent_energy(impl_->efp, &Epol));
     double Eqm = 0.0;
     if (rem_read(REM_EFP_ORDER) == 1) {
         Eqm = impl_->state_energy - Eefp;
@@ -2295,6 +2549,7 @@ void EFP2::print_pairwise_energy(int if_excited)
     printf("\n ------ QM---EFP PAIRWISE ENERGY ANALYSIS COMPLETED ---------------------\n\n");
 }
 
+/*
 void EFP2::get_qm_gradient(std::vector<double>& grad)
 {
     size_t n_atoms;
@@ -2302,6 +2557,23 @@ void EFP2::get_qm_gradient(std::vector<double>& grad)
     check_fail(efp_get_point_charge_count(impl_->efp, &n_atoms));
     grad.resize(3 * n_atoms);
     check_fail(efp_get_point_charge_gradient(impl_->efp, &grad.front()));
+}
+*/
+
+void EFP2::get_qmmm_nuclear_gradient(double *grad)
+{
+    // before asking for the gradient on QM nuclei (ptc points), add LJ contributions to them
+    check_fail(update_gradient_special_fragment(impl_->efp));
+
+    size_t n_atoms;
+    check_fail(efp_get_point_charge_count(impl_->efp, &n_atoms));
+
+    // need vector here
+    std::vector<double> grad_vec;
+    grad_vec.resize(3*n_atoms);
+    check_fail(efp_get_point_charge_gradient(impl_->efp, &grad_vec.front()));
+    // convert from vector to double array
+    copy(grad_vec.begin(),grad_vec.end(),grad);
 }
 
 void EFP2::get_gradient(std::vector<double>& grad)
@@ -2315,6 +2587,5 @@ void EFP2::get_gradient(std::vector<double>& grad)
 
 extern "C" void efpenergypol2(double *jPv, INTEGER *size, double *Ecis, double *energy)
 {
-	*energy = EFP2::instance().get_excited_state_energy_correction(
-	    jPv, *size, *Ecis);
+	*energy = EFP2::instance().get_excited_state_energy_correction(jPv, *size, *Ecis);
 }

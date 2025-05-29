@@ -917,7 +917,15 @@ lj_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
                       &force, &vec_zero);
         efp_add_stress(&swf->dr, &force, &efp->stress);
     }
-
+    double energy_thresh = 0.1;
+    if (efp->opts.print > 0) {
+        if (fabs(energy) > energy_thresh) {
+            printf("WARNING: MM LJ energy between frag %zu, atom %zu and frag %zu, atom %zu, distance %lf is %lf\n", 
+                fr_i_idx, pt_i_idx, fr_j_idx, pt_j_idx, r, energy);
+            printf("         Coordinates of atoms %lf, %lf, %lf, and %lf, %lf, %lf\n", 
+                    pt_i->x, pt_i->y, pt_i->z, pt_j->x, pt_j->y, pt_j->z);
+            }
+    }
     return energy;
 }
 

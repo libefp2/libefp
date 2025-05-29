@@ -177,6 +177,8 @@ struct efp_opts {
 	enum efp_elec_damp elec_damp;
 	/** Polarization damping type (see #efp_pol_damp). */
 	enum efp_pol_damp pol_damp;
+	/** Polarization damping value (see #efp_pol_damp_tt_value). */
+	double pol_damp_tt_value;
 	/** Driver used to find polarization induced dipoles. */
 	enum efp_pol_driver pol_driver;
 	/** Enable periodic boundary conditions if nonzero. */
@@ -775,15 +777,21 @@ enum efp_result efp_get_stress_tensor(struct efp *efp, double *stress);
 
 /**
  * Get all ab initio screening parameters.
- *
  * \param[in] efp The efp structure.
- *
  * \param[out] screen Array of N elements where screening parameters will be
  * stored. N is the total number of multipole points in all fragments.
- *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-enum efp_result efp_get_all_ai_screen(struct efp *efp, double *screen);
+//enum efp_result efp_get_all_ai_screen(struct efp *efp, double *screen);
+
+/**
+ * Get electrostatics ab initio screening parameters of high-order multipoles.
+ * \param[in] efp The efp structure.
+ * \param[out] screen Array of N elements where screening parameters will be
+ * stored. N is the total number of multipole points in all fragments.
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_ho_ai_screen(struct efp *efp, double *screen);
 
 /**
  * Get the ab initio screening parameters for one fragment.
@@ -944,7 +952,7 @@ enum efp_result efp_get_frag_multipole_coord(struct efp *efp, size_t frag_idx,
  * @return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
 enum efp_result
-efp_get_frag_rank(struct efp *efp, size_t frag_idx, size_t *rank);
+efp_get_frag_rank(struct efp *efp, size_t frag_idx, int *rank);
 
 /**
  * Get total number of multipoles from EFP electrostatics.
@@ -955,7 +963,23 @@ efp_get_frag_rank(struct efp *efp, size_t frag_idx, size_t *rank);
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-enum efp_result efp_get_multipole_count(struct efp *efp, size_t *n_mult);
+//enum efp_result efp_get_multipole_count(struct efp *efp, size_t *n_mult);
+
+/**
+ * Get the total number of high-order (large than monopoles) multipole points from EFP electrostatics.
+ * \param[in] efp The efp structure.
+ * \param[out] n_mult Number of electrostatics multipoles.
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_ho_multipole_count(struct efp *efp, size_t *n_mult);
+
+/**
+ * Get the total number of charge-only multipole points from EFP electrostatics.
+ * \param[in] efp The efp structure.
+ * \param[out] n_mult Number of electrostatics multipoles.
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_mm_multipole_count(struct efp *efp, size_t *n_mult);
 
 /**
  * Get coordinates of electrostatics multipoles.
@@ -969,7 +993,29 @@ enum efp_result efp_get_multipole_count(struct efp *efp, size_t *n_mult);
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-enum efp_result efp_get_multipole_coordinates(struct efp *efp, double *xyz);
+//enum efp_result efp_get_multipole_coordinates(struct efp *efp, double *xyz);
+
+/**
+ * Get coordinates of high-order (higher than monopoles) electrostatics multipoles.
+ * \param[in] efp The efp structure.
+ * \param[out] xyz Array where coordinates of EFP electrostatics multipoles
+ * will be stored. Size of the \p xyz array must be at least [3 * \p n_mult]
+ * elements, where \p n_mult is the value returned by the
+ * ::efp_get_multipole_count function.
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_ho_multipole_coordinates(struct efp *efp, double *xyz);
+
+/**
+ * Get coordinates of monopole-only electrostatics multipoles.
+ * \param[in] efp The efp structure.
+ * \param[out] xyz Array where coordinates of EFP electrostatics multipoles
+ * will be stored. Size of the \p xyz array must be at least [3 * \p n_mult]
+ * elements, where \p n_mult is the value returned by the
+ * ::efp_get_multipole_count function.
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_mm_multipole_coordinates(struct efp *efp, double *xyz);
 
 /**
  * Get electrostatics multipoles from EFP fragments.
@@ -992,7 +1038,63 @@ enum efp_result efp_get_multipole_coordinates(struct efp *efp, double *xyz);
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-enum efp_result efp_get_multipole_values(struct efp *efp, double *mult);
+//enum efp_result efp_get_multipole_values(struct efp *efp, double *mult);
+
+/**
+ * Get high-order (higher than monopoles) electrostatics multipoles from EFP fragments.
+ * \param[in] efp The efp structure.
+ * \param[out] mult Array where charges, dipoles, quadrupoles, and octupoles
+ * for each point will be stored.
+ * The size of the \p mult array must be at least [(1 + 3 + 6 + 10) * \p
+ * n_mult] elements (charges + dipoles + quadrupoles + octupoles), where \p
+ * n_mult is the value returned by the ::efp_get_multipole_count function.
+ * Quadrupoles are stored in the following order:
+ *    \a xx, \a yy, \a zz, \a xy, \a xz, \a yz
+ * Octupoles are stored in the following order:
+ *    \a xxx, \a yyy, \a zzz, \a xxy, \a xxz,
+ *    \a xyy, \a yyz, \a xzz, \a yzz, \a xyz
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_ho_multipole_values(struct efp *efp, double *mult);
+
+/**
+ * Get (elec + nuc charges) values from monopole-only electrostatics multipoles from EFP fragments.
+ * \param[in] efp The efp structure.
+ * \param[out] mult Array where charges, dipoles, quadrupoles, and octupoles
+ * for each point will be stored.
+ * The size of the \p mult array must be at least [\p n_mult]
+ * elements, where \p
+ * n_mult is the value returned by the ::efp_get_multipole_count function.
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_mm_multipole_values(struct efp *efp, double *mult);
+
+/**
+ *
+ * @param efp The efp structure.
+ * @param[out] monopoles Array with all efp monopoles.
+ *
+ * The size of the \p monopoles array must be at least [\p n_mult] elements
+ * where \p n_mult is the value returned by the ::efp_get_multipole_count function.
+ * Only monopoles (no nuclear charges) are returned by this funciton.
+ *
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+//enum efp_result efp_get_mono_values(struct efp *efp, double *monopoles);
+
+/**
+ * Get elec-only charges from high-order electrostatic multipoles 
+ * (typically needed for qm-efp electrostatic screening) 
+ * @param efp The efp structure.
+ * @param[out] monopoles Array with all efp monopoles.
+ *
+ * The size of the \p monopoles array must be at least [\p n_mult] elements
+ * where \p n_mult is the value returned by the ::efp_get_multipole_count function.
+ * Only monopoles (no nuclear charges) are returned by this funciton.
+ *
+ * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
+ */
+enum efp_result efp_get_ho_mono_values(struct efp *efp, double *monopoles);
 
 /**
  * Get electrostatics dipoles from EFP fragments.
@@ -1001,12 +1103,12 @@ enum efp_result efp_get_multipole_values(struct efp *efp, double *mult);
  *
  * \param[out] dipoles Array with all efp dipoles.
  *
- * The size of the \p mult array must be at least [3 * \p n_mult] elements
+ * The size of the \p dipoles array must be at least [3 * \p n_mult] elements
  * where \p n_mult is the value returned by the ::efp_get_multipole_count function.
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-enum efp_result efp_get_dipole_values(struct efp *efp, double *dipoles);
+//enum efp_result efp_get_dipole_values(struct efp *efp, double *dipoles);
 
 /**
  * Get electrostatics quadrupoles from EFP fragments.
@@ -1023,7 +1125,7 @@ enum efp_result efp_get_dipole_values(struct efp *efp, double *dipoles);
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-enum efp_result efp_get_quadrupole_values(struct efp *efp, double *quad);
+//enum efp_result efp_get_quadrupole_values(struct efp *efp, double *quad);
 
 /**
  * Get electrostatics octupoles from EFP fragments.
@@ -1041,7 +1143,7 @@ enum efp_result efp_get_quadrupole_values(struct efp *efp, double *quad);
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-enum efp_result efp_get_octupole_values(struct efp *efp, double *oct);
+//enum efp_result efp_get_octupole_values(struct efp *efp, double *oct);
 
 /**
  *  Get the number of polarization induced dipoles from a particular fragment.
@@ -1401,6 +1503,14 @@ efp_get_frag_pol_pt(struct efp *efp, size_t frag_idx, size_t pt_idx,
  */
 enum efp_result
 save_ai_field_pol_pt(struct efp *efp, struct efp_pol_pt *pol_pt, size_t frag_idx, size_t pt_idx);
+
+/**
+ * Saves ab initio field into polarizable points
+ * @param efp
+ * @param field pointer to the ab initio field
+ * @return
+ */
+enum efp_result save_ai_field(struct efp *efp, double *field);
 
 /**
  * Get electric field for a point on a fragment.

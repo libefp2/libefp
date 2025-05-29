@@ -33,7 +33,7 @@
 
 #define POL_SCF_TOL 1.0e-10
 #define POL_SCF_MAX_ITER 200
-#define INDIP_PRINT_TRESH 5.0
+#define INDIP_PRINT_TRESH 0.5
 
 double efp_get_pol_damp_tt(double, double, double);
 enum efp_result efp_compute_id_direct(struct efp *);
@@ -820,7 +820,7 @@ compute_energy_range(struct efp *efp, size_t from, size_t to, void *data)
                 }
     }
 
-    if (efp->opts.print > 1 && efp->opts.enable_pairwise) {
+    if (efp->opts.print > 2 && efp->opts.enable_pairwise) {
         printf("\n Pairwise analysis from compute_energy_range() follows \n");
         print_energies(efp);
     }
@@ -959,7 +959,7 @@ efp_compute_pol_energy(struct efp *efp, double *energy)
 
 	assert(energy);
 
-	// counter to know when to zero out induced dipoles and static field
+ 	// counter to know when to zero out induced dipoles and static field
 	// need to be explored further
 	static int counter = 0;
 
@@ -980,7 +980,7 @@ efp_compute_pol_energy(struct efp *efp, double *energy)
 	if (res)
 		return res;
 
-	if (efp->opts.print > 1) {
+	if (efp->opts.print > 3) {
         for (int i = 0; i < efp->n_frag; i++) {
             printf("Fragment %d\n", i);
             for (int j = 0; j < efp->frags[i].n_polarizable_pts; j++) {
@@ -1023,6 +1023,15 @@ efp_compute_pol_correction(struct efp *efp, double *energy)
     if (res)
         return res;
 
+	if (efp->opts.print > 3) {
+        for (int i = 0; i < efp->n_frag; i++) {
+            printf("Fragment %d\n", i);
+            for (int j = 0; j < efp->frags[i].n_polarizable_pts; j++) {
+                print_pol_pt(efp, i, j);
+            }
+        }
+    }
+
     *energy = 0.0;
     efp_balance_work(efp, compute_energy_correction_range, energy);
     efp_allreduce(energy, 1);
@@ -1050,7 +1059,7 @@ efp_compute_pol_energy_crystal(struct efp *efp, double *energy)
     if ((res = efp_compute_id_iterative(efp)))
         return res;
 
-    if (efp->opts.print > 1) {
+    if (efp->opts.print > 3) {
         for (int i = 0; i < efp->n_frag; i++) {
             printf("Fragment %d\n", i);
             for (int j = 0; j < efp->frags[i].n_polarizable_pts; j++) {

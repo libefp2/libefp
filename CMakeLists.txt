@@ -32,9 +32,9 @@ project(
   LANGUAGES C CXX
   )
 
-#set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/installed" CACHE PATH "Installation directory" FORCE)
+set(CMAKE_INSTALL_PREFIX "$ENV{LIBEFP_DIR}" CACHE PATH "Installation directory" FORCE)
 #set(CMAKE_INSTALL_PREFIX "${LIBEFP_DIR}" CACHE PATH "Installation directory")
-set(CMAKE_INSTALL_LIBDIR "lib")
+#set(CMAKE_INSTALL_LIBDIR "lib")
 
 ### LVS needs this on MacOS silicon
 set(CMAKE_CXX_STANDARD 17)
@@ -81,7 +81,7 @@ if((${BUILD_SHARED_LIBS}) AND NOT ${BUILD_FPIC})
 endif()
 
 ### This option turns OPENMP ON and OFF!
-option_with_print(LIBEFP_ENABLE_OPENMP "Enable OpenMP parallelization. Psi4 wants OFF" ON)
+option_with_print(LIBEFP_ENABLE_OPENMP "Enable OpenMP parallelization. Psi4 wants OFF" OFF)
 
 option_with_print(ENABLE_GENERIC "Enable mostly static linking in shared library" OFF)
 include(xhost)  # defines: option(ENABLE_XHOST "Enable processor-specific optimization" ON)
@@ -232,8 +232,8 @@ install(FILES fraglib/makefp.inp
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fraglib
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
 
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/nnlib
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
+#install(DIRECTORY ${PROJECT_SOURCE_DIR}/nnlib
+#        DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
 
 # headers NOT namespace protected
 install(FILES ${src_prefix}/efp.h
