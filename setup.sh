@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 export TORCH_SWITCH=ON
 

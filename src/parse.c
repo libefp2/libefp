@@ -222,6 +222,9 @@ parse_monopoles(struct frag *frag, struct stream *stream)
                     counter, frag->n_multipole_pts, frag->name);
             return EFP_RESULT_SUCCESS;
         }
+
+        if (i == 0 && frag->multipole_rank < 1) frag->multipole_rank = 0;
+
         struct multipole_pt tmp_pt;
         memset(&tmp_pt, 0, sizeof(tmp_pt));
         if (!tok_label(stream, sizeof(tmp_pt.label), tmp_pt.label) ||
@@ -271,6 +274,10 @@ parse_dipoles(struct frag *frag, struct stream *stream)
                    counter, frag->n_multipole_pts, frag->name);
             return EFP_RESULT_SUCCESS;
         }
+
+        if (i == 0 && frag->multipole_rank < 2) frag->multipole_rank = 1;
+        if (i == 0) frag->if_mm_frag = false;
+
         struct multipole_pt tmp_pt;
         memset(&tmp_pt, 0, sizeof(tmp_pt));
         if (!tok_label(stream, sizeof(tmp_pt.label), tmp_pt.label) ||
@@ -332,6 +339,10 @@ parse_quadrupoles(struct frag *frag, struct stream *stream)
                    counter, frag->n_multipole_pts, frag->name);
             return EFP_RESULT_SUCCESS;
         }
+
+        if (i == 0 && frag->multipole_rank < 3) frag->multipole_rank = 2;
+        if (i == 0) frag->if_mm_frag = false;
+
         struct multipole_pt tmp_pt;
         memset(&tmp_pt, 0, sizeof(tmp_pt));
         if (!tok_label(stream, sizeof(tmp_pt.label), tmp_pt.label) ||
@@ -401,6 +412,10 @@ parse_octupoles(struct frag *frag, struct stream *stream)
                    counter, frag->n_multipole_pts, frag->name);
             return EFP_RESULT_SUCCESS;
         }
+
+        if (i == 0) frag->multipole_rank = 3;
+        if (i == 0) frag->if_mm_frag = false;
+
         struct multipole_pt tmp_pt;
         memset(&tmp_pt, 0, sizeof(tmp_pt));
 
@@ -1207,6 +1222,9 @@ parse_screen(struct frag *frag, struct stream *stream)
                    counter, frag->n_multipole_pts, frag->name);
             return EFP_RESULT_SUCCESS;
         }
+
+        if (i == 0 && screen_type == 0) frag->if_qm_screen = true;
+
         struct multipole_pt tmp_pt;
         memset(&tmp_pt, 0, sizeof(tmp_pt));
         double tmp_screen;
@@ -1565,7 +1583,12 @@ parse_file(struct efp *efp, struct stream *stream)
 		efp->lib[efp->n_lib - 1] = frag;
 
 		/* default value */
-		frag->pol_damp = 0.6;
+		//frag->pol_damp = 0.6; //commented out for ticket 3416
+		frag->pol_damp = efp->opts.pol_damp_tt_value;
+
+        frag->if_mm_frag = true;
+        frag->if_qm_screen = false;
+        frag->multipole_rank = -1;
 
 		efp_stream_next_line(stream);
 		efp_stream_next_line(stream);

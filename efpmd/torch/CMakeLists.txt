@@ -17,7 +17,7 @@ target_include_directories(ctorch PRIVATE ${TORCH_INCLUDE_DIRS})
 target_link_libraries(ctorch PUBLIC "${TORCH_LIBRARIES}")
 
 set_target_properties(ctorch PROPERTIES
-  CXX_STANDARD 14
+  CXX_STANDARD 17
   CXX_STANDARD_REQUIRED YES
 )
 

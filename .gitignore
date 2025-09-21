@@ -28,4 +28,4 @@ build*/
 /cmake-build-debug/
 comp*.log
 /lib
-
+.DS_Store

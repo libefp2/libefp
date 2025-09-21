@@ -147,6 +147,7 @@ static struct cfg *make_cfg(void)
 	cfg_add_bool(cfg, "hess_central", false);
 	cfg_add_double(cfg, "num_step_dist", 0.001);
 	cfg_add_double(cfg, "num_step_angle", 0.01);
+	cfg_add_double(cfg, "pol_damp_value", 0.6);
 
 	cfg_add_enum(cfg, "ensemble", ENSEMBLE_TYPE_NVE,
 		"nve\n"
@@ -351,6 +352,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 		.elec_damp = cfg_get_enum(cfg, "elec_damp"),
 		.disp_damp = cfg_get_enum(cfg, "disp_damp"),
 		.pol_damp = cfg_get_enum(cfg, "pol_damp"),
+		.pol_damp_tt_value = cfg_get_double(cfg, "pol_damp_value"),
 		.pol_driver = cfg_get_enum(cfg, "pol_driver"),
 		.enable_pbc = cfg_get_bool(cfg, "enable_pbc"),
 		.enable_elpot = cfg_get_bool(cfg, "enable_elpot"),
@@ -367,7 +369,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
         .print = cfg_get_int(cfg, "print")
 	};
 
-    // adjustoing special terms
+    // adjusting special terms
     if (opts.special_terms == 0) opts.special_terms = opts.terms;
 
 	enum efp_coord_type coord_type = cfg_get_enum(cfg, "coord");
@@ -375,14 +377,6 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 
 	if (!efp)
 		error("unable to create efp object");
-
-	if (cfg_get_bool(cfg, "single_params_file"))
-		check_fail(efp_add_potential(efp, cfg_get_string(cfg, "efp_params_file")));
-	else
-		add_potentials(efp, cfg, sys);
-
-	for (size_t i = 0; i < sys->n_frags; i++)
-	    check_fail(efp_add_fragment(efp, sys->frags[i].name));
 
 	if (sys->n_charges > 0) {
 		double q[sys->n_charges];
@@ -407,10 +401,19 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 	if (cfg_get_bool(cfg, "enable_ff"))
 		opts.terms &= ~(EFP_TERM_ELEC | EFP_TERM_POL | EFP_TERM_DISP | EFP_TERM_XR);
 
+    check_fail(efp_set_opts(efp, &opts));
+
+	if (cfg_get_bool(cfg, "single_params_file"))
+		check_fail(efp_add_potential(efp, cfg_get_string(cfg, "efp_params_file")));
+	else
+		add_potentials(efp, cfg, sys);
+
+	for (size_t i = 0; i < sys->n_frags; i++)
+	    check_fail(efp_add_fragment(efp, sys->frags[i].name));
+
     if (opts.enable_pairwise)
         check_fail(efp_add_ligand(efp, opts.ligand));
 
-    check_fail(efp_set_opts(efp, &opts));
 	check_fail(efp_prepare(efp));
     check_fail(efp_set_symmlist(efp));
 

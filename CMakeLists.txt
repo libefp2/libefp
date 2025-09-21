@@ -34,6 +34,7 @@ project(
 
 set(CMAKE_INSTALL_PREFIX "$ENV{LIBEFP_DIR}" CACHE PATH "Installation directory" FORCE)
 #set(CMAKE_INSTALL_PREFIX "${LIBEFP_DIR}" CACHE PATH "Installation directory")
+#set(CMAKE_INSTALL_LIBDIR "lib")
 
 ### LVS needs this on MacOS silicon
 set(CMAKE_CXX_STANDARD 17)
@@ -230,6 +231,9 @@ install(FILES fraglib/makefp.inp
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fraglib
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
+
+#install(DIRECTORY ${PROJECT_SOURCE_DIR}/nnlib
+#        DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
 
 # headers NOT namespace protected
 install(FILES ${src_prefix}/efp.h
