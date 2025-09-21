@@ -24,7 +24,8 @@
 /include/
 tags
 build*/
-/installed/
+/install*/
 /cmake-build-debug/
-compilation.log
+comp*.log
+/lib
 
