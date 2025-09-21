@@ -143,14 +143,13 @@ jobs:
           activate-environment: libefp-dev
           environment-file: export.yaml
           python-version: ${{ matrix.cfg.python-version }}
-          miniforge-variant: Mambaforge
-          use-mamba: true
-          channels: conda-forge,nodefaults
+          channels: conda-forge
+          conda-remove-defaults: true
 
       - name: Environment Information
         run: |
-          mamba info
-          mamba list
+          conda info
+          conda list
 
       - name: Configure CMake
         run: |
@@ -225,7 +224,7 @@ jobs:
       # Step is unnecessary; remove for debugging.
       - name: Confound Environment - test fetched pybind11
         if: ${{ matrix.cfg.blas == 'OBL' }}
-        run: mamba remove pybind11
+        run: conda remove pybind11
 
       - name: Build & Install Python bindings
         run: |
