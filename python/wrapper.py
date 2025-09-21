@@ -102,11 +102,6 @@ def compute(efpobj, do_gradient=False):
     res = efpobj._efp_compute(do_gradient)
     _result_to_error(res)
 
-    # If pairwise is enabled
-    if efpobj.get_opts().get("enable_pairwise", False):
-        #_result_to_error(res2)
-        efpobj.print_pairwise_energies() #  do this for enable_pairwise=true
-
 def add_potential(efpobj, potential, fragpath='LIBRARY', duplicates_ok=False):
     """Searches for EFP fragments and adds to `efpobj`.
 
@@ -139,6 +134,8 @@ def add_potential(efpobj, potential, fragpath='LIBRARY', duplicates_ok=False):
        if present.
 
     """
+
+    print('POTENTIAL ', potential)
     paths = []
     library_paths = []
     for pth in fragpath.split(os.pathsep):
@@ -275,8 +272,8 @@ def get_opts(efpobj, label='libefp'):
     dopts['spec_disp'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_DISP) # SKP
     dopts['spec_xr'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_XR) # SKP
     dopts['spec_chtr'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_CHTR)  # SKP
-    dopts['spec_qq'] = bool(opts.terms & core.efp_special_term.EFP_SPEC_TERM_QQ) # SKP
-    dopts['spec_lj'] = bool(opts.terms & core.efp_special_term.EFP_SPEC_TERM_LJ)  # SKP
+    dopts['spec_qq'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_QQ) # SKP
+    dopts['spec_lj'] = bool(opts.special_terms & core.efp_special_term.EFP_SPEC_TERM_LJ)  # SKP
  
     dopts['elec_damp'] = {
         core.EFP_ELEC_DAMP_SCREEN: 'screen',
@@ -357,7 +354,7 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         'elec', 'pol', 'disp', 'xr', 'elec_damp', 'pol_damp', 'disp_damp', 'enable_pbc', 'enable_cutoff', 'swf_cutoff',
         'xr_cutoff',
         'pol_driver', 'ai_elec', 'ai_pol', 'enable_pairwise', 'ligand', 'symmetry', 'symm_frag',
-        'spec_elec', 'spec_pol', 'spec_disp', 'spec_xr', 'spec_qq', 'ai_qq', 'qq', 'lj', 'special_fragment',
+        'spec_elec', 'spec_pol', 'spec_disp', 'spec_xr', 'spec_chtr', 'ai_qq', 'qq', 'lj', 'special_fragment',
         'spec_qq', 'spec_lj', 'print'
     ]
     label_allowed = [_lbtl[label].get(itm, itm) for itm in allowed]
@@ -373,10 +370,10 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
     if append == 'libefp':
         opts.ligand = -100
         opts.special_fragment = -100
-        opts.terms |= core.efp_term.EFP_TERM_ELEC
-        opts.terms |= core.efp_term.EFP_TERM_POL
-        opts.terms |= core.efp_term.EFP_TERM_DISP
-        opts.terms |= core.efp_term.EFP_TERM_XR
+        #opts.terms |= core.efp_term.EFP_TERM_ELEC
+        #opts.terms |= core.efp_term.EFP_TERM_POL
+        #opts.terms |= core.efp_term.EFP_TERM_DISP
+        #opts.terms |= core.efp_term.EFP_TERM_XR
     elif append == 'psi':
         opts.terms |= core.efp_term.EFP_TERM_ELEC
         opts.terms |= core.efp_term.EFP_TERM_POL
@@ -387,6 +384,8 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         opts.disp_damp = core.EFP_DISP_DAMP_OVERLAP
         opts.terms |= core.efp_term.EFP_TERM_AI_ELEC
         opts.terms |= core.efp_term.EFP_TERM_AI_POL
+        opts.ligand = -100
+        opts.special_fragment = -100
     #elif append == 'qchem':
     #    # q-chem and psi4 have different defaults for at least this option
     #    opts.disp_damp = core.EFP_DISP_DAMP_TT
@@ -729,11 +728,16 @@ def set_periodic_box(efpobj, xyz, alpha=90.0, beta=90.0, gamma=90.0):
        Parameters alpha, beta, and gamma added.
 
     """
-    #if len(xyz) != 3:
-    #    raise PyEFPSyntaxError('Invalid periodic box setting: {}'.format(xyz))
 
-    res = efpobj._efp_set_periodic_box(xyz[0], xyz[1], xyz[2], alpha, beta, gamma)
-    _result_to_error(res)
+    if len(xyz) == 3:
+        res = efpobj._efp_set_periodic_box(xyz[0], xyz[1], xyz[2], alpha, beta, gamma)
+        _result_to_error(res)
+    elif len(xyz) == 6:
+        res = efpobj._efp_set_periodic_box(xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5])
+        _result_to_error(res)
+    else :
+        raise PyEFPSyntaxError('Invalid periodic box setting: {}'.format(xyz))
+
     (res, xyzabc) = efpobj._efp_get_periodic_box()
     _result_to_error(res)
 

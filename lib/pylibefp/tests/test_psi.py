@@ -34,8 +34,8 @@ def test_efpefptorque():
         ]
     }  # yapf: disable
 
-    assert compare_values(-0.0066095987170644, ene['total'], sys._getframe().f_code.co_name + ': ene', atol=1.e-5)
-    assert compare_recursive(ref, {'torque': torq}, sys._getframe().f_code.co_name + ': torq', atol=1.e-6)
+    assert compare_values(-0.0066095987170644, ene['total'], sys._getframe().f_code.co_name + ': ene', atol=1.e-5, return_message=True), 'FAILED'
+    assert compare_recursive(ref, {'torque': torq}, sys._getframe().f_code.co_name + ': torq', atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_efpefp_bz2():
@@ -45,7 +45,7 @@ def test_efpefp_bz2():
 
     asdf = pylibefp.core.efp()
 
-    frags = ['c6h6', 'c6h6']
+    frags = ['c6h6_l', 'c6h6_l']
     asdf.add_potential(frags)
     asdf.add_fragment(frags)
     asdf.set_frag_coordinates(
@@ -59,8 +59,12 @@ def test_efpefp_bz2():
     ene = asdf.get_energy(label='psi')
 
     # values copied from q-chem output file
-    assert compare_values(-0.006945881265, ene['elst'], sys._getframe().f_code.co_name + ': ene elst', atol=1.e-6)
-    assert compare_values(0.046915489574, ene['exch'], sys._getframe().f_code.co_name + ': ene exch', atol=1.e-6)
-    assert compare_values(-0.000675030191, ene['ind'], sys._getframe().f_code.co_name + ': ene ind', atol=1.e-6)
-    assert compare_values(-0.021092526180, ene['disp'], sys._getframe().f_code.co_name + ': ene disp', atol=1.e-6)
-    assert compare_values(0.018202051938, ene['total'], sys._getframe().f_code.co_name + ': ene', atol=1.e-6)
+    assert compare_values(-0.006945881265, ene['elst'], sys._getframe().f_code.co_name + ': ene elst', atol=1.e-6, return_message=True), 'FAILED'
+    assert compare_values(0.046915489574, ene['exch'], sys._getframe().f_code.co_name + ': ene exch', atol=1.e-6, return_message=True), 'FAILED'
+    assert compare_values(-0.000675030191, ene['ind'], sys._getframe().f_code.co_name + ': ene ind', atol=1.e-6, return_message=True), 'FAILED'
+    assert compare_values(-0.021092526180, ene['disp'], sys._getframe().f_code.co_name + ': ene disp', atol=1.e-6, return_message=True), 'FAILED'
+    assert compare_values(0.018202051938, ene['total'], sys._getframe().f_code.co_name + ': ene', atol=1.e-6, return_message=True), 'FAILED'
+
+if __name__ == '__main__':
+    test_efpefptorque()
+    test_efpefp_bz2()

@@ -11,7 +11,7 @@ from systems import *
 def blank_ene():
     fields = [
         'charge_penetration', 'disp', 'dispersion', 'elec', 'electrostatic', 'electrostatic_point_charges',
-        'exchange_repulsion', 'pol', 'polarization', 'xr'
+        'exchange_repulsion', 'pol', 'polarization', 'xr', 'qq', 'lj'
     ]
     ene = {f: 0.0 for f in fields}
     return ene
@@ -25,7 +25,7 @@ def test_elec_1a():
 
     expected_ene = blank_ene()
     expected_ene['elec'] = expected_ene['electrostatic'] = expected_ene['total'] = 0.0002900482
-    assert compare_recursive(expected_ene, ene, atol=1.e-6)
+    assert compare_recursive(expected_ene, ene, atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_elec_1b():
@@ -40,7 +40,7 @@ def test_elec_1b():
     expected_ene['elec'] = expected_ene['total'] = elst
     expected_ene['charge_penetration'] = cp
     expected_ene['electrostatic'] = elst - cp
-    assert compare_recursive(expected_ene, ene, atol=1.e-6)
+    assert compare_recursive(expected_ene, ene, atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_pol_1a():
@@ -57,7 +57,7 @@ def test_pol_1a():
     expected_ene['pol'] = expected_ene['polarization'] = pol
     expected_ene['total'] = elec + pol
     pprint.pprint(opts)
-    assert compare_recursive(expected_ene, ene, atol=1.e-6)
+    assert compare_recursive(expected_ene, ene, atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_pol_1b():
@@ -72,7 +72,7 @@ def test_pol_1b():
     expected_ene['elec'] = expected_ene['electrostatic'] = elec
     expected_ene['pol'] = expected_ene['polarization'] = pol
     expected_ene['total'] = elec + pol
-    assert compare_recursive(expected_ene, ene, atol=1.e-6)
+    assert compare_recursive(expected_ene, ene, atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_disp_1a():
@@ -83,7 +83,7 @@ def test_disp_1a():
 
     expected_ene = blank_ene()
     expected_ene['disp'] = expected_ene['dispersion'] = expected_ene['total'] = -0.0000989033
-    assert compare_recursive(expected_ene, ene, atol=1.e-6)
+    assert compare_recursive(expected_ene, ene, atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_disp_1b():
@@ -95,7 +95,7 @@ def test_disp_1b():
 
     expected_ene = blank_ene()
     expected_ene['disp'] = expected_ene['dispersion'] = expected_ene['total'] = -0.0001007275
-    assert compare_recursive(expected_ene, ene, atol=1.e-6)
+    assert compare_recursive(expected_ene, ene, atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_xr_1():
@@ -106,7 +106,7 @@ def test_xr_1():
 
     expected_ene = blank_ene()
     expected_ene['xr'] = expected_ene['exchange_repulsion'] = expected_ene['total'] = 0.0000134716
-    assert compare_recursive(expected_ene, ene, atol=1.e-6)
+    assert compare_recursive(expected_ene, ene, atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_total_1a():
@@ -137,11 +137,11 @@ def test_total_1a():
     expected_ene['pol'] = expected_ene['polarization'] = 0.0002777238 - expected_ene['electrostatic']
     expected_ene['disp'] = expected_ene['dispersion'] = -0.0000989033
     expected_ene['total'] = 0.0001922903
-    assert compare(2, asdf.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag')
-    assert compare_values(0.0, asdf.get_frag_charge(1), sys._getframe().f_code.co_name + ': f_chg', atol=1.e-6)
-    assert compare(1, asdf.get_frag_multiplicity(1), sys._getframe().f_code.co_name + ': f_mult')
-    assert compare('NH3_L', asdf.get_frag_name(1), sys._getframe().f_code.co_name + ': f_name')
-    assert compare_recursive(expected_ene, ene, sys._getframe().f_code.co_name + ': ene', atol=1.e-6)
+    assert compare(2, asdf.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag', return_message=True), 'FAILED'
+    assert compare_values(0.0, asdf.get_frag_charge(1), sys._getframe().f_code.co_name + ': f_chg', atol=1.e-6, return_message=True), 'FAILED'
+    assert compare(1, asdf.get_frag_multiplicity(1), sys._getframe().f_code.co_name + ': f_mult', return_message=True), 'FAILED'
+    assert compare('NH3_L', asdf.get_frag_name(1), sys._getframe().f_code.co_name + ': f_name', return_message=True), 'FAILED'
+    assert compare_recursive(expected_ene, ene, sys._getframe().f_code.co_name + ': ene', atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_elec_2a():
@@ -149,7 +149,7 @@ def test_elec_2a():
     asdf.set_opts({'elec': True, 'elec_damp': 'screen'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(0.0015865516, ene['elec'], atol=1.e-6)
+    assert compare_values(0.0015865516, ene['elec'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_elec_2b():
@@ -157,7 +157,7 @@ def test_elec_2b():
     asdf.set_opts({'elec': True, 'elec_damp': 'overlap'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(0.0017049246, ene['elec'], atol=1.e-6)
+    assert compare_values(0.0017049246, ene['elec'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_pol_2a():
@@ -166,7 +166,7 @@ def test_pol_2a():
     asdf.compute()
     ene = asdf.get_energy()
     pprint.pprint(ene)
-    assert compare_values(0.0013685212, ene['total'], atol=1.e-6)
+    assert compare_values(0.0013685212, ene['total'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_pol_2b():
@@ -174,7 +174,7 @@ def test_pol_2b():
     asdf.set_opts({'elec': True, 'pol': True, 'elec_damp': 'screen', 'pol_driver': 'direct'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(0.0013685212, ene['total'], atol=1.e-6)
+    assert compare_values(0.0013685212, ene['total'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_disp_2a():
@@ -182,7 +182,7 @@ def test_disp_2a():
     asdf.set_opts({'disp': True, 'disp_damp': 'tt'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(-0.0014688094, ene['disp'], atol=1.e-6)
+    assert compare_values(-0.0014688094, ene['disp'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_disp_2b():
@@ -190,7 +190,7 @@ def test_disp_2b():
     asdf.set_opts({'disp': True, 'disp_damp': 'overlap'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(-0.0015801770, ene['disp'], atol=1.e-6)
+    assert compare_values(-0.0015801770, ene['disp'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_xr_2():
@@ -198,7 +198,7 @@ def test_xr_2():
     asdf.set_opts({'xr': True})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(0.0008443933, ene['xr'], atol=1.e-6)
+    assert compare_values(0.0008443933, ene['xr'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_total_2a():
@@ -207,7 +207,7 @@ def test_total_2a():
     asdf.compute()
     ene = asdf.get_energy()
     assert compare(5, asdf.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag')
-    assert compare_values(0.0007440865, ene['total'], atol=1.e-6)
+    assert compare_values(0.0007440865, ene['total'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_elec_3a():
@@ -215,7 +215,7 @@ def test_elec_3a():
     asdf.set_opts({'elec': True, 'elec_damp': 'screen'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(-0.0039531505, ene['elec'], atol=1.e-6)
+    assert compare_values(-0.0039531505, ene['elec'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_elec_3b():
@@ -223,7 +223,7 @@ def test_elec_3b():
     asdf.set_opts({'elec': True, 'elec_damp': 'overlap'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(0.0023592829, ene['elec'], atol=1.e-6)
+    assert compare_values(0.0023592829, ene['elec'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_pol_3a():
@@ -231,7 +231,7 @@ def test_pol_3a():
     asdf.set_opts({'elec': True, 'pol': True, 'elec_damp': 'screen', 'pol_damp': 'off'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(-0.0066095992, ene['total'], atol=1.e-6)
+    assert compare_values(-0.0066095992, ene['total'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_pol_3b():
@@ -239,7 +239,7 @@ def test_pol_3b():
     asdf.set_opts({'elec': True, 'pol': True, 'elec_damp': 'screen', 'pol_damp': 'off', 'pol_driver': 'direct'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(-0.0066095992, ene['total'], atol=1.e-6)
+    assert compare_values(-0.0066095992, ene['total'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_disp_3a():
@@ -247,7 +247,7 @@ def test_disp_3a():
     asdf.set_opts({'disp': True, 'disp_damp': 'tt'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(-0.0173897265, ene['disp'], atol=1.e-6)
+    assert compare_values(-0.0173897265, ene['disp'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_disp_3b():
@@ -255,7 +255,7 @@ def test_disp_3b():
     asdf.set_opts({'disp': True, 'disp_damp': 'overlap'})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(-0.0220107872, ene['disp'], atol=1.e-6)
+    assert compare_values(-0.0220107872, ene['disp'], atol=1.e-6, return_message=True), 'FAILED'
 
 
 def test_xr_3():
@@ -263,7 +263,7 @@ def test_xr_3():
     asdf.set_opts({'xr': True})
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(0.0301402098, ene['xr'], atol=1.e-5)
+    assert compare_values(0.0301402098, ene['xr'], atol=1.e-5, return_message=True), 'FAILED'
 
 
 def test_total_3a():
@@ -279,8 +279,8 @@ def test_total_3a():
     })
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare(9, asdf.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag')
-    assert compare_values(0.0061408841, ene['total'], sys._getframe().f_code.co_name, atol=1.e-5)
+    assert compare(9, asdf.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag', return_message=True), 'FAILED'
+    assert compare_values(0.0061408841, ene['total'], sys._getframe().f_code.co_name, atol=1.e-5, return_message=True), 'FAILED'
 
 
 def test_total_4a():
@@ -301,11 +301,11 @@ def test_total_4a():
     mfrags = [1 for fr in range(12)]
     cfrags = [0.0 for fr in range(12)]
     tnm = sys._getframe().f_code.co_name
-    assert compare(12, asdf.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag')
-    assert compare_recursive({'dummy': cfrags}, {'dummy': asdf.get_frag_charge()}, tnm + ': f_chg', atol=1.e-2)
-    assert compare_recursive({'dummy': mfrags}, {'dummy': asdf.get_frag_multiplicity()}, tnm + ': f_mult', atol=1.e-2)
-    assert compare_recursive({'dummy': [fr + '_L' for fr in nfrags]}, {'dummy': asdf.get_frag_name()}, tnm + ': f_names', atol=1.e-2)
-    assert compare_values(-0.0095597483, ene['total'], sys._getframe().f_code.co_name, atol=1.e-5)
+    assert compare(12, asdf.get_frag_count(), sys._getframe().f_code.co_name + ': nfrag', return_message=True), 'FAILED'
+    assert compare_recursive({'dummy': cfrags}, {'dummy': asdf.get_frag_charge()}, tnm + ': f_chg', atol=1.e-2, return_message=True), 'FAILED'
+    assert compare_recursive({'dummy': mfrags}, {'dummy': asdf.get_frag_multiplicity()}, tnm + ': f_mult', atol=1.e-2, return_message=True), 'FAILED'
+    assert compare_recursive({'dummy': [fr + '_L' for fr in nfrags]}, {'dummy': asdf.get_frag_name()}, tnm + ': f_names', atol=1.e-2, return_message=True), 'FAILED'
+    assert compare_values(-0.0095597483, ene['total'], sys._getframe().f_code.co_name, atol=1.e-5, return_message=True), 'FAILED'
 
 
 def test_total_4b():
@@ -321,7 +321,7 @@ def test_total_4b():
     })
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(-0.0092400662, ene['total'], atol=1.e-5)
+    assert compare_values(-0.0092400662, ene['total'], atol=1.e-5, return_message=True), 'FAILED'
 
 
 def test_total_4c():
@@ -337,7 +337,7 @@ def test_total_4c():
     })
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(-0.0091278725, ene['total'], atol=1.e-5)
+    assert compare_values(-0.0091278725, ene['total'], atol=1.e-5, return_message=True), 'FAILED'
 
 
 def test_total_4d():
@@ -354,8 +354,16 @@ def test_total_4d():
     })
     asdf.compute()
     ene = asdf.get_energy()
-    assert compare_values(-0.0095597483, ene['total'], atol=1.e-5)
+    assert compare_values(-0.0095597483, ene['total'], atol=1.e-5, return_message=True), 'FAILED'
 
 
 if __name__ == '__main__':
-    test_total_4a()
+    function_list = [    test_elec_1a,    test_elec_1b, test_elec_2a, test_elec_2b, test_elec_3a, test_elec_3b,
+                         test_pol_1a, test_pol_1b, test_pol_2a, test_pol_2b, test_pol_3a, test_pol_3b,
+                         test_disp_1a, test_disp_1b, test_disp_2a, test_disp_2b, test_disp_3a, test_disp_3b,
+                         test_xr_1, test_xr_2, test_xr_3,
+                         test_total_1a, test_total_2a, test_total_3a, test_total_4a, test_total_4b, test_total_4c, test_total_4d]
+    for f in function_list:
+        print(f'\nComputing {f.__name__}')
+        f()
+
