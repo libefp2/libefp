@@ -25,16 +25,15 @@ def frag_setup(test_name):
         efp.set_periodic_box(periodic_box)
         #print('box2', efp.get_periodic_box())
 
-
-
     #print(frag_coords)
     #pprint.pprint(efp_options)
     efp.compute(do_gradient = if_gradient)
     ene = efp.get_energy()
 
-    if 'enable_pairwise' in efp_options.keys():
-        if efp_options['enable_pairwise'] in [True, 'true', 1]:
-            efp.print_pairwise_energies()
+    # print pairwise components
+    #if 'enable_pairwise' in efp_options.keys():
+    #    if efp_options['enable_pairwise'] in [True, 'true', 1]:
+    #        efp.print_pairwise_energies()
 
     print(efp.energy_summary())
     if if_gradient:
@@ -50,9 +49,9 @@ if __name__ == '__main__':
              'symm_1.in', 'symm_2.in', 'symm_2full.in', 'symm_2pw.in']
 
     # running for all tests in files list
-    #for f in files:
-    #    print(f'\nComputing {f}...')
-    #    frag_setup('../'+f)
+    for f in files:
+        print(f'\nComputing {f}...')
+        frag_setup('../'+f)
 
     # single test execution
     frag_setup('../symm_2pw.in')

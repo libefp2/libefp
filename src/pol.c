@@ -626,7 +626,7 @@ compute_id_range(struct efp *efp, size_t from, size_t to, void *data)
 			struct polarizable_pt *pt = frag->polarizable_pts + j;
 			vec_t field, field_conj;
 
-			/* electric field from other induced dipoles */
+            /* electric field from other induced dipoles */
 			get_induced_dipole_field(efp, i, pt, &field,
 			    &field_conj);
 
@@ -959,7 +959,7 @@ efp_compute_pol_energy(struct efp *efp, double *energy)
 
     assert(energy);
 
- 	// counter to know when to zero out induced dipoles and static field
+    // counter to know when to zero out induced dipoles and static field
 	// need to be explored further
 	static int counter = 0;
     // think how to skip recomputing static field in qm scf iterations

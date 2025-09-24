@@ -227,6 +227,7 @@ py::tuple _efp_get_periodic_box(efp* efp) {
     return rets;
 }
 
+/*
 py::tuple _efp_get_multipole_count(efp* efp) {
     enum efp_result res;
     size_t n_mult = 0;
@@ -268,7 +269,7 @@ py::tuple _efp_get_multipole_values(efp* efp, size_t n_mult) {
     py::tuple rets = py::make_tuple(res, mult);
     return rets;
 }
-
+*/
 py::tuple _efp_get_induced_dipole_count(efp* efp) {
     enum efp_result res;
     size_t n_dip = 0;
@@ -628,6 +629,7 @@ PYBIND11_MODULE(core, m) {
         .def_readwrite("disp_damp", &efp_opts::disp_damp,                     "Dispersion damping type (see #efp_disp_damp).")
         .def_readwrite("elec_damp", &efp_opts::elec_damp,                     "Electrostatic damping type (see #efp_elec_damp).")
         .def_readwrite("pol_damp", &efp_opts::pol_damp,                       "Polarization damping type (see #efp_pol_damp).")
+        .def_readwrite("pol_damp_tt_value", &efp_opts::pol_damp_tt_value,     "Polarization damping tt parameter value.")
         .def_readwrite("pol_driver", &efp_opts::pol_driver,                   "Driver used to find polarization induced dipoles.")
         .def_readwrite("enable_pbc", &efp_opts::enable_pbc,                   "Enable periodic boundary conditions if nonzero.")
         .def_readwrite("enable_elpot", &efp_opts::enable_elpot,               "Enable switching off elpot contribution for custom torch gradient.")
@@ -761,12 +763,12 @@ PYBIND11_MODULE(core, m) {
         .def("_efp_get_frag_charge", &_efp_get_frag_charge, "Gets total charge on fragment", py::arg("frag_idx"))
         .def("_efp_get_frag_multiplicity", &_efp_get_frag_multiplicity, "Gets spin multiplicity on fragment")
         // Multipoles & Induced Dipoles
-        .def("_efp_get_multipole_count", &_efp_get_multipole_count,
-             "Wrapped gets total number of multipoles from EFP electrostatics")
-        .def("_efp_get_multipole_coordinates", &_efp_get_multipole_coordinates,
-             "Wrapped gets coordinates of electrostatics multipoles")
-        .def("_efp_get_multipole_values", &_efp_get_multipole_values,
-             "Wrapped gets electrostatics multipoles from EFP fragments")
+        //.def("_efp_get_multipole_count", &_efp_get_multipole_count,
+        //     "Wrapped gets total number of multipoles from EFP electrostatics")
+        //.def("_efp_get_multipole_coordinates", &_efp_get_multipole_coordinates,
+        //     "Wrapped gets coordinates of electrostatics multipoles")
+        //.def("_efp_get_multipole_values", &_efp_get_multipole_values,
+        //     "Wrapped gets electrostatics multipoles from EFP fragments")
         .def("_efp_get_induced_dipole_count", &_efp_get_induced_dipole_count,
              "Wrapped gets the number of polarization induced dipoles")
         .def("_efp_get_induced_dipole_coordinates", &_efp_get_induced_dipole_coordinates,

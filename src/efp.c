@@ -1752,7 +1752,6 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_log("zero_atomic_gradient(efp) failure");
         return res;
     }
-
 	if (efp->opts.symmetry == 0) { // standard case
         efp_balance_work(efp, compute_two_body_range, NULL);
 	}
@@ -1764,7 +1763,7 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_log("efp_compute_pol() failure");
         return res;
     }
-	if ((res = efp_compute_ai_elec(efp))){
+    if ((res = efp_compute_ai_elec(efp))){
         efp_log("efp_compute_ai_elec() failure");
         return res;
     }
@@ -3206,7 +3205,39 @@ void print_opts(struct efp_opts *opts)
 {
     assert(opts);
 
+    /*
+    switch (opts->terms) {
+        case EFP_TERM_ELEC:
+            printf("ELEC");
+            break;
+        case EFP_TERM_POL:
+            printf("POL");
+            break;
+        case EFP_TERM_DISP:
+            printf("DISP");
+            break;
+        case EFP_TERM_XR:
+            printf("XR");
+            break;
+        case EFP_TERM_QQ:
+            printf("QQ");
+            break;
+        case EFP_TERM_LJ:
+            printf("LJ");
+            break;
+        default:
+            printf("Unknown");
+            break;
+    }
+*/
     printf("\n--- some EFP opts parameters ---\n");
+    printf("EFP terms:       %d\n", opts->terms);
+    printf("EFP special terms:  %d\n", opts->special_terms);
+    printf("disp damping:    %d\n", opts->disp_damp);
+    printf("elec damping:    %d\n", opts->elec_damp);
+    printf("pol  damping:    %d\n", opts->pol_damp);
+
+    printf("pol damp tt value: %lf\n", opts->pol_damp_tt_value);
 
     printf("enable_pbc       %d\n", opts->enable_pbc);
     printf("enable_elpot     %d\n", opts->enable_elpot);

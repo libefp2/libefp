@@ -45,7 +45,7 @@ def test_elec_1b():
 
 def test_pol_1a():
     asdf = system_1()
-    opts = {'elec': True, 'pol': True, 'elec_damp': 'screen'}
+    opts = {'elec': True, 'pol': True, 'elec_damp': 'screen', 'print': 0}
     asdf.set_opts(opts)
     asdf.compute()
     ene = asdf.get_energy()
@@ -56,7 +56,7 @@ def test_pol_1a():
     expected_ene['elec'] = expected_ene['electrostatic'] = elec
     expected_ene['pol'] = expected_ene['polarization'] = pol
     expected_ene['total'] = elec + pol
-    pprint.pprint(opts)
+    #pprint.pprint(opts)
     assert compare_recursive(expected_ene, ene, atol=1.e-6, return_message=True), 'FAILED'
 
 
@@ -363,7 +363,9 @@ if __name__ == '__main__':
                          test_disp_1a, test_disp_1b, test_disp_2a, test_disp_2b, test_disp_3a, test_disp_3b,
                          test_xr_1, test_xr_2, test_xr_3,
                          test_total_1a, test_total_2a, test_total_3a, test_total_4a, test_total_4b, test_total_4c, test_total_4d]
-    for f in function_list:
+    tests = function_list
+    #tests = [item for item in function_list if 'pol' in str(item)]
+    for f in tests:
         print(f'\nComputing {f.__name__}')
         f()
 

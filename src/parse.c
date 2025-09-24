@@ -1584,7 +1584,10 @@ parse_file(struct efp *efp, struct stream *stream)
 
 		/* default value */
 		//frag->pol_damp = 0.6; //commented out for ticket 3416
-		frag->pol_damp = efp->opts.pol_damp_tt_value;
+        if (efp->opts.pol_damp_tt_value > 0.0) {
+            frag->pol_damp = efp->opts.pol_damp_tt_value;
+        }
+        else frag->pol_damp = 0.6;  // default
 
         frag->if_mm_frag = true;
         frag->if_qm_screen = false;

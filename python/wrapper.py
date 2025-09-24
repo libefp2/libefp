@@ -291,7 +291,9 @@ def get_opts(efpobj, label='libefp'):
         core.EFP_DISP_DAMP_OFF: 'off',
     }[opts.disp_damp]
 
+    dopts['pol_damp_tt_value'] = opts.pol_damp_tt_value
     dopts['enable_pbc'] = bool(opts.enable_pbc)
+    dopts['enable_elpot'] = bool(opts.enable_elpot)
     dopts['enable_cutoff'] = bool(opts.enable_cutoff)
     dopts['swf_cutoff'] = opts.swf_cutoff
     dopts['xr_cutoff'] = opts.xr_cutoff
@@ -350,8 +352,8 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
     """
     # warn on stray dopts keys
     allowed = [
-        'elec', 'pol', 'disp', 'xr', 'elec_damp', 'pol_damp', 'disp_damp', 'enable_pbc', 'enable_cutoff', 'swf_cutoff',
-        'xr_cutoff',
+        'elec', 'pol', 'disp', 'xr', 'elec_damp', 'pol_damp', 'disp_damp',
+        'pol_damp_tt_value', 'enable_pbc', 'enable_elpot', 'enable_cutoff', 'swf_cutoff', 'xr_cutoff',
         'pol_driver', 'ai_elec', 'ai_pol', 'enable_pairwise', 'ligand', 'symmetry', 'symm_frag',
         'spec_elec', 'spec_pol', 'spec_disp', 'spec_xr', 'spec_chtr', 'ai_qq', 'qq', 'lj', 'special_fragment',
         'spec_qq', 'spec_lj', 'print'
@@ -373,6 +375,9 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         #opts.terms |= core.efp_term.EFP_TERM_POL
         #opts.terms |= core.efp_term.EFP_TERM_DISP
         #opts.terms |= core.efp_term.EFP_TERM_XR
+        opts.elec_damp = core.EFP_ELEC_DAMP_SCREEN
+        opts.pol_damp = core.EFP_POL_DAMP_TT
+        opts.disp_damp = core.EFP_DISP_DAMP_OVERLAP
     elif append == 'psi':
         opts.terms |= core.efp_term.EFP_TERM_ELEC
         opts.terms |= core.efp_term.EFP_TERM_POL
@@ -565,6 +570,16 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
             _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
                              'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
 
+    topic = _lbtl[label].get('enable_elpot', 'enable_elpot')
+    if topic in dopts:
+        if dopts[topic] in trues:
+            opts.enable_elpot = 1
+        elif dopts[topic] in falses:
+            opts.enable_elpot = 0
+        else:
+            _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
+                             'invalid value for [T/F] {}: {}'.format(topic, dopts[topic]))
+
     topic = _lbtl[label].get('symmetry', 'symmetry')
     if topic in dopts:
         if dopts[topic] in trues:
@@ -648,6 +663,12 @@ def set_opts(efpobj, dopts, label='libefp', append='libefp'):
         except KeyError:
             _result_to_error(core.efp_result.EFP_RESULT_SYNTAX_ERROR,
                              'invalid value for [iterative/direct] {}: {}'.format(topic, dopts[topic]))
+
+    topic = _lbtl[label].get('pol_damp_tt_value', 'pol_damp_tt_value')
+    if topic in dopts:
+        opts.pol_damp_tt_value = float(dopts[topic])
+    else:
+        opts.pol_damp_tt_value = 0.6  # libefp default set in efpmd
 
     topic = _lbtl[label].get('ai_elec', 'ai_elec')
     if topic in dopts:
@@ -897,109 +918,109 @@ def get_frag_count(efpobj):
 
     return nfrag
 
-
-def get_multipole_count(efpobj):
-    """Gets the number of multipoles in `efpobj` computation.
-
-    Returns
-    -------
-    int
-        Total number of multipoles from electrostatics calculation.
-
-    """
-    (res, nmult) = efpobj._efp_get_multipole_count()
-    _result_to_error(res)
-
-    return nmult
-
-
-def get_multipole_coordinates(efpobj, verbose=1):
-    """Gets the coordinates of `efpobj` electrostatics multipoles.
-
-    Parameters
-    ----------
-    verbose : int, optional
-        Whether to print out the multipole coordinates. 0: no printing. 1:
-        print charges and dipoles. 2: additionally print quadrupoles
-        and octupoles.
-
-    Returns
-    -------
-    list
-        ``3 n_mult`` (flat) array of multipole locations.
-
-    Examples
-    --------
-
-    >>> # Use with NumPy
-    >>> n_mult = efpobj.get_multipole_count()
-    >>> xyz_mult = np.asarray(efpobj.get_multipole_coordinates()).reshape(n_mult, 3)
-
-    """
-    nmult = efpobj.get_multipole_count()
-    (res, xyz) = efpobj._efp_get_multipole_coordinates(nmult)
-    _result_to_error(res)
-
-    if verbose >= 1:
-        xyz3 = list(map(list, zip(*[iter(xyz)] * 3)))
-
-        text = '\n  ==>  EFP Multipole Coordinates  <==\n\n'
-        for mu in range(nmult):
-            text += '{:6d}   {:14.8f} {:14.8f} {:14.8f}\n'.format(mu, *xyz3[mu])
-        print(text)
-
-    return xyz
-
-
-def get_multipole_values(efpobj, verbose=1):
-    """Gets the computed per-point multipoles of `efpobj`.
-
-    Parameters
-    ----------
-    verbose : int, optional
-        Whether to print out the multipole arrays. 0: no printing. 1:
-        print charges and dipoles. ``2``: additionally print quadrupoles
-        and octupoles.
-
-    Returns
-    -------
-    list
-        ``20 n_mult`` (flat) array of per-point multipole values including
-        charges + dipoles + quadrupoles + octupoles.
-        Dipoles stored as     x, y, z.
-        Quadrupoles stored as xx, yy, zz, xy, xz, yz.
-        Octupoles stored as   xxx, yyy, zzz, xxy, xxz, xyy, yyz, xzz, yzz, xyz.
-
-    Examples
-    --------
-    >>> # Use with NumPy
-    >>> n_mult = efpobj.get_multipole_count()
-    >>> val_mult = np.asarray(efpobj.get_multipole_values()).reshape(n_mult, 20)
-
-    """
-    nmult = efpobj.get_multipole_count()
-    (res, mult) = efpobj._efp_get_multipole_values(nmult)
-    _result_to_error(res)
-
-    if verbose >= 1:
-        mult20 = list(map(list, zip(*[iter(mult)] * 20)))
-
-        text = '\n  ==>  EFP Multipoles: Charge & Dipole  <==\n\n'
-        for mu in range(nmult):
-            text += '{:6d}   {:14.8f}   {:14.8f} {:14.8f} {:14.8f}\n'.format(mu, *mult20[mu][:4])
-
-        if verbose >= 2:
-            text += '\n  ==>  EFP Multipoles: Quadrupole  <==\n\n'
-            for mu in range(nmult):
-                text += '{:6d}   {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}\n'.format(mu, *mult20[mu][4:10])
-            text += '\n  ==>  EFP Multipoles: Octupole  <==\n\n'
-            for mu in range(nmult):
-                text += '{:6d}   {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}\n'.format(
-                    mu, *mult20[mu][10:])
-        print(text)
-
-    return mult
-
+# #
+# # def get_multipole_count(efpobj):
+# #     """Gets the number of multipoles in `efpobj` computation.
+# #
+# #     Returns
+# #     -------
+# #     int
+# #         Total number of multipoles from electrostatics calculation.
+# #
+# #     """
+# #     (res, nmult) = efpobj._efp_get_multipole_count()
+# #     _result_to_error(res)
+# #
+# #     return nmult
+# #
+#
+# def get_multipole_coordinates(efpobj, verbose=1):
+#     """Gets the coordinates of `efpobj` electrostatics multipoles.
+#
+#     Parameters
+#     ----------
+#     verbose : int, optional
+#         Whether to print out the multipole coordinates. 0: no printing. 1:
+#         print charges and dipoles. 2: additionally print quadrupoles
+#         and octupoles.
+#
+#     Returns
+#     -------
+#     list
+#         ``3 n_mult`` (flat) array of multipole locations.
+#
+#     Examples
+#     --------
+#
+#     >>> # Use with NumPy
+#     >>> n_mult = efpobj.get_multipole_count()
+#     >>> xyz_mult = np.asarray(efpobj.get_multipole_coordinates()).reshape(n_mult, 3)
+#
+#     """
+#     nmult = efpobj.get_multipole_count()
+#     (res, xyz) = efpobj._efp_get_multipole_coordinates(nmult)
+#     _result_to_error(res)
+#
+#     if verbose >= 1:
+#         xyz3 = list(map(list, zip(*[iter(xyz)] * 3)))
+#
+#         text = '\n  ==>  EFP Multipole Coordinates  <==\n\n'
+#         for mu in range(nmult):
+#             text += '{:6d}   {:14.8f} {:14.8f} {:14.8f}\n'.format(mu, *xyz3[mu])
+#         print(text)
+#
+#     return xyz
+#
+#
+# def get_multipole_values(efpobj, verbose=1):
+#     """Gets the computed per-point multipoles of `efpobj`.
+#
+#     Parameters
+#     ----------
+#     verbose : int, optional
+#         Whether to print out the multipole arrays. 0: no printing. 1:
+#         print charges and dipoles. ``2``: additionally print quadrupoles
+#         and octupoles.
+#
+#     Returns
+#     -------
+#     list
+#         ``20 n_mult`` (flat) array of per-point multipole values including
+#         charges + dipoles + quadrupoles + octupoles.
+#         Dipoles stored as     x, y, z.
+#         Quadrupoles stored as xx, yy, zz, xy, xz, yz.
+#         Octupoles stored as   xxx, yyy, zzz, xxy, xxz, xyy, yyz, xzz, yzz, xyz.
+#
+#     Examples
+#     --------
+#     >>> # Use with NumPy
+#     >>> n_mult = efpobj.get_multipole_count()
+#     >>> val_mult = np.asarray(efpobj.get_multipole_values()).reshape(n_mult, 20)
+#
+#     """
+#     nmult = efpobj.get_multipole_count()
+#     (res, mult) = efpobj._efp_get_multipole_values(nmult)
+#     _result_to_error(res)
+#
+#     if verbose >= 1:
+#         mult20 = list(map(list, zip(*[iter(mult)] * 20)))
+#
+#         text = '\n  ==>  EFP Multipoles: Charge & Dipole  <==\n\n'
+#         for mu in range(nmult):
+#             text += '{:6d}   {:14.8f}   {:14.8f} {:14.8f} {:14.8f}\n'.format(mu, *mult20[mu][:4])
+#
+#         if verbose >= 2:
+#             text += '\n  ==>  EFP Multipoles: Quadrupole  <==\n\n'
+#             for mu in range(nmult):
+#                 text += '{:6d}   {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}\n'.format(mu, *mult20[mu][4:10])
+#             text += '\n  ==>  EFP Multipoles: Octupole  <==\n\n'
+#             for mu in range(nmult):
+#                 text += '{:6d}   {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}\n'.format(
+#                     mu, *mult20[mu][10:])
+#         print(text)
+#
+#     return mult
+#
 
 def get_induced_dipole_count(efpobj):
     """Gets the number of polarization induced dipoles in `efpobj` computation.
@@ -1909,9 +1930,9 @@ core.efp.set_point_charge_values = set_point_charge_values
 core.efp.get_point_charge_count = get_point_charge_count
 core.efp.get_point_charge_coordinates = get_point_charge_coordinates
 core.efp.get_point_charge_values = get_point_charge_values
-core.efp.get_multipole_count = get_multipole_count
-core.efp.get_multipole_coordinates = get_multipole_coordinates
-core.efp.get_multipole_values = get_multipole_values
+#core.efp.get_multipole_count = get_multipole_count
+#core.efp.get_multipole_coordinates = get_multipole_coordinates
+#core.efp.get_multipole_values = get_multipole_values
 core.efp.get_induced_dipole_count = get_induced_dipole_count
 core.efp.get_induced_dipole_coordinates = get_induced_dipole_coordinates
 core.efp.get_induced_dipole_values = get_induced_dipole_values
