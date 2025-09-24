@@ -24,7 +24,11 @@
 /include/
 tags
 build*/
-/installed/
+/install*/
 /cmake-build-debug/
-compilation.log
-
+comp*.log
+/lib
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo

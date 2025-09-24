@@ -108,12 +108,12 @@ set_coord_points(struct frag *frag, const double *coord)
 static enum efp_result
 set_coord_atoms(struct frag *frag, const double *coord)
 {
-    int natoms = frag->n_atoms;
-
-    // printf("\nCOORDINATES IN set_coord_atoms\n");
-    // for (size_t i=0; i<natoms; i++) {
-    //    printf("%12.6lf    %12.6lf    %12.6lf\n", coord[3 * i], coord[3 * i + 1], coord[3 * i + 2]);
-    //}
+     size_t natoms = frag->n_atoms;
+     //double BOHR_RADIUS = 0.52917721092; 
+     //printf("\nCOORDINATES IN set_coord_atoms\n");
+     //for (size_t i=0; i<natoms; i++) {
+     //   printf("%12.6lf    %12.6lf    %12.6lf\n", coord[3 * i] * BOHR_RADIUS, coord[3 * i + 1] * BOHR_RADIUS, coord[3 * i + 2] * BOHR_RADIUS);
+     //}
 
     double current_coord[3*natoms];
     for (size_t i=0; i<3*natoms; i++) {
@@ -541,6 +541,7 @@ do_qq(const struct efp_opts *opts)
     return opts->terms & EFP_TERM_QQ;
 }
 
+
 static void
 compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
     void *data)
@@ -671,11 +672,10 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
             print_energies(efp);
 }
 
-EFP_EXPORT enum efp_result
+static void
 compute_two_body_crystal(struct efp *efp)
 {
     double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0, e_elec_tmp = 0.0, e_disp_tmp = 0.0;
-
 // no parallelization
     int nsymm = efp->nsymm_frag;
     size_t *unique_frag = (size_t *)calloc(nsymm, sizeof(size_t));
@@ -686,11 +686,12 @@ compute_two_body_crystal(struct efp *efp)
 
     for (size_t k = 0; k < nsymm; k++) {
         size_t i = unique_frag[k];
-        struct frag *frag = efp->frags + i;
+        // printf("unique_frag %zu\n",unique_frag[k]);
+	    struct frag *frag = efp->frags + i;
 
         // scaling factor that tells how many fragments like this are in the system
         size_t factor = nsymm_frag[k];
-
+	    // printf("nsymm_frag = %zu\n",factor);
         for (size_t fr_j=0; fr_j<efp->n_frag; fr_j++){
             if ( fr_j != i && !efp_skip_frag_pair(efp, i, fr_j)) {
 
@@ -768,8 +769,6 @@ compute_two_body_crystal(struct efp *efp)
     efp->energy.dispersion += e_disp/2;
     efp->energy.exchange_repulsion += e_xr/2;
     efp->energy.charge_penetration += e_cp/2;
-
-    return EFP_RESULT_SUCCESS;
 }
 
 EFP_EXPORT enum efp_result
@@ -1734,11 +1733,14 @@ efp_compute(struct efp *efp, int do_gradient)
 	//efp->do_gradient = do_gradient;
     efp->do_gradient = 1;
 
-	if (efp_counter == 0)
-	    if ((res = check_params(efp))) {
+	if (efp_counter == 0) {
+        if ((res = check_params(efp))) {
             efp_log("check_params() failure");
             return res;
-	    }
+        }
+        if (efp->opts.print > 2)
+            print_opts(&efp->opts);
+    }
 
 	memset(&efp->energy, 0, sizeof(efp->energy));
 	memset(&efp->stress, 0, sizeof(efp->stress));
@@ -1750,22 +1752,18 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_log("zero_atomic_gradient(efp) failure");
         return res;
     }
-
 	if (efp->opts.symmetry == 0) { // standard case
         efp_balance_work(efp, compute_two_body_range, NULL);
 	}
 	else {  // high-symmetry crystals
-	    if ((res = compute_two_body_crystal(efp))){
-            efp_log("compute_two_body_crystal() failure");
-            return res;
-        }
-	}
+        compute_two_body_crystal(efp);
+    }
 
 	if ((res = efp_compute_pol(efp))) {
         efp_log("efp_compute_pol() failure");
         return res;
     }
-	if ((res = efp_compute_ai_elec(efp))){
+    if ((res = efp_compute_ai_elec(efp))){
         efp_log("efp_compute_ai_elec() failure");
         return res;
     }
@@ -2646,6 +2644,27 @@ efp_get_frag_mass(struct efp *efp, size_t frag_idx, double *mass_out)
 	return EFP_RESULT_SUCCESS;
 }
 
+/*
+EFP_EXPORT enum efp_result
+efp_get_frag_atom_mass(struct efp *efp, size_t frag_idx, double *atom_mass_out)
+{
+        assert(efp);
+        assert(atom_mass_out);
+        assert(frag_idx < efp->n_frag);
+ 
+        const struct frag *frag = efp->frags + frag_idx;
+	size_t n_atoms;
+	*n_atoms = efp->frags[frag_idx].n_atoms;
+
+	double atom_mass_out[n_atoms] ;
+
+        for (size_t i = 0; i < frag->n_atoms; i++)
+                atom_mass_out[i] = frag->atoms[i].mass;
+
+        return EFP_RESULT_SUCCESS;
+}
+*/
+
 EFP_EXPORT enum efp_result
 efp_get_frag_inertia(struct efp *efp, size_t frag_idx, double *inertia_out)
 {
@@ -2673,6 +2692,7 @@ efp_get_frag_inertia(struct efp *efp, size_t frag_idx, double *inertia_out)
 	return EFP_RESULT_SUCCESS;
 }
 
+
 EFP_EXPORT enum efp_result
 efp_get_frag_atom_count(struct efp *efp, size_t frag_idx, size_t *n_atoms)
 {
@@ -2684,6 +2704,7 @@ efp_get_frag_atom_count(struct efp *efp, size_t frag_idx, size_t *n_atoms)
 
 	return EFP_RESULT_SUCCESS;
 }
+
 
 EFP_EXPORT enum efp_result
 efp_get_frag_atoms(struct efp *efp, size_t frag_idx, size_t size,
@@ -2941,16 +2962,6 @@ efp_get_pairwise_energy(struct efp *efp, struct efp_energy *pair_energies){
 }
 
 EFP_EXPORT enum efp_result
-efp_set_pairwise_energy(struct efp *efp, struct efp_energy *pair_energies)
-{
-    assert(efp);
-    assert(pair_energies);
-
-    memcpy(efp->pair_energies, pair_energies, efp->n_frag * sizeof(struct efp_energy));
-    return EFP_RESULT_SUCCESS;
-}
-
-EFP_EXPORT enum efp_result
 efp_set_symmlist(struct efp *efp)
 {
     assert(efp);
@@ -3048,35 +3059,6 @@ efp_get_nsymm_frag(struct efp *efp, size_t *nsymm_frag){
 
     *nsymm_frag = efp->nsymm_frag;
     return EFP_RESULT_SUCCESS;
-}
-
-void
-unique_symm_frag(struct efp *efp, size_t *unique_frag){
-    //printf("\n Symmetry-unique fragments \n");
-    int n = 0;
-    int i = 0;
-    do {
-        if (efp->symmlist[i] > n) {
-            unique_frag[n] = i;
-            //printf(" %d ", unique_frag[n]);
-            n++;
-        }
-        i++;
-    } while (n < efp->nsymm_frag);
-}
-
-void
-n_symm_frag(struct efp *efp, size_t *symm_frag) {
-
-    for (size_t i = 0; i < efp->nsymm_frag; i++) {
-        size_t counter = 0;
-        for (size_t j = 0; j < efp->n_frag; j++) {
-            if (efp->symmlist[i] == efp->symmlist[j])
-                counter++;
-        }
-        symm_frag[i] = counter;
-        // printf("\n symm_frag %d = %d", i, symm_frag[i]);
-    }
 }
 
 void
@@ -3210,10 +3192,63 @@ void print_ene(struct efp_energy *energy) {
 }
 
 void print_energies(struct efp *efp) {
+    size_t n_frag = efp->n_frag;
     printf(" --- PAIRWISE ENERGIES --- \n");
     for (size_t i=0; i<efp->n_frag; i++) {
         printf(" PAIR ENERGY on FRAGMENT %zu %s \n", i, efp->frags[i].name);
         print_ene(&efp->pair_energies[i]);
     }
-    printf("\n");
+    printf("---\n");
+}
+
+void print_opts(struct efp_opts *opts)
+{
+    assert(opts);
+
+    /*
+    switch (opts->terms) {
+        case EFP_TERM_ELEC:
+            printf("ELEC");
+            break;
+        case EFP_TERM_POL:
+            printf("POL");
+            break;
+        case EFP_TERM_DISP:
+            printf("DISP");
+            break;
+        case EFP_TERM_XR:
+            printf("XR");
+            break;
+        case EFP_TERM_QQ:
+            printf("QQ");
+            break;
+        case EFP_TERM_LJ:
+            printf("LJ");
+            break;
+        default:
+            printf("Unknown");
+            break;
+    }
+*/
+    printf("\n--- some EFP opts parameters ---\n");
+    printf("EFP terms:       %d\n", opts->terms);
+    printf("EFP special terms:  %d\n", opts->special_terms);
+    printf("disp damping:    %d\n", opts->disp_damp);
+    printf("elec damping:    %d\n", opts->elec_damp);
+    printf("pol  damping:    %d\n", opts->pol_damp);
+
+    printf("pol damp tt value: %lf\n", opts->pol_damp_tt_value);
+
+    printf("enable_pbc       %d\n", opts->enable_pbc);
+    printf("enable_elpot     %d\n", opts->enable_elpot);
+    printf("enable_cutoff    %d\n", opts->enable_cutoff);
+    printf("swf_cutoff       %lf\n", opts->swf_cutoff);
+    printf("xr_cutoff        %lf\n", opts->xr_cutoff);
+    printf("enable_pairwise  %d\n", opts->enable_pairwise);
+    printf("ligand           %d\n", opts->ligand);
+    printf("special_fragment   %d\n", opts->special_fragment);
+    printf("symmetry         %d\n", opts->symmetry);
+    printf("print            %d\n", opts->print);
+
+    printf(" ---\n");
 }

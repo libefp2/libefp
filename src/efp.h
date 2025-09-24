@@ -385,7 +385,7 @@ void efp_set_error_log(void (*cb)(const char *));
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
 enum efp_result efp_set_opts(struct efp *efp, const struct efp_opts *opts);
-
+ 
 /**
  * Get currently set computation options.
  *
@@ -420,7 +420,7 @@ enum efp_result efp_add_potential(struct efp *efp, const char *path);
 enum efp_result efp_add_fragment(struct efp *efp, const char *name);
 
 /**
- * Add a ligand fragment to teh system
+ * Add a ligand fragment to the system
  * @param[in] efp
  * @param[in] ligand_index Index of the ligand in the fragment list
  * @return ::EFP_RESULT_SUCCESS on success or error code otherwise.
@@ -1392,6 +1392,8 @@ enum efp_result efp_get_frag_name(struct efp *efp, size_t frag_idx, size_t size,
 enum efp_result efp_get_frag_mass(struct efp *efp, size_t frag_idx,
     double *mass);
 
+//enum efp_result efp_get_frag_atom_mass(struct efp *efp, size_t frag_idx, double *atom_mass_out);
+
 /**
  * Get fragment principal moments of inertia.
  *
@@ -1595,7 +1597,7 @@ enum efp_result efp_get_pairwise_energy(struct efp *efp,
  * \param[in] total energy and energy components of each ligand-fragment pair
  *
  */
-enum efp_result efp_set_pairwise_energy(struct efp *efp, struct efp_energy *pair_energies);
+//enum efp_result efp_set_pairwise_energy(struct efp *efp, struct efp_energy *pair_energies);
 
 /**
  * Prepares information for computing symmetric crystals. Sets the symmetry list, nsymm_frag AND skiplist
@@ -1624,20 +1626,6 @@ enum efp_result efp_get_symmlist(struct efp *efp, size_t frag_idx, size_t *symm)
  * \param[out] nsymm_frag The value of nsymm_frag.
  */
 enum efp_result efp_get_nsymm_frag(struct efp *efp, size_t *nsymm_frag);
-
-/**
- * Computes the list of indexes of symmetry-unique fragments
- * @param[in] efp The efp structure.
- * @param[out] unique_frag Array with unique-symmetry fragment' indexes
- */
-void unique_symm_frag(struct efp *efp, size_t *unique_frag);
-
-/**
- * Computes number of symmetric fragments of each type
- * @param[in] efp The efp structure
- * @param[out] symm_frag Array of length nsymm_frag specifying # of identical fragments
- */
-void n_symm_frag(struct efp *efp, size_t *symm_frag);
 
 /** updates (shifts) parameters of fragment based on coordinates of fragment atoms
  *
@@ -1719,6 +1707,12 @@ void print_ene(struct efp_energy *energy);
  * @param efp
  */
 void print_energies(struct efp *efp);
+
+/**
+ * Print simple efp options
+ * @param opts
+ */
+void print_opts(struct efp_opts *opts);
 
 #ifdef __cplusplus
 } /* extern "C" */

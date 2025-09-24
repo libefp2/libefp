@@ -1,0 +1,10 @@
+run_type sp
+coord xyzabc
+terms qq lj
+fraglib_path ../fraglib
+
+fragment tip3p_mm_l
+   0.0 0.0 0.0 1.0 2.0 3.0
+
+fragment tip3p_mm_l
+   3.0 0.0 0.0 5.0 2.0 8.0

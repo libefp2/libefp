@@ -445,7 +445,7 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
 	state->energy = 0;
 	state->grad = xcalloc(sys->n_frags * 6 + sys->n_charges * 3, sizeof(double));
 	state->ff = NULL;
-    	state->torch = NULL;
+    state->torch = NULL;
 	state->torch_grad = NULL;
  
 	if (cfg_get_bool(cfg, "enable_ff")) {
@@ -472,6 +472,7 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
     // initiate torch state
 #ifdef TORCH_SWITCH
     if (cfg_get_bool(cfg, "enable_torch")) {
+        check_fail(efp_get_frag_count(state->efp, &nfrag));
         if (cfg_get_int(cfg, "special_fragment") < 0 || cfg_get_int(cfg, "special_fragment") > nfrag-1)
             error("do not know for which fragment to compute torch: set special_fragment");
 
