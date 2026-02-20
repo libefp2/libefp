@@ -2,7 +2,7 @@
 
 export TORCH_SWITCH=ON
 
-export LIBEFP_DIR="/depot/lslipche/data/skp/branch/MLMM_new/libefp"
+export LIBEFP_DIR="/depot/lslipche/data/skp/branch/feb26/libefp"
 export INSTALLATION_DIR="$LIBEFP_DIR/installed"
 
 if [[ "$TORCH_SWITCH" == "ON" ]] then

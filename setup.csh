@@ -2,7 +2,7 @@
 
 setenv TORCH_SWITCH ON
 
-setenv LIBEFP_DIR "/depot/lslipche/data/skp/branch/MLMM_new/libefp"
+setenv LIBEFP_DIR "/depot/lslipche/data/skp/branch/feb26/libefp"
 setenv INSTALLATION_DIR "$LIBEFP_DIR/installed"
 
 if ("$TORCH_SWITCH" == "ON") then
