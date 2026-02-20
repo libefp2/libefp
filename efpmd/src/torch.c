@@ -282,7 +282,6 @@ void atomic_number_to_species(const int* atomic_num, int64_t* frag_species, size
     }
 }
 
-// SKP's torch version
 void torch_compute(struct torch *torch, const char* nn_path, int print) {
 
     size_t n_atoms = torch->natoms;
