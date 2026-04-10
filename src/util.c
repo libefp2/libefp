@@ -359,3 +359,34 @@ calc_rmsd(const struct frag *frag1, const struct frag *frag2){
     double rmsd = 0.0;
     return rmsd;
 }
+
+
+void
+unique_symm_frag(struct efp *efp, size_t *unique_frag){
+    //printf("\n Symmetry-unique fragments \n");
+    size_t n = 0;
+    size_t i = 0;
+    do {
+        if (efp->symmlist[i] > n) {
+            unique_frag[n] = i;
+            //printf(" %d ", unique_frag[n]);
+            n++;
+        }
+        i++;
+    } while (n < efp->nsymm_frag);
+}
+
+void
+n_symm_frag(struct efp *efp, size_t *symm_frag) {
+
+    for (size_t i = 0; i < efp->nsymm_frag; i++) {
+        size_t counter = 0;
+        for (size_t j = 0; j < efp->n_frag; j++) {
+            if (efp->symmlist[i] == efp->symmlist[j])
+                counter++;
+        }
+        symm_frag[i] = counter;
+        // printf("\n symm_frag %d = %d", i, symm_frag[i]);
+    }
+}
+

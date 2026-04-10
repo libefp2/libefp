@@ -55,5 +55,9 @@ void find_plane(const vec_t, const vec_t, const vec_t, vec_t *, double);
 double max_cutoff(const six_t);
 // computes rmsd between two fragment structures
 double calc_rmsd(const struct frag *frag1, const struct frag *frag2);
+// Computes the list of indexes of symmetry-unique fragments
+void unique_symm_frag(struct efp *efp, size_t *unique_frag);
+// Computes number of symmetric fragments of each type
+void n_symm_frag(struct efp *efp, size_t *symm_frag);
 
 #endif /* LIBEFP_UTIL_H */
