@@ -32,7 +32,7 @@ project(
   LANGUAGES C CXX
   )
 
-set(CMAKE_INSTALL_PREFIX "$ENV{LIBEFP_DIR}" CACHE PATH "Installation directory" FORCE)
+#set(CMAKE_INSTALL_PREFIX "$ENV{LIBEFP_DIR}" CACHE PATH "Installation directory" FORCE)
 #set(CMAKE_INSTALL_PREFIX "${LIBEFP_DIR}" CACHE PATH "Installation directory")
 #set(CMAKE_INSTALL_LIBDIR "lib")
 
