@@ -35,6 +35,8 @@ struct frag;
 double efp_frag_frag_elec(struct efp *, size_t, size_t);
 double efp_frag_frag_disp(struct efp *, size_t, size_t,
     const double *, const six_t *);
+double efp_frag_frag_chiral_chiral(struct efp *, size_t, size_t);
+double efp_frag_frag_disp_4body(struct efp *, size_t, size_t);
 void efp_frag_frag_xr(struct efp *, size_t, size_t, double *,
     six_t *, double *, double *);
 double efp_frag_frag_qq(struct efp *, size_t, size_t);

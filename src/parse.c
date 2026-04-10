@@ -640,6 +640,253 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
+    // save molecular dyn pol tensor here
+    for (size_t w = 0; w < 12; w++) {
+        mat_t *mol_dyn_tensor = frag->dyn_elec_pol + w;
+        *mol_dyn_tensor = mat_zero;
+
+        for (size_t i=0; i<frag->n_dynamic_polarizable_pts; i++){
+            struct dynamic_polarizable_pt *pt =
+			    frag->dynamic_polarizable_pts + i;
+            mol_dyn_tensor->xx += pt->tensor[w].xx;
+            mol_dyn_tensor->yy += pt->tensor[w].yy;
+            mol_dyn_tensor->zz += pt->tensor[w].zz;
+            mol_dyn_tensor->xy += pt->tensor[w].xy;
+            mol_dyn_tensor->yx += pt->tensor[w].yx;
+            mol_dyn_tensor->xz += pt->tensor[w].xz;
+            mol_dyn_tensor->zx += pt->tensor[w].zx;
+            mol_dyn_tensor->yz += pt->tensor[w].yz;
+            mol_dyn_tensor->zy += pt->tensor[w].zy;
+        }
+    }
+
+	return EFP_RESULT_SUCCESS;
+}
+
+
+static enum efp_result
+parse_vel_pol_pts(struct frag *frag, struct stream *stream)
+{
+    // We assume that dynamic polarizability points are already read and stored
+    // Here we add vel-elec correlation polarizabilities to dynamic pol points
+
+	double m[9];
+
+	efp_stream_next_line(stream);
+
+	if (efp_stream_eof(stream)){
+        efp_log("parse_vel_pol_pts() failure for fragment %s", frag->name);
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+	for (size_t w = 0; w < 12; w++) {
+		for (size_t i = 0; i < frag->n_dynamic_polarizable_pts; i++) {
+			struct dynamic_polarizable_pt *pt =
+			    frag->dynamic_polarizable_pts + i;
+
+			if (!efp_stream_advance(stream, 5)){
+                efp_log("parse_vel_pol_pts() failure for fragment %s", frag->name);
+                return EFP_RESULT_SYNTAX_ERROR;
+            }
+
+            double x, y, z;
+			if (!tok_double(stream, &x) ||
+			    !tok_double(stream, &y) ||
+			    !tok_double(stream, &z)){
+                efp_log("parse_vel_pol_pts() coordinate reading failure for fragment %s", frag->name);
+                return EFP_RESULT_SYNTAX_ERROR;
+            }
+            // check that the read coordinates match stored coordinates
+            if ( fabs(pt->x - x) > 0.0001 || fabs(pt->y - y) > 0.0001 || fabs(pt->z - z) > 0.0001) {
+                efp_log("coordinates in parse_vel_pol_pts() do not match stored coordinates of dynamic polarizability points for fragment %s", frag->name);
+                return EFP_RESULT_SYNTAX_ERROR;
+            }
+
+			efp_stream_next_line(stream);
+
+			for (size_t j = 0; j < 9; j++)
+				if (!tok_double(stream, m + j)){
+                    efp_log("parse_vel_pol_pts() polarizability reading failure for fragment %s", frag->name);
+                    return EFP_RESULT_SYNTAX_ERROR;
+                }
+
+            // direct order
+			pt->vel_elec[w].xx = m[0];
+			pt->vel_elec[w].xy = m[1];
+			pt->vel_elec[w].xz = m[2];
+            pt->vel_elec[w].yx = m[3];
+            pt->vel_elec[w].yy = m[4];
+			pt->vel_elec[w].yz = m[5];
+			pt->vel_elec[w].zx = m[6];
+			pt->vel_elec[w].zy = m[7];
+            pt->vel_elec[w].zz = m[8];
+
+			efp_stream_next_line(stream);
+		}
+	}
+
+	if (!tok_stop(stream)){
+        efp_log("parse_vel_pol_pts() failure for fragment %s", frag->name);
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+	return EFP_RESULT_SUCCESS;
+}
+
+static enum efp_result
+parse_mag_elec_pts(struct frag *frag, struct stream *stream)
+{
+    // We assume that dynamic polarizability points are already read and stored
+    // Here we add vel-elec correlation polarizabilities to dynamic pol points
+
+	double m[9];
+
+	efp_stream_next_line(stream);
+
+	if (efp_stream_eof(stream)){
+        efp_log("parse_mag_elec_pts() failure for fragment %s", frag->name);
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+	for (size_t w = 0; w < 12; w++) {
+		for (size_t i = 0; i < frag->n_dynamic_polarizable_pts; i++) {
+			struct dynamic_polarizable_pt *pt =
+			    frag->dynamic_polarizable_pts + i;
+
+			if (!efp_stream_advance(stream, 5)){
+                efp_log("parse_mag_elec_pts() failure for fragment %s", frag->name);
+                return EFP_RESULT_SYNTAX_ERROR;
+            }
+
+            double x, y, z;
+			if (!tok_double(stream, &x) ||
+			    !tok_double(stream, &y) ||
+			    !tok_double(stream, &z)){
+                efp_log("parse_mag_elec_pts() coordinate reading failure for fragment %s", frag->name);
+                return EFP_RESULT_SYNTAX_ERROR;
+            }
+            // check that the read coordinates match stored coordinates
+            if ( fabs(pt->x - x) > 0.0001 || fabs(pt->y - y) > 0.0001 || fabs(pt->z - z) > 0.0001) {
+                efp_log("coordinates in parse_mag_elec_pts() do not match stored coordinates of dynamic polarizability points for fragment %s", frag->name);
+                return EFP_RESULT_SYNTAX_ERROR;
+            }
+
+			efp_stream_next_line(stream);
+
+			for (size_t j = 0; j < 9; j++)
+				if (!tok_double(stream, m + j)){
+                    efp_log("parse_mag_elec_pts() polarizability reading failure for fragment %s", frag->name);
+                    return EFP_RESULT_SYNTAX_ERROR;
+                }
+
+            // direct order
+			pt->mag_elec[w].xx = m[0];
+			pt->mag_elec[w].xy = m[1];
+			pt->mag_elec[w].xz = m[2];
+            pt->mag_elec[w].yx = m[3];
+            pt->mag_elec[w].yy = m[4];
+			pt->mag_elec[w].yz = m[5];
+			pt->mag_elec[w].zx = m[6];
+			pt->mag_elec[w].zy = m[7];
+            pt->mag_elec[w].zz = m[8];
+
+			efp_stream_next_line(stream);
+		}
+	}
+
+	if (!tok_stop(stream)){
+        efp_log("parse_vel_pol_pts() failure for fragment %s", frag->name);
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+	return EFP_RESULT_SUCCESS;
+}
+
+static enum efp_result
+parse_mol_mag_elec_pol(struct frag *frag, struct stream *stream)
+{
+	double m[9];
+
+	efp_stream_next_line(stream);
+
+	if (efp_stream_eof(stream)){
+        efp_log("parse_mol_mag_elec_pol() failure for fragment %s", frag->name);
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+	for (size_t w = 0; w < 12; w++) {
+
+ 			efp_stream_next_line(stream);
+
+			for (size_t j = 0; j < 9; j++)
+				if (!tok_double(stream, m + j)){
+                    efp_log("parse_mol_mag_elec_pol() polarizability reading failure for fragment %s", frag->name);
+                    return EFP_RESULT_SYNTAX_ERROR;
+                }
+
+            // direct order
+			frag->mag_elec_pol[w].xx = m[0];
+			frag->mag_elec_pol[w].xy = m[1];
+			frag->mag_elec_pol[w].xz = m[2];
+			frag->mag_elec_pol[w].yx = m[3];
+			frag->mag_elec_pol[w].yy = m[4];
+			frag->mag_elec_pol[w].yz = m[5];
+			frag->mag_elec_pol[w].zx = m[6];
+			frag->mag_elec_pol[w].zy = m[7];
+			frag->mag_elec_pol[w].zz = m[8];
+
+			efp_stream_next_line(stream);
+	}
+
+	if (!tok_stop(stream)){
+        efp_log("parse_mol_mag_elec_pol() failure for fragment %s", frag->name);
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+	return EFP_RESULT_SUCCESS;
+}
+
+static enum efp_result
+parse_mol_vel_elec_pol(struct frag *frag, struct stream *stream)
+{
+	double m[9];
+
+	efp_stream_next_line(stream);
+
+	if (efp_stream_eof(stream)){
+        efp_log("parse_mol_vel_elec_pol() failure for fragment %s", frag->name);
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
+	for (size_t w = 0; w < 12; w++) {
+
+ 			efp_stream_next_line(stream);
+
+			for (size_t j = 0; j < 9; j++)
+				if (!tok_double(stream, m + j)){
+                    efp_log("parse_mol_vel_elec_pol() polarizability reading failure for fragment %s", frag->name);
+                    return EFP_RESULT_SYNTAX_ERROR;
+                }
+
+            // direct order
+			frag->vel_elec_pol[w].xx = m[0];
+			frag->vel_elec_pol[w].xy = m[1];
+			frag->vel_elec_pol[w].xz = m[2];
+			frag->vel_elec_pol[w].yz = m[3];
+			frag->vel_elec_pol[w].yy = m[4];
+			frag->vel_elec_pol[w].yz = m[5];
+			frag->vel_elec_pol[w].zx = m[6];
+			frag->vel_elec_pol[w].zy = m[7];
+			frag->vel_elec_pol[w].zz = m[8];
+
+			efp_stream_next_line(stream);
+	}
+
+	if (!tok_stop(stream)){
+        efp_log("parse_mol_vel_elec_pol() failure for fragment %s", frag->name);
+        return EFP_RESULT_SYNTAX_ERROR;
+    }
+
 	return EFP_RESULT_SUCCESS;
 }
 
@@ -1489,6 +1736,10 @@ get_parse_fn(struct stream *stream)
 		{ "OCTUPOLES",                  parse_octupoles               },
 		{ "POLARIZABLE POINTS",         parse_polarizable_pts         },
 		{ "DYNAMIC POLARIZABLE POINTS", parse_dynamic_polarizable_pts },
+        { "DYNAMIC VELOCITY POLARIZABILITY POINTS", parse_vel_pol_pts },
+        { "DYNAMIC MAG-ELEC DIP POLARIZABILITY POINTS", parse_mag_elec_pts },
+        { "MOLECULAR MAG-ELEC POLARIZABILITY", parse_mol_mag_elec_pol },
+        { "MOLECULAR VEL-ELEC POLARIZABILITY", parse_mol_vel_elec_pol },
 		{ "PROJECTION BASIS SET",       parse_projection_basis        },
 		{ "MULTIPLICITY",               parse_multiplicity            },
 		{ "PROJECTION WAVEFUNCTION",    parse_projection_wf           },

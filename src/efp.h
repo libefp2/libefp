@@ -251,6 +251,12 @@ struct efp_energy {
 	/**
 	 * EFP/EFP dispersion energy. */
 	double dispersion;
+    /**
+	 * EFP/EFP chiral dispersion energy. */
+	double disp_chiral;
+	/**
+	 * EFP/EFP 4-body dispersion energy. */
+	double disp_4body;
 	/**
 	 * AI/EFP dispersion energy. */
 	double ai_dispersion;

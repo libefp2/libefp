@@ -548,6 +548,8 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 {
 	double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0, e_elec_tmp = 0.0, e_disp_tmp = 0.0;
     double e_lj = 0.0, e_qq = 0.0, e_qq_tmp = 0.0;
+    double e_chiral_tmp = 0.0, e_chiral = 0.0; 
+    double e_disp_4body_tmp = 0.0, e_disp_4body = 0.0;
 
 	(void)data;
 
@@ -555,7 +557,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 	bool if_pairwise = efp->opts.enable_pairwise && efp->opts.ligand > -1;
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic) reduction(+:e_elec,e_disp,e_xr,e_cp,e_qq,e_lj)
+#pragma omp parallel for schedule(dynamic) reduction(+:e_elec,e_disp,e_xr,e_cp,e_qq,e_lj,e_disp_4body,e_chiral)
 #endif
 	for (size_t i = frag_from; i < frag_to; i++) {
 		size_t cnt = efp->n_frag % 2 ? (efp->n_frag - 1) / 2 :
@@ -626,8 +628,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 				}
 				if ((do_disp(&efp->opts) || special_disp) && efp->frags[i].n_dynamic_polarizable_pts > 0 &&
                         efp->frags[fr_j].n_dynamic_polarizable_pts > 0) {
-					e_disp_tmp = efp_frag_frag_disp(efp,
-					    i, fr_j, s, ds);
+					e_disp_tmp = efp_frag_frag_disp(efp, i, fr_j, s, ds);
 					e_disp += e_disp_tmp;
 					/* */
 					if (if_pairwise) {
@@ -636,6 +637,13 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                         if (fr_j == efp->opts.ligand) 
                             efp->pair_energies[i].dispersion = e_disp_tmp;
                     }
+                    // tmp placement
+                    e_chiral_tmp = efp_frag_frag_chiral_chiral(efp, i, fr_j);
+                    e_chiral += e_chiral_tmp; 
+
+                    // tmp placement
+                    e_disp_4body_tmp = efp_frag_frag_disp_4body(efp, i, fr_j);
+                    e_disp_4body += e_disp_4body_tmp;
 				}
                 // LJ terms
                 if (do_lj(&efp->opts) || special_lj) {
@@ -663,6 +671,8 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 	efp->energy.charge_penetration += e_cp;
     efp->energy.qq += e_qq;
     efp->energy.lj += e_lj;
+    efp->energy.disp_4body += e_disp_4body;
+    efp->energy.disp_chiral += e_chiral;
 
     if (efp->opts.print > 1) {
         printf(" In compute_two_body_range() \n");
@@ -3105,6 +3115,23 @@ print_pol_pt(struct efp *efp, size_t frag_index, size_t pol_index) {
     printf("\n");
 }
 
+void
+print_dyn_pt(struct efp *efp, size_t frag_index, size_t pol_index) {
+    struct dynamic_polarizable_pt *pt = efp->frags[frag_index].dynamic_polarizable_pts + pol_index;
+    printf(" Dyn pol point coords         %lf %lf %lf\n", pt->x, pt->y, pt->z);
+    printf(" Dyn pol tensor at first freq %lf %lf %lf %lf %lf %lf %lf %lf %lf\n",
+            pt->tensor[0].xx, pt->tensor[0].xy, pt->tensor[0].xz, pt->tensor[0].yx, pt->tensor[0].yy, pt->tensor[0].yz,
+            pt->tensor[0].zx, pt->tensor[0].zy, pt->tensor[0].zz);
+    printf(" Dyn vel-elec tensor at first freq %lf %lf %lf %lf %lf %lf %lf %lf %lf\n",
+            pt->vel_elec[0].xx, pt->vel_elec[0].xy, pt->vel_elec[0].xz, pt->vel_elec[0].yx, pt->vel_elec[0].yy, pt->vel_elec[0].yz,
+            pt->vel_elec[0].zx, pt->vel_elec[0].zy, pt->vel_elec[0].zz);
+    printf(" Dyn mag-elec tensor at first freq %lf %lf %lf %lf %lf %lf %lf %lf %lf\n",
+            pt->mag_elec[0].xx, pt->mag_elec[0].xy, pt->mag_elec[0].xz, pt->mag_elec[0].yx, pt->mag_elec[0].yy, pt->mag_elec[0].yz,
+            pt->mag_elec[0].zx, pt->mag_elec[0].zy, pt->mag_elec[0].zz);
+
+    printf("\n");
+}
+
 void print_ligand(struct efp *efp, size_t frag_index) {
     if (! efp->opts.enable_pairwise)
         return;
@@ -3120,6 +3147,12 @@ void
 print_frag_info(struct efp *efp, size_t frag_index) {
     struct frag *fr = efp->frags + frag_index;
     printf("Fragment %s\n", fr->name);
+    printf(" n_atoms %zu, n_multipole_pts %zu, n_polarizable_pts %zu, n_dynamic_polarizable_pts %zu\n", 
+        fr->n_atoms, fr->n_multipole_pts, fr->n_polarizable_pts, fr->n_dynamic_polarizable_pts);
+    printf(" n_lmo %zu, n_xr_atoms %zu, xr_wf_size %zu\n", fr->n_lmo, fr->n_xr_atoms, fr->xr_wf_size);
+
+    printf(" COM coordinates  %lf  %lf  %lf\n", fr->x, fr->y, fr->z);
+    printf("\n");
 
     for (int i=0; i < fr->n_atoms; i++) {
         print_atoms(efp, frag_index, i);
@@ -3132,6 +3165,23 @@ print_frag_info(struct efp *efp, size_t frag_index) {
     for (int i=0; i < fr->n_polarizable_pts; i++) {
         print_pol_pt(efp, frag_index, i);
     }
+
+    for (int i=0; i < fr->n_dynamic_polarizable_pts; i++) {
+        print_dyn_pt(efp, frag_index, i);
+    }
+    printf(" Dynamic electric dipole polarizability at first frequency: \n");
+    printf(" %lf %lf %lf %lf %lf %lf %lf %lf %lf\n",
+            fr->dyn_elec_pol[0].xx, fr->dyn_elec_pol[0].xy, fr->dyn_elec_pol[0].xz, fr->dyn_elec_pol[0].yx, fr->dyn_elec_pol[0].yy, 
+            fr->dyn_elec_pol[0].yz, fr->dyn_elec_pol[0].zx, fr->dyn_elec_pol[0].zy, fr->dyn_elec_pol[0].zz);
+
+    printf(" Magnetic-electric dipole polarizability at first frequency: \n");
+    printf(" %lf %lf %lf %lf %lf %lf %lf %lf %lf\n",
+            fr->mag_elec_pol[0].xx, fr->mag_elec_pol[0].xy, fr->mag_elec_pol[0].xz, fr->mag_elec_pol[0].yx, fr->mag_elec_pol[0].yy, 
+            fr->mag_elec_pol[0].yz, fr->mag_elec_pol[0].zx, fr->mag_elec_pol[0].zy, fr->mag_elec_pol[0].zz);
+    printf(" Velocity-electric dipole polarizability at first frequency: \n");
+    printf(" %lf %lf %lf %lf %lf %lf %lf %lf %lf\n",
+            fr->vel_elec_pol[0].xx, fr->vel_elec_pol[0].xy, fr->vel_elec_pol[0].xz, fr->vel_elec_pol[0].yx, fr->vel_elec_pol[0].yy, 
+            fr->vel_elec_pol[0].yz, fr->vel_elec_pol[0].zx, fr->vel_elec_pol[0].zy, fr->vel_elec_pol[0].zz);
 
     print_ligand(efp, frag_index);
     printf("\n");
@@ -3181,6 +3231,10 @@ void print_ene(struct efp_energy *energy) {
 
     printf(" COULOMB MM ENERGY             %lf \n", energy->qq);
     printf(" LENNARD-JONES MM ENERGY       %lf \n", energy->lj);
+
+    // not added to the total so far
+    printf(" DISPERSION 4BODY ENERGY       %.10lf \n", energy->disp_4body);
+    printf(" DISPERSION CHIRAL ENERGY      %.10lf \n", energy->disp_chiral);
 
     double ene_sum = energy->electrostatic + energy->charge_penetration +
                      energy->electrostatic_point_charges + energy->polarization +

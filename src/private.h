@@ -86,6 +86,8 @@ struct ligand_pt {
 struct dynamic_polarizable_pt {
 	double x, y, z;
 	mat_t tensor[12];
+	mat_t vel_elec[12];
+	mat_t mag_elec[12];
 };
 
 struct dipquad_polarizable_pt {
@@ -196,6 +198,15 @@ struct frag {
 
 	/* if classical (partial charges only and no QM-EFP screening) fragment */
 	bool if_mm_frag;
+
+	/* molecular magnetic-electric dynamic polarizability */
+	mat_t mag_elec_pol[12];
+
+	/* molecular velocity-electric dipole polarizability */
+	mat_t vel_elec_pol[12]; 
+
+	/* molecular dipole dynamic polarizability */
+	mat_t dyn_elec_pol[12]; 
 };
 
 /* structure derived from struct frag for describing ligand */

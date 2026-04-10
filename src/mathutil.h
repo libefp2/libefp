@@ -32,6 +32,8 @@
 
 #define PI 3.14159265358979323846
 #define EPSILON 1.0e-8
+/* Fine structure constant */
+#define FINE_CONST 7.297352569824e-3
 
 #define VEC(x) ((vec_t *)(&(x)))
 #define CVEC(x) ((const vec_t *)(&(x)))
@@ -246,6 +248,15 @@ mat_set(mat_t *mat, size_t a1, size_t a2, double val)
 	((double *)mat)[3 * a1 + a2] = val;
 }
 
+static inline mat_t
+mat_add(mat_t *m1, mat_t *m2)
+{
+	mat_t out = {m1->xx+m2->xx, m1->xy+m2->xy, m1->xz+m2->xz, 
+				m1->yx+m2->yx, m1->yy+m2->yy, m1->yz+m2->yz, 
+			    m1->zx+m2->zx, m1->zy+m2->zy, m1->zz+m2->zz};
+	return out;
+}
+
 static inline vec_t
 mat_vec(const mat_t *mat, const vec_t *vec)
 {
@@ -430,5 +441,34 @@ frac_to_cart(const six_t box, vec_t *dr) {
     dr->y = dr->y * box.y * gamma_sin + dr->z * box.z * beta_term;
     dr->z = dr->z * gamma_term * box.z;
 }
+
+/* Kronicker delta */
+static inline double
+delta(size_t i, size_t j) 
+{
+	if (i == j) return 1.0;
+	else return 0.0;
+}
+
+/* T_ab tensor of second rank */
+static inline mat_t
+Tab(const vec_t *C)
+{
+	mat_t Tab = mat_zero; 
+	double tmp = 0;
+	double R = vec_len(C);
+	double R2 = R*R; 
+    double R5 = R2*R2*R;
+
+	for (size_t i=0; i<3; i++) {
+		for (size_t j=0; j<3; j++){
+			tmp = (3.0 * vec_get(C,i)*vec_get(C,j) - delta(i,j)*R2) / R5;
+			mat_set(&Tab, i,j,tmp);
+		}
+	}
+	return Tab; 
+}
+
+
 
 #endif /* LIBEFP_MATH_UTIL_H */
