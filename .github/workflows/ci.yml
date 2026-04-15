@@ -182,6 +182,10 @@ jobs:
           fi
 
       - name: Test (CTest) - unit tests
+        # added to debug random test failures 
+        env:
+            MKL_NUM_THREADS: 1
+            OMP_NUM_THREADS: 1
         run: ctest --output-on-failure --test-dir "${{ github.workspace }}/build"
 
       - name: Test (find_package) - consume installation
@@ -245,9 +249,6 @@ jobs:
         if: ${{ matrix.cfg.blas == 'MKL' }}
         run: conda install psi4 -c conda-forge
 
-      - name: Debug File Locations
-        run: find ${{ github.workspace }}/installed -name "libefp2py.py"
-        
       - name: Test (pytest) -- unit tests Python bindings
         run: |
             PYTHONPATH="${{ github.workspace }}/installed/lib:${{ github.workspace }}/installed/lib/pylibefp/tests" \
