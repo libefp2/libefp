@@ -1,4 +1,3 @@
-import libefp2py
 import pylibefp
 from qcelemental.testing import compare, compare_values
 import pprint
@@ -9,7 +8,7 @@ a2b = 1.0 / b2a
 
 def frag_setup(test_name):
     # coordinates in Bohr
-    coord_type, frags, frag_coords, efp_options, if_gradient, ref_energy, periodic_box = libefp2py.read_libefp_input(test_name)
+    coord_type, frags, frag_coords, efp_options, if_gradient, ref_energy, periodic_box = pyjob_prepper(test_name)
     #print(frag_coords)
 
     efp = pylibefp.core.efp()

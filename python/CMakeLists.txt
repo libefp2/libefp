@@ -166,7 +166,9 @@ install(
     PATTERN "systems.py"
     PATTERN "__pycache__" EXCLUDE
     PATTERN "*pyc" EXCLUDE
-    PATTERN "test_libefp.py" EXCLUDE  # until xr_cutoff resolved
-    PATTERN "test_opts.py" EXCLUDE  # until xr_cutoff resolved
+    PATTERN "test_dict.py" # EXCLUDE
+    PATTERN "test_libefp.py" # EXCLUDE  # until xr_cutoff resolved
+    PATTERN "test_opts.py" # EXCLUDE  # until xr_cutoff resolved
+    PATTERN "test_libefp2.py" # EXCLUDE  
+    PATTERN "libefp2py.py" # EXCLUDE  
   )
-
