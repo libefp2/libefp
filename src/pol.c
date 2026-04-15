@@ -68,7 +68,7 @@ get_multipole_field(const vec_t *xyz, const struct multipole_pt *mult_pt,
 		xyz->z - mult_pt->z - swf->cell.z
 	};
 
-	double t1, t2;
+	double t1=0.0, t2=0.0;
 	double r = vec_len(&dr);
 	double r3 = r * r * r;
 	double r5 = r3 * r * r;
@@ -306,8 +306,8 @@ add_electron_density_field(struct efp *efp)
     if (efp->get_electron_density_field == NULL)
         return EFP_RESULT_SUCCESS;
 
-    xyz = (vec_t *)malloc(efp->n_polarizable_pts * sizeof(vec_t));
-    field = (vec_t *)malloc(efp->n_polarizable_pts * sizeof(vec_t));
+    xyz = (vec_t *)calloc(efp->n_polarizable_pts, sizeof(vec_t));
+    field = (vec_t *)calloc(efp->n_polarizable_pts, sizeof(vec_t));
 
     for (size_t i = 0, idx = 0; i < efp->n_frag; i++) {
         struct frag *frag = efp->frags + i;
@@ -1079,7 +1079,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 	const struct frag *fr_i = efp->frags + frag_idx;
 	const struct polarizable_pt *pt_i = fr_i->polarizable_pts + pt_idx;
 	vec_t force, add_i, add_j, force_, add_i_, add_j_;
-	double e;
+	double e = 0.0;
 
     vec_t dipole_i = {
             0.5 * (pt_i->indip.x + pt_i->indipconj.x),

@@ -63,12 +63,12 @@ sim_efield(struct state *state)
 	msg("ELECTRIC FIELD IS IN ATOMIC UNITS\n\n");
 
 	for (size_t i = 0; i < n_frags; i++) {
-		double field[3];
+		double field[3] = {0.0};
 		struct efp_atom *atoms;
 		size_t n_atoms;
 
 		check_fail(efp_get_frag_atom_count(state->efp, i, &n_atoms));
-		atoms = xmalloc(n_atoms * sizeof(struct efp_atom));
+		atoms = xcalloc(n_atoms, sizeof(struct efp_atom));
 		check_fail(efp_get_frag_atoms(state->efp, i, n_atoms, atoms));
 
 		for (size_t j = 0; j < n_atoms; j++) {
@@ -116,7 +116,7 @@ sim_elpot(struct state *state)
         size_t n_atoms;
 
         check_fail(efp_get_frag_atom_count(state->efp, i, &n_atoms));
-        atoms = xmalloc(n_atoms * sizeof(struct efp_atom));
+        atoms = xcalloc(n_atoms, sizeof(struct efp_atom));
         check_fail(efp_get_frag_atoms(state->efp, i, n_atoms, atoms));
 
         msg("ELECTROSTATIC POTENTIAL ON FRAGMENT %zu\n", i);
@@ -178,7 +178,7 @@ void sim_frag_elpot(struct state *state) {
 
 
       check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_atoms));  // SKP
-      atoms = xmalloc(n_atoms * sizeof(struct efp_atom));
+      atoms = xcalloc(n_atoms, sizeof(struct efp_atom));
       check_fail(efp_get_frag_atoms(state->efp, spec_frag, n_atoms, atoms));
 
       msg("ELECTROSTATIC POTENTIAL ON FRAGMENT %zu\n", spec_frag);

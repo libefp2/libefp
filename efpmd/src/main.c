@@ -520,10 +520,10 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
         state->torch_grad = xcalloc(n_special_atoms * 3, sizeof(double));
 
 	    // special fragment atomic coordinates
-	    double *atom_coord = (double*)malloc(3 * n_special_atoms * sizeof(double));
+	    double *atom_coord = (double*)calloc(3 * n_special_atoms, sizeof(double));
         check_fail(efp_get_frag_atom_coord(state->efp, spec_frag, atom_coord));
 
-        int *atom_znuc = (int*)malloc(3 * n_special_atoms * sizeof(int));
+        int *atom_znuc = (int*)calloc(3 * n_special_atoms, sizeof(int));
         check_fail(efp_get_frag_atom_znuc(state->efp, spec_frag, atom_znuc));
 
         torch_set_coord(state->torch, atom_coord);

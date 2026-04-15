@@ -53,10 +53,10 @@ void get_torch_type(struct torch *torch, const char *str) {
 
 void torch_init(struct torch *torch, size_t natom) {
     torch->natoms = natom;
-    torch->atom_coords = malloc(3*natom*sizeof(double));
-    torch->atom_types = malloc(natom*sizeof(int));
-    torch->grad = malloc(3*natom*sizeof(double));
-    torch->elpot = malloc(natom*sizeof(double));
+    torch->atom_coords = calloc(3*natom, sizeof(double));
+    torch->atom_types = calloc(natom, sizeof(int));
+    torch->grad = calloc(3*natom, sizeof(double));
+    torch->elpot = calloc(natom, sizeof(double));
 } 
  
 void torch_get_atom_count(struct torch *torch , size_t natom) {
@@ -101,13 +101,13 @@ void torch_custom_compute(struct torch *torch, int print) {
     float *frag_coord;
     float *elecpots_data;
     //float custom_energy;
-    double custom_energy;
+    double custom_energy = 0.0;
 
-    elecpots_data = malloc(n_atoms * sizeof(float));
-    gradients = malloc(n_atoms * 3 * sizeof(float));
-    forces = malloc(n_atoms * 3 * sizeof(float));
+    elecpots_data = calloc(n_atoms, sizeof(float));
+    gradients = calloc(n_atoms * 3, sizeof(float));
+    forces = calloc(n_atoms * 3, sizeof(float));
 
-    frag_coord = malloc(n_atoms*3* sizeof(float));
+    frag_coord = calloc(n_atoms*3, sizeof(float));
 
     for (size_t i=0; i<n_atoms; i++) {
         frag_coord[i*3] = (float)(torch->atom_coords[i*3] * BOHR_RADIUS);
@@ -208,12 +208,12 @@ void torch_compute(struct torch *torch, const char* nn_path, int print) {
 
     size_t n_atoms = torch->natoms;
     float *gradients, *forces, *frag_coord;
-    double ani_energy;    
+    double ani_energy = 0.0;    
 
-    gradients = malloc(n_atoms * 3 * sizeof(float));
-    forces = malloc(n_atoms * 3 * sizeof(float));
+    gradients = calloc(n_atoms * 3, sizeof(float));
+    forces = calloc(n_atoms * 3, sizeof(float));
 
-    frag_coord = malloc(n_atoms*3* sizeof(float));
+    frag_coord = calloc(n_atoms*3, sizeof(float));
     for (size_t i=0; i<n_atoms; i++) {
         frag_coord[i*3] = (float)(torch->atom_coords[i*3] * BOHR_RADIUS);
         frag_coord[i*3+1] = (float)(torch->atom_coords[i*3+1] * BOHR_RADIUS);

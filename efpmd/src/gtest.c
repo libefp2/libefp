@@ -70,10 +70,10 @@ static void test_cgrad(struct state *state, const double *cgrad)
 	check_fail(efp_get_point_charge_coordinates(state->efp, xyz));
 
 	for (size_t i = 0; i < n_charges; i++) {
-		double ngrad[3];
+		double ngrad[3] = {0.0};
 
 		for (size_t j = 0; j < 3; j++) {
-			double e1, e2;
+			double e1 = 0.0, e2 = 0.0;
 			double coord = xyz[3 * i + j];
 
 			xyz[3 * i + j] = coord - dstep;
@@ -115,10 +115,10 @@ static void test_fgrad(struct state *state, const double *fgrad)
 	for (size_t i = 0, k=0; i < n_frags; i++) {
 
         if (i == spec_frag) continue;
-		double deriv[3], ngrad[6];
+		double deriv[3] = {0.0}, ngrad[6] = {0.0};
 
 		for (size_t j = 0; j < 6; j++) {
-			double e1, e2;
+			double e1 = 0.0, e2 = 0.0;
 			double coord = xyzabc[6 * i + j];
 			double step = j < 3 ? dstep : astep;
 
@@ -162,10 +162,10 @@ static void test_agrad(struct state *state, const double *agrad)
     check_fail(efp_get_frag_atom_coord(state->efp, spec_frag, atom_coord));
 
     for (size_t i = 0; i < n_special_atoms; i++) {
-        double ngrad[3];
+        double ngrad[3] = {0.0};
         for (size_t j = 0; j < 3; j++) {
 
-            double e1, e2;
+            double e1 = 0.0, e2 = 0.0;
             double coord = atom_coord[3 * i + j];
 
             atom_coord[3 * i + j] = coord - dstep;
@@ -221,12 +221,12 @@ static void test_agrad(struct state *state, const double *agrad)
     spec_frag = cfg_get_int(state->cfg, "special_fragment");
     check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
-    double atom_coord[3 * n_special_atoms]; // = (double*)malloc(3 * n_special_atoms * sizeof(double));
+    double atom_coord[3 * n_special_atoms] = {0.0}; // = (double*)malloc(3 * n_special_atoms * sizeof(double));
     check_fail(efp_get_frag_atom_coord(state->efp, spec_frag, atom_coord));
 
     for (size_t i = 0; i < n_special_atoms; i++) {
-        double ngrad[3];
-	double tmp_agrad[3];
+        double ngrad[3] = {0.0};
+	    double tmp_agrad[3] = {0.0};
         for (size_t j = 0; j < 3; j++) {
 
             double e1, e2, e3, e4;

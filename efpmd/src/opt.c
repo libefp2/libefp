@@ -239,7 +239,7 @@ static void print_status(struct state *state, double e_diff, double rms_grad, do
 void sim_opt(struct state *state)
 {
     size_t n_frags, n_charge, n_coord, n_special_atoms, spec_frag;
-    double rms_grad, max_grad;
+    double rms_grad = 0.0, max_grad = 0.0;
 
     int static algorithm_switch;
 

@@ -585,7 +585,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                     ds = (six_t *) calloc(n_lmo_ij, sizeof(six_t));
 
                     if (do_xr(&efp->opts) || special_xr) {
-                        double exr, ecp;
+                        double exr = 0.0, ecp = 0.0;
 
                         efp_frag_frag_xr(efp, i, fr_j,
                                          s, ds, &exr, &ecp);
@@ -800,7 +800,7 @@ EFP_EXPORT enum efp_result
 efp_get_atomic_gradient(struct efp *efp, double *grad)
 {
 	six_t *efpgrad = NULL; /* Calculated EFP gradient */
-	vec_t *pgrad; /* Conversion of grad to vec_t type */
+	vec_t *pgrad = NULL; /* Conversion of grad to vec_t type */
 	size_t i, j, k, l;
 	size_t nr; /* Number of atoms in the current fragment */
 	size_t maxa; /* Maximum number of size of m, Ia, r arrays */
@@ -833,15 +833,15 @@ efp_get_atomic_gradient(struct efp *efp, double *grad)
 
 	res = EFP_RESULT_NO_MEMORY;
 	/* Create and initialize some arrays for work */
-	if ((r = (vec_t *)malloc(maxa * sizeof(*r))) == NULL)
+	if ((r = (vec_t *)calloc(maxa, sizeof(*r))) == NULL)
 		goto error;
-	if ((m = (double *)malloc(maxa * sizeof(*m))) == NULL)
+	if ((m = (double *)calloc(maxa, sizeof(*m))) == NULL)
 		goto error;
-	if ((Ia = (double *)malloc(maxa * sizeof(*Ia))) == NULL)
+	if ((Ia = (double *)calloc(maxa, sizeof(*Ia))) == NULL)
 		goto error;
 
 	/* Copy computed efp->grad */
-	if ((efpgrad = (six_t *)malloc(efp->n_frag * sizeof(*efpgrad))) == NULL)
+	if ((efpgrad = (six_t *)calloc(efp->n_frag, sizeof(*efpgrad))) == NULL)
 		goto error;
 	memcpy(efpgrad, efp->grad, efp->n_frag * sizeof(*efpgrad));
 
@@ -963,7 +963,7 @@ EFP_EXPORT enum efp_result
 efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad)
 {
     six_t *efpgrad = NULL; /* Calculated EFP gradient */
-    vec_t *pgrad; /* Conversion of grad to vec_t type */
+    vec_t *pgrad = NULL; /* Conversion of grad to vec_t type */
     size_t i, j, k, l;
     size_t nr; /* Number of atoms in the current fragment */
     vec_t *r = NULL; /* Radius-vector of each atom inside current fragment
@@ -992,11 +992,11 @@ efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad)
 
     res = EFP_RESULT_NO_MEMORY;
     /* Create and initialize some arrays for work */
-    if ((r = (vec_t *)malloc(nr * sizeof(*r))) == NULL)
+    if ((r = (vec_t *)calloc(nr, sizeof(*r))) == NULL)
         goto error;
-    if ((m = (double *)malloc(nr * sizeof(*m))) == NULL)
+    if ((m = (double *)calloc(nr, sizeof(*m))) == NULL)
         goto error;
-    if ((Ia = (double *)malloc(nr * sizeof(*Ia))) == NULL)
+    if ((Ia = (double *)calloc(nr, sizeof(*Ia))) == NULL)
         goto error;
 
     //for (size_t i=0; i<efp->n_frag; i++) {
@@ -1005,7 +1005,7 @@ efp_get_frag_atomic_gradient(struct efp *efp, size_t frag_id, double *grad)
 
 
     /* Copy computed efp->grad */
-    if ((efpgrad = (six_t *)malloc(sizeof(*efpgrad))) == NULL)
+    if ((efpgrad = (six_t *)calloc(1,sizeof(*efpgrad))) == NULL)
         goto error;
     memcpy(efpgrad, efp->grad + frag_id, sizeof(*efpgrad));
 
@@ -2484,6 +2484,7 @@ efp_add_fragment(struct efp *efp, const char *name)
 
 	enum efp_result res;
 	struct frag *frag = efp->frags + efp->n_frag - 1;
+    memset(frag, 0, sizeof(*frag));
 
     // if update/rotate parameters
 	if (efp->opts.update_params == 1) {
@@ -2536,17 +2537,14 @@ efp_add_ligand(struct efp *efp, int ligand_index) {
         lig->ligand_frag = &efp->frags[ligand_index];
         lig->n_ligand_pts = efp->frags[ligand_index].n_polarizable_pts;
 
-        size_t size;
-        size = lig->n_ligand_pts * sizeof(struct ligand_pt);
-        lig->ligand_pts = (struct ligand_pt *) malloc(size);
+        lig->ligand_pts = (struct ligand_pt *) calloc(lig->n_ligand_pts, sizeof(struct ligand_pt));
         if (lig->ligand_pts == NULL)
             return EFP_RESULT_NO_MEMORY;
 
         for (size_t i = 0; i < lig->n_ligand_pts; i++) {
             struct ligand_pt *pt = lig->ligand_pts + i;
-            size = efp->n_frag * sizeof(vec_t);
             pt->n_frag = efp->n_frag;
-            pt->fragment_field = (vec_t *) malloc(size);
+            pt->fragment_field = (vec_t *) calloc(efp->n_frag, sizeof(vec_t));
             if (!pt->fragment_field)
                 return EFP_RESULT_NO_MEMORY;
         }
@@ -2981,7 +2979,7 @@ efp_set_symmlist(struct efp *efp)
         // this needs to be changed for list settings of symmetry!!!
         efp->nsymm_frag = efp->n_lib;
         char name[32];
-        char** unique_names=malloc(efp->n_lib * sizeof(name));
+        char** unique_names=calloc(efp->n_lib, sizeof(name));
         for (int i = 0; i < efp->n_lib; i++){
                 unique_names[i] = NULL;
         }

@@ -387,7 +387,7 @@ efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
 static void
 rotate_quadrupole(const mat_t *rotmat, const double *in, double *out)
 {
-	double full_in[9], full_out[9];
+	double full_in[9] = {0.0}, full_out[9] = {0.0};
 
 	for (size_t a = 0; a < 3; a++)
 		for (size_t b = 0; b < 3; b++)
@@ -403,7 +403,7 @@ rotate_quadrupole(const mat_t *rotmat, const double *in, double *out)
 static void
 rotate_octupole(const mat_t *rotmat, const double *in, double *out)
 {
-	double full_in[27], full_out[27];
+	double full_in[27]={0.0}, full_out[27]={0.0};
 
 	for (size_t a = 0; a < 3; a++)
 		for (size_t b = 0; b < 3; b++)
@@ -827,7 +827,7 @@ lj_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 
     double energy = 0.0;
     double g = 0.0, g1 = 0.0, g2 = 0.0;
-    double r2, sr6 = 0.0;
+    double r2 = 0.0, sr6 = 0.0;
 
     if (combination_rule == 1) {
         // E_lj = (C_12/r^12 - C_6/r^6)

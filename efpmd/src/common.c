@@ -346,7 +346,7 @@ void print_pair_energy(struct state *state) {
     check_fail(efp_get_coordinates(state->efp, coord));
 
     struct efp_energy *energies;
-    energies = xmalloc(n_frags * sizeof(struct efp_energy));
+    energies = xcalloc(n_frags, sizeof(struct efp_energy));
     check_fail(efp_get_pairwise_energy(state->efp, energies));
 
     char ligand[32];

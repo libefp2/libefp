@@ -209,7 +209,7 @@ lmo_lmo_xr_grad(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 	six_t ds_ij = lmo_ds[ij];
 	six_t dt_ij = lmo_dt[ij];
 
-	double t1, t2;
+	double t1=0.0, t2=0.0;
 	vec_t force = vec_zero, torque_i = vec_zero;
 
 	/* first part */
@@ -535,12 +535,12 @@ efp_frag_frag_xr(struct efp *efp, size_t frag_i, size_t frag_j, double *lmo_s,
         size_t ij_wf_size = fr_i->xr_wf_size * fr_j->xr_wf_size;
         size_t ij_nlmo = fr_i->n_lmo * fr_j->n_lmo;
         size_t ij_nlmo_wf_size = fr_i->n_lmo * fr_j->xr_wf_size;
-        double *s = (double *) malloc(ij_wf_size * sizeof(double));
-        double *t = (double *) malloc(ij_wf_size * sizeof(double));
-        double *lmo_t = (double *) malloc(ij_nlmo * sizeof(double));
-        double *tmp = (double *) malloc(ij_nlmo_wf_size * sizeof(double));
-        struct xr_atom *atoms_j = (struct xr_atom *) malloc(
-                fr_j->n_xr_atoms * sizeof(struct xr_atom));
+        double *s = (double *) calloc(ij_wf_size, sizeof(double));
+        double *t = (double *) calloc(ij_wf_size, sizeof(double));
+        double *lmo_t = (double *) calloc(ij_nlmo, sizeof(double));
+        double *tmp = (double *) calloc(ij_nlmo_wf_size, sizeof(double));
+        struct xr_atom *atoms_j = (struct xr_atom *) calloc(
+                fr_j->n_xr_atoms, sizeof(struct xr_atom));
 
         for (size_t j = 0; j < fr_j->n_xr_atoms; j++) {
             atoms_j[j] = fr_j->xr_atoms[j];
@@ -600,11 +600,11 @@ efp_frag_frag_xr(struct efp *efp, size_t frag_i, size_t frag_j, double *lmo_s,
 
         /* compute gradient */
 
-        six_t *ds = (six_t *) malloc(ij_wf_size * sizeof(six_t));
-        six_t *dt = (six_t *) malloc(ij_wf_size * sizeof(six_t));
-        six_t *lmo_dt = (six_t *) malloc(ij_nlmo * sizeof(six_t));
-        six_t *sixtmp = (six_t *) malloc(ij_nlmo_wf_size * sizeof(six_t));
-        double *lmo_tmp = (double *) malloc(ij_nlmo * sizeof(double));
+        six_t *ds = (six_t *) calloc(ij_wf_size, sizeof(six_t));
+        six_t *dt = (six_t *) calloc(ij_wf_size, sizeof(six_t));
+        six_t *lmo_dt = (six_t *) calloc(ij_nlmo, sizeof(six_t));
+        six_t *sixtmp = (six_t *) calloc(ij_nlmo_wf_size, sizeof(six_t));
+        double *lmo_tmp = (double *) calloc(ij_nlmo, sizeof(double));
 
         efp_st_int_deriv(fr_i->n_xr_atoms, fr_i->xr_atoms,
                          fr_j->n_xr_atoms, atoms_j,
@@ -731,7 +731,7 @@ rotate_func_f(const mat_t *rotmat, const double *in, double *out)
 	const double norm1 = sqrt(5.0) / 3.0;
 	const double norm2 = sqrt(3.0) / 2.0;
 
-	double full_in[27], full_out[27];
+	double full_in[27]={0.0}, full_out[27]={0.0};
 
 	for (size_t a = 0; a < 3; a++)
 		for (size_t b = 0; b < 3; b++)

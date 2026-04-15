@@ -369,7 +369,7 @@ euler_to_matrix(double a, double b, double c, mat_t *out)
 static inline void
 matrix_to_euler(const mat_t *rotmat, double *ea, double *eb, double *ec)
 {
-	double a, b, c, sinb;
+	double a=0.0, b=0.0, c=0.0, sinb=0.0;
 
 	if (fabs(rotmat->zz - 1.0) < 1.0e-7) {
 		b = 0.0;
