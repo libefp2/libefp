@@ -48,7 +48,8 @@ jobs:
 
           - label: M-Clang
             # NaNs in tests on macos-latest (macos-12)
-            runs-on: macos-13
+            #runs-on: macos-13
+            runs-on: macos-latest
             python-version: "3.10"
             blas: OBL
             build_type: Release
@@ -59,7 +60,8 @@ jobs:
 
           - label: M-Clang
             # NaNs in tests on macos-latest (macos-12)
-            runs-on: macos-13
+            #runs-on: macos-13
+            runs-on: macos-15-intel
             python-version: "3.10"
             blas: ACC
             build_type: Release
@@ -180,6 +182,10 @@ jobs:
           fi
 
       - name: Test (CTest) - unit tests
+        # added to debug random test failures 
+        env:
+            MKL_NUM_THREADS: 1
+            OMP_NUM_THREADS: 1
         run: ctest --output-on-failure --test-dir "${{ github.workspace }}/build"
 
       - name: Test (find_package) - consume installation
@@ -245,7 +251,7 @@ jobs:
 
       - name: Test (pytest) -- unit tests Python bindings
         run: |
-            PYTHONPATH="${{ github.workspace }}/installed/lib" \
+            PYTHONPATH="${{ github.workspace }}/installed/lib:${{ github.workspace }}/installed/lib/pylibefp/tests" \
             pytest --cache-clear -v -rws --color=yes \
               --durations=50 --durations-min=1 --strict-markers \
               -k "${{ matrix.cfg.pytest-marker-expr }}" \

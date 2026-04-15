@@ -1893,7 +1893,7 @@ efp_get_frag_rank(struct efp *efp, size_t frag_idx, int *rank)
     return EFP_RESULT_SUCCESS;
 }
 
-/*
+
 EFP_EXPORT enum efp_result
 efp_get_multipole_count(struct efp *efp, size_t *n_mult)
 {
@@ -1908,7 +1908,7 @@ efp_get_multipole_count(struct efp *efp, size_t *n_mult)
 	*n_mult = sum;
 	return EFP_RESULT_SUCCESS;
 }
-*/
+
 
 EFP_EXPORT enum efp_result
 efp_get_ho_multipole_count(struct efp *efp, size_t *n_mult)
@@ -1942,7 +1942,7 @@ efp_get_mm_multipole_count(struct efp *efp, size_t *n_mult)
 	return EFP_RESULT_SUCCESS;
 }
 
-/*
+
 EFP_EXPORT enum efp_result
 efp_get_multipole_coordinates(struct efp *efp, double *xyz)
 {
@@ -1960,7 +1960,7 @@ efp_get_multipole_coordinates(struct efp *efp, double *xyz)
 	}
 	return EFP_RESULT_SUCCESS;
 }
-*/
+
 
 EFP_EXPORT enum efp_result
 efp_get_ho_multipole_coordinates(struct efp *efp, double *xyz)
@@ -2000,7 +2000,7 @@ efp_get_mm_multipole_coordinates(struct efp *efp, double *xyz)
 	return EFP_RESULT_SUCCESS;
 }
 
-/*
+
 EFP_EXPORT enum efp_result
 efp_get_multipole_values(struct efp *efp, double *mult)
 {
@@ -2028,7 +2028,7 @@ efp_get_multipole_values(struct efp *efp, double *mult)
 	}
 	return EFP_RESULT_SUCCESS;
 }
-*/
+
 
 EFP_EXPORT enum efp_result
 efp_get_ho_multipole_values(struct efp *efp, double *mult)

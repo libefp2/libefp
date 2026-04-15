@@ -2,7 +2,7 @@ run_type grad
 coord atoms
 elec_damp screen
 fraglib_path ../fraglib
-print 3
+print 1
 
 fragment h2o_l
 A01O1               -3.394000    -1.900000    -3.700000
