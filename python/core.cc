@@ -763,12 +763,12 @@ PYBIND11_MODULE(core, m) {
         .def("_efp_get_frag_charge", &_efp_get_frag_charge, "Gets total charge on fragment", py::arg("frag_idx"))
         .def("_efp_get_frag_multiplicity", &_efp_get_frag_multiplicity, "Gets spin multiplicity on fragment")
         // Multipoles & Induced Dipoles
-        //.def("_efp_get_multipole_count", &_efp_get_multipole_count,
-        //     "Wrapped gets total number of multipoles from EFP electrostatics")
-        //.def("_efp_get_multipole_coordinates", &_efp_get_multipole_coordinates,
-        //     "Wrapped gets coordinates of electrostatics multipoles")
-        //.def("_efp_get_multipole_values", &_efp_get_multipole_values,
-        //     "Wrapped gets electrostatics multipoles from EFP fragments")
+        .def("_efp_get_multipole_count", &_efp_get_multipole_count,
+             "Wrapped gets total number of multipoles from EFP electrostatics")
+        .def("_efp_get_multipole_coordinates", &_efp_get_multipole_coordinates,
+             "Wrapped gets coordinates of electrostatics multipoles")
+        .def("_efp_get_multipole_values", &_efp_get_multipole_values,
+             "Wrapped gets electrostatics multipoles from EFP fragments")
         .def("_efp_get_induced_dipole_count", &_efp_get_induced_dipole_count,
              "Wrapped gets the number of polarization induced dipoles")
         .def("_efp_get_induced_dipole_coordinates", &_efp_get_induced_dipole_coordinates,
