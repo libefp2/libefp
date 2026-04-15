@@ -918,109 +918,109 @@ def get_frag_count(efpobj):
 
     return nfrag
 
-# #
-# # def get_multipole_count(efpobj):
-# #     """Gets the number of multipoles in `efpobj` computation.
-# #
-# #     Returns
-# #     -------
-# #     int
-# #         Total number of multipoles from electrostatics calculation.
-# #
-# #     """
-# #     (res, nmult) = efpobj._efp_get_multipole_count()
-# #     _result_to_error(res)
-# #
-# #     return nmult
-# #
-#
-# def get_multipole_coordinates(efpobj, verbose=1):
-#     """Gets the coordinates of `efpobj` electrostatics multipoles.
-#
-#     Parameters
-#     ----------
-#     verbose : int, optional
-#         Whether to print out the multipole coordinates. 0: no printing. 1:
-#         print charges and dipoles. 2: additionally print quadrupoles
-#         and octupoles.
-#
-#     Returns
-#     -------
-#     list
-#         ``3 n_mult`` (flat) array of multipole locations.
-#
-#     Examples
-#     --------
-#
-#     >>> # Use with NumPy
-#     >>> n_mult = efpobj.get_multipole_count()
-#     >>> xyz_mult = np.asarray(efpobj.get_multipole_coordinates()).reshape(n_mult, 3)
-#
-#     """
-#     nmult = efpobj.get_multipole_count()
-#     (res, xyz) = efpobj._efp_get_multipole_coordinates(nmult)
-#     _result_to_error(res)
-#
-#     if verbose >= 1:
-#         xyz3 = list(map(list, zip(*[iter(xyz)] * 3)))
-#
-#         text = '\n  ==>  EFP Multipole Coordinates  <==\n\n'
-#         for mu in range(nmult):
-#             text += '{:6d}   {:14.8f} {:14.8f} {:14.8f}\n'.format(mu, *xyz3[mu])
-#         print(text)
-#
-#     return xyz
-#
-#
-# def get_multipole_values(efpobj, verbose=1):
-#     """Gets the computed per-point multipoles of `efpobj`.
-#
-#     Parameters
-#     ----------
-#     verbose : int, optional
-#         Whether to print out the multipole arrays. 0: no printing. 1:
-#         print charges and dipoles. ``2``: additionally print quadrupoles
-#         and octupoles.
-#
-#     Returns
-#     -------
-#     list
-#         ``20 n_mult`` (flat) array of per-point multipole values including
-#         charges + dipoles + quadrupoles + octupoles.
-#         Dipoles stored as     x, y, z.
-#         Quadrupoles stored as xx, yy, zz, xy, xz, yz.
-#         Octupoles stored as   xxx, yyy, zzz, xxy, xxz, xyy, yyz, xzz, yzz, xyz.
-#
-#     Examples
-#     --------
-#     >>> # Use with NumPy
-#     >>> n_mult = efpobj.get_multipole_count()
-#     >>> val_mult = np.asarray(efpobj.get_multipole_values()).reshape(n_mult, 20)
-#
-#     """
-#     nmult = efpobj.get_multipole_count()
-#     (res, mult) = efpobj._efp_get_multipole_values(nmult)
-#     _result_to_error(res)
-#
-#     if verbose >= 1:
-#         mult20 = list(map(list, zip(*[iter(mult)] * 20)))
-#
-#         text = '\n  ==>  EFP Multipoles: Charge & Dipole  <==\n\n'
-#         for mu in range(nmult):
-#             text += '{:6d}   {:14.8f}   {:14.8f} {:14.8f} {:14.8f}\n'.format(mu, *mult20[mu][:4])
-#
-#         if verbose >= 2:
-#             text += '\n  ==>  EFP Multipoles: Quadrupole  <==\n\n'
-#             for mu in range(nmult):
-#                 text += '{:6d}   {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}\n'.format(mu, *mult20[mu][4:10])
-#             text += '\n  ==>  EFP Multipoles: Octupole  <==\n\n'
-#             for mu in range(nmult):
-#                 text += '{:6d}   {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}\n'.format(
-#                     mu, *mult20[mu][10:])
-#         print(text)
-#
-#     return mult
-#
+
+def get_multipole_count(efpobj):
+    """Gets the number of multipoles in `efpobj` computation.
+
+    Returns
+    -------
+    int
+        Total number of multipoles from electrostatics calculation.
+
+    """
+    (res, nmult) = efpobj._efp_get_multipole_count()
+    _result_to_error(res)
+
+    return nmult
+
+
+def get_multipole_coordinates(efpobj, verbose=1):
+    """Gets the coordinates of `efpobj` electrostatics multipoles.
+
+    Parameters
+    ----------
+    verbose : int, optional
+        Whether to print out the multipole coordinates. 0: no printing. 1:
+        print charges and dipoles. 2: additionally print quadrupoles
+        and octupoles.
+
+    Returns
+    -------
+    list
+        ``3 n_mult`` (flat) array of multipole locations.
+
+    Examples
+    --------
+
+    >>> # Use with NumPy
+    >>> n_mult = efpobj.get_multipole_count()
+    >>> xyz_mult = np.asarray(efpobj.get_multipole_coordinates()).reshape(n_mult, 3)
+
+    """
+    nmult = efpobj.get_multipole_count()
+    (res, xyz) = efpobj._efp_get_multipole_coordinates(nmult)
+    _result_to_error(res)
+
+    if verbose >= 1:
+        xyz3 = list(map(list, zip(*[iter(xyz)] * 3)))
+
+        text = '\n  ==>  EFP Multipole Coordinates  <==\n\n'
+        for mu in range(nmult):
+            text += '{:6d}   {:14.8f} {:14.8f} {:14.8f}\n'.format(mu, *xyz3[mu])
+        print(text)
+
+    return xyz
+
+
+def get_multipole_values(efpobj, verbose=1):
+    """Gets the computed per-point multipoles of `efpobj`.
+
+    Parameters
+    ----------
+    verbose : int, optional
+        Whether to print out the multipole arrays. 0: no printing. 1:
+        print charges and dipoles. ``2``: additionally print quadrupoles
+        and octupoles.
+
+    Returns
+    -------
+    list
+        ``20 n_mult`` (flat) array of per-point multipole values including
+        charges + dipoles + quadrupoles + octupoles.
+        Dipoles stored as     x, y, z.
+        Quadrupoles stored as xx, yy, zz, xy, xz, yz.
+        Octupoles stored as   xxx, yyy, zzz, xxy, xxz, xyy, yyz, xzz, yzz, xyz.
+
+    Examples
+    --------
+    >>> # Use with NumPy
+    >>> n_mult = efpobj.get_multipole_count()
+    >>> val_mult = np.asarray(efpobj.get_multipole_values()).reshape(n_mult, 20)
+
+    """
+    nmult = efpobj.get_multipole_count()
+    (res, mult) = efpobj._efp_get_multipole_values(nmult)
+    _result_to_error(res)
+
+    if verbose >= 1:
+        mult20 = list(map(list, zip(*[iter(mult)] * 20)))
+
+        text = '\n  ==>  EFP Multipoles: Charge & Dipole  <==\n\n'
+        for mu in range(nmult):
+            text += '{:6d}   {:14.8f}   {:14.8f} {:14.8f} {:14.8f}\n'.format(mu, *mult20[mu][:4])
+
+        if verbose >= 2:
+            text += '\n  ==>  EFP Multipoles: Quadrupole  <==\n\n'
+            for mu in range(nmult):
+                text += '{:6d}   {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}\n'.format(mu, *mult20[mu][4:10])
+            text += '\n  ==>  EFP Multipoles: Octupole  <==\n\n'
+            for mu in range(nmult):
+                text += '{:6d}   {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}\n'.format(
+                    mu, *mult20[mu][10:])
+        print(text)
+
+    return mult
+
 
 def get_induced_dipole_count(efpobj):
     """Gets the number of polarization induced dipoles in `efpobj` computation.

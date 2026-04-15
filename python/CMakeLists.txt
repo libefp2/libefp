@@ -169,6 +169,9 @@ install(
     PATTERN "test_dict.py" # EXCLUDE
     PATTERN "test_libefp.py" # EXCLUDE  # until xr_cutoff resolved
     PATTERN "test_opts.py" # EXCLUDE  # until xr_cutoff resolved
-    PATTERN "test_libefp2.py" EXCLUDE  # due to inconsistency in placing the original inputs in test dir 
-    PATTERN "libefp2py.py" # EXCLUDE  
+    PATTERN "test_efpefp.py" 
+    PATTERN "test_efpefp2.py" EXCLUDE  
+    PATTERN "libefp2py.py" 
+    PATTERN "test_psi.py" #EXCLUDE  
+    PATTERN "test_scf.py" #EXCLUDE  
   )

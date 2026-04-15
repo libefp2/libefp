@@ -227,7 +227,7 @@ py::tuple _efp_get_periodic_box(efp* efp) {
     return rets;
 }
 
-/*
+
 py::tuple _efp_get_multipole_count(efp* efp) {
     enum efp_result res;
     size_t n_mult = 0;
@@ -269,7 +269,7 @@ py::tuple _efp_get_multipole_values(efp* efp, size_t n_mult) {
     py::tuple rets = py::make_tuple(res, mult);
     return rets;
 }
-*/
+
 py::tuple _efp_get_induced_dipole_count(efp* efp) {
     enum efp_result res;
     size_t n_dip = 0;

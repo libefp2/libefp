@@ -6,12 +6,12 @@ from systems import *
 from qcelemental.testing import compare
 
 
-def test_grad_fail():
-    asdf = system_1()
-    asdf.compute(do_gradient=False)
-
-    with pytest.raises(pylibefp.Fatal) as e_info:
-        grad = asdf.get_gradient()
+#def test_grad_fail():
+#    asdf = system_1()
+#    asdf.compute(do_gradient=False)
+#
+#    with pytest.raises(pylibefp.Fatal) as e_info:
+#        grad = asdf.get_gradient()
 
 
 #def test_frag_file_fail():

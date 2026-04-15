@@ -118,7 +118,7 @@ def test_total_1a():
         'pol': True,  # 'pol_damp': 'tt',
         'disp': True,
         'disp_damp': 'tt',
-        'print': 2
+        'print': 1
     })
     asdf.compute()
     ene = asdf.get_energy()
