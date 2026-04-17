@@ -191,6 +191,7 @@ jobs:
           valgrind --tool=memcheck \
                    --leak-check=full \
                    --track-origins=yes \
+                   --trace-children=yes \
                    --error-exitcode=1 \
                    ctest --output-on-failure --test-dir "${{ github.workspace }}/build"
                    
