@@ -187,11 +187,13 @@ jobs:
       - name: Test (CTest) with Valgrind
         run: |
           sudo apt-get update && sudo apt-get install -y valgrind
-          ctest --output-on-failure \
-                --test-dir "${{ github.workspace }}/build" \
-                -T memcheck \
-                --overwrite MemoryCheckCommandOptions="--leak-check=full --track-origins=yes --error-exitcode=1"
-
+          # Run valgrind directly on the ctest executable
+          valgrind --tool=memcheck \
+                   --leak-check=full \
+                   --track-origins=yes \
+                   --error-exitcode=1 \
+                   ctest --output-on-failure --test-dir "${{ github.workspace }}/build"
+                   
       - name: Test (find_package) - consume installation
         run: |
           mkdir test_installed_library && cd test_installed_library
