@@ -199,7 +199,7 @@ void print_geometry_pbc(struct efp *efp, int ligand)
 void print_energy(struct state *state)
 {
 //	printf("Inside print_energy\n");
-	struct efp_energy energy;
+	struct efp_energy energy = {0.0};
 
 	check_fail(efp_get_energy(state->efp, &energy));
 

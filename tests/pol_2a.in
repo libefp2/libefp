@@ -4,7 +4,6 @@ coord xyzabc
 terms elec pol
 elec_damp screen
 fraglib_path ../fraglib
-print 3
 
 fragment h2o_l
   -1.0   3.7   0.4  -1.3   0.0   7.0

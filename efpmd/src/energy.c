@@ -38,7 +38,8 @@ void compute_energy(struct state *state, bool do_grad)
 {
 	struct efp_atom *atoms;
 	struct efp_energy efp_energy;
-	double xyz[3], xyzabc[6], *grad;
+	memset(&efp_energy, 0, sizeof(efp_energy));
+	double xyz[3] = {0.0}, xyzabc[6] = {0.0}, *grad;
 	size_t ifrag, nfrag, iatom, natom, spec_frag, n_special_atoms;
 	int itotal;
 
