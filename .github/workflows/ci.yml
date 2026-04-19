@@ -20,6 +20,8 @@ jobs:
             cmargs: >
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
+              -D CMAKE_C_FLAGS="-fsanitize=thread -g"
+              -D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"  # i.e., all
 
           - label: L-Gnu
@@ -30,6 +32,8 @@ jobs:
             cmargs: >
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
+              -D CMAKE_C_FLAGS="-fsanitize=thread -g"
+              -D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"
 
           - label: L-Intel
@@ -56,6 +60,8 @@ jobs:
             cmargs: >
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
+              -D CMAKE_C_FLAGS="-fsanitize=thread -g"
+              -D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"
 
           - label: M-Clang
@@ -68,6 +74,8 @@ jobs:
             cmargs: >
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
+              -D CMAKE_C_FLAGS="-fsanitize=thread -g"
+              -D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"
 
           - label: W-MinGW
