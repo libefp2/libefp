@@ -513,7 +513,7 @@ static void state_init(struct state *state, const struct cfg *cfg, const struct 
         if (state->torch->nn_type  != 3) load_ani_model(state->torch->ani_model, state->torch->nn_type, cfg_get_string(state->cfg, "ml_path"));
         if (state->torch->nn_type  == 3) load_custom_ani_model(state->torch->ani_model, state->torch->aev, state->torch->custom_model, ml_location);
  
-        spec_frag = cfg_get_int(cfg, "special_fragment");
+        spec_frag = (size_t)cfg_get_int(cfg, "special_fragment");
 	
         check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
         torch_init(state->torch, n_special_atoms);

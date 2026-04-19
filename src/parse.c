@@ -34,7 +34,7 @@
 #include "private.h"
 
 static void init_multipole_pt(struct multipole_pt *pt) {
-    memset(pt, 0, sizeof(*pt));
+    memset(pt, 0, sizeof(struct multipole_pt));
     pt->screen2 = 10.0;
     pt->screen0 = 10.0;
     pt->if_znuc = false;
@@ -44,10 +44,6 @@ static void init_multipole_pt(struct multipole_pt *pt) {
     pt->if_oct = false;
     pt->if_scr2 = false;
     pt->if_scr0 = false;
-}
-
-static void init_pol_pt(struct polarizable_pt *pt) {
-    memset(pt, 0, sizeof(*pt));
 }
 
 static int
@@ -158,9 +154,7 @@ parse_coordinates(struct frag *frag, struct stream *stream)
 			return EFP_RESULT_SUCCESS;
 		}
 
-		struct efp_atom atom;
-
-		memset(&atom, 0, sizeof(atom));
+		struct efp_atom atom = {0.0};
 		if (!tok_label(stream, sizeof(atom.label), atom.label) ||
 		    !tok_double(stream, &atom.x) ||
 		    !tok_double(stream, &atom.y) ||
@@ -488,8 +482,8 @@ parse_polarizable_pts(struct frag *frag, struct stream *stream)
 		struct polarizable_pt *pt =
 		    frag->polarizable_pts + frag->n_polarizable_pts - 1;
 		// zero out all entries
-        init_pol_pt(pt);
-
+        memset(pt, 0, sizeof(struct polarizable_pt));
+ 
 		if (!efp_stream_advance(stream, 4)){
             efp_log("parse_polarizable_pts() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
@@ -1449,8 +1443,7 @@ parse_mm_atomtype(struct frag *frag, struct stream *stream)
                    counter, frag->n_atoms, frag->name);
             return EFP_RESULT_SUCCESS;
         }
-        struct efp_atom atom;
-        memset(&atom, 0, sizeof(atom));
+        struct efp_atom atom = {0.0};
         if (!tok_label(stream, sizeof(atom.label), atom.label) ||
             !tok_label(stream, sizeof(atom.ff_label), atom.ff_label)){
             printf("problem with fragment %s", frag->name);

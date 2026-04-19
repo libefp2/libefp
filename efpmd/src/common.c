@@ -146,20 +146,24 @@ void print_geometry_pbc(struct efp *efp, int ligand)
     size_t n_frags;
     check_fail(efp_get_frag_count(efp, &n_frags));
 
+	if (ligand < 0)
+		 msg(" WARNING! Specify ligand tor printing PBC geometry\n\n"); 
+	size_t lig = (size_t)ligand;
+
     msg("    GEOMETRY IN PBC CELL (ANGSTROMS)\n\n");
 
-    double bx[6];
+    double bx[6] = {0.0};
 
     check_fail(efp_get_periodic_box(efp, bx));
     six_t box = {bx[0],bx[1],bx[2],bx[3],bx[4],bx[5]};
     //six_t box = {10.66, 12.03, 10.872, 90.0, 115.83, 90.0};
 
     double lig_com[6];
-    check_fail(efp_get_frag_xyzabc(efp,ligand,lig_com));
+    check_fail(efp_get_frag_xyzabc(efp,lig,lig_com));
     for (size_t i = 0; i < n_frags; i++) {
 
         vec_t cell = {0.0,0.0,0.0};
-        if (i != ligand) {
+        if (i != lig) {
             double frag_com[6];
             check_fail(efp_get_frag_xyzabc(efp, i, frag_com));
             vec_t dr = {frag_com[0] - lig_com[0], frag_com[1] - lig_com[1], frag_com[2] - lig_com[2]};
@@ -352,7 +356,9 @@ void print_pair_energy(struct state *state) {
     char ligand[32];
     size_t lig_atoms;
 
-    size_t ligand_index = cfg_get_int(state->cfg, "ligand");
+    size_t ligand_index = (size_t)cfg_get_int(state->cfg, "ligand");
+	if (ligand_index >= n_frags)
+		error("Ligand index is out of bound");
     check_fail(efp_get_frag_name(state->efp, ligand_index, sizeof(ligand),ligand));
     check_fail(efp_get_frag_atom_count(state->efp, ligand_index, &lig_atoms));
     struct efp_atom latoms[lig_atoms];
@@ -360,11 +366,9 @@ void print_pair_energy(struct state *state) {
 
     char frag_name[32];
     size_t frag_atoms;
-    double lattice_energy[6];
-    for (size_t j=0; j<6; j++){
-        lattice_energy[j]=0.0;
-    }
-    for (size_t i=0; i <n_frags; i++){
+    double lattice_energy[6] = {0.0};
+
+	for (size_t i=0; i <n_frags; i++){
         check_fail(efp_get_frag_name(state->efp, i, sizeof(frag_name),frag_name));
         check_fail(efp_get_frag_atom_count(state->efp, i, &frag_atoms));
 

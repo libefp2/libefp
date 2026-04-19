@@ -48,7 +48,7 @@ static double compute_efp(size_t n, const double *x, double *gx, void *data)
     if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
         // prepare for optimization of atom coordinates of a special fragment
         // through forces provided externally
-        spec_frag = cfg_get_int(state->cfg, "special_fragment");
+        spec_frag = (size_t)cfg_get_int(state->cfg, "special_fragment");
         check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
         switch(cfg_get_int(state->cfg, "opt_special_frag")) {
@@ -238,7 +238,7 @@ static void print_status(struct state *state, double e_diff, double rms_grad, do
 
 void sim_opt(struct state *state)
 {
-    size_t n_frags, n_charge, n_coord, n_special_atoms, spec_frag;
+    size_t n_frags=0, n_charge=0, n_coord=0, n_special_atoms=0, spec_frag;
     double rms_grad = 0.0, max_grad = 0.0;
 
     int static algorithm_switch;
@@ -275,7 +275,7 @@ void sim_opt(struct state *state)
 
 #ifdef TORCH_SWITCH
    if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
-        spec_frag = cfg_get_int(state->cfg, "special_fragment");
+        spec_frag = (size_t)cfg_get_int(state->cfg, "special_fragment");
         check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
         if (cfg_get_int(state->cfg, "opt_special_frag") == 0) 

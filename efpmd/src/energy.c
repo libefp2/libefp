@@ -37,8 +37,7 @@
 void compute_energy(struct state *state, bool do_grad)
 {
 	struct efp_atom *atoms;
-	struct efp_energy efp_energy;
-	memset(&efp_energy, 0, sizeof(efp_energy));
+	struct efp_energy efp_energy = {0.0};
 	double xyz[3] = {0.0}, xyzabc[6] = {0.0}, *grad;
 	size_t ifrag, nfrag, iatom, natom, spec_frag, n_special_atoms;
 	int itotal;
@@ -95,8 +94,11 @@ void compute_energy(struct state *state, bool do_grad)
 
     if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
 
-	    spec_frag = cfg_get_int(state->cfg, "special_fragment");
-        check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));  // SKP
+	    spec_frag = (size_t)cfg_get_int(state->cfg, "special_fragment");
+        check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));  
+
+		if (n_special_atoms < 1)
+			error("ML special fragment does not have any atoms!");
 
 	    if (cfg_get_bool(state->cfg, "enable_elpot")) {
             double *elpot;

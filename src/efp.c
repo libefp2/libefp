@@ -341,36 +341,6 @@ copy_frag(struct frag *dest, const struct frag *src)
 	return EFP_RESULT_SUCCESS;
 }
 
-/*
-static enum efp_result
-copy_ligand(struct ligand *dest, const struct ligand *src) {
-    size_t size;
-
-    memcpy(dest, src, sizeof(*dest));
-
-    if (src->ligand_frag)
-        copy_frag(dest->ligand_frag, src->ligand_frag);
-
-    if (src->ligand_pts) {
-        size = src->n_ligand_pts * sizeof(struct ligand_pt);
-        dest->ligand_pts = (struct ligand_pt *) malloc(size);
-        if (!dest->ligand_pts)
-            return EFP_RESULT_NO_MEMORY;
-        memcpy(dest->ligand_pts, src->ligand_pts, size);
-
-        for (size_t i=0; i<src->n_ligand_pts; i++) {
-            const struct ligand_pt *src_pt = src->ligand_pts + i;
-            struct ligand_pt *dest_pt = dest->ligand_pts + i;
-            size = src_pt->n_frag * sizeof(vec_t);
-            dest_pt->fragment_field = (vec_t *)malloc(size);
-            if (!dest_pt->fragment_field)
-                return EFP_RESULT_NO_MEMORY;
-            memcpy(dest_pt->fragment_field, src_pt->fragment_field, size);
-        }
-    }
-}
-*/
-
 // updates (shifts) parameters of fragment based on coordinates of fragment atoms
 static enum efp_result
 update_params(struct efp_atom *atoms, const struct frag *lib_orig, const struct frag *lib_current) {
@@ -566,12 +536,15 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 			size_t fr_j = j % efp->n_frag;
 
             // special fragment - additional check on special terms
-            bool if_special_fragment = efp->opts.special_fragment == i || efp->opts.special_fragment == fr_j;
-            bool special_xr = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_XR);
-            bool special_elec = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_ELEC);
-            bool special_disp = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_DISP);
-            bool special_qq = (!if_special_fragment) || (if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_QQ));
-            bool special_lj = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_LJ);
+            bool if_special_fragment=false, special_xr=false, special_elec=false, special_disp=false, special_qq=false, special_lj=false;
+            if (efp->opts.special_fragment >=0) {
+                if_special_fragment = (size_t)efp->opts.special_fragment == i || (size_t)efp->opts.special_fragment == fr_j;
+            }
+            special_xr = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_XR);
+            special_elec = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_ELEC);
+            special_disp = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_DISP);
+            special_qq = (!if_special_fragment) || (if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_QQ));
+            special_lj = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_LJ);
 
 			if (!efp_skip_frag_pair(efp, i, fr_j)) {
 				double *s;
@@ -613,8 +586,9 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                         printf(" WARNING: elec energy between fragments %zu and %zu is %lf \n", i, fr_j, e_elec_tmp);
 
                     // zeroing the energy contribution on the special fragment in torch custom models
-                    if (efp->opts.enable_elpot && if_special_fragment) e_elec_tmp = 0.0;
-                        //e_elec_tmp = efp_frag_frag_elec(efp, i, fr_j);
+                    if (efp->opts.enable_elpot && if_special_fragment) 
+                        e_elec_tmp = 0.0;
+
 					e_elec += e_elec_tmp;
 					/* */
 					if (if_pairwise) {
@@ -626,8 +600,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 				}
 				if ((do_disp(&efp->opts) || special_disp) && efp->frags[i].n_dynamic_polarizable_pts > 0 &&
                         efp->frags[fr_j].n_dynamic_polarizable_pts > 0) {
-					e_disp_tmp = efp_frag_frag_disp(efp,
-					    i, fr_j, s, ds);
+					e_disp_tmp = efp_frag_frag_disp(efp, i, fr_j, s, ds);
 					e_disp += e_disp_tmp;
 					/* */
 					if (if_pairwise) {
@@ -1208,7 +1181,11 @@ update_special_fragment(struct efp *efp, const double *coord)
     assert(efp);
     assert(coord);
     //printf("Inside update_special_fragment\n");
-    size_t fr_i = efp->opts.special_fragment;
+    if (efp->opts.special_fragment < 0) {
+        efp_log("special fragment not set");
+        return EFP_RESULT_FATAL;
+    }
+    size_t fr_i = (size_t)efp->opts.special_fragment;
     struct frag *spec_frag = efp->frags + fr_i;
 
     if (set_coord_atoms(spec_frag, coord)) {
@@ -1224,11 +1201,11 @@ update_gradient_special_fragment(struct efp *efp)
 {
     assert(efp);
     if (efp->opts.special_fragment < 0) {
-        efp_log("special fragment not set, continue");
-        return EFP_RESULT_SUCCESS;
+        efp_log("special fragment not set");
+        return EFP_RESULT_FATAL;
     }
 
-    size_t fr_i = efp->opts.special_fragment;
+    size_t fr_i = (size_t)efp->opts.special_fragment;
     struct frag *spec_frag = efp->frags + fr_i;
 
     for (size_t i=0; i<spec_frag->n_atoms; i++) {
@@ -2743,10 +2720,14 @@ EFP_EXPORT enum efp_result efp_get_atom_mm_info(struct efp *efp, double *charges
     assert(coords);
     assert(charges);
 
+    if (efp->opts.special_fragment < 0) {
+        efp_log("special fragment is not defined");
+		return EFP_RESULT_FATAL;
+    }
     int natom = 0;
     for (size_t fr_i = 0; fr_i < efp->n_frag; fr_i++) {
         // assume that this function is always used in QM/MM like models with QM fragment
-        if (efp->opts.special_fragment == fr_i) continue;
+        if ((size_t)efp->opts.special_fragment == fr_i) continue;
         struct frag *frag = efp->frags + fr_i;
         for (size_t j = 0; j < frag->n_atoms; j++) {
             struct efp_atom *atom = frag->atoms + j;

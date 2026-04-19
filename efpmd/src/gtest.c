@@ -105,10 +105,13 @@ static void test_fgrad(struct state *state, const double *fgrad)
 
 	size_t n_frags, spec_frag;
 	check_fail(efp_get_frag_count(state->efp, &n_frags));
-    spec_frag = n_frags + 1; // make in inactive if torch model is off
+    spec_frag = n_frags + 1; // make it inactive if torch model is off
 
     if (cfg_get_bool(state->cfg, "enable_torch") )
-        spec_frag = cfg_get_int(state->cfg, "special_fragment");
+        if (cfg_get_int(state->cfg, "special_fragment") < 0)
+            error("Special fragment is not defined in ML model");
+        spec_frag = (size_t)cfg_get_int(state->cfg, "special_fragment");
+
 	double xyzabc[6 * n_frags];
 	check_fail(efp_get_coordinates(state->efp, xyzabc));
 
@@ -155,7 +158,9 @@ static void test_agrad(struct state *state, const double *agrad)
 
     size_t spec_frag, n_special_atoms;
 
-    spec_frag = cfg_get_int(state->cfg, "special_fragment");
+    if (cfg_get_int(state->cfg, "special_fragment") < 0)
+        error("Special fragment is not defined in ML model!");
+    spec_frag = (size_t)cfg_get_int(state->cfg, "special_fragment");
     check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
     double atom_coord[3 * n_special_atoms]; // = (double*)malloc(3 * n_special_atoms * sizeof(double));
@@ -300,7 +305,10 @@ static void test_grad(struct state *state)
 #ifdef TORCH_SWITCH
     // models with libtorch optimized fragment
     if (cfg_get_bool(state->cfg, "enable_torch")) {
-        spec_frag = cfg_get_int(state->cfg, "special_fragment");
+        if (cfg_get_int(state->cfg, "special_fragment") < 0)
+            error("Special fragment is not defined in ML model");
+
+        spec_frag = (size_t)cfg_get_int(state->cfg, "special_fragment");
         check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));
 
         // check efp and charges gradient on non-special fragment
