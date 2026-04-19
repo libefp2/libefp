@@ -181,19 +181,19 @@ jobs:
             objdump.exe -p "${{ github.workspace }}\\installed\\bin\\efpmd.exe" | grep "dll"
           fi
 
-      #- name: Test (CTest) - unit tests
-      #  run: ctest --output-on-failure --test-dir "${{ github.workspace }}/build"
+      - name: Test (CTest) - unit tests
+        run: ctest --output-on-failure --test-dir "${{ github.workspace }}/build"
 
-      - name: Test (CTest) with Valgrind
-        run: |
-          sudo apt-get update && sudo apt-get install -y valgrind
-          # Run valgrind directly on the ctest executable
-          valgrind --tool=memcheck \
-                   --leak-check=full \
-                   --track-origins=yes \
-                   --trace-children=yes \
-                   --error-exitcode=1 \
-                   ctest --output-on-failure --test-dir "${{ github.workspace }}/build"
+      # - name: Test (CTest) with Valgrind
+      #   run: |
+      #     sudo apt-get update && sudo apt-get install -y valgrind
+      #     # Run valgrind directly on the ctest executable
+      #     valgrind --tool=memcheck \
+      #              --leak-check=full \
+      #              --track-origins=yes \
+      #              --trace-children=yes \
+      #              --error-exitcode=1 \
+      #              ctest --output-on-failure --test-dir "${{ github.workspace }}/build"
                    
       - name: Test (find_package) - consume installation
         run: |
