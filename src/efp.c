@@ -516,8 +516,8 @@ static void
 compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
     void *data)
 {
-	double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0, e_elec_tmp = 0.0, e_disp_tmp = 0.0;
-    double e_lj = 0.0, e_qq = 0.0, e_qq_tmp = 0.0;
+	double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0;
+    double e_lj = 0.0, e_qq = 0.0;
 
 	(void)data;
 
@@ -534,6 +534,8 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 
 		for (size_t j = i + 1; j < i + 1 + cnt; j++) {
 			size_t fr_j = j % efp->n_frag;
+
+            double e_elec_tmp = 0.0, e_disp_tmp = 0.0, e_qq_tmp = 0.0;
 
             // special fragment - additional check on special terms
             bool if_special_fragment=false, special_xr=false, special_elec=false, 
