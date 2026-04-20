@@ -272,13 +272,27 @@ jobs:
         
       - name: Test (pytest) -- unit tests Python bindings
         run: |
-            # Only apply LD_PRELOAD on Linux if we are thread-sanitizing
-            if [[ "${{ runner.os }}" == "Linux" && "${{ matrix.cfg.cmargs }}" == *"-fsanitize=thread"* ]]; then
-              export LD_PRELOAD=$(find /usr/share/miniconda -name libtsan.so.2 | head -n 1)
+          # 1. Fix the Linux LD_PRELOAD logic with safer quoting
+          # We check the environment variable directly rather than the expanded string
+          if [[ "${{ runner.os }}" == "Linux" ]] && [[ "${{ matrix.cfg.cmargs }}" == *"-fsanitize=thread"* ]]; then
+            TSAN_LIB=$(find /usr/share/miniconda -name libtsan.so.2 | head -n 1)
+            if [ -f "$TSAN_LIB" ]; then
+              export LD_PRELOAD="$TSAN_LIB"
               echo "Using LD_PRELOAD=$LD_PRELOAD"
             fi
-            PYTHONPATH="${{ github.workspace }}/installed/lib:${{ github.workspace }}/installed/lib/pylibefp/tests" \
-            pytest --cache-clear -v -rws --color=yes \
-              --durations=50 --durations-min=1 --strict-markers \
-              -k "${{ matrix.cfg.pytest-marker-expr }}" \
-              "${{ github.workspace }}/installed/"
+          fi
+
+          # 2. Fix the Windows/Linux PYTHONPATH separator issue
+          # We use a small python snippet to get the correct OS separator (: or ;)
+          SEP=$(python -c "import os; print(os.pathsep)")
+          LIB_PATH="${{ github.workspace }}/installed/lib"
+          TEST_PATH="${{ github.workspace }}/installed/lib/pylibefp/tests"
+          
+          export PYTHONPATH="${LIB_PATH}${SEP}${TEST_PATH}"
+          echo "PYTHONPATH is set to: $PYTHONPATH"
+          
+          # PYTHONPATH="${{ github.workspace }}/installed/lib:${{ github.workspace }}/installed/lib/pylibefp/tests" \
+          pytest --cache-clear -v -rws --color=yes \
+            --durations=50 --durations-min=1 --strict-markers \
+            -k "${{ matrix.cfg.pytest-marker-expr }}" \
+            "${{ github.workspace }}/installed/"
