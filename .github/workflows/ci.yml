@@ -130,11 +130,21 @@ jobs:
             :
             sed -E -i.bak "s;#${{ matrix.cfg.blas }};;g" export.yaml
           fi
+          # does not work with thread-sanitizing
+          # if [[ "${{ runner.os }}" == "Windows" ]]; then
+          #   :
+          #   sed -i "s;fortran-compiler;m2w64-gcc-fortran;g" export.yaml
+          #   sed -i "s;#${{ matrix.cfg.blas }};;g" export.yaml
+          #   sed -i "s;openmp;pthreads;g" export.yaml  # W openblas is pthreads
+          #   sed -i "s;#- libpython;- libpython;g" export.yaml
+          # fi
           if [[ "${{ runner.os }}" == "Windows" ]]; then
-            :
-            sed -i "s;fortran-compiler;m2w64-gcc-fortran;g" export.yaml
+            # Use the modern conda-forge compilers instead of the ancient m2w64 ones
+            sed -i "s;c-compiler;gcc;g" export.yaml
+            sed -i "s;cxx-compiler;gxx;g" export.yaml
+            sed -i "s;fortran-compiler;gfortran;g" export.yaml
             sed -i "s;#${{ matrix.cfg.blas }};;g" export.yaml
-            sed -i "s;openmp;pthreads;g" export.yaml  # W openblas is pthreads
+            sed -i "s;openmp;pthreads;g" export.yaml
             sed -i "s;#- libpython;- libpython;g" export.yaml
           fi
           # model sed for L/W
@@ -259,12 +269,11 @@ jobs:
       - name: Install Psi4 for QM/EFP testing
         if: ${{ matrix.cfg.blas == 'MKL' }}
         run: conda install psi4 -c conda-forge
-
-      - name: Debug File Locations
-        run: find ${{ github.workspace }}/installed -name "libefp2py.py"
         
       - name: Test (pytest) -- unit tests Python bindings
         run: |
+            # needed only when thread-sanitizing
+            export LD_PRELOAD=/usr/share/miniconda/envs/libefp-dev/lib/libtsan.so.2
             PYTHONPATH="${{ github.workspace }}/installed/lib:${{ github.workspace }}/installed/lib/pylibefp/tests" \
             pytest --cache-clear -v -rws --color=yes \
               --durations=50 --durations-min=1 --strict-markers \
