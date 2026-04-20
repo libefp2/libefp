@@ -1,0 +1,8 @@
+   => Loading Basis Set <=
+
+    Name: 6-31G*
+    Role: ORBITAL
+    Keyword: BASIS
+    atoms 1   entry O          line   145 file /Users/lyuda/anaconda3/envs/psi4_2026/share/psi4/basis/6-31gs.gbs 
+    atoms 2-3 entry H          line    44 file /Users/lyuda/anaconda3/envs/psi4_2026/share/psi4/basis/6-31gs.gbs 
+

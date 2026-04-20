@@ -1,0 +1,96 @@
+
+Host: MacBook-Pro-5.local
+
+Timers On : Sun Apr 19 22:37:26 2026
+Timers Off: Sun Apr 19 22:37:35 2026
+
+Wall Time:        9.11 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Libint2ERI::Libint2ERI              :      0.000u      0.000s      0.001w      1 calls
+
+--------------------------------------------------------------------------------------
+Libint2ERI::Libint2ERI              :      0.000u      0.000s      0.001w      1 calls
+
+**************************************************************************************
+
+Host: MacBook-Pro-5.local
+
+Timers On : Sun Apr 19 22:45:19 2026
+Timers Off: Sun Apr 19 22:45:20 2026
+
+Wall Time:        0.46 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Libint2ERI::Libint2ERI              :      0.000u      0.000s      0.007w      1 calls
+
+--------------------------------------------------------------------------------------
+Libint2ERI::Libint2ERI              :      0.000u      0.000s      0.007w      1 calls
+
+**************************************************************************************
+
+Host: MacBook-Pro-5.local
+
+Timers On : Sun Apr 19 22:47:15 2026
+Timers Off: Sun Apr 19 22:47:16 2026
+
+Wall Time:        0.44 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Libint2ERI::Libint2ERI              :      0.000u      0.000s      0.005w      1 calls
+
+--------------------------------------------------------------------------------------
+Libint2ERI::Libint2ERI              :      0.000u      0.000s      0.005w      1 calls
+
+**************************************************************************************
+
+Host: MacBook-Pro-5.local
+
+Timers On : Sun Apr 19 23:26:35 2026
+Timers Off: Sun Apr 19 23:26:36 2026
+
+Wall Time:        0.45 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Libint2ERI::Libint2ERI              :      0.000u      0.000s      0.006w      1 calls
+
+--------------------------------------------------------------------------------------
+Libint2ERI::Libint2ERI              :      0.000u      0.000s      0.006w      1 calls
+
+**************************************************************************************
+
+Host: MacBook-Pro-5.local
+
+Timers On : Sun Apr 19 23:27:15 2026
+Timers Off: Sun Apr 19 23:27:15 2026
+
+Wall Time:        0.36 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Libint2ERI::Libint2ERI              :      0.000u      0.000s      0.006w      1 calls
+
+--------------------------------------------------------------------------------------
+Libint2ERI::Libint2ERI              :      0.000u      0.000s      0.006w      1 calls
+
+**************************************************************************************
+
+Host: MacBook-Pro-5.local
+
+Timers On : Mon Apr 20 00:02:21 2026
+Timers Off: Mon Apr 20 00:02:30 2026
+
+Wall Time:        9.12 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Libint2ERI::Libint2ERI              :      0.000u      0.017s      0.006w      1 calls
+
+--------------------------------------------------------------------------------------
+Libint2ERI::Libint2ERI              :      0.000u      0.017s      0.006w      1 calls
+
+**************************************************************************************

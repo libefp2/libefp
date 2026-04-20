@@ -640,10 +640,10 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
     efp->energy.qq += e_qq;
     efp->energy.lj += e_lj;
 
-//    if (efp->opts.print > 1) {
+    if (efp->opts.print > 1) {
         printf(" In compute_two_body_range() \n");
         print_ene(&efp->energy);
-//    }
+    }
     if (efp->opts.print > 2 && efp->opts.enable_pairwise)
             print_energies(efp);
 }
