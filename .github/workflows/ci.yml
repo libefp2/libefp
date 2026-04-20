@@ -272,26 +272,27 @@ jobs:
         
       - name: Test (pytest) -- unit tests Python bindings
         run: |
-          # 1. Fix the Linux LD_PRELOAD logic with safer quoting
-          # We check the environment variable directly rather than the expanded string
-          if [[ "${{ runner.os }}" == "Linux" ]] && [[ "${{ matrix.cfg.cmargs }}" == *"-fsanitize=thread"* ]]; then
+          # 1. Capture the cmargs into a variable first to avoid quote nesting issues
+          CM_ARGS='${{ matrix.cfg.cmargs }}'
+          
+          # 2. Logic for TSan on Linux
+          if [[ "${{ runner.os }}" == "Linux" && "$CM_ARGS" == *"-fsanitize=thread"* ]]; then
             TSAN_LIB=$(find /usr/share/miniconda -name libtsan.so.2 | head -n 1)
-            if [ -f "$TSAN_LIB" ]; then
+            if [ -n "$TSAN_LIB" ] && [ -f "$TSAN_LIB" ]; then
               export LD_PRELOAD="$TSAN_LIB"
               echo "Using LD_PRELOAD=$LD_PRELOAD"
             fi
           fi
-
-          # 2. Fix the Windows/Linux PYTHONPATH separator issue
-          # We use a small python snippet to get the correct OS separator (: or ;)
+          
+          # 3. Setup PYTHONPATH
           SEP=$(python -c "import os; print(os.pathsep)")
           LIB_PATH="${{ github.workspace }}/installed/lib"
           TEST_PATH="${{ github.workspace }}/installed/lib/pylibefp/tests"
-          
           export PYTHONPATH="${LIB_PATH}${SEP}${TEST_PATH}"
           echo "PYTHONPATH is set to: $PYTHONPATH"
-          
           # PYTHONPATH="${{ github.workspace }}/installed/lib:${{ github.workspace }}/installed/lib/pylibefp/tests" \
+          
+          # 4. Run Pytest
           pytest --cache-clear -v -rws --color=yes \
             --durations=50 --durations-min=1 --strict-markers \
             -k "${{ matrix.cfg.pytest-marker-expr }}" \
