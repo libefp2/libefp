@@ -276,17 +276,6 @@ jobs:
         
       - name: Test (pytest) -- unit tests Python bindings
         run: |
-          # needed with thread sanitizer
-          # CM_ARGS='${{ matrix.cfg.cmargs }}'      
-          # if [[ "${{ runner.os }}" == "Linux" && "$CM_ARGS" == *"-fsanitize=thread"* ]]; then
-          #   TSAN_LIB=$(find /usr/share/miniconda -name libtsan.so.2 | head -n 1)
-          #   if [ -n "$TSAN_LIB" ] && [ -f "$TSAN_LIB" ]; then
-          #     export LD_PRELOAD="$TSAN_LIB"
-          #     # FORCE TSAN TO EXIT IMMEDIATELY ON FIRST ERROR TO SAVE LOG SPACE
-          #     export TSAN_OPTIONS="halt_on_error=1:second_deadlock_stack=1"
-          #   fi
-          # fi
-          
           # Setup PYTHONPATH
           SEP=$(python -c "import os; print(os.pathsep)")
           LIB_PATH="${{ github.workspace }}/installed/lib"
