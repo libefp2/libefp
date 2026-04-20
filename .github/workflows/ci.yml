@@ -277,8 +277,6 @@ jobs:
               export LD_PRELOAD=$(find /usr/share/miniconda -name libtsan.so.2 | head -n 1)
               echo "Using LD_PRELOAD=$LD_PRELOAD"
             fi
-            #export LD_PRELOAD=/usr/share/miniconda/envs/libefp-dev/lib/libtsan.so.2
-            
             PYTHONPATH="${{ github.workspace }}/installed/lib:${{ github.workspace }}/installed/lib/pylibefp/tests" \
             pytest --cache-clear -v -rws --color=yes \
               --durations=50 --durations-min=1 --strict-markers \
