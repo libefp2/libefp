@@ -280,7 +280,8 @@ jobs:
             TSAN_LIB=$(find /usr/share/miniconda -name libtsan.so.2 | head -n 1)
             if [ -n "$TSAN_LIB" ] && [ -f "$TSAN_LIB" ]; then
               export LD_PRELOAD="$TSAN_LIB"
-              echo "Using LD_PRELOAD=$LD_PRELOAD"
+              # FORCE TSAN TO EXIT IMMEDIATELY ON FIRST ERROR TO SAVE LOG SPACE
+              export TSAN_OPTIONS="halt_on_error=1:second_deadlock_stack=1"
             fi
           fi
           
@@ -293,7 +294,7 @@ jobs:
           # PYTHONPATH="${{ github.workspace }}/installed/lib:${{ github.workspace }}/installed/lib/pylibefp/tests" \
           
           # 4. Run Pytest
-          pytest --cache-clear -v -rws --color=yes \
+          pytest -s --cache-clear -v -rws --color=yes \
             --durations=50 --durations-min=1 --strict-markers \
             -k "${{ matrix.cfg.pytest-marker-expr }}" \
             "${{ github.workspace }}/installed/"
