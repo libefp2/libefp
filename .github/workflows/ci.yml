@@ -20,8 +20,10 @@ jobs:
             cmargs: >
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
-              -D CMAKE_C_FLAGS="-fsanitize=thread -g"
-              -D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
+              # uncomment the following two options to look for possible memory-related bugs in openmp 
+              # however, the tests will take ~10 times longer
+              #-D CMAKE_C_FLAGS="-fsanitize=thread -g"
+              #-D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"  # i.e., all
 
           - label: L-Gnu
@@ -32,8 +34,11 @@ jobs:
             cmargs: >
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
-              -D CMAKE_C_FLAGS="-fsanitize=thread -g"
-              -D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
+              # uncomment the following two options to look for possible memory-related bugs in openmp 
+              # however, the tests will take ~10 times longer
+              # this workflow was crashing with these options in pytests due to conflict of TSan and libgomp
+              #-D CMAKE_C_FLAGS="-fsanitize=thread -g"
+              #-D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"
 
           - label: L-Intel
@@ -130,7 +135,6 @@ jobs:
             :
             sed -E -i.bak "s;#${{ matrix.cfg.blas }};;g" export.yaml
           fi
-          # does not work with thread-sanitizing
           # if [[ "${{ runner.os }}" == "Windows" ]]; then
           #   :
           #   sed -i "s;fortran-compiler;m2w64-gcc-fortran;g" export.yaml
@@ -139,7 +143,7 @@ jobs:
           #   sed -i "s;#- libpython;- libpython;g" export.yaml
           # fi
           if [[ "${{ runner.os }}" == "Windows" ]]; then
-            # Use the modern conda-forge compilers instead of the ancient m2w64 ones
+            # Use the modern conda-forge compilers instead of the old m2w64 ones
             sed -i "s;c-compiler;gcc;g" export.yaml
             sed -i "s;cxx-compiler;gxx;g" export.yaml
             sed -i "s;fortran-compiler;gfortran;g" export.yaml
@@ -201,7 +205,7 @@ jobs:
       # - name: Test (CTest) with Valgrind
       #   run: |
       #     sudo apt-get update && sudo apt-get install -y valgrind
-      #     # Run valgrind directly on the ctest executable
+      #     # Run valgrind directly on the ctest executable. The tests will take forever
       #     valgrind --tool=memcheck \
       #              --leak-check=full \
       #              --track-origins=yes \
