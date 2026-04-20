@@ -730,7 +730,6 @@ static void
 compute_ai_elec_range(struct efp *efp, size_t from, size_t to, void *data)
 {
 	double energy = 0.0;
-	double energy_tmp = 0.0;
 
 	(void)data;
 
@@ -738,7 +737,7 @@ compute_ai_elec_range(struct efp *efp, size_t from, size_t to, void *data)
 #pragma omp parallel for schedule(dynamic) reduction(+:energy)
 #endif
 	for (size_t i = from; i < to; i++) {
-        energy_tmp = 0.0;
+        double energy_tmp = 0.0;
         // skip special fragment
         if (efp->opts.special_fragment >= -1)        
             if (i == (size_t)efp->opts.special_fragment)
@@ -1094,7 +1093,6 @@ static void
 compute_ai_qq_range(struct efp *efp, size_t from, size_t to, void *data)
 {
     double energy = 0.0;
-    double energy_tmp = 0.0;
 
     (void)data;
 
@@ -1102,7 +1100,7 @@ compute_ai_qq_range(struct efp *efp, size_t from, size_t to, void *data)
 #pragma omp parallel for schedule(dynamic) reduction(+:energy)
 #endif
     for (size_t i = from; i < to; i++) {
-        energy_tmp = 0.0;
+        double energy_tmp = 0.0;
         // skip special fragment
         if (efp->opts.special_fragment >= -1)        
             if (i == (size_t)efp->opts.special_fragment)

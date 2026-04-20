@@ -390,13 +390,12 @@ compute_fragment_field_range(struct efp *efp, size_t from, size_t to, void *data
 {
     (void)data;
 
-    struct ligand *ligand = efp->ligand;
-
 #ifdef _OPENMP
 #pragma omp parallel for schedule(dynamic)
 #endif
 	for (size_t i = from; i < to; i++) {
-		struct frag *frag = efp->frags + i;
+		// struct frag *frag = efp->frags + i;
+        struct ligand *ligand = efp->ligand;
 
 		for (size_t j = 0; j < ligand->n_ligand_pts; j++) {
             struct ligand_pt *pt = ligand->ligand_pts + j;
@@ -773,10 +772,6 @@ compute_energy_range(struct efp *efp, size_t from, size_t to, void *data)
     // if_pairwise tells whether pairwise calculations with EFP (not QM) ligand
     bool if_pairwise = efp->opts.enable_pairwise && efp->opts.ligand > -1;
 
-    struct ligand *ligand;
-	if (if_pairwise)
-        ligand = efp->ligand;
-
 #ifdef _OPENMP
 #pragma omp parallel for schedule(dynamic) reduction(+:energy)
 #endif
@@ -784,6 +779,10 @@ compute_energy_range(struct efp *efp, size_t from, size_t to, void *data)
 
         // zeroing out polarization pair energies is a must
         efp->pair_energies[i].polarization = 0.0;
+
+        struct ligand *ligand;
+	    if (if_pairwise)
+            ligand = efp->ligand;
 
         // skip energy contribution for a special fragment in case of torch model with elpot
         // this assumes that we use ml/efp fragment that induces field to other fragments due to its efp nature (multipoles and ind dipoles)
