@@ -560,7 +560,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                     s = (double *) calloc(n_lmo_ij, sizeof(double));
                     ds = (six_t *) calloc(n_lmo_ij, sizeof(six_t));
 
-                    if (do_xr(&efp->opts) || special_xr) {
+                    if ((do_xr(&efp->opts) && !if_special_fragment) || special_xr) {
                         double exr = 0.0, ecp = 0.0;
 
                         efp_frag_frag_xr(efp, i, fr_j,
@@ -581,8 +581,8 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                         }
                     }
                 }
-				if ((do_elec(&efp->opts) || special_elec) && efp->frags[i].n_multipole_pts > 0 &&
-				    efp->frags[fr_j].n_multipole_pts > 0) {
+				if (((do_elec(&efp->opts)  && !if_special_fragment) || special_elec) 
+                        && efp->frags[i].n_multipole_pts > 0 && efp->frags[fr_j].n_multipole_pts > 0) {
 					e_elec_tmp = efp_frag_frag_elec(efp, i, fr_j);
 
                     if (efp->opts.print > 0 && fabs(e_elec_tmp) > 1.0) 
@@ -601,8 +601,8 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                             efp->pair_energies[i].electrostatic = e_elec_tmp;
                     }
 				}
-				if ((do_disp(&efp->opts) || special_disp) && efp->frags[i].n_dynamic_polarizable_pts > 0 &&
-                        efp->frags[fr_j].n_dynamic_polarizable_pts > 0) {
+				if (((do_disp(&efp->opts)  && !if_special_fragment) || special_disp) 
+                        && efp->frags[i].n_dynamic_polarizable_pts > 0 && efp->frags[fr_j].n_dynamic_polarizable_pts > 0) {
 					e_disp_tmp = efp_frag_frag_disp(efp, i, fr_j, s, ds);
 					e_disp += e_disp_tmp;
 					/* */
@@ -614,11 +614,11 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                     }
 				}
                 // LJ terms
-                if (do_lj(&efp->opts) || special_lj) {
+                if ((do_lj(&efp->opts)  && !if_special_fragment) || special_lj) {
                     e_lj += efp_frag_frag_lj(efp, i, fr_j);
                 }
                 // MM-like charge-charge interactions
-                if (do_qq(&efp->opts) && special_qq) {
+                if ((do_qq(&efp->opts)  && !if_special_fragment) || special_qq) {
                     e_qq_tmp = efp_frag_frag_qq(efp, i, fr_j);
 
                     // zeroing the energy contribution on the special fragment in torch custom models

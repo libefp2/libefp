@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export TORCH_SWITCH=OFF
+export TORCH_SWITCH=ON
 
 export LIBEFP_DIR="/Users/lyuda/LIBEFP/libefp_skp_may2025"
 export INSTALLATION_DIR="$LIBEFP_DIR"
