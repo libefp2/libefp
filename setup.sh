@@ -19,9 +19,9 @@ if [[ "$TORCH_SWITCH" == "ON" ]]; then
     echo "TORCHANI_DIR=$TORCHANI_DIR"
     echo "PYTHON_REQS=$PYTHON_REQS"
 else
-    unsetenv LIBTORCH_INCLUDE_DIRS
-    unsetenv TORCH_INSTALLED_DIR
-    unsetenv TORCHANI_DIR
+    unset LIBTORCH_INCLUDE_DIRS
+    unset TORCH_INSTALLED_DIR
+    unset TORCHANI_DIR
 
     echo "Torch integration is disabled. Only basic environment variables are set:"
     echo "LIBEFP_DIR=$LIBEFP_DIR"

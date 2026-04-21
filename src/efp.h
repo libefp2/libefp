@@ -963,7 +963,7 @@ efp_get_frag_rank(struct efp *efp, size_t frag_idx, int *rank);
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-//enum efp_result efp_get_multipole_count(struct efp *efp, size_t *n_mult);
+enum efp_result efp_get_multipole_count(struct efp *efp, size_t *n_mult);
 
 /**
  * Get the total number of high-order (large than monopoles) multipole points from EFP electrostatics.
@@ -993,7 +993,7 @@ enum efp_result efp_get_mm_multipole_count(struct efp *efp, size_t *n_mult);
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-//enum efp_result efp_get_multipole_coordinates(struct efp *efp, double *xyz);
+enum efp_result efp_get_multipole_coordinates(struct efp *efp, double *xyz);
 
 /**
  * Get coordinates of high-order (higher than monopoles) electrostatics multipoles.
@@ -1038,7 +1038,7 @@ enum efp_result efp_get_mm_multipole_coordinates(struct efp *efp, double *xyz);
  *
  * \return ::EFP_RESULT_SUCCESS on success or error code otherwise.
  */
-//enum efp_result efp_get_multipole_values(struct efp *efp, double *mult);
+enum efp_result efp_get_multipole_values(struct efp *efp, double *mult);
 
 /**
  * Get high-order (higher than monopoles) electrostatics multipoles from EFP fragments.

@@ -102,13 +102,14 @@ def test_qmefp():
             for pole in range(20):
                 efp_ints[pole] = np.asarray(p4_efp_ints[pole])
 
-            # add frag atom Z into multipole charge (when pos'n of atom matches mp)
-            for ifr in range(n_fr):
-                atoms = efpobj.get_frag_atoms(ifr)
-                for iat in range(natoms[ifr]):
-                    xyz_atom = [atoms[iat]['x'], atoms[iat]['y'], atoms[iat]['z']]
-                    if np.allclose(xyz_atom, origin, atol=1e-10):
-                        val_mp[imp, 0] += atoms[iat]['Z']
+            # LVS: atom Z charges are already included in multipoles as of 2025
+            # # add frag atom Z into multipole charge (when pos'n of atom matches mp)
+            # for ifr in range(n_fr):
+            #     atoms = efpobj.get_frag_atoms(ifr)
+            #     for iat in range(natoms[ifr]):
+            #         xyz_atom = [atoms[iat]['x'], atoms[iat]['y'], atoms[iat]['z']]
+            #         if np.allclose(xyz_atom, origin, atol=1e-10):
+            #             val_mp[imp, 0] += atoms[iat]['Z']
 
             # scale multipole integrals by multipole magnitudes. result goes into V
             for pole in range(20):
@@ -380,6 +381,10 @@ def test_qmefp():
 
     # <-- efp: add in permanent moment contribution and cache
     Vefp = modify_Fock_permanent(mol, nbf, efpmol)
+
+    print("Vefp")
+    print(Vefp)
+    
     assert compare(1, np.allclose(Vefp, ref_V2), 'EFP permanent Fock contrib')
     H = H + Vefp
     Horig = H.copy()

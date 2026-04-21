@@ -68,14 +68,14 @@ get_multipole_field(const vec_t *xyz, const struct multipole_pt *mult_pt,
 		xyz->z - mult_pt->z - swf->cell.z
 	};
 
-	double t1, t2;
+	double t1=0.0, t2=0.0;
 	double r = vec_len(&dr);
 	double r3 = r * r * r;
 	double r5 = r3 * r * r;
 	double r7 = r5 * r * r;
 
 	/* charge */
-	if (mult_pt->if_mon || mult_pt->if_dip) {
+	if (mult_pt->if_mon || mult_pt->if_znuc) {
         field.x += swf->swf * (mult_pt->monopole + mult_pt->znuc) * dr.x / r3;
         field.y += swf->swf * (mult_pt->monopole + mult_pt->znuc) * dr.y / r3;
         field.z += swf->swf * (mult_pt->monopole + mult_pt->znuc) * dr.z / r3;
@@ -178,6 +178,8 @@ get_elec_field(const struct efp *efp, size_t frag_idx, size_t pt_idx)
 	const struct polarizable_pt *pt = fr_j->polarizable_pts + pt_idx;
 	vec_t elec_field = vec_zero;
 
+    // ATTENTION! field due to MM atoms is not added here. Is it needed in any circumstances?
+
 	for (size_t i = 0; i < efp->n_frag; i++) {
 		if (i == frag_idx )
 			continue;
@@ -186,8 +188,9 @@ get_elec_field(const struct efp *efp, size_t frag_idx, size_t pt_idx)
             continue;
         // this might need to be changed to a more careful separation of
         // elec and pol contributions to the field
-        if (i == efp->opts.special_fragment && !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
-            continue;
+        if (efp->opts.special_fragment >=0) 
+            if (i == (size_t)efp->opts.special_fragment && !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
+                continue;
 		const struct frag *fr_i = efp->frags + i;
 		struct swf swf = efp_make_swf(efp, fr_i, fr_j, 0);
 		if (swf.swf == 0.0)
@@ -247,8 +250,8 @@ get_ligand_field(const struct efp *efp, size_t frag_idx, size_t pt_idx, int liga
 
     /* ligand is not QM */
     if (ligand_idx != -1) {
-        const struct frag *fr_i = efp->frags + ligand_idx;
-        if (efp_skip_frag_pair(efp, ligand_idx, frag_idx))
+        const struct frag *fr_i = efp->frags + (size_t)ligand_idx;
+        if (efp_skip_frag_pair(efp, (size_t)ligand_idx, frag_idx))
             return elec_field;
 
         struct swf swf = efp_make_swf(efp, fr_i, fr_j, 0);
@@ -306,8 +309,8 @@ add_electron_density_field(struct efp *efp)
     if (efp->get_electron_density_field == NULL)
         return EFP_RESULT_SUCCESS;
 
-    xyz = (vec_t *)malloc(efp->n_polarizable_pts * sizeof(vec_t));
-    field = (vec_t *)malloc(efp->n_polarizable_pts * sizeof(vec_t));
+    xyz = (vec_t *)calloc(efp->n_polarizable_pts, sizeof(vec_t));
+    field = (vec_t *)calloc(efp->n_polarizable_pts, sizeof(vec_t));
 
     for (size_t i = 0, idx = 0; i < efp->n_frag; i++) {
         struct frag *frag = efp->frags + i;
@@ -349,9 +352,10 @@ compute_elec_field_range(struct efp *efp, size_t from, size_t to, void *data)
 #pragma omp parallel for schedule(dynamic)
 #endif
 	for (size_t i = from; i < to; i++) {
-        if (i == efp->opts.special_fragment &&
-        !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
-            continue;
+        if (efp->opts.special_fragment >=0) 
+            if (i == (size_t)efp->opts.special_fragment &&
+            !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
+                continue;
         // const struct frag *frag = efp->frags + i;
 		struct frag *frag = efp->frags + i;
 
@@ -386,13 +390,12 @@ compute_fragment_field_range(struct efp *efp, size_t from, size_t to, void *data
 {
     (void)data;
 
-    struct ligand *ligand = efp->ligand;
-
 #ifdef _OPENMP
 #pragma omp parallel for schedule(dynamic)
 #endif
 	for (size_t i = from; i < to; i++) {
-		struct frag *frag = efp->frags + i;
+		// struct frag *frag = efp->frags + i;
+        struct ligand *ligand = efp->ligand;
 
 		for (size_t j = 0; j < ligand->n_ligand_pts; j++) {
             struct ligand_pt *pt = ligand->ligand_pts + j;
@@ -488,9 +491,10 @@ get_induced_dipole_field(struct efp *efp, size_t frag_idx,
         if (efp->opts.symmetry == 0 && efp_skip_frag_pair(efp, frag_idx, j))
             continue;
 
-        if (j == efp->opts.special_fragment &&
-            !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
-            continue;
+        if (efp->opts.special_fragment >=0) 
+            if (j == (size_t)efp->opts.special_fragment &&
+                !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
+                continue;
 
         struct frag *fr_j = efp->frags + j;
 		struct swf swf = efp_make_swf(efp, fr_i, fr_j, 0);
@@ -616,9 +620,10 @@ compute_id_range(struct efp *efp, size_t from, size_t to, void *data)
 #endif
 	for (size_t i = from; i < to; i++) {
 
-        if (i == efp->opts.special_fragment &&
-            !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
-            continue;
+        if (efp->opts.special_fragment >=0) 
+            if (i == (size_t)efp->opts.special_fragment &&
+                !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
+                continue;
 
         struct frag *frag = efp->frags + i;
 
@@ -767,24 +772,26 @@ compute_energy_range(struct efp *efp, size_t from, size_t to, void *data)
     // if_pairwise tells whether pairwise calculations with EFP (not QM) ligand
     bool if_pairwise = efp->opts.enable_pairwise && efp->opts.ligand > -1;
 
-    struct ligand *ligand;
-	if (if_pairwise)
-        ligand = efp->ligand;
-
 #ifdef _OPENMP
 #pragma omp parallel for schedule(dynamic) reduction(+:energy)
 #endif
     for (size_t i = from; i < to; i++) {
 
+        // zeroing out polarization pair energies is a must
+        efp->pair_energies[i].polarization = 0.0;
+
+        struct ligand *ligand;
+	    if (if_pairwise)
+            ligand = efp->ligand;
+
         // skip energy contribution for a special fragment in case of torch model with elpot
         // this assumes that we use ml/efp fragment that induces field to other fragments due to its efp nature (multipoles and ind dipoles)
         // this needs to be changed if ml fragment uses ml-predicted charges instead
-        if (efp->opts.enable_elpot && efp->opts.special_fragment == i) continue;
+        if (efp->opts.enable_elpot && efp->opts.special_fragment >=0) 
+            if ((size_t)efp->opts.special_fragment == i) 
+                continue;
 
         struct frag *frag = efp->frags + i;
-
-        // zeroing out polarization pair energies is a must
-        efp->pair_energies[i].polarization = 0.0;
 
         for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
             struct polarizable_pt *pt = frag->polarizable_pts + j;
@@ -1079,7 +1086,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 	const struct frag *fr_i = efp->frags + frag_idx;
 	const struct polarizable_pt *pt_i = fr_i->polarizable_pts + pt_idx;
 	vec_t force, add_i, add_j, force_, add_i_, add_j_;
-	double e;
+	double ene = 0.0, energy = 0.0;
 
     vec_t dipole_i = {
             0.5 * (pt_i->indip.x + pt_i->indipconj.x),
@@ -1088,6 +1095,10 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
     };
 
     for (size_t j = 0; j < efp->n_frag; j++) {
+
+    	/* energy without switching applied */
+		energy = 0.0;
+
 		if (j == frag_idx || efp_skip_frag_pair(efp, frag_idx, j))
 			continue;
 
@@ -1096,23 +1107,31 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
         // this needs to be changed if ml fragment uses ml-predicted charges instead
 
         // this is true for normal cases not related to torch model with elpot
-        bool not_torch_elpot = !efp->opts.enable_elpot || (efp->opts.special_fragment != frag_idx && efp->opts.special_fragment != j);
+        bool not_torch_elpot = true;
         // true when torch with elpot is invoked and fr_idx is the ml fragment
-        bool torch_elpot_i = efp->opts.enable_elpot && (efp->opts.special_fragment == frag_idx);
+        bool torch_elpot_i = false;
         // true when torch with elpot is invoked and j is the ml fragment
-        bool torch_elpot_j = efp->opts.enable_elpot && (efp->opts.special_fragment == j);
+        bool torch_elpot_j = false;
+
+        if (efp->opts.special_fragment >= 0) {
+            not_torch_elpot = !efp->opts.enable_elpot || 
+                                ((size_t)efp->opts.special_fragment != frag_idx && 
+                                (size_t)efp->opts.special_fragment != j);
+            torch_elpot_i = efp->opts.enable_elpot && ((size_t)efp->opts.special_fragment == frag_idx);
+            torch_elpot_j = efp->opts.enable_elpot && ((size_t)efp->opts.special_fragment == j);
+        }
 
         struct frag *fr_j = efp->frags + j;
 		struct swf swf = efp_make_swf(efp, fr_i, fr_j, 0);
 		if (swf.swf == 0.0)
 		    continue;
 
-		/* energy without switching applied */
-		double energy = 0.0;
 
 		/* induced dipole - multipoles */
 		for (size_t k = 0; k < fr_j->n_multipole_pts; k++) {
 			struct multipole_pt *pt_j = fr_j->multipole_pts + k;
+
+            ene = 0.0;
 
 			vec_t dr = {
 				pt_j->x - pt_i->x - swf.cell.x,
@@ -1138,7 +1157,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 			/* induced dipole - charge+monopole */
 			if (pt_j->if_mon || pt_j->if_znuc) {
                 double qj = pt_j->monopole + pt_j->znuc;
-                e = -efp_charge_dipole_energy(qj, &dipole_i, &dr);
+                ene = -efp_charge_dipole_energy(qj, &dipole_i, &dr);
                 efp_charge_dipole_grad(qj, &dipole_i, &dr,
                                        &force_, &add_j_, &add_i_);
                 vec_negate(&force_);
@@ -1148,7 +1167,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 
 			/* induced dipole - dipole */
 			if (pt_j->if_dip) {
-                e += efp_dipole_dipole_energy(&dipole_i,
+                ene += efp_dipole_dipole_energy(&dipole_i,
                                               &pt_j->dipole, &dr);
                 efp_dipole_dipole_grad(&dipole_i, &pt_j->dipole, &dr,
                                        &force_, &add_i_, &add_j_);
@@ -1159,7 +1178,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 
 			/* induced dipole - quadrupole */
             if (pt_j->if_quad) {
-                e += efp_dipole_quadrupole_energy(&dipole_i,
+                ene += efp_dipole_quadrupole_energy(&dipole_i,
                                                   pt_j->quadrupole, &dr);
                 efp_dipole_quadrupole_grad(&dipole_i, pt_j->quadrupole,
                                            &dr, &force_, &add_i_, &add_j_);
@@ -1173,9 +1192,9 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 			vec_scale(&add_i, p1);
 			vec_scale(&add_j, p1);
 
-			force.x += p2 * e * dr.x;
-			force.y += p2 * e * dr.y;
-			force.z += p2 * e * dr.z;
+			force.x += p2 * ene * dr.x;
+			force.y += p2 * ene * dr.y;
+			force.z += p2 * ene * dr.z;
 
 			vec_scale(&force, swf.swf);
 			vec_scale(&add_i, swf.swf);
@@ -1187,7 +1206,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
             if (not_torch_elpot) {
                 efp_add_force(efp->grad + frag_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &add_i);
                 efp_sub_force(efp->grad + j, CVEC(fr_j->x), CVEC(pt_j->x), &force, &add_j);
-                energy += p1 * e;
+                energy += p1 * ene;
             }
 
             // adding gradients to non-ML fragment only in torch elpot model
@@ -1199,6 +1218,8 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 		for (size_t jj = 0; jj < fr_j->n_polarizable_pts; jj++) {
 			struct polarizable_pt *pt_j = fr_j->polarizable_pts+jj;
 			// size_t idx_j = fr_j->polarizable_offset+jj;
+
+            ene = 0.0;
 
 			vec_t dr = {
 				pt_j->x - pt_i->x - swf.cell.x,
@@ -1223,7 +1244,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 				    fr_j->pol_damp);
 			}
 
-            e = efp_dipole_dipole_energy(&half_dipole_i, &pt_j->indipconj, &dr);
+            ene = efp_dipole_dipole_energy(&half_dipole_i, &pt_j->indipconj, &dr);
             efp_dipole_dipole_grad(&half_dipole_i, &pt_j->indipconj, &dr, &force, &add_i, &add_j);
 			vec_negate(&add_j);
 
@@ -1231,9 +1252,9 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 			vec_scale(&add_i, p1);
 			vec_scale(&add_j, p1);
 
-			force.x += p2 * e * dr.x;
-			force.y += p2 * e * dr.y;
-			force.z += p2 * e * dr.z;
+			force.x += p2 * ene * dr.x;
+			force.y += p2 * ene * dr.y;
+			force.z += p2 * ene * dr.z;
 
 			vec_scale(&force, swf.swf);
 			vec_scale(&add_i, swf.swf);
@@ -1245,7 +1266,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
             if (not_torch_elpot) {
                 efp_add_force(efp->grad + frag_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &add_i);
                 efp_sub_force(efp->grad + j, CVEC(fr_j->x), CVEC(pt_j->x), &force, &add_j);
-                energy += p1 * e;
+                energy += p1 * ene;
             }
 
             // adding gradients to non-ML fragment only in torch elpot model
@@ -1339,6 +1360,9 @@ efp_get_electric_field(struct efp *efp, size_t frag_idx, const double *xyz,
 	assert(frag_idx < efp->n_frag);
 	assert(xyz);
 	assert(field);
+
+    // ATTENTION! This function does not include the electric field due to MM atoms
+    // might need to reconsider it!
 
 	const struct frag *frag = efp->frags + frag_idx;
 	vec_t elec_field = vec_zero;

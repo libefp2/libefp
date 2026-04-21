@@ -127,7 +127,7 @@ static void parse_frag(struct stream *stream, enum efp_coord_type coord_type,
         }
     }
 	else {
-		frag->coord = (double*)malloc(n_rows * n_cols * sizeof(double));
+		frag->coord = (double*)calloc(n_rows * n_cols, sizeof(double));
         for (int i = 0, idx = 0; i < n_rows; i++) {
             for (int j = 0; j < n_cols; j++, idx++) {
                 if (!efp_stream_parse_double(stream, frag->coord + idx))
@@ -203,6 +203,8 @@ struct sys *parse_input(struct cfg *cfg, const char *path)
 
 		if (is_keyword(efp_stream_get_ptr(stream), "fragment")) {
 			struct frag frag;
+			memset(&frag, 0, sizeof(frag));
+
 			enum efp_coord_type coord_type;
 
 			efp_stream_advance(stream, strlen("fragment"));

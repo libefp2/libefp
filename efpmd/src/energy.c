@@ -37,8 +37,8 @@
 void compute_energy(struct state *state, bool do_grad)
 {
 	struct efp_atom *atoms;
-	struct efp_energy efp_energy;
-	double xyz[3], xyzabc[6], *grad;
+	struct efp_energy efp_energy = {0.0};
+	double xyz[3] = {0.0}, xyzabc[6] = {0.0}, *grad;
 	size_t ifrag, nfrag, iatom, natom, spec_frag, n_special_atoms;
 	int itotal;
 
@@ -94,13 +94,16 @@ void compute_energy(struct state *state, bool do_grad)
 
     if (cfg_get_bool(state->cfg, "enable_torch") && cfg_get_int(state->cfg, "opt_special_frag") > -1) {
 
-	    spec_frag = cfg_get_int(state->cfg, "special_fragment");
-        check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));  // SKP
+	    spec_frag = (size_t)cfg_get_int(state->cfg, "special_fragment");
+        check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_special_atoms));  
+
+		if (n_special_atoms < 1)
+			error("ML special fragment does not have any atoms!");
 
 	    if (cfg_get_bool(state->cfg, "enable_elpot")) {
             double *elpot;
             struct efp_atom *atoms;
-	        atoms = xmalloc(n_special_atoms * sizeof(struct efp_atom));
+	        atoms = xcalloc(n_special_atoms, sizeof(struct efp_atom));
             check_fail(efp_get_frag_atoms(state->efp, spec_frag, n_special_atoms, atoms));
 	        elpot = xcalloc(n_special_atoms, sizeof(double));
 	        for (size_t j = 0; j < n_special_atoms; j++) {
@@ -189,7 +192,7 @@ void compute_energy(struct state *state, bool do_grad)
 
 	for (ifrag = 0, itotal = 0; ifrag < nfrag; ifrag++) {
 		check_fail(efp_get_frag_atom_count(state->efp, ifrag, &natom));
-		atoms = xmalloc(natom * sizeof(struct efp_atom));
+		atoms = xcalloc(natom, sizeof(struct efp_atom));
 		check_fail(efp_get_frag_atoms(state->efp, ifrag, natom, atoms));
 
 		for (iatom = 0; iatom < natom; iatom++, itotal++)
@@ -204,7 +207,7 @@ void compute_energy(struct state *state, bool do_grad)
 		for (ifrag = 0, itotal = 0, grad = state->grad; ifrag < nfrag; ifrag++, grad += 6) {
 			check_fail(efp_get_frag_xyzabc(state->efp, ifrag, xyzabc));
 			check_fail(efp_get_frag_atom_count(state->efp, ifrag, &natom));
-			atoms = xmalloc(natom * sizeof(struct efp_atom));
+			atoms = xcalloc(natom, sizeof(struct efp_atom));
 			check_fail(efp_get_frag_atoms(state->efp, ifrag, natom, atoms));
 
 			for (iatom = 0; iatom < natom; iatom++, itotal++) {

@@ -34,7 +34,7 @@
 #include "private.h"
 
 static void init_multipole_pt(struct multipole_pt *pt) {
-    memset(pt, 0, sizeof(*pt));
+    memset(pt, 0, sizeof(struct multipole_pt));
     pt->screen2 = 10.0;
     pt->screen0 = 10.0;
     pt->if_znuc = false;
@@ -44,10 +44,6 @@ static void init_multipole_pt(struct multipole_pt *pt) {
     pt->if_oct = false;
     pt->if_scr2 = false;
     pt->if_scr0 = false;
-}
-
-static void init_pol_pt(struct polarizable_pt *pt) {
-    memset(pt, 0, sizeof(*pt));
 }
 
 static int
@@ -158,9 +154,7 @@ parse_coordinates(struct frag *frag, struct stream *stream)
 			return EFP_RESULT_SUCCESS;
 		}
 
-		struct efp_atom atom;
-
-		memset(&atom, 0, sizeof(atom));
+		struct efp_atom atom = {0.0};
 		if (!tok_label(stream, sizeof(atom.label), atom.label) ||
 		    !tok_double(stream, &atom.x) ||
 		    !tok_double(stream, &atom.y) ||
@@ -488,8 +482,8 @@ parse_polarizable_pts(struct frag *frag, struct stream *stream)
 		struct polarizable_pt *pt =
 		    frag->polarizable_pts + frag->n_polarizable_pts - 1;
 		// zero out all entries
-        init_pol_pt(pt);
-
+        memset(pt, 0, sizeof(struct polarizable_pt));
+ 
 		if (!efp_stream_advance(stream, 4)){
             efp_log("parse_polarizable_pts() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
@@ -503,7 +497,7 @@ parse_polarizable_pts(struct frag *frag, struct stream *stream)
         }
 
 		efp_stream_next_line(stream);
-		double m[9];
+		double m[9]={0.0};
 
 		for (size_t i = 0; i < 9; i++)
 			if (!tok_double(stream, m + i)){
@@ -531,7 +525,7 @@ parse_polarizable_pts(struct frag *frag, struct stream *stream)
 static enum efp_result
 parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 {
-	double m[9];
+	double m[9]={0.0};
 
 	efp_stream_next_line(stream);
 
@@ -549,6 +543,8 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 		struct dynamic_polarizable_pt *pt =
 		    frag->dynamic_polarizable_pts +
 		    frag->n_dynamic_polarizable_pts - 1;
+        memset(pt, 0, sizeof(*pt));
+
 
 		if (!efp_stream_advance(stream, 5)){
             efp_log("parse_dynamic_polarizable_pts() failure for fragment %s", frag->name);
@@ -699,6 +695,7 @@ shell:
 			return EFP_RESULT_NO_MEMORY;
 
 		struct shell *shell = atom->shells + atom->n_shells - 1;
+        memset(shell, 0, sizeof(*shell));
 		shell->type = efp_stream_get_char(stream);
 
         //printf("\n shell->type %c", shell->type);
@@ -718,7 +715,7 @@ shell:
 		efp_stream_next_line(stream);
 
 		size_t cnt = (shell->type == 'L' ? 3 : 2) * shell->n_funcs;
-		shell->coef = (double *)malloc(cnt * sizeof(double));
+		shell->coef = (double *)calloc(cnt, sizeof(double));
 		if (shell->coef == NULL)
 			return EFP_RESULT_NO_MEMORY;
 		double *ptr = shell->coef;
@@ -778,8 +775,8 @@ parse_projection_wf(struct frag *frag, struct stream *stream)
         return EFP_RESULT_SYNTAX_ERROR;
     }
 
-	frag->xr_wf = (double *)malloc(
-	    frag->n_lmo * frag->xr_wf_size * sizeof(double));
+	frag->xr_wf = (double *)calloc(
+	    frag->n_lmo * frag->xr_wf_size, sizeof(double));
 	if (frag->xr_wf == NULL)
 		return EFP_RESULT_NO_MEMORY;
 
@@ -832,7 +829,7 @@ parse_fock_mat(struct frag *frag, struct stream *stream)
 	efp_stream_next_line(stream);
 
 	size_t size = frag->n_lmo * (frag->n_lmo + 1) / 2;
-	frag->xr_fock_mat = (double *)malloc(size * sizeof(double));
+	frag->xr_fock_mat = (double *)calloc(size, sizeof(double));
 	if (frag->xr_fock_mat == NULL)
 		return EFP_RESULT_NO_MEMORY;
 
@@ -865,7 +862,7 @@ parse_lmo_centroids(struct frag *frag, struct stream *stream)
         efp_log("number of LMO centroids is zero");
 		return EFP_RESULT_SYNTAX_ERROR;
 	}
-	frag->lmo_centroids = (vec_t *)malloc(frag->n_lmo * sizeof(vec_t));
+	frag->lmo_centroids = (vec_t *)calloc(frag->n_lmo, sizeof(vec_t));
 	if (frag->lmo_centroids == NULL)
 		return EFP_RESULT_NO_MEMORY;
 
@@ -979,7 +976,7 @@ skip_ctfok(struct frag *frag, struct stream *stream)
 static enum efp_result
 parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
 {
-    double m[27];
+    double m[27]={0.0};
 
     efp_stream_next_line(stream);
 
@@ -997,6 +994,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
         struct dipquad_polarizable_pt *pt =
                 frag->dipquad_polarizable_pts +
                 frag->n_dynamic_polarizable_pts - 1;
+        memset(pt, 0, sizeof(*pt));
 
         if (!efp_stream_advance(stream, 5)){
             printf("problem with fragment %s", frag->name);
@@ -1142,7 +1140,7 @@ parse_screen(struct frag *frag, struct stream *stream)
 	double *scr;
 	char type;
 
-	scr = (double *)malloc(frag->n_multipole_pts * sizeof(double));
+	scr = (double *)calloc(frag->n_multipole_pts, sizeof(double));
 	if (scr == NULL)
 		return EFP_RESULT_NO_MEMORY;
 	type = efp_stream_get_char(stream);
@@ -1227,7 +1225,7 @@ parse_screen(struct frag *frag, struct stream *stream)
 
         struct multipole_pt tmp_pt;
         memset(&tmp_pt, 0, sizeof(tmp_pt));
-        double tmp_screen;
+        double tmp_screen = 0.0;
         if (!tok_label(stream, sizeof(tmp_pt.label), tmp_pt.label) ||
             !tok_double(stream, NULL) ||
             !tok_double(stream, &tmp_screen)){
@@ -1278,7 +1276,7 @@ parse_xrfit(struct frag *frag, struct stream *stream)
 		return EFP_RESULT_SYNTAX_ERROR;
 	}
 
-	frag->xrfit = (double *)malloc(frag->n_lmo * 4 * sizeof(double));
+	frag->xrfit = (double *)calloc(frag->n_lmo * 4, sizeof(double));
 	if (frag->xrfit == NULL)
 		return EFP_RESULT_NO_MEMORY;
 	efp_stream_next_line(stream);
@@ -1445,8 +1443,7 @@ parse_mm_atomtype(struct frag *frag, struct stream *stream)
                    counter, frag->n_atoms, frag->name);
             return EFP_RESULT_SUCCESS;
         }
-        struct efp_atom atom;
-        memset(&atom, 0, sizeof(atom));
+        struct efp_atom atom = {0.0};
         if (!tok_label(stream, sizeof(atom.label), atom.label) ||
             !tok_label(stream, sizeof(atom.ff_label), atom.ff_label)){
             printf("problem with fragment %s", frag->name);

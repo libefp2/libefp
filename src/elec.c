@@ -327,15 +327,31 @@ mult_mult_grad(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
     // gradient is not added to the special fragment in this case
     // this assumes that we use ml/efp fragment that induces field to other fragments due to its efp nature (multipoles and ind dipoles)
     // this might need to be changed if ml fragment uses ml-predicted charges instead
-
-    if (!efp->opts.enable_elpot || (efp->opts.special_fragment != fr_i_idx && efp->opts.special_fragment != fr_j_idx)) {
+    if (!efp->opts.enable_elpot) {
         efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &torque_i);
         efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x), &force, &torque_j);
-    }
-    else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_i_idx)
-        efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x), &force, &torque_j);
-    else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_j_idx)
-        efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &torque_i);
+        }
+    else if ( efp->opts.special_fragment >= 0) {
+        if ((size_t)efp->opts.special_fragment != fr_i_idx && (size_t)efp->opts.special_fragment != fr_j_idx) {
+            efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &torque_i);
+            efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x), &force, &torque_j);
+        }
+        else if ((size_t)efp->opts.special_fragment == fr_i_idx) 
+            efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x), &force, &torque_j);
+        else if ((size_t)efp->opts.special_fragment == fr_j_idx) 
+            efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &torque_i);
+        }
+    else
+        printf("\nERROR: special fragment is not defined in elpot model!\n");
+            
+        // if (!efp->opts.enable_elpot || (efp->opts.special_fragment != fr_i_idx && efp->opts.special_fragment != fr_j_idx)) {
+        // efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &torque_i);
+        // efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x), &force, &torque_j);
+        // }
+        // else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_i_idx)
+        // efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x), &force, &torque_j);
+        // else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_j_idx)
+        // efp_add_force(efp->grad + fr_i_idx, CVEC(fr_i->x), CVEC(pt_i->x), &force, &torque_i);
 }
 
 double
@@ -373,13 +389,23 @@ efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
 
         // a check for torch special model with elpot on special fragment
         // gradient is not added to the special fragment in this case
-        if (!efp->opts.enable_elpot || (efp->opts.special_fragment != fr_i_idx && efp->opts.special_fragment != fr_j_idx)) {
+        if (!efp->opts.enable_elpot) {
             six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
             six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
         }
-        else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_i_idx) six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
-        else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_j_idx) six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
-
+        else if ( efp->opts.special_fragment >= 0) {
+            if ((size_t)efp->opts.special_fragment != fr_i_idx && (size_t)efp->opts.special_fragment != fr_j_idx) {
+                six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+                six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+            }
+            else if ((size_t)efp->opts.special_fragment == fr_i_idx) 
+                six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+            else if ((size_t)efp->opts.special_fragment == fr_j_idx) 
+                six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+        }
+        else {
+            printf("\nERROR: special fragment is not defined in elpot model!\n");
+        }
         return energy * swf.swf;
     }
 }
@@ -387,7 +413,7 @@ efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
 static void
 rotate_quadrupole(const mat_t *rotmat, const double *in, double *out)
 {
-	double full_in[9], full_out[9];
+	double full_in[9] = {0.0}, full_out[9] = {0.0};
 
 	for (size_t a = 0; a < 3; a++)
 		for (size_t b = 0; b < 3; b++)
@@ -403,7 +429,7 @@ rotate_quadrupole(const mat_t *rotmat, const double *in, double *out)
 static void
 rotate_octupole(const mat_t *rotmat, const double *in, double *out)
 {
-	double full_in[27], full_out[27];
+	double full_in[27]={0.0}, full_out[27]={0.0};
 
 	for (size_t a = 0; a < 3; a++)
 		for (size_t b = 0; b < 3; b++)
@@ -601,8 +627,8 @@ compute_ai_elec_frag(struct efp *efp, size_t frag_idx)
 	} */
 
 	for (size_t i = 0; i < fr_i->n_multipole_pts; i++) {
+        struct multipole_pt *pt_i = fr_i->multipole_pts + i;
 		for (size_t j = 0; j < efp->n_ptc; j++) {
-			struct multipole_pt *pt_i = fr_i->multipole_pts + i;
 			vec_t dr = vec_sub(CVEC(pt_i->x), efp->ptc_xyz + j);
 
 			/* charge - monopole */
@@ -704,7 +730,6 @@ static void
 compute_ai_elec_range(struct efp *efp, size_t from, size_t to, void *data)
 {
 	double energy = 0.0;
-	double energy_tmp = 0.0;
 
 	(void)data;
 
@@ -712,9 +737,11 @@ compute_ai_elec_range(struct efp *efp, size_t from, size_t to, void *data)
 #pragma omp parallel for schedule(dynamic) reduction(+:energy)
 #endif
 	for (size_t i = from; i < to; i++) {
+        double energy_tmp = 0.0;
         // skip special fragment
-        if (i == efp->opts.special_fragment)
-            continue;
+        if (efp->opts.special_fragment >= -1)        
+            if (i == (size_t)efp->opts.special_fragment)
+                continue;
 
 		energy_tmp = compute_ai_elec_frag(efp, i);
 		energy += energy_tmp;
@@ -827,7 +854,7 @@ lj_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 
     double energy = 0.0;
     double g = 0.0, g1 = 0.0, g2 = 0.0;
-    double r2, sr6 = 0.0;
+    double r2 = 0.0, sr6 = 0.0;
 
     if (combination_rule == 1) {
         // E_lj = (C_12/r^12 - C_6/r^6)
@@ -960,12 +987,23 @@ efp_frag_frag_qq(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
 
             // a check for torch special model with elpot on special fragment
             // gradient is not added to the special fragment in this case
-            if (!efp->opts.enable_elpot || (efp->opts.special_fragment != fr_i_idx && efp->opts.special_fragment != fr_j_idx)) {
+            if (!efp->opts.enable_elpot) {
                 six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
                 six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
             }
-            else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_i_idx) six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
-            else if (efp->opts.enable_elpot && efp->opts.special_fragment == fr_j_idx) six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+            else if ( efp->opts.special_fragment >= 0) {
+                if ((size_t)efp->opts.special_fragment != fr_i_idx && (size_t)efp->opts.special_fragment != fr_j_idx) {
+                    six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+                    six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+                }
+                else if ((size_t)efp->opts.special_fragment == fr_i_idx) 
+                    six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
+                else if ((size_t)efp->opts.special_fragment == fr_j_idx) 
+                    six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
+            }
+            else {
+                printf("\nERROR: special fragment is not defined in elpot model!\n");
+            }
         }
 
         return energy * swf.swf;
@@ -1055,7 +1093,6 @@ static void
 compute_ai_qq_range(struct efp *efp, size_t from, size_t to, void *data)
 {
     double energy = 0.0;
-    double energy_tmp = 0.0;
 
     (void)data;
 
@@ -1063,9 +1100,11 @@ compute_ai_qq_range(struct efp *efp, size_t from, size_t to, void *data)
 #pragma omp parallel for schedule(dynamic) reduction(+:energy)
 #endif
     for (size_t i = from; i < to; i++) {
+        double energy_tmp = 0.0;
         // skip special fragment
-        if (i == efp->opts.special_fragment)
-            continue;
+        if (efp->opts.special_fragment >= -1)        
+            if (i == (size_t)efp->opts.special_fragment)
+                continue;
 
         // where are switching functions???
 

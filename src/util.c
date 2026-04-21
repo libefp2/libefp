@@ -182,12 +182,48 @@ efp_find_lib(struct efp *efp, const char *name)
 	return NULL;
 }
 
+// void
+// efp_add_stress(const vec_t *dr, const vec_t *force, mat_t *stress)
+// {
+// #ifdef _OPENMP
+// #pragma omp critical
+// #endif
+// 	{
+// 		stress->xx += dr->x * force->x;
+// 		stress->xy += dr->x * force->y;
+// 		stress->xz += dr->x * force->z;
+// 		stress->yx += dr->y * force->x;
+// 		stress->yy += dr->y * force->y;
+// 		stress->yz += dr->y * force->z;
+// 		stress->zx += dr->z * force->x;
+// 		stress->zy += dr->z * force->y;
+// 		stress->zz += dr->z * force->z;
+// 	}
+// }
+
 void
 efp_add_stress(const vec_t *dr, const vec_t *force, mat_t *stress)
 {
 #ifdef _OPENMP
-#pragma omp critical
-#endif
+#pragma omp atomic
+		stress->xx += dr->x * force->x;
+#pragma omp atomic
+		stress->xy += dr->x * force->y;
+#pragma omp atomic
+		stress->xz += dr->x * force->z;
+#pragma omp atomic
+		stress->yx += dr->y * force->x;
+#pragma omp atomic
+		stress->yy += dr->y * force->y;
+#pragma omp atomic
+		stress->yz += dr->y * force->z;
+#pragma omp atomic
+		stress->zx += dr->z * force->x;
+#pragma omp atomic
+		stress->zy += dr->z * force->y;
+#pragma omp atomic
+		stress->zz += dr->z * force->z;
+#else		
 	{
 		stress->xx += dr->x * force->x;
 		stress->xy += dr->x * force->y;
@@ -199,6 +235,7 @@ efp_add_stress(const vec_t *dr, const vec_t *force, mat_t *stress)
 		stress->zy += dr->z * force->y;
 		stress->zz += dr->z * force->z;
 	}
+#endif
 }
 
 void

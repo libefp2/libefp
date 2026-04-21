@@ -63,12 +63,12 @@ sim_efield(struct state *state)
 	msg("ELECTRIC FIELD IS IN ATOMIC UNITS\n\n");
 
 	for (size_t i = 0; i < n_frags; i++) {
-		double field[3];
+		double field[3] = {0.0};
 		struct efp_atom *atoms;
 		size_t n_atoms;
 
 		check_fail(efp_get_frag_atom_count(state->efp, i, &n_atoms));
-		atoms = xmalloc(n_atoms * sizeof(struct efp_atom));
+		atoms = xcalloc(n_atoms, sizeof(struct efp_atom));
 		check_fail(efp_get_frag_atoms(state->efp, i, n_atoms, atoms));
 
 		for (size_t j = 0; j < n_atoms; j++) {
@@ -116,7 +116,7 @@ sim_elpot(struct state *state)
         size_t n_atoms;
 
         check_fail(efp_get_frag_atom_count(state->efp, i, &n_atoms));
-        atoms = xmalloc(n_atoms * sizeof(struct efp_atom));
+        atoms = xcalloc(n_atoms, sizeof(struct efp_atom));
         check_fail(efp_get_frag_atoms(state->efp, i, n_atoms, atoms));
 
         msg("ELECTROSTATIC POTENTIAL ON FRAGMENT %zu\n", i);
@@ -133,38 +133,13 @@ sim_elpot(struct state *state)
     msg("ELECTROSTATIC POTENTIAL JOB COMPLETED SUCCESSFULLY\n");
 }
 
-/*
-void get_frag_elpot(struct state *state) {
-    size_t spec_frag;
-    spec_frag = cfg_get_int(state->cfg, "special_fragment");
-
-    double elpot;
-    struct efp_atom *atoms;
-    size_t n_atoms;
-
- 
-    check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_atoms));  // SKP
-    atoms = xmalloc(n_atoms * sizeof(struct efp_atom));
-    check_fail(efp_get_frag_atoms(state->efp, spec_frag, n_atoms, atoms));
-    //state->spec_elpot = malloc(n_atoms * sizeof(double));
-    state->spec_elpot = xcalloc(n_atoms, sizeof(double)); 
-  
-
-    for (size_t j = 0; j < n_atoms; j++) {
-         check_fail(efp_get_elec_potential(state->efp, spec_frag, &atoms[j].x, &elpot));
-	 state->spec_elpot[j] = elpot;
-	 print_elpot(atoms + j, elpot);
-    }
-    
-    free(atoms);
-}
-*/
-
 void sim_frag_elpot(struct state *state) {
 
-   // size_t chosen_frag = cfg_get_int(state->cfg, "frag_num");
+    if (cfg_get_int(state->cfg, "special_fragment") < 0)
+        error("Special fragment is not defined in fragment elec potential calculation");
+
     size_t spec_frag;
-    spec_frag = cfg_get_int(state->cfg, "special_fragment");
+    spec_frag = (size_t)cfg_get_int(state->cfg, "special_fragment");
 
     msg("\n=============FRAG-ELECTROSTATIC POTENTIAL JOB======================\n\n");
 
@@ -172,13 +147,13 @@ void sim_frag_elpot(struct state *state) {
     msg("\nCOORDINATES IN ANGSTROMS, ELECTROSTATIC POTENTIAL IN ATOMIC UNITS\n");
     msg("     ATOM            X            Y            Z        ELPOT \n\n");
 
-      double elpot;
+      double elpot = 0.0;
       struct efp_atom *atoms;
       size_t n_atoms;
 
 
-      check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_atoms));  // SKP
-      atoms = xmalloc(n_atoms * sizeof(struct efp_atom));
+      check_fail(efp_get_frag_atom_count(state->efp, spec_frag, &n_atoms));  
+      atoms = xcalloc(n_atoms, sizeof(struct efp_atom));
       check_fail(efp_get_frag_atoms(state->efp, spec_frag, n_atoms, atoms));
 
       msg("ELECTROSTATIC POTENTIAL ON FRAGMENT %zu\n", spec_frag);

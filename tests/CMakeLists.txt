@@ -65,8 +65,11 @@ foreach(test_name
   elec_3a
   elec_3b
   elpot
+  elpot_frag
   grad_1
   hess_1
+  lj_1
+  lj_2
   md_1
   md_2
   md_3
@@ -83,6 +86,8 @@ foreach(test_name
   pol_2b
   pol_3a
   pol_3b
+  polab_0
+  polab_1
   print
   qm_1a
   qm_1b
@@ -90,6 +95,10 @@ foreach(test_name
   qm_2b
   reduced
   sp_1
+  sp_2
+  spec_frag_1
+  spec_frag_2
+  spec_frag_base
   symm_1
   symm_2full
   symm_2

@@ -20,6 +20,10 @@ jobs:
             cmargs: >
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
+              # uncomment the following two options to look for possible memory-related bugs in openmp 
+              # however, the tests will take ~10 times longer
+              #-D CMAKE_C_FLAGS="-fsanitize=thread -g"
+              #-D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"  # i.e., all
 
           - label: L-Gnu
@@ -30,6 +34,11 @@ jobs:
             cmargs: >
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
+              # uncomment the following two options to look for possible memory-related bugs in openmp 
+              # however, the tests will take ~10 times longer
+              # this workflow was crashing with these options in pytests due to conflict of TSan and libgomp
+              #-D CMAKE_C_FLAGS="-fsanitize=thread -g"
+              #-D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"
 
           - label: L-Intel
@@ -48,18 +57,20 @@ jobs:
 
           - label: M-Clang
             # NaNs in tests on macos-latest (macos-12)
-            runs-on: macos-13
+            #runs-on: macos-13
+            runs-on: macos-latest
             python-version: "3.10"
             blas: OBL
             build_type: Release
             cmargs: >
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
-            pytest-marker-expr: "test"
+              pytest-marker-expr: "test"
 
           - label: M-Clang
             # NaNs in tests on macos-latest (macos-12)
-            runs-on: macos-13
+            #runs-on: macos-13
+            runs-on: macos-15-intel
             python-version: "3.10"
             blas: ACC
             build_type: Release
@@ -124,11 +135,20 @@ jobs:
             :
             sed -E -i.bak "s;#${{ matrix.cfg.blas }};;g" export.yaml
           fi
+          # if [[ "${{ runner.os }}" == "Windows" ]]; then
+          #   :
+          #   sed -i "s;fortran-compiler;m2w64-gcc-fortran;g" export.yaml
+          #   sed -i "s;#${{ matrix.cfg.blas }};;g" export.yaml
+          #   sed -i "s;openmp;pthreads;g" export.yaml  # W openblas is pthreads
+          #   sed -i "s;#- libpython;- libpython;g" export.yaml
+          # fi
           if [[ "${{ runner.os }}" == "Windows" ]]; then
-            :
-            sed -i "s;fortran-compiler;m2w64-gcc-fortran;g" export.yaml
+            # Use the modern conda-forge compilers instead of the old m2w64 ones
+            sed -i "s;c-compiler;gcc;g" export.yaml
+            sed -i "s;cxx-compiler;gxx;g" export.yaml
+            sed -i "s;fortran-compiler;gfortran;g" export.yaml
             sed -i "s;#${{ matrix.cfg.blas }};;g" export.yaml
-            sed -i "s;openmp;pthreads;g" export.yaml  # W openblas is pthreads
+            sed -i "s;openmp;pthreads;g" export.yaml
             sed -i "s;#- libpython;- libpython;g" export.yaml
           fi
           # model sed for L/W
@@ -182,6 +202,17 @@ jobs:
       - name: Test (CTest) - unit tests
         run: ctest --output-on-failure --test-dir "${{ github.workspace }}/build"
 
+      # - name: Test (CTest) with Valgrind
+      #   run: |
+      #     sudo apt-get update && sudo apt-get install -y valgrind
+      #     # Run valgrind directly on the ctest executable. The tests will take forever
+      #     valgrind --tool=memcheck \
+      #              --leak-check=full \
+      #              --track-origins=yes \
+      #              --trace-children=yes \
+      #              --error-exitcode=1 \
+      #              ctest --output-on-failure --test-dir "${{ github.workspace }}/build"
+                   
       - name: Test (find_package) - consume installation
         run: |
           mkdir test_installed_library && cd test_installed_library
@@ -242,11 +273,19 @@ jobs:
       - name: Install Psi4 for QM/EFP testing
         if: ${{ matrix.cfg.blas == 'MKL' }}
         run: conda install psi4 -c conda-forge
-
+        
       - name: Test (pytest) -- unit tests Python bindings
         run: |
-            PYTHONPATH="${{ github.workspace }}/installed/lib" \
-            pytest --cache-clear -v -rws --color=yes \
-              --durations=50 --durations-min=1 --strict-markers \
-              -k "${{ matrix.cfg.pytest-marker-expr }}" \
-              "${{ github.workspace }}/installed/"
+          # Setup PYTHONPATH
+          SEP=$(python -c "import os; print(os.pathsep)")
+          LIB_PATH="${{ github.workspace }}/installed/lib"
+          TEST_PATH="${{ github.workspace }}/installed/lib/pylibefp/tests"
+          export PYTHONPATH="${LIB_PATH}${SEP}${TEST_PATH}"
+          echo "PYTHONPATH is set to: $PYTHONPATH"
+          # PYTHONPATH="${{ github.workspace }}/installed/lib:${{ github.workspace }}/installed/lib/pylibefp/tests" \
+          
+          # Run Pytest
+          pytest -s --cache-clear -v -rws --color=yes \
+            --durations=50 --durations-min=1 --strict-markers \
+            -k "${{ matrix.cfg.pytest-marker-expr }}" \
+            "${{ github.workspace }}/installed/"
