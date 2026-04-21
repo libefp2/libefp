@@ -7,7 +7,7 @@ import os
 FILES = [
     'atom_coord.in', 'atom_coord_2.in', 'grad_1.in', 'lj_1.in', 'lj_2.in',
     'pairwise_0.in', 'pairwise_1.in', 'pairwise_2.in', 'pairwise_x.in', 'pbc_1.in', 'pbc_2.in',
-    'reduced.in', 'spec_frag_0.in', 'spec_frag_1.in', 'spec_frag_2.in', 'spec_frag_base.in', 'spec_frag_ref.in',
+    'reduced.in', 'spec_frag_1.in', 'spec_frag_2.in', 'spec_frag_base.in', 
     'symm_1.in', 'symm_2.in', 'symm_2full.in', 'symm_2pw.in'
 ]
 

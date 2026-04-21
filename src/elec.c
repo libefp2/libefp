@@ -96,60 +96,60 @@ mult_mult_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 	}
 
     // charge - monopole
-    //if (pt_i->if_znuc && pt_j->if_mon)
+    if (pt_i->if_znuc && pt_j->if_mon)
         energy += ccdamp_j * efp_charge_charge_energy(pt_i->znuc, pt_j->monopole, &dr);
 
     // monopole - charge
-    //if (pt_j->if_znuc && pt_i->if_mon)
+    if (pt_j->if_znuc && pt_i->if_mon)
         energy += ccdamp_i * efp_charge_charge_energy(pt_j->znuc, pt_i->monopole, &dr);
 
     // charge-charge
-    //if (pt_i->if_znuc && pt_j->if_znuc)
+    if (pt_i->if_znuc && pt_j->if_znuc)
         energy += efp_charge_charge_energy(pt_i->znuc, pt_j->znuc, &dr);
 
     // monopole - monopole
-    //if (pt_i->if_mon && pt_j->if_mon)
+    if (pt_i->if_mon && pt_j->if_mon)
 	    energy += ccdamp * efp_charge_charge_energy(pt_i->monopole,
 	            pt_j->monopole, &dr);
 
 	// monopole - dipole
-    //if ((pt_i->if_znuc || pt_i->if_mon) && pt_j->if_dip)
+    if ((pt_i->if_znuc || pt_i->if_mon) && pt_j->if_dip)
 	    energy += efp_charge_dipole_energy(qi, &pt_j->dipole, &dr);
 
 	// dipole - monopole
-    //if ((pt_j->if_znuc || pt_j->if_mon) && pt_i->if_dip)
+    if ((pt_j->if_znuc || pt_j->if_mon) && pt_i->if_dip)
 	    energy -= efp_charge_dipole_energy(qj, &pt_i->dipole, &dr);
 
 	// monopole - quadrupole
-    //if ((pt_i->if_znuc || pt_i->if_mon) && pt_j->if_quad)
+    if ((pt_i->if_znuc || pt_i->if_mon) && pt_j->if_quad)
         energy += efp_charge_quadrupole_energy(qi, pt_j->quadrupole, &dr);
 
 	// quadrupole - monopole
-    //if ((pt_j->if_znuc || pt_j->if_mon) && pt_i->if_quad)
+    if ((pt_j->if_znuc || pt_j->if_mon) && pt_i->if_quad)
     	energy += efp_charge_quadrupole_energy(qj, pt_i->quadrupole, &dr);
 
 	// monopole - octupole
-    //if ((pt_i->if_znuc || pt_i->if_mon) && pt_j->if_oct)
+    if ((pt_i->if_znuc || pt_i->if_mon) && pt_j->if_oct)
         energy += efp_charge_octupole_energy(qi, pt_j->octupole, &dr);
 
 	// octupole - monopole
-    //if ((pt_j->if_znuc || pt_j->if_mon) && pt_i->if_oct)
+    if ((pt_j->if_znuc || pt_j->if_mon) && pt_i->if_oct)
     	energy -= efp_charge_octupole_energy(qj, pt_i->octupole, &dr);
 
 	/* dipole - dipole */
-    //if (pt_i->if_dip && pt_j->if_dip)
+    if (pt_i->if_dip && pt_j->if_dip)
         energy += efp_dipole_dipole_energy(&pt_i->dipole, &pt_j->dipole, &dr);
 
 	/* dipole - quadrupole */
-    //if (pt_i->if_dip && pt_j->if_quad)
+    if (pt_i->if_dip && pt_j->if_quad)
     	energy += efp_dipole_quadrupole_energy(&pt_i->dipole, pt_j->quadrupole, &dr);
 
 	/* quadrupole - dipole */
-    //if (pt_j->if_dip && pt_i->if_dip)
+    if (pt_j->if_dip && pt_i->if_dip)
         energy -= efp_dipole_quadrupole_energy(&pt_j->dipole, pt_i->quadrupole, &dr);
 
 	/* quadrupole - quadrupole */
-    //if (pt_i->if_quad && pt_j->if_quad)
+    if (pt_i->if_quad && pt_j->if_quad)
         energy += efp_quadrupole_quadrupole_energy(pt_i->quadrupole,
                 pt_j->quadrupole, &dr);
 
