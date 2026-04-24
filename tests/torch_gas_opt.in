@@ -1,6 +1,7 @@
 # single fragment job is effectively a pure ML calculation of water molecule
 
-run_type opt
+run_type opttest
+ref_energy -76.3885325979
 coord atoms
 terms qq lj
 special_terms qq lj

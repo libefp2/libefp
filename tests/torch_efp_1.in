@@ -1,7 +1,8 @@
 #                   TOTAL ENERGY  -115.6773809671
 #                   OPTIMIZATION CONVERGED IN 44 STEPS
 
-run_type opt
+run_type opttest
+ref_energy -115.6773809671
 coord atoms
 terms elec pol disp xr
 elec_damp overlap

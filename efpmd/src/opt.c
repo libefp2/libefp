@@ -391,3 +391,4 @@ void sim_opt(struct state *state)
 
     msg("ENERGY MINIMIZATION JOB COMPLETED SUCCESSFULLY\n");
 }
+

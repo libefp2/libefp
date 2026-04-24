@@ -5,19 +5,17 @@ endif ()
 
 # extract project version from source
 
-if(NOT DEFINED torch_switch)
-    if(DEFINED ENV{TORCH_SWITCH})
-        set(torch_switch $ENV{TORCH_SWITCH})
-    else()
-        set(torch_switch OFF)
-    endif()
-endif()
+# if(NOT DEFINED torch_switch)
+#     if(DEFINED ENV{TORCH_SWITCH})
+#         set(torch_switch $ENV{TORCH_SWITCH})
+#     else()
+#         set(torch_switch OFF)
+#     endif()
+# endif()
 
-option(torch_switch "Enable Torch library integration" ${TORCH_SWITCH})
-
-if(torch_switch)
-    add_definitions(-DTORCH_SWITCH)
-endif()
+# if(torch_switch)
+#     add_definitions(-DTORCH_SWITCH)
+# endif()
 
 file(STRINGS "src/efp.h" _src_efp_h REGEX "LIBEFP_VERSION_STRING")
 
@@ -58,6 +56,36 @@ if (NOT DEFINED ${efp}_IS_TOP_LEVEL)
     endif ()
     set(${efp}_IS_TOP_LEVEL ${PROJECT_IS_TOP_LEVEL})
 endif ()
+
+################# TORCH #####################################################
+option(torch_switch "Enable Torch library integration" ${TORCH_SWITCH})
+
+if(TORCH_SWITCH)
+    # Tell CMake to go find LibTorch 
+    # (It will look in CMAKE_PREFIX_PATH, which points to your local folder or Conda)
+    find_package(Torch REQUIRED)
+
+    # Define your internal project paths
+    # Use CMAKE_CURRENT_SOURCE_DIR so it's always relative to where the code is
+    set(TORCHANI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/efpmd/torch")
+
+    # Use the variables
+    add_definitions(-DTORCH_SWITCH)
+    
+    # These variables were created by find_package(Torch)
+    include_directories(${TORCH_INCLUDE_DIRS})
+    
+    # This is your internal directory
+    include_directories(${TORCHANI_DIR})
+
+    # Link to the target 
+    # Use the variable created by find_package(Torch)
+    # target_link_libraries(efp PRIVATE ${TORCH_LIBRARIES})
+    
+    message(STATUS "Torch found: ${TORCH_FOUND}")
+    message(STATUS "Torch Include Dirs: ${TORCH_INCLUDE_DIRS}")
+endif()
+
 
 ################################### Options ####################################
 include(psi4OptionsTools)

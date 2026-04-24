@@ -1,4 +1,5 @@
-run_type opt
+run_type opttest
+ref_energy -76.3989390114
 coord atoms
 terms qq lj
 special_terms qq lj

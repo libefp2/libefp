@@ -1,15 +1,15 @@
 
-if(NOT DEFINED torch_switch)
+if(NOT DEFINED TORCH_SWITCH)
     if(DEFINED ENV{TORCH_SWITCH})
-        set(torch_switch $ENV{TORCH_SWITCH})
+        set(TORCH_SWITCH $ENV{TORCH_SWITCH})
     else()
-        set(torch_switch OFF)
+        set(TORCH_SWITCH OFF)
     endif()
 endif()
 
-option(torch_switch "Enable Torch library integration" ${TORCH_SWITCH})
+option(TORCH_SWITCH "Enable Torch library integration" ${TORCH_SWITCH})
 
-if(torch_switch)
+if(TORCH_SWITCH)
     add_definitions(-DTORCH_SWITCH)
 endif()
 
@@ -28,12 +28,12 @@ add_library(
     libopt/timer.f
   )
 
-if(torch_switch)
+if(TORCH_SWITCH)
  find_package(Torch REQUIRED)
  add_library(ctorch OBJECT torch/c_libtorch.cc)
 endif()
 
-if(torch_switch)
+if(TORCH_SWITCH)
   message(STATUS "Torch integration enabled.")
   add_executable(
     efpmd
@@ -78,7 +78,7 @@ endif()
 
 set(TORCH_INCLUDE_DIRS "$ENV{LIBTORCH_INCLUDE_DIRS}" CACHE PATH "Torch include directories")
 
-if(torch_switch)
+if(TORCH_SWITCH)
   message("TORCH_INSTALL_PREFIX =  ${TORCH_INSTALL_PREFIX}")
   message("TORCH_LIBRARIES =  ${TORCH_LIBRARIES}")
   message("TORCH_INCLUDE_DIRS =  ${TORCH_INCLUDE_DIRS}")
@@ -91,7 +91,7 @@ set_target_properties(efpmd PROPERTIES
   CXX_STANDARD_REQUIRED YES
 )
 
-if(torch_switch)
+if(TORCH_SWITCH)
   target_include_directories(
   ctorch
   PRIVATE
@@ -99,7 +99,7 @@ if(torch_switch)
   )
 endif()
 
-if(torch_switch)
+if(TORCH_SWITCH)
   target_include_directories(
   efpmd
   PRIVATE
@@ -119,7 +119,7 @@ else()
   )
 endif()
 
-if(torch_switch)
+if(TORCH_SWITCH)
   target_link_libraries(
   ctorch
   PUBLIC
@@ -127,7 +127,7 @@ if(torch_switch)
   )
 endif()
 
-if(torch_switch)
+if(TORCH_SWITCH)
   target_link_libraries(
   efpmd
   PUBLIC

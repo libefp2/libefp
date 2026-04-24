@@ -14,10 +14,28 @@ jobs:
         cfg:
           - label: L-Gnu
             runs-on: ubuntu-latest
+            torch: OFF
             python-version: "3.10"
             blas: MKL
             build_type: Release
             cmargs: >
+              -D TORCH_SWITCH=OFF
+              -D BUILD_SHARED_LIBS=ON
+              -D LIBEFP_ENABLE_OPENMP=ON
+              # uncomment the following two options to look for possible memory-related bugs in openmp 
+              # however, the tests will take ~10 times longer
+              #-D CMAKE_C_FLAGS="-fsanitize=thread -g"
+              #-D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
+            pytest-marker-expr: "test"  # i.e., all
+
+          - label: L-Torch
+            runs-on: ubuntu-latest
+            torch: ON
+            python-version: "3.10"
+            blas: MKL
+            build_type: Release
+            cmargs: >
+              -D TORCH_SWITCH=ON
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
               # uncomment the following two options to look for possible memory-related bugs in openmp 
@@ -28,10 +46,12 @@ jobs:
 
           - label: L-Gnu
             runs-on: ubuntu-latest
+            torch: OFF
             python-version: "3.10"
             blas: OBL
             build_type: Release
             cmargs: >
+              -D TORCH_SWITCH=OFF
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
               # uncomment the following two options to look for possible memory-related bugs in openmp 
@@ -43,10 +63,12 @@ jobs:
 
           - label: L-Intel
             runs-on: ubuntu-latest
+            torch: OFF
             python-version: "3.10"
             blas: MKL
             build_type: Release
             cmargs: >
+              -D TORCH_SWITCH=OFF
               -D CMAKE_C_COMPILER=icx
               -D CMAKE_CXX_COMPILER=icpx
               -D CMAKE_C_FLAGS="--gcc-toolchain=${CONDA_PREFIX} --sysroot=${CONDA_PREFIX}/${HOST}/sysroot -target ${HOST}"
@@ -56,35 +78,37 @@ jobs:
             pytest-marker-expr: "not dict_5"  # the forced fail fails?
 
           - label: M-Clang
-            # NaNs in tests on macos-latest (macos-12)
-            #runs-on: macos-13
             runs-on: macos-latest
+            torch: OFF
             python-version: "3.10"
             blas: OBL
             build_type: Release
             cmargs: >
+              -D TORCH_SWITCH=OFF
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
               pytest-marker-expr: "test"
 
           - label: M-Clang
-            # NaNs in tests on macos-latest (macos-12)
-            #runs-on: macos-13
             runs-on: macos-15-intel
+            torch: OFF
             python-version: "3.10"
             blas: ACC
             build_type: Release
             cmargs: >
+              -D TORCH_SWITCH=OFF
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
             pytest-marker-expr: "test"
 
           - label: W-MinGW
             runs-on: windows-latest
+            torch: OFF
             python-version: "3.10"
             blas: MKL
             build_type: Release
             cmargs: >
+              -D TORCH_SWITCH=OFF
               -D CMAKE_C_COMPILER="gcc.exe"
               -D CMAKE_CXX_COMPILER="g++.exe"
               -D CMAKE_Fortran_COMPILER="gfortran.exe"
@@ -130,6 +154,10 @@ jobs:
             if [[ "${{ matrix.cfg.label }}" == "L-Intel" ]]; then
               sed -i "s/#- dpcpp_linux-64/- dpcpp_linux-64/g" export.yaml
             fi
+            if [[ "${{ matrix.cfg.torch }}" == "ON" ]]; then
+              # Append pytorch-cpu to the end of the dependencies list
+              sed -i "/dependencies:/a \  - pytorch-cpu" export.yaml
+            fi
           fi
           if [[ "${{ runner.os }}" == "macOS" ]]; then
             :
@@ -166,6 +194,19 @@ jobs:
           channels: conda-forge
           conda-remove-defaults: true
 
+      - name: Install LibTorch
+        run: |
+          # if [[ "${{ matrix.cfg.torch }}" == "ON" ]]; then
+          #   URL="https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.2.0%2Bcpu.zip"
+          # fi
+        
+          # curl -L $URL -o libtorch.zip
+          # unzip -q libtorch.zip -d ${{ github.workspace }}/deps
+          if [[ "${{ matrix.cfg.torch }}" == "ON" ]]; then
+            sed -i "/dependencies:/a \  - pytorch-cpu" export.yaml
+          fi
+
+      
       - name: Environment Information
         run: |
           conda info
@@ -179,6 +220,7 @@ jobs:
             -G Ninja \
             -D CMAKE_INSTALL_PREFIX="${{ github.workspace }}/installed" \
             -D CMAKE_PREFIX_PATH="${CONDA_PREFIX}" \
+            #-D CMAKE_PREFIX_PATH=${CONDA_PREFIX};${{ github.workspace }}/deps/libtorch\
             ${{ matrix.cfg.cmargs }}
 
       - name: Build & Install
