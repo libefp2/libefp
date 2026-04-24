@@ -266,8 +266,10 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fraglib
 
 if (TORCH_SWITCH)
     message(STATUS "Copying nnlib potentials to CMAKE_INSTALL_DATADIR/libefp directory...")
+    message(STATUS "CMAKE_BINARY_DIR is ${CMAKE_BINARY_DIR}")
+    message(STATUS "CMAKE_INSTALL_DATADIR is ${CMAKE_INSTALL_DATADIR}")
     file(COPY ${PROJECT_SOURCE_DIR}/nnlib 
-         DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
+         DESTINATION ${CMAKE_BINARY_DIR})
     install(DIRECTORY ${PROJECT_SOURCE_DIR}/nnlib
             DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
 endif()
