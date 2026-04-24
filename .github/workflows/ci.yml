@@ -172,6 +172,12 @@ jobs:
           #   sed -E -i.bak "s;;;g" export.yaml
           cat export.yaml
 
+      - name: Install LibTorch
+        run: |
+          if [[ "${{ matrix.cfg.torch }}" == "ON" ]]; then
+            sed -i "/dependencies:/a \  - pytorch-cpu" export.yaml
+          fi
+
       - name: Install dependencies
         uses: conda-incubator/setup-miniconda@v3
         with:
@@ -180,13 +186,6 @@ jobs:
           python-version: ${{ matrix.cfg.python-version }}
           channels: conda-forge
           conda-remove-defaults: true
-
-      - name: Install LibTorch
-        run: |
-          if [[ "${{ matrix.cfg.torch }}" == "ON" ]]; then
-            sed -i "/dependencies:/a \  - pytorch-cpu" export.yaml
-          fi
-
       
       - name: Environment Information
         run: |

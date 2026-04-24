@@ -5,6 +5,23 @@ if (POLICY CMP0135)
 	cmake_policy(SET CMP0135 NEW)
 endif ()
 
+# extract project version from source
+file(STRINGS "src/efp.h" _src_efp_h REGEX "LIBEFP_VERSION_STRING")
+
+if (${_src_efp_h} MATCHES "^#define LIBEFP_VERSION_STRING \"(.*)\"$")
+    set(_libefp_VERSION ${CMAKE_MATCH_1})
+endif()
+
+project(
+  libefp
+  # someday when Makefile dropped, configure efp.h.in from cmake
+  VERSION ${_libefp_VERSION}
+  LANGUAGES C CXX
+  )
+
+#set(CMAKE_INSTALL_PREFIX "$ENV{LIBEFP_DIR}" CACHE PATH "Installation directory" FORCE)
+#set(CMAKE_INSTALL_PREFIX "${LIBEFP_DIR}" CACHE PATH "Installation directory")
+#set(CMAKE_INSTALL_LIBDIR "lib")
 
 ################# TORCH #####################################################
 
@@ -49,24 +66,6 @@ else()
     message(STATUS "Compiling without Torch functionality")
 endif()
 
-
-# extract project version from source
-file(STRINGS "src/efp.h" _src_efp_h REGEX "LIBEFP_VERSION_STRING")
-
-if (${_src_efp_h} MATCHES "^#define LIBEFP_VERSION_STRING \"(.*)\"$")
-    set(_libefp_VERSION ${CMAKE_MATCH_1})
-endif()
-
-project(
-  libefp
-  # someday when Makefile dropped, configure efp.h.in from cmake
-  VERSION ${_libefp_VERSION}
-  LANGUAGES C CXX
-  )
-
-#set(CMAKE_INSTALL_PREFIX "$ENV{LIBEFP_DIR}" CACHE PATH "Installation directory" FORCE)
-#set(CMAKE_INSTALL_PREFIX "${LIBEFP_DIR}" CACHE PATH "Installation directory")
-#set(CMAKE_INSTALL_LIBDIR "lib")
 
 ### LVS needs this on MacOS silicon
 set(CMAKE_CXX_STANDARD 17)
