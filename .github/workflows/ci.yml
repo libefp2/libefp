@@ -22,10 +22,6 @@ jobs:
               -D TORCH_SWITCH=OFF
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
-              # uncomment the following two options to look for possible memory-related bugs in openmp 
-              # however, the tests will take ~10 times longer
-              #-D CMAKE_C_FLAGS="-fsanitize=thread -g"
-              #-D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"  # i.e., all
 
           - label: L-Torch
@@ -38,10 +34,6 @@ jobs:
               -D TORCH_SWITCH=ON
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
-              # uncomment the following two options to look for possible memory-related bugs in openmp 
-              # however, the tests will take ~10 times longer
-              #-D CMAKE_C_FLAGS="-fsanitize=thread -g"
-              #-D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"  # i.e., all
 
           - label: L-Gnu
@@ -54,11 +46,6 @@ jobs:
               -D TORCH_SWITCH=OFF
               -D BUILD_SHARED_LIBS=ON
               -D LIBEFP_ENABLE_OPENMP=ON
-              # uncomment the following two options to look for possible memory-related bugs in openmp 
-              # however, the tests will take ~10 times longer
-              # this workflow was crashing with these options in pytests due to conflict of TSan and libgomp
-              #-D CMAKE_C_FLAGS="-fsanitize=thread -g"
-              #-D CMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
             pytest-marker-expr: "test"
 
           - label: L-Intel
@@ -196,12 +183,6 @@ jobs:
 
       - name: Install LibTorch
         run: |
-          # if [[ "${{ matrix.cfg.torch }}" == "ON" ]]; then
-          #   URL="https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.2.0%2Bcpu.zip"
-          # fi
-        
-          # curl -L $URL -o libtorch.zip
-          # unzip -q libtorch.zip -d ${{ github.workspace }}/deps
           if [[ "${{ matrix.cfg.torch }}" == "ON" ]]; then
             sed -i "/dependencies:/a \  - pytorch-cpu" export.yaml
           fi
@@ -220,7 +201,6 @@ jobs:
             -G Ninja \
             -D CMAKE_INSTALL_PREFIX="${{ github.workspace }}/installed" \
             -D CMAKE_PREFIX_PATH="${CONDA_PREFIX}" \
-            #-D CMAKE_PREFIX_PATH=${CONDA_PREFIX};${{ github.workspace }}/deps/libtorch\
             ${{ matrix.cfg.cmargs }}
 
       - name: Build & Install
