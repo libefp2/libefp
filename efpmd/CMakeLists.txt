@@ -1,16 +1,14 @@
 
-if(NOT DEFINED TORCH_SWITCH)
-    if(DEFINED ENV{TORCH_SWITCH})
-        set(TORCH_SWITCH $ENV{TORCH_SWITCH})
-    else()
-        set(TORCH_SWITCH OFF)
-    endif()
-endif()
-
 option(TORCH_SWITCH "Enable Torch library integration" ${TORCH_SWITCH})
 
 if(TORCH_SWITCH)
-    add_definitions(-DTORCH_SWITCH)
+ add_library(ctorch OBJECT torch/c_libtorch.cc)
+endif()
+
+if(TORCH_SWITCH)
+  message("TORCH_INSTALL_PREFIX =  ${TORCH_INSTALL_PREFIX}")
+  message("TORCH_LIBRARIES =  ${TORCH_LIBRARIES}")
+  message("TORCH_INCLUDE_DIRS =  ${TORCH_INCLUDE_DIRS}")
 endif()
 
 add_library(
@@ -27,11 +25,6 @@ add_library(
     libopt/linpack.f
     libopt/timer.f
   )
-
-if(TORCH_SWITCH)
- find_package(Torch REQUIRED)
- add_library(ctorch OBJECT torch/c_libtorch.cc)
-endif()
 
 if(TORCH_SWITCH)
   message(STATUS "Torch integration enabled.")
@@ -74,16 +67,6 @@ else()
   )
 endif()
  
-#set(TORCH_INCLUDE_DIRS "/depot/lslipche/data/skp/libtorch/include/;/depot/lslipche/data/skp/libtorch/include/torch/csrc/api/include")
-
-set(TORCH_INCLUDE_DIRS "$ENV{LIBTORCH_INCLUDE_DIRS}" CACHE PATH "Torch include directories")
-
-if(TORCH_SWITCH)
-  message("TORCH_INSTALL_PREFIX =  ${TORCH_INSTALL_PREFIX}")
-  message("TORCH_LIBRARIES =  ${TORCH_LIBRARIES}")
-  message("TORCH_INCLUDE_DIRS =  ${TORCH_INCLUDE_DIRS}")
-endif()
-
 #CXX_STANDARD 14
 
 set_target_properties(efpmd PROPERTIES
@@ -149,15 +132,14 @@ else()
   )
 endif()
 
-
 target_compile_definitions(
   efpmd
   PRIVATE
     $<BUILD_INTERFACE:FRAGLIB_PATH="/../fraglib">
     $<INSTALL_INTERFACE:FRAGLIB_PATH="${CMAKE_INSTALL_DATADIR}/${efp}/fraglib">
     $<BUILD_INTERFACE:ML_PATH="../nnlib/">
-#    $<INSTALL_INTERFACE:ML_PATH="${CMAKE_INSTALL_DATADIR}/${efp}/nnlib">
-  )
+    $<INSTALL_INTERFACE:ML_PATH="${CMAKE_INSTALL_DATADIR}/${efp}/nnlib">
+)
 
 add_executable(${efp}::efpmd ALIAS efpmd)
 

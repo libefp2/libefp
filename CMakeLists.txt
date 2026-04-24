@@ -1,22 +1,56 @@
+#message(STATUS ">>> DEBUG: CMake is reading the top-level file")
+
 cmake_minimum_required(VERSION 3.16)
 if (POLICY CMP0135)
 	cmake_policy(SET CMP0135 NEW)
 endif ()
 
+
+################# TORCH #####################################################
+
+if(NOT DEFINED TORCH_SWITCH)
+    if(DEFINED ENV{TORCH_SWITCH})
+        set(TORCH_SWITCH $ENV{TORCH_SWITCH})
+    else()
+        set(TORCH_SWITCH OFF)
+    endif()
+endif()
+
+option(TORCH_SWITCH "Enable Torch library integration" ${TORCH_SWITCH})
+
+#option(TORCH_SWITCH "Enable Torch library integration" ON)
+
+if(TORCH_SWITCH)
+    # Tell CMake to go find LibTorch 
+    # (It will look in CMAKE_PREFIX_PATH, which points to your local folder or Conda)
+    find_package(Torch REQUIRED)
+
+    # Define your internal project paths
+    # Use CMAKE_CURRENT_SOURCE_DIR so it's always relative to where the code is
+    set(TORCHANI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/efpmd/torch")
+
+    # Use the variables
+    add_definitions(-DTORCH_SWITCH)
+    
+    # These variables were created by find_package(Torch)
+    include_directories(${TORCH_INCLUDE_DIRS})
+    
+    # This is your internal directory
+    include_directories(${TORCHANI_DIR})
+
+    # Link to the target 
+    # Use the variable created by find_package(Torch)
+    # target_link_libraries(efp PRIVATE ${TORCH_LIBRARIES})
+    
+    message(STATUS "Compiling with Torch functionality")
+    message(STATUS "Torch found: ${TORCH_FOUND}")
+    message(STATUS "Torch Include Dirs: ${TORCH_INCLUDE_DIRS}")
+else()
+    message(STATUS "Compiling without Torch functionality")
+endif()
+
+
 # extract project version from source
-
-# if(NOT DEFINED torch_switch)
-#     if(DEFINED ENV{TORCH_SWITCH})
-#         set(torch_switch $ENV{TORCH_SWITCH})
-#     else()
-#         set(torch_switch OFF)
-#     endif()
-# endif()
-
-# if(torch_switch)
-#     add_definitions(-DTORCH_SWITCH)
-# endif()
-
 file(STRINGS "src/efp.h" _src_efp_h REGEX "LIBEFP_VERSION_STRING")
 
 if (${_src_efp_h} MATCHES "^#define LIBEFP_VERSION_STRING \"(.*)\"$")
@@ -56,35 +90,6 @@ if (NOT DEFINED ${efp}_IS_TOP_LEVEL)
     endif ()
     set(${efp}_IS_TOP_LEVEL ${PROJECT_IS_TOP_LEVEL})
 endif ()
-
-################# TORCH #####################################################
-option(torch_switch "Enable Torch library integration" ${TORCH_SWITCH})
-
-if(TORCH_SWITCH)
-    # Tell CMake to go find LibTorch 
-    # (It will look in CMAKE_PREFIX_PATH, which points to your local folder or Conda)
-    find_package(Torch REQUIRED)
-
-    # Define your internal project paths
-    # Use CMAKE_CURRENT_SOURCE_DIR so it's always relative to where the code is
-    set(TORCHANI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/efpmd/torch")
-
-    # Use the variables
-    add_definitions(-DTORCH_SWITCH)
-    
-    # These variables were created by find_package(Torch)
-    include_directories(${TORCH_INCLUDE_DIRS})
-    
-    # This is your internal directory
-    include_directories(${TORCHANI_DIR})
-
-    # Link to the target 
-    # Use the variable created by find_package(Torch)
-    # target_link_libraries(efp PRIVATE ${TORCH_LIBRARIES})
-    
-    message(STATUS "Torch found: ${TORCH_FOUND}")
-    message(STATUS "Torch Include Dirs: ${TORCH_INCLUDE_DIRS}")
-endif()
 
 
 ################################### Options ####################################
@@ -260,8 +265,13 @@ install(FILES fraglib/makefp.inp
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fraglib
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
 
-#install(DIRECTORY ${PROJECT_SOURCE_DIR}/nnlib
-#        DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
+if (TORCH_SWITCH)
+    message(STATUS "Copying nnlib potentials to CMAKE_INSTALL_DATADIR/libefp directory...")
+    file(COPY ${PROJECT_SOURCE_DIR}/nnlib 
+         DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
+    install(DIRECTORY ${PROJECT_SOURCE_DIR}/nnlib
+            DESTINATION ${CMAKE_INSTALL_DATADIR}/${efp})
+endif()
 
 # headers NOT namespace protected
 install(FILES ${src_prefix}/efp.h
