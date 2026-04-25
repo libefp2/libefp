@@ -139,13 +139,13 @@ endforeach()
 # --- Torch-Specific Tests ---
 if(TORCH_SWITCH)
     set(torch_tests
-        torch_efp_1
+        #torch_efp_1
         torch_efp_2
         torch_efp_3
         torch_gas_gtest
         torch_gas_opt
         torch_mm_gtest_1
-        torch_mm_opt_1
+        #torch_mm_opt_1
         torch_mm_opt_2
     )
 

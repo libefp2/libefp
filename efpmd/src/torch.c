@@ -189,10 +189,10 @@ void torch_custom_compute(struct torch *torch, int print) {
     double *elecpots_data;
     double custom_energy;
 
-    elecpots_data = malloc(n_atoms * sizeof(double));
-    gradients = malloc(n_atoms * 3 * sizeof(double));
-    forces = malloc(n_atoms * 3 * sizeof(double));
-    frag_coord = malloc(n_atoms*3* sizeof(double));
+    elecpots_data = xcalloc(n_atoms, sizeof(double));
+    gradients = xcalloc(n_atoms * 3, sizeof(double));
+    forces = xcalloc(n_atoms * 3, sizeof(double));
+    frag_coord = xcalloc(n_atoms * 3, sizeof(double));
 
     for (size_t i=0; i<n_atoms; i++) {
         frag_coord[i*3] = torch->atom_coords[i*3] * BOHR_RADIUS;
