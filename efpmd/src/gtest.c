@@ -31,6 +31,8 @@
 #endif
 
 void sim_gtest(struct state *state);
+void sim_etest(struct state *state);
+void sim_opt(struct state *state);
 
 static void test_vec(char label, size_t idx, double tol, const double *agrad,
 		const double *ngrad)
@@ -400,4 +402,15 @@ void sim_etest(struct state *state)
     test_energy(state);
 
     msg("ENERGY TEST JOB COMPLETED SUCCESSFULLY\n");
+}
+
+void sim_opttest(struct state *state)
+{
+    msg("GEOMETRY OPTIMIZATION TEST JOB\n\n\n");
+
+    sim_opt(state);
+    msg("\n");
+    test_energy(state);
+
+    msg("GEOMETRY OPTIMIZATION TEST JOB COMPLETED SUCCESSFULLY\n");
 }

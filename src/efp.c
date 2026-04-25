@@ -115,12 +115,16 @@ set_coord_atoms(struct frag *frag, const double *coord)
      //   printf("%12.6lf    %12.6lf    %12.6lf\n", coord[3 * i] * BOHR_RADIUS, coord[3 * i + 1] * BOHR_RADIUS, coord[3 * i + 2] * BOHR_RADIUS);
      //}
 
-    double current_coord[3*natoms];
+    double *current_coord = (double*)calloc(natoms * 3, sizeof(double));
+    if (current_coord == NULL) 
+        return EFP_RESULT_NO_MEMORY;
     for (size_t i=0; i<3*natoms; i++) {
         current_coord[i] = coord[i];
     }
 
-    double ref_coord[3*natoms];
+    double *ref_coord = (double*)calloc(natoms * 3, sizeof(double));
+    if (ref_coord == NULL) 
+        return EFP_RESULT_NO_MEMORY;
     for (size_t i=0; i<natoms; i++) {
         ref_coord[3*i] = frag->lib->atoms[i].x;
         ref_coord[3*i+1] = frag->lib->atoms[i].y;
@@ -166,6 +170,9 @@ set_coord_atoms(struct frag *frag, const double *coord)
     efp_update_pol(frag);
     efp_update_disp(frag);
     efp_update_xr(frag);
+
+    free(current_coord);
+    free(ref_coord);
 
     return EFP_RESULT_SUCCESS;
 }

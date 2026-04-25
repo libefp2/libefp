@@ -2,7 +2,9 @@
 #                  OPTIMIZATION CONVERGED IN 124 STEPS
 
 
-run_type opt
+run_type opttest
+ref_energy -56.5371329225
+gtest_tol 1e-4
 coord atoms
 elec_damp screen
 disp_damp tt

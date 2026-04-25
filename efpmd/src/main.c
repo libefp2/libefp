@@ -48,7 +48,8 @@ void sim_elpot(struct state *);
 void sim_frag_elpot(struct state *);
 void sim_gtest(struct state *);
 void sim_etest(struct state *);
-// void test_nnp7();
+void sim_opttest(struct state *);
+
 
 #define USAGE_STRING \
 	"usage: efpmd [-d | -v | -h | input]\n" \
@@ -70,7 +71,8 @@ static struct cfg *make_cfg(void)
         "elpot\n"
         "frag_elpot\n"
 		"gtest\n"
-        "etest\n",
+        "etest\n"
+		"opttest\n",
 		(int []) { RUN_TYPE_SP,
 			   RUN_TYPE_GRAD,
 			   RUN_TYPE_HESS,
@@ -80,7 +82,8 @@ static struct cfg *make_cfg(void)
 			   RUN_TYPE_ELPOT,
                RUN_TYPE_FRAG_ELPOT,
 			   RUN_TYPE_GTEST,
-			   RUN_TYPE_ETEST});
+			   RUN_TYPE_ETEST,
+			   RUN_TYPE_OPTTEST});
 
 	cfg_add_enum(cfg, "coord", EFP_COORD_TYPE_POINTS,
 		"xyzabc\n"
@@ -228,6 +231,8 @@ static sim_fn_t get_sim_fn(enum run_type run_type)
 		    return sim_gtest;
 		case RUN_TYPE_ETEST:
 		    return sim_etest;
+		case RUN_TYPE_OPTTEST:
+		    return sim_opttest;
 	}
 	assert(0);
 }

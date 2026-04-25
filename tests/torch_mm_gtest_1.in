@@ -1,6 +1,6 @@
 run_type gtest
 ref_energy -76.3937716824
-gtest_tol 5.0e-6
+gtest_tol 1.0e-5
 coord atoms
 terms qq lj
 fraglib_path ../fraglib

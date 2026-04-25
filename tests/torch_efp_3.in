@@ -4,7 +4,9 @@
 
 
 
-run_type opt
+run_type opttest
+ref_energy -115.6944723182
+gtest_tol 2e-5
 coord atoms
 terms elec pol disp xr
 elec_damp overlap

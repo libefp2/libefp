@@ -1,0 +1,23 @@
+run_type opt
+coord points
+terms qq 
+special_terms qq
+disp_damp off
+userlib_path .
+special_fragment 1
+enable_torch true
+enable_elpot true
+custom_nn ANIMM.pt
+opt_special_frag 0
+max_steps 200
+opt_tol 5.0e-4
+print 0
+
+fragment sol
+   13.74158859   48.78915787   40.33430099
+   12.84534693   48.85788441   39.87373590
+   14.14191723   49.71623898   40.35318375
+fragment lig
+   32.70870686   39.27886248   44.37481880
+   32.24294186   38.36189747   43.69426250
+   31.95732832   37.07950115   44.11069870
