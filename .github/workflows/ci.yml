@@ -124,7 +124,9 @@ jobs:
             - fortran-compiler
             #- dpcpp_linux-64
             - blas-devel
-            - mkl<2026.0.0
+            if [[ "${{ matrix.cfg.blas }}" == "MKL" ]]; then
+              sed -i "/dependencies:/a \  - mkl<2026.0.0" export.yaml
+            fi
             #MKL- libblas=*=*mkl
             #ACC- libblas=*=*accelerate
             #OBL- libblas=*=*openblas
