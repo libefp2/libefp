@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.13)
 project(ctorch C CXX)
 
-find_package(Torch REQUIRED)
+#find_package(Torch REQUIRED)
 
 add_library(ctorch SHARED c_libtorch.cc)
 

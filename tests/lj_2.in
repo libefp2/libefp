@@ -1,9 +1,10 @@
-run_type grad
+run_type gtest
+ref_energy -0.0051579061
 coord atoms
 terms qq lj
-special_terms qq lj
+special_terms lj
 fraglib_path ../fraglib
-print 0
+special_fragment 2
 
 fragment tip3p_mm_l
 A01O                -1.815220     2.663988     0.000000
@@ -14,6 +15,11 @@ fragment tip3p_mm_l
 A01O                -1.815220     5.663988     0.000000
 A02H                -1.616905     4.722730     0.001942
 A03H                -2.465495     5.770431    -0.695494
+
+fragment tip3p_mm_l
+A01O                -4.815220     5.663988     0.000000
+A02H                -4.616905     4.722730     0.001942
+A03H                -5.465495     5.770431    -0.695494
 
 
 

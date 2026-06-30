@@ -1,9 +1,6 @@
-#                   TOTAL ENERGY  -115.6884424223
-# L-BFGS-B is unable to make an optimization step
-# OPTIMIZATION HAS NOT CONVERGED
 
-
-run_type opt
+run_type opttest
+ref_energy -115.672583
 coord atoms
 terms elec pol disp xr
 elec_damp overlap

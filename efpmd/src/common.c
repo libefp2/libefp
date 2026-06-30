@@ -108,7 +108,7 @@ void print_geometry(struct efp *efp)
 		size_t n_atoms;
 		check_fail(efp_get_frag_atom_count(efp, i, &n_atoms));
 
-		struct efp_atom atoms[n_atoms];
+		struct efp_atom *atoms = xcalloc(n_atoms, sizeof(struct efp_atom));
 		check_fail(efp_get_frag_atoms(efp, i, n_atoms, atoms));
 
 		for (size_t a = 0; a < n_atoms; a++) {
@@ -118,13 +118,14 @@ void print_geometry(struct efp *efp)
 
 			msg("%-16s %12.6lf %12.6lf %12.6lf\n", atoms[a].label, x, y, z);
 		}
+		free(atoms);
 	}
 
 	size_t n_charges;
 	check_fail(efp_get_point_charge_count(efp, &n_charges));
 
 	if (n_charges > 0) {
-		double xyz[3 * n_charges];
+		double *xyz = xcalloc(3 * n_charges, sizeof(double));
 		check_fail(efp_get_point_charge_coordinates(efp, xyz));
 
 		for (size_t i = 0; i < n_charges; i++) {
@@ -136,6 +137,7 @@ void print_geometry(struct efp *efp)
 			snprintf(label, sizeof(label), "Q%04zu", i + 1);
 			msg("%-16s %12.6lf %12.6lf %12.6lf\n", label, x, y, z);
 		}
+		free(xyz);
 	}
 
 	msg("\n\n");
@@ -185,7 +187,7 @@ void print_geometry_pbc(struct efp *efp, int ligand)
         size_t n_atoms;
         check_fail(efp_get_frag_atom_count(efp, i, &n_atoms));
 
-        struct efp_atom atoms[n_atoms];
+        struct efp_atom *atoms = xcalloc(n_atoms, sizeof(struct efp_atom));
         check_fail(efp_get_frag_atoms(efp, i, n_atoms, atoms));
 
             for (size_t a = 0; a < n_atoms; a++) {
@@ -195,6 +197,7 @@ void print_geometry_pbc(struct efp *efp, int ligand)
 
             msg("%-16s %12.6lf %12.6lf %12.6lf\n", atoms[a].label, x, y, z);
         }
+		free(atoms);
     }
 
     msg("\n\n");
@@ -361,7 +364,7 @@ void print_pair_energy(struct state *state) {
 		error("Ligand index is out of bound");
     check_fail(efp_get_frag_name(state->efp, ligand_index, sizeof(ligand),ligand));
     check_fail(efp_get_frag_atom_count(state->efp, ligand_index, &lig_atoms));
-    struct efp_atom latoms[lig_atoms];
+    struct efp_atom *latoms = xcalloc(lig_atoms, sizeof(struct efp_atom));
     check_fail(efp_get_frag_atoms(state->efp, ligand_index, lig_atoms, latoms));
 
     char frag_name[32];
@@ -372,7 +375,7 @@ void print_pair_energy(struct state *state) {
         check_fail(efp_get_frag_name(state->efp, i, sizeof(frag_name),frag_name));
         check_fail(efp_get_frag_atom_count(state->efp, i, &frag_atoms));
 
-        struct efp_atom atoms[frag_atoms];
+        struct efp_atom *atoms = xcalloc(frag_atoms, sizeof(struct efp_atom));
         check_fail(efp_get_frag_atoms(state->efp, i, frag_atoms, atoms));
 
         msg("   PAIRWISE ENERGY BETWEEN FRAGMENT %zu (%s) AND LIGAND %zu (%s) \n", i, frag_name, ligand_index, ligand);
@@ -392,8 +395,10 @@ void print_pair_energy(struct state *state) {
             double z = latoms[a].z * BOHR_RADIUS;
             msg("   %-16s %12.6lf %12.6lf %12.6lf\n", latoms[a].label, x, y, z);
         }
-        msg("\n");
 
+		free(atoms);
+        
+		msg("\n");
         msg("    PAIRWISE ENERGY COMPONENTS (ATOMIC UNITS)\n");
         msg("%40s %16.10lf\n", "PAIRWISE ELECTROSTATIC ENERGY", energies[i].electrostatic);
         msg("%40s %16.10lf\n", "PAIRWISE POLARIZATION ENERGY", energies[i].polarization);
@@ -416,6 +421,7 @@ void print_pair_energy(struct state *state) {
         lattice_energy[5] = lattice_energy[5] + energies[i].total;
     }
     free(energies);
+	free(latoms);
 
     msg("    LATTICE ENERGY COMPONENTS (ATOMIC UNITS)\n");
     msg("%40s %16.10lf\n", "LATTICE ELECTROSTATIC ENERGY", lattice_energy[0]);

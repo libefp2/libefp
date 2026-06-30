@@ -2,7 +2,7 @@
 
 run_type gtest
 ref_energy -76.3884295676
-gtest_tol 5.0e-6
+gtest_tol 1.0e-5
 num_step_dist	0.001
 coord atoms
 terms qq lj

@@ -63,7 +63,8 @@ enum run_type {
 	RUN_TYPE_ELPOT,
     RUN_TYPE_FRAG_ELPOT,
 	RUN_TYPE_GTEST,
-	RUN_TYPE_ETEST
+	RUN_TYPE_ETEST,
+	RUN_TYPE_OPTTEST
 };
 
 enum ensemble_type {

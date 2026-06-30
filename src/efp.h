@@ -41,7 +41,7 @@ extern "C" {
 #endif
 
 /** Version string. */
-#define LIBEFP_VERSION_STRING "2.0.0"
+#define LIBEFP_VERSION_STRING "3.0.0"
 
 /** Result of an operation. */
 enum efp_result {
@@ -1597,7 +1597,7 @@ enum efp_result efp_get_pairwise_energy(struct efp *efp,
  * \param[in] total energy and energy components of each ligand-fragment pair
  *
  */
-//enum efp_result efp_set_pairwise_energy(struct efp *efp, struct efp_energy *pair_energies);
+enum efp_result efp_set_pairwise_energy(struct efp *efp, struct efp_energy *pair_energies);
 
 /**
  * Prepares information for computing symmetric crystals. Sets the symmetry list, nsymm_frag AND skiplist

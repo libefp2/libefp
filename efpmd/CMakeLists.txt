@@ -1,16 +1,14 @@
 
-if(NOT DEFINED torch_switch)
-    if(DEFINED ENV{TORCH_SWITCH})
-        set(torch_switch $ENV{TORCH_SWITCH})
-    else()
-        set(torch_switch OFF)
-    endif()
+option(TORCH_SWITCH "Enable Torch library integration" ${TORCH_SWITCH})
+
+if(TORCH_SWITCH)
+ add_library(ctorch OBJECT torch/c_libtorch.cc)
 endif()
 
-option(torch_switch "Enable Torch library integration" ${TORCH_SWITCH})
-
-if(torch_switch)
-    add_definitions(-DTORCH_SWITCH)
+if(TORCH_SWITCH)
+  message("TORCH_INSTALL_PREFIX =  ${TORCH_INSTALL_PREFIX}")
+  message("TORCH_LIBRARIES =  ${TORCH_LIBRARIES}")
+  message("TORCH_INCLUDE_DIRS =  ${TORCH_INCLUDE_DIRS}")
 endif()
 
 add_library(
@@ -28,12 +26,7 @@ add_library(
     libopt/timer.f
   )
 
-if(torch_switch)
- find_package(Torch REQUIRED)
- add_library(ctorch OBJECT torch/c_libtorch.cc)
-endif()
-
-if(torch_switch)
+if(TORCH_SWITCH)
   message(STATUS "Torch integration enabled.")
   add_executable(
     efpmd
@@ -74,16 +67,6 @@ else()
   )
 endif()
  
-#set(TORCH_INCLUDE_DIRS "/depot/lslipche/data/skp/libtorch/include/;/depot/lslipche/data/skp/libtorch/include/torch/csrc/api/include")
-
-set(TORCH_INCLUDE_DIRS "$ENV{LIBTORCH_INCLUDE_DIRS}" CACHE PATH "Torch include directories")
-
-if(torch_switch)
-  message("TORCH_INSTALL_PREFIX =  ${TORCH_INSTALL_PREFIX}")
-  message("TORCH_LIBRARIES =  ${TORCH_LIBRARIES}")
-  message("TORCH_INCLUDE_DIRS =  ${TORCH_INCLUDE_DIRS}")
-endif()
-
 #CXX_STANDARD 14
 
 set_target_properties(efpmd PROPERTIES
@@ -91,7 +74,7 @@ set_target_properties(efpmd PROPERTIES
   CXX_STANDARD_REQUIRED YES
 )
 
-if(torch_switch)
+if(TORCH_SWITCH)
   target_include_directories(
   ctorch
   PRIVATE
@@ -99,7 +82,7 @@ if(torch_switch)
   )
 endif()
 
-if(torch_switch)
+if(TORCH_SWITCH)
   target_include_directories(
   efpmd
   PRIVATE
@@ -119,7 +102,7 @@ else()
   )
 endif()
 
-if(torch_switch)
+if(TORCH_SWITCH)
   target_link_libraries(
   ctorch
   PUBLIC
@@ -127,7 +110,7 @@ if(torch_switch)
   )
 endif()
 
-if(torch_switch)
+if(TORCH_SWITCH)
   target_link_libraries(
   efpmd
   PUBLIC
@@ -149,15 +132,14 @@ else()
   )
 endif()
 
-
 target_compile_definitions(
   efpmd
   PRIVATE
     $<BUILD_INTERFACE:FRAGLIB_PATH="/../fraglib">
     $<INSTALL_INTERFACE:FRAGLIB_PATH="${CMAKE_INSTALL_DATADIR}/${efp}/fraglib">
     $<BUILD_INTERFACE:ML_PATH="../nnlib/">
-#    $<INSTALL_INTERFACE:ML_PATH="${CMAKE_INSTALL_DATADIR}/${efp}/nnlib">
-  )
+    $<INSTALL_INTERFACE:ML_PATH="${CMAKE_INSTALL_DATADIR}/${efp}/nnlib">
+)
 
 add_executable(${efp}::efpmd ALIAS efpmd)
 
