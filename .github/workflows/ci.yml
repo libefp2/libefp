@@ -124,6 +124,7 @@ jobs:
             - fortran-compiler
             #- dpcpp_linux-64
             - blas-devel
+            - mkl<2026.0.0
             #MKL- libblas=*=*mkl
             #ACC- libblas=*=*accelerate
             #OBL- libblas=*=*openblas
