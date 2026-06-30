@@ -553,7 +553,8 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
             special_xr = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_XR);
             special_elec = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_ELEC);
             special_disp = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_DISP);
-            special_qq = (!if_special_fragment) || (if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_QQ));
+            //special_qq = (!if_special_fragment) || (if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_QQ));
+            special_qq = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_QQ);
             special_lj = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_LJ);
 
 			if (!efp_skip_frag_pair(efp, i, fr_j)) {
@@ -2948,6 +2949,16 @@ efp_get_pairwise_energy(struct efp *efp, struct efp_energy *pair_energies){
 
         memcpy(pair_energies, efp->pair_energies, efp->n_frag * sizeof(struct efp_energy));
         return EFP_RESULT_SUCCESS;
+}
+
+EFP_EXPORT enum efp_result
+efp_set_pairwise_energy(struct efp *efp, struct efp_energy *pair_energies)
+{
+    assert(efp);
+    assert(pair_energies);
+
+    memcpy(efp->pair_energies, pair_energies, efp->n_frag * sizeof(struct efp_energy));
+    return EFP_RESULT_SUCCESS;
 }
 
 EFP_EXPORT enum efp_result

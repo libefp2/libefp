@@ -1,5 +1,5 @@
 run_type gtest
-ref_energy -76.3938952213
+ref_energy -76.4627607720 
 gtest_tol 5.0e-6
 num_step_dist   0.001
 coord atoms

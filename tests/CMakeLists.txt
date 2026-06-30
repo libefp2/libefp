@@ -93,7 +93,8 @@ foreach(test_name
   qm_1b
   qm_2a
   qm_2b
-  reduced
+  reduced_1
+  reduced_2
   sp_1
   sp_2
   spec_frag_1
@@ -139,14 +140,19 @@ endforeach()
 # --- Torch-Specific Tests ---
 if(TORCH_SWITCH)
     set(torch_tests
+        torch_elpot
         #torch_efp_1
         torch_efp_2
         torch_efp_3
+        torch_efp_4
+        #torch_efp_5
         torch_gas_gtest
         torch_gas_opt
         torch_mm_gtest_1
         #torch_mm_opt_1
         torch_mm_opt_2
+        #torch_mm_opt_3
+        #torch_mm_opt_4
     )
 
     foreach(test_name ${torch_tests})

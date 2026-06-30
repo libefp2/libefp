@@ -366,7 +366,7 @@ void sim_opt(struct state *state)
                 printf("\n");
             }
 
-            msg("\nOPTIMIZATION CONVERGED IN %d STEPS\n", step);
+            msg("\nOPTIMIZATION CONVERGED IN %d STEPS\n\n", step);
             if_converged = true;
             break;
         }
@@ -385,10 +385,10 @@ void sim_opt(struct state *state)
         e_old = e_new;
     }
 
-    if (!if_converged) msg("\nOPTIMIZATION HAS NOT CONVERGED\n");
+    if (!if_converged) msg("\nWARNING!  OPTIMIZATION HAS NOT CONVERGED\n\n");
 
     opt_shutdown(opt_state);
 
-    msg("ENERGY MINIMIZATION JOB COMPLETED SUCCESSFULLY\n");
+    msg("ENERGY MINIMIZATION JOB COMPLETED\n");
 }
 

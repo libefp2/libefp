@@ -411,6 +411,6 @@ void sim_opttest(struct state *state)
     sim_opt(state);
     msg("\n");
     test_energy(state);
-
+    msg("\n");
     msg("GEOMETRY OPTIMIZATION TEST JOB COMPLETED SUCCESSFULLY\n");
 }
