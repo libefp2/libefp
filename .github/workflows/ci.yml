@@ -304,6 +304,7 @@ jobs:
           export PYTHONPATH="${LIB_PATH}${SEP}${TEST_PATH}"
           echo "PYTHONPATH is set to: $PYTHONPATH"
           # PYTHONPATH="${{ github.workspace }}/installed/lib:${{ github.workspace }}/installed/lib/pylibefp/tests" \
+          export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}"
           
           # Run Pytest
           pytest -s --cache-clear -v -rws --color=yes \
