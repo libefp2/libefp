@@ -7,6 +7,12 @@ from qcelemental.testing import compare, compare_recursive, compare_values
 
 from systems import *
 
+print(pylibefp, pylibefp.__file__)
+print(dir(pylibefp))
+
+core = pylibefp.core
+from_dict = pylibefp.from_dict
+to_dict = pylibefp.to_dict
 
 def blank_ene():
     fields = [

@@ -1484,6 +1484,21 @@ def nuclear_repulsion_energy(efpobj, use_efp_frags=True, use_point_charges=False
 
     return nre
 
+# SG
+def get_elec_potential(efpobj, ifr, xyz):
+
+    (res, elpot) = efpobj._efp_get_elec_potential(ifr, xyz)
+    _result_to_error(res)
+
+    return elpot
+
+def get_frag_atomic_gradient(efpobj, ifr):
+
+    (res, grad) = efpobj._efp_get_frag_atomic_gradient(ifr)
+    _result_to_error(res)
+
+    return grad
+
 
 #def _frag_idx_validation(efpobj, ifr):
 #    nfr = efpobj.get_frag_count()
@@ -1942,6 +1957,8 @@ core.efp.get_wavefunction_dependent_energy = get_wavefunction_dependent_energy
 core.efp.set_periodic_box = set_periodic_box
 core.efp.get_periodic_box = get_periodic_box
 core.efp.get_frag_xyzabc = get_frag_xyzabc
+core.efp.get_elec_potential = get_elec_potential
+core.efp.get_frag_atomic_gradient = get_frag_atomic_gradient
 
 core.efp.get_frag_atoms = get_frag_atoms
 core.efp.get_atoms = get_atoms

@@ -398,6 +398,45 @@ py::tuple _efp_get_frag_atoms(efp* efp, size_t frag_idx, size_t frag_natom) {
     return rets;
 }
 
+// Satarupa's changes: wrapping get_elec_potential and get_frag_atom_gradient
+
+py::tuple _efp_get_elec_potential(efp* efp, size_t frag_idx, py::list xyz) {
+
+    enum efp_result res;
+    double elpot = 0.0;
+
+    double pxyz[3];
+    for (size_t i = 0; i < 3; i++) pxyz[i] = py::cast<double>(xyz[i]);
+    res = efp_get_elec_potential(efp, frag_idx, pxyz, &elpot);
+
+    py::tuple rets = py::make_tuple(res, elpot);
+
+    return rets;
+}
+
+py::tuple _efp_get_frag_atomic_gradient(efp* efp, size_t frag_idx) {
+
+    enum efp_result resa, res;
+    size_t n_atoms;
+
+    resa = efp_get_frag_atom_count(efp, frag_idx, &n_atoms);
+
+    double* grad = new double[3 * n_atoms];
+
+    res = efp_get_frag_atomic_gradient(efp, frag_idx, grad);
+
+    py::list gradlist;
+    for (size_t ic = 0; ic < 3 * n_atoms; ++ic) gradlist.append(grad[ic]);
+    delete[] grad;
+
+
+    py::tuple rets = py::make_tuple(res, gradlist);
+
+    return rets;
+
+}
+
+
 // py::dict extend_efp_get_atoms(efp* efp) {
 //    enum efp_result res;
 //    size_t frag_natom, natom=0;
@@ -789,6 +828,8 @@ PYBIND11_MODULE(core, m) {
              py::arg("frag_idx"), py::arg("frag_natom"))
         .def("get_electric_field", &efp_get_electric_field,
              "Gets electric field for a point on 0-indexed fragment *arg0* and returns it in *arg1*")
+        .def("_efp_get_elec_potential", &_efp_get_elec_potential, "Wrapped: Gets value of the elelctric potential at any point on specified              fragment", py::arg("frag_idx"), py::arg("xyz"))
+        .def("_efp_get_frag_atomic_gradient", &_efp_get_frag_atomic_gradient, "Wrapped: Gets computed EFP energy gradient on individual atoms of specified fragment", py::arg("frag_idx"))
         .def("torque_to_derivative", &efp_torque_to_derivative,
              "Convert rigid body torque *arg1* to derivatives *arg2* of energy by Euler angles *arg0*")
         .def("clean", &_clean, "Preferred destructor combining libefp::efp_shutdown and field_fn release")

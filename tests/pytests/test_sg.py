@@ -3,13 +3,14 @@ from qcelemental.testing import compare, compare_values
 import pprint
 import pytest
 import os
-
-FILES = [
+import numpy as np
+"""FILES = [
     'atom_coord.in', 'atom_coord_2.in', 'grad_1.in', 'lj_1.in', 'lj_2.in',
     'pairwise_0.in', 'pairwise_1.in', 'pairwise_2.in', 'pairwise_x.in', 'pbc_1.in', 'pbc_2.in',
     'reduced_1.in', 'spec_frag_1.in', 'spec_frag_2.in', 'spec_frag_base.in', 
     'symm_1.in', 'symm_2.in', 'symm_2full.in', 'symm_2pw.in'
-]
+]"""
+FILES = ['libefp.inp']
 
 b2a = 0.529177
 a2b = 1.0 / b2a
@@ -17,16 +18,18 @@ a2b = 1.0 / b2a
 def frag_setup(test_name, pyjob_prepper):
     # coordinates in Bohr
     coord_type, frags, frag_coords, efp_options, if_gradient, ref_energy, periodic_box = pyjob_prepper(test_name)
-    #print(frag_coords)
+    print('Frag coords:', frag_coords)
 
     efp = pylibefp.core.efp()
-    efp.add_potential(frags)
+    efp.add_potential(frags, fragpath = ".")
     efp.add_fragment(frags)
     for i in range(len(frags)):
         efp.set_frag_coordinates(i, coord_type, frag_coords[i])
     efp.prepare()
-
+    
+    #efp_options.update({'elec': True, 'pol': True, 'disp': True, 'xr' : True})
     efp.set_opts(efp_options)
+    
     if periodic_box:
         #print('box1', periodic_box)
         efp.set_periodic_box(periodic_box)
@@ -36,7 +39,27 @@ def frag_setup(test_name, pyjob_prepper):
     #pprint.pprint(efp_options)
     efp.compute(do_gradient = if_gradient)
     ene = efp.get_energy()
+    
 
+    print("Gradient on atoms of ligand:\n")
+    
+    liggrad = efp.get_frag_atomic_gradient(1)
+    liggrad = np.array(liggrad).reshape(-1,3)
+    print(liggrad/b2a)
+    print()
+    print("Potential:\n")
+    for frag in frags:
+        if frag == 'lig':
+            #nat = efp.get_frag_atom_count(frags.index(frag))
+            if coord_type == 'points' or coords == 'xyzabc':
+                
+                atoms = efp.get_frag_atoms(frags.index(frag))
+                for atom in atoms:
+                    xyz = [atom["x"], atom["y"], atom["z"]]
+                    potential = efp.get_elec_potential(frags.index(frag), xyz)
+                    print(np.array(xyz) * b2a, potential)
+    
+    
     # print pairwise components
     #if 'enable_pairwise' in efp_options.keys():
     #    if efp_options['enable_pairwise'] in [True, 'true', 1]:
@@ -68,5 +91,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 @pytest.mark.parametrize("filename", FILES)
 def test_frag_setup(filename, pyjob_prepper):
     print(f'\nComputing {filename}...')
-    full_path = os.path.join(BASE_DIR, '..', filename)
+    full_path = os.path.join(BASE_DIR, '', filename)
     frag_setup(full_path, pyjob_prepper)
+
+if __name__ == "__main__":
+    test_frag_setup()
