@@ -91,6 +91,7 @@ foreach(test_name
   pairwise_0
   pairwise_1
   pairwise_2
+  pairwise_ligand_1
   pairwise_x
   parse_labels_1a
   parse_labels_1b

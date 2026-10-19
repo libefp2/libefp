@@ -530,6 +530,9 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 
 	// ligand is a fragment (not QM)
 	bool if_pairwise = efp->opts.enable_pairwise && efp->opts.ligand > -1;
+	// two-body terms only for the pairs with the ligand
+	bool ligand_only = efp->opts.enable_pairwise && efp->opts.pairwise_ligand_only;
+	size_t ligand = efp->opts.ligand > -1 ? (size_t)efp->opts.ligand : efp->n_frag;
 
 #ifdef _OPENMP
 #pragma omp parallel for schedule(dynamic) reduction(+:e_elec,e_disp,e_xr,e_cp,e_qq,e_lj)
@@ -561,6 +564,9 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 			}
 			else
 				fr_j = (i + 1 + k) % efp->n_frag;
+
+			if (ligand_only && i != ligand && fr_j != ligand)
+				continue;
 
             double e_elec_tmp = 0.0, e_disp_tmp = 0.0, e_qq_tmp = 0.0;
 
@@ -1788,7 +1794,27 @@ compute(struct efp *efp, int do_gradient)
 
 	efp->do_gradient = do_gradient;
 
+	if (efp->opts.pairwise_ligand_only) {
+		if (!efp->opts.enable_pairwise) {
+			efp_log("pairwise_ligand_only requires enable_pairwise");
+			return EFP_RESULT_FATAL;
+		}
+		if (efp->opts.symmetry) {
+			efp_log("pairwise_ligand_only is not available with symmetry");
+			return EFP_RESULT_FATAL;
+		}
+		if (do_gradient) {
+			efp_log("gradients are not available with pairwise_ligand_only");
+			return EFP_RESULT_FATAL;
+		}
+	}
+
 	if (efp_counter == 0) {
+        if (efp->opts.pairwise_ligand_only)
+            printf(" NOTE: pairwise_ligand_only: two-body energies (electrostatic, "
+                "dispersion, exchange repulsion, charge penetration) include only "
+                "the fragment pairs with the ligand; the total energy is not the "
+                "energy of the system\n");
         if ((res = check_params(efp))) {
             efp_log("check_params() failure");
             return res;

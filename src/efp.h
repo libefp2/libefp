@@ -196,6 +196,12 @@ struct efp_opts {
     /** Index of ligand for enable_pairwise.
      * default = 0 (ie the first fragment); -1 defines the ligand to be a QM region. */
     int ligand;
+    /** With enable_pairwise: compute the two-body terms (electrostatics,
+     * dispersion, exchange repulsion, charge penetration) only for the
+     * fragment pairs with the ligand. Polarization is computed for the whole
+     * system as usual. The total energy is then not the energy of the system,
+     * and gradients are not available. */
+    int pairwise_ligand_only;
     /** Index of a special (QM or ML) fragment */
     int special_fragment;
     /** Is 1 for periodic symmetric system (ctystal lattice). Default is 0 */

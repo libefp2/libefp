@@ -170,6 +170,7 @@ static struct cfg *make_cfg(void)
 
 	cfg_add_int(cfg, "ligand", -100);
     cfg_add_bool(cfg, "enable_pairwise", false);
+    cfg_add_bool(cfg, "pairwise_ligand_only", false);
     cfg_add_bool(cfg, "print_pbc", false);
     cfg_add_bool(cfg, "print_geometry", true);
     cfg_add_bool(cfg, "symmetry", false);
@@ -376,6 +377,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 		.xr_cutoff = cfg_get_double(cfg, "xr_cutoff"),
         .enable_pairwise = cfg_get_bool(cfg, "enable_pairwise"), 
         .ligand = cfg_get_int(cfg, "ligand"),
+        .pairwise_ligand_only = cfg_get_bool(cfg, "pairwise_ligand_only"),
         .special_fragment = cfg_get_int(cfg, "special_fragment"),
         .symmetry = cfg_get_bool(cfg, "symmetry"),
         .symm_frag = cfg_get_enum(cfg, "symm_frag"),
