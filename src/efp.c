@@ -1742,10 +1742,14 @@ efp_compute(struct efp *efp, int do_gradient)
 
 	/* neighbor lists for the current positions, used by the pair loops
 	 * only during this computation */
+	double t0 = efp_wall_time();
 	if ((res = efp_build_neighbors(efp))) {
 		efp_log("efp_build_neighbors() failure");
 		return res;
 	}
+	if (efp->opts.print > 0 && efp->nbr_valid)
+		printf(" TIMING neighbor lists %10.2f s (%zu pairs)\n",
+		    efp_wall_time() - t0, efp->nbr_offset[efp->n_frag] / 2);
 	/* per-thread stress tensors */
 #ifdef _OPENMP
 	size_t n_thr = (size_t)omp_get_max_threads();
@@ -1803,6 +1807,8 @@ compute(struct efp *efp, int do_gradient)
         efp_log("zero_atomic_gradient(efp) failure");
         return res;
     }
+	double t_start = efp_wall_time();
+
 	if (efp->opts.symmetry == 0) { // standard case
         efp_balance_work(efp, compute_two_body_range, NULL);
 	}
@@ -1810,10 +1816,19 @@ compute(struct efp *efp, int do_gradient)
         compute_two_body_crystal(efp);
     }
 
+	double t_two_body = efp_wall_time();
+	if (efp->opts.print > 0)
+		printf(" TIMING two-body terms (elec, disp, xr%s) %10.2f s\n",
+		    efp->do_gradient ? ", with gradient" : "", t_two_body - t_start);
+
 	if ((res = efp_compute_pol(efp))) {
         efp_log("efp_compute_pol() failure");
         return res;
     }
+
+	double t_pol = efp_wall_time();
+	if (efp->opts.print > 0)
+		printf(" TIMING polarization total %10.2f s\n", t_pol - t_two_body);
     if ((res = efp_compute_ai_elec(efp))){
         efp_log("efp_compute_ai_elec() failure");
         return res;

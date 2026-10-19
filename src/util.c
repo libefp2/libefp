@@ -25,9 +25,20 @@
  */
 
 #include <ctype.h>
+#include <time.h>
 
 #include "private.h"
 #include "util.h"
+
+/* monotonic wall clock time in seconds (for timing printouts) */
+double
+efp_wall_time(void)
+{
+	struct timespec ts;
+
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	return (double)ts.tv_sec + 1.0e-9 * (double)ts.tv_nsec;
+}
 
 int
 efp_skip_frag_pair(const struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)

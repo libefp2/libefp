@@ -1049,8 +1049,12 @@ efp_compute_pol_energy(struct efp *efp, double *energy)
 	static int counter = 0;
     // think how to skip recomputing static field in qm scf iterations
     // check on efp->do_gradient breaks gtests...
+    double t0 = efp_wall_time();
     if ((res = compute_elec_field(efp)))
         return res;
+    double t1 = efp_wall_time();
+    if (efp->opts.print > 0)
+        printf(" TIMING polarization: static field %10.2f s\n", t1 - t0);
 
 	switch (efp->opts.pol_driver) {
 	case EFP_POL_DRIVER_ITERATIVE:
@@ -1064,6 +1068,10 @@ efp_compute_pol_energy(struct efp *efp, double *energy)
 	if (res)
 		return res;
 
+    double t2 = efp_wall_time();
+    if (efp->opts.print > 0)
+        printf("\n TIMING polarization: induced dipoles %10.2f s\n", t2 - t1);
+
 	if (efp->opts.print > 3) {
         for (int i = 0; i < efp->n_frag; i++) {
             printf("Fragment %d\n", i);
@@ -1076,6 +1084,8 @@ efp_compute_pol_energy(struct efp *efp, double *energy)
 	*energy = 0.0;
 	efp_balance_work(efp, compute_energy_range, energy);
 	efp_allreduce(energy, 1);
+    if (efp->opts.print > 0)
+        printf(" TIMING polarization: energy %10.2f s\n", efp_wall_time() - t2);
 
     efp_balance_work(efp, copy_indip_gs, NULL);
 
@@ -1406,8 +1416,12 @@ efp_compute_pol(struct efp *efp)
         if ((res = efp_compute_pol_energy(efp, &efp->energy.polarization)))
             return res;
 
-        if (efp->do_gradient)
+        if (efp->do_gradient) {
+            double t0 = efp_wall_time();
             efp_balance_work(efp, compute_grad_range, NULL);
+            if (efp->opts.print > 0)
+                printf(" TIMING polarization: gradient %10.2f s\n", efp_wall_time() - t0);
+        }
     }
 	// for symmetric crystals only
 	else {
