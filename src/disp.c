@@ -290,10 +290,16 @@ efp_frag_frag_disp(struct efp *efp, size_t frag_i, size_t frag_j,
         size_t n_disp_j = fr_j->n_dynamic_polarizable_pts;
 
 
+        /* s and ds (LMO overlaps, one LMO per dynamic polarizable point) exist
+         * only when both fragments have LMOs; they are used only for overlap
+         * damping, which requires n_lmo == n_dynamic_polarizable_pts */
+        six_t ds_zero = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
         for (size_t ii = 0, idx = 0; ii < n_disp_i; ii++)
             for (size_t jj = 0; jj < n_disp_j; jj++, idx++)
                 energy += point_point_disp(efp, frag_i, frag_j, ii, jj,
-                                           s[idx], ds[idx], &swf);
+                                           s ? s[idx] : 0.0,
+                                           ds ? ds[idx] : ds_zero, &swf);
 
         vec_t force = {
                 swf.dswf.x * energy,

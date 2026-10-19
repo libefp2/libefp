@@ -89,6 +89,38 @@ skip_label(struct stream *stream)
 	return efp_stream_current_char(stream) != '\0';
 }
 
+/*
+ * Skip the label of a polarizable point or LMO centroid. GAMESS writes it as
+ * 'CT',I1 / 'CT',I2 / 'CT',I3 followed by 3F15.10 (static polarizable points and LMO
+ * centroids: "CT1", "CT12", "CT123"; dynamic and dipole-quadrupole points always
+ * 'CT',I3: "CT  1", "CT 12", "CT123"), so neither a fixed number of characters
+ * nor a whitespace-delimited token is right: the label length varies, contains
+ * blanks for I3 and runs into a negative coordinate that fills its F15.10 field
+ * ("CT1-132.2805782867"). Skip "CT", blanks and the index digits (or the asterisks
+ * of an overflowed index) and stop at the first coordinate. Labels that do not
+ * start with "CT" are skipped as a token.
+ */
+static int
+skip_ct_label(struct stream *stream)
+{
+	efp_stream_skip_space(stream);
+
+	if (efp_stream_eol(stream))
+		return 0;
+
+	if (efp_strncasecmp(efp_stream_get_ptr(stream), "CT", 2) != 0)
+		return skip_label(stream);
+
+	efp_stream_advance(stream, 2);
+	efp_stream_skip_space(stream);
+
+	while (isdigit((unsigned char)efp_stream_current_char(stream)) ||
+	    efp_stream_current_char(stream) == '*')
+		efp_stream_get_char(stream);
+
+	return !efp_stream_eol(stream);
+}
+
 static int
 tok_label(struct stream *stream, size_t size, char *val)
 {
@@ -99,8 +131,20 @@ tok_label(struct stream *stream, size_t size, char *val)
 	if (efp_stream_eol(stream))
 		return 0;
 
+	/* GAMESS writes these labels as an A8 field followed by F15.10 numbers, so a
+	 * full 8-character label ("BO123124") runs into a negative number that fills
+	 * its field ("BO123124-132.2805782867"): end the label there */
 	start = efp_stream_get_ptr(stream);
-	efp_stream_skip_nonspace(stream);
+	for (size_t n = 0; ; n++) {
+		char c = efp_stream_current_char(stream);
+
+		if (c == '\0' || isspace((unsigned char)c))
+			break;
+		if (n == 8 && c == '-' && (isdigit((unsigned char)start[n + 1]) ||
+		    start[n + 1] == '.'))
+			break;
+		efp_stream_get_char(stream);
+	}
 	end = efp_stream_get_ptr(stream);
 	memset(val, 0, size);
 
@@ -484,7 +528,7 @@ parse_polarizable_pts(struct frag *frag, struct stream *stream)
 		// zero out all entries
         memset(pt, 0, sizeof(struct polarizable_pt));
  
-		if (!efp_stream_advance(stream, 4)){
+		if (!skip_ct_label(stream)){
             efp_log("parse_polarizable_pts() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -546,7 +590,7 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
         memset(pt, 0, sizeof(*pt));
 
 
-		if (!efp_stream_advance(stream, 5)){
+		if (!skip_ct_label(stream)){
             efp_log("parse_dynamic_polarizable_pts() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -597,7 +641,7 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 			struct dynamic_polarizable_pt *pt =
 			    frag->dynamic_polarizable_pts + i;
 
-			if (!efp_stream_advance(stream, 5)){
+			if (!skip_ct_label(stream)){
                 efp_log("parse_dynamic_polarizable_pts() failure for fragment %s", frag->name);
                 return EFP_RESULT_SYNTAX_ERROR;
             }
@@ -648,6 +692,8 @@ parse_projection_basis(struct frag *frag, struct stream *stream)
 		if (tok_stop(stream))
 			return EFP_RESULT_SUCCESS;
 
+		/* GAMESS writes the atom line as FORMAT(A8,A2,3F15.10,1X,F6.1): the label is a
+		 * fixed-width field, the A2 part is blank, so skipping 8 characters is correct */
 		if (!efp_stream_advance(stream, 8)){
             printf("problem with fragment %s", frag->name);
             efp_log("parse_projection_basis() failure");
@@ -785,6 +831,8 @@ parse_projection_wf(struct frag *frag, struct stream *stream)
 
 	for (size_t j = 0; j < frag->n_lmo; j++) {
 		for (size_t i = 0; i < frag->xr_wf_size / 5; i++) {
+			/* GAMESS writes FORMAT(I2,I3,5E15.8): the coefficients follow a fixed 5-character
+			 * index field and are not separated by blanks, so skip exactly 5 characters */
 			if (!efp_stream_advance(stream, 5)){
                 printf("problem with fragment %s, reading wf coefficients", frag->name);
                 efp_log("parse_projection_wf() failure");
@@ -869,7 +917,7 @@ parse_lmo_centroids(struct frag *frag, struct stream *stream)
 	for (size_t i = 0; i < frag->n_lmo; i++) {
 		vec_t *ct = frag->lmo_centroids + i;
 
-		if (!skip_label(stream) ||
+		if (!skip_ct_label(stream) ||
 		    !tok_double(stream, &ct->x) ||
 		    !tok_double(stream, &ct->y) ||
 		    !tok_double(stream, &ct->z)){
@@ -993,10 +1041,10 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
 
         struct dipquad_polarizable_pt *pt =
                 frag->dipquad_polarizable_pts +
-                frag->n_dynamic_polarizable_pts - 1;
+                frag->n_dipquad_polarizable_pts - 1;
         memset(pt, 0, sizeof(*pt));
 
-        if (!efp_stream_advance(stream, 5)){
+        if (!skip_ct_label(stream)){
             printf("problem with fragment %s", frag->name);
             efp_log("parse_dipquad_polarizable_pts() failure");
             return EFP_RESULT_SYNTAX_ERROR;
@@ -1070,7 +1118,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
             struct dipquad_polarizable_pt *pt =
                     frag->dipquad_polarizable_pts + i;
 
-            if (!efp_stream_advance(stream, 5)){
+            if (!skip_ct_label(stream)){
                 printf("problem with fragment %s", frag->name);
                 efp_log("parse_dipquad_polarizable_pts() failure");
                 return EFP_RESULT_SYNTAX_ERROR;

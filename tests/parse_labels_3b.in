@@ -1,0 +1,21 @@
+# Parser regression test: DIPOLE-QUADRUPOLE DYNAMIC POLARIZABLE POINTS section before the DYNAMIC
+# POLARIZABLE POINTS section (h2o_dipquad.efp; tests/tools/make_parse_test_fragments.py). The section
+# does not enter the energy, which must equal the one with h2o_l (parse_labels_3a).
+run_type gtest
+ref_energy 0.0071752936
+coord points
+terms elec pol disp xr
+elec_damp screen
+pol_damp tt
+disp_damp overlap
+fraglib_path ../fraglib
+
+fragment h2o_dipquad
+    0.000000     0.063030     0.000000
+   -0.752652    -0.500166     0.000000
+    0.752652    -0.500166     0.000000
+
+fragment nh3_l
+    0.300000     0.400000     2.936823
+   -0.166791    -0.408506     3.292603
+   -0.166791     1.208506     3.292603

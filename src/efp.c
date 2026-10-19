@@ -558,8 +558,9 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
             special_lj = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_LJ);
 
 			if (!efp_skip_frag_pair(efp, i, fr_j)) {
-				double *s;
-				six_t *ds;
+				/* LMO overlap integrals, only computed when both fragments have LMOs */
+				double *s = NULL;
+				six_t *ds = NULL;
 				size_t n_lmo_ij = efp->frags[i].n_lmo *
 				    efp->frags[fr_j].n_lmo;
 
@@ -680,8 +681,9 @@ compute_two_body_crystal(struct efp *efp)
             if ( fr_j != i && !efp_skip_frag_pair(efp, i, fr_j)) {
 
                 struct frag *fragj = efp->frags + fr_j;
-                double *s;
-                six_t *ds;
+                /* LMO overlap integrals, only computed when both fragments have LMOs */
+                double *s = NULL;
+                six_t *ds = NULL;
                 size_t n_lmo_ij = efp->frags[i].n_lmo *
                                   efp->frags[fr_j].n_lmo;
                 // if need to compute exrep and overlap screening for this pair

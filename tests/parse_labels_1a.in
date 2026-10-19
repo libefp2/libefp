@@ -1,0 +1,21 @@
+# Parser regression test: polarizable point labels CT100 and above (five characters).
+# pentacene_2x.efp = pentacene + a copy 400 bohr away in one fragment; the polarizable points of the
+# first molecule are CT52 ... CT102 (tests/tools/make_parse_test_fragments.py). The energy must equal
+# the one with pentacene_l (parse_labels_1a).
+run_type gtest
+ref_energy -0.0045488666
+coord points
+terms elec pol
+elec_damp screen
+pol_damp tt
+fraglib_path ../fraglib
+
+fragment pentacene_l
+    3.636109    -0.722305     0.000000
+    4.911087    -1.405659     0.000000
+    6.058717    -0.722932     0.000000
+
+fragment h2o_l
+    1.200000     0.000000     3.363030
+    0.447348     0.000000     2.799834
+    1.952652     0.000000     2.799834

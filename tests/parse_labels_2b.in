@@ -1,0 +1,25 @@
+# Parser regression test: labels running into negative coordinates (GAMESS F15.10 / A8 fields), e.g.
+# "CT1-494.2951596447" and "A01CXXXX-493.1287504085" (pentacene_shift.efp, internal frame shifted by
+# -500 bohr; tests/tools/make_parse_test_fragments.py). The energy must equal the one with pentacene_l
+# (parse_labels_2a).
+run_type gtest
+ref_energy -0.0065500989
+# the internal frame of pentacene_shift is 500 bohr away from the molecule: a rotation by the default
+# num_step_angle (0.01) moves it by 5 bohr, too far for the numerical derivative
+num_step_angle 0.00001
+coord points
+terms elec pol disp xr
+elec_damp screen
+pol_damp tt
+disp_damp overlap
+fraglib_path ../fraglib
+
+fragment pentacene_shift
+    3.636109    -0.722305     0.000000
+    4.911087    -1.405659     0.000000
+    6.058717    -0.722932     0.000000
+
+fragment h2o_l
+    1.200000     0.000000     3.363030
+    0.447348     0.000000     2.799834
+    1.952652     0.000000     2.799834
