@@ -102,7 +102,7 @@ charge_penetration_grad(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 	six_atomic_sub_abc(efp->grad + fr_j_idx, &torque_j);
 
 	if (efp->do_gradient) /* the stress tensor is available only with gradients */
-		efp_add_stress(&swf->dr, &force, &efp->stress);
+		efp_add_thread_stress(efp, &swf->dr, &force);
 }
 
 static void
@@ -422,7 +422,7 @@ lmo_lmo_xr_grad(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 	six_atomic_sub_abc(efp->grad + fr_j_idx, &torque_j);
 
 	if (efp->do_gradient) /* the stress tensor is available only with gradients */
-		efp_add_stress(&swf->dr, &force, &efp->stress);
+		efp_add_thread_stress(efp, &swf->dr, &force);
 }
 
 static double
@@ -659,7 +659,7 @@ efp_frag_frag_xr(struct efp *efp, size_t frag_i, size_t frag_j, double *lmo_s,
         six_atomic_add_xyz(efp->grad + frag_i, &force);
         six_atomic_sub_xyz(efp->grad + frag_j, &force);
         if (efp->do_gradient) /* the stress tensor is available only with gradients */
-        	efp_add_stress(&swf.dr, &force, &efp->stress);
+        	efp_add_thread_stress(efp, &swf.dr, &force);
 
         free(s);
         free(ds);

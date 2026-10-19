@@ -85,6 +85,8 @@ foreach(test_name
   md_1
   md_2
   md_3
+  nbr_1
+  nbr_2
   opt_1
   pairwise_0
   pairwise_1

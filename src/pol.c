@@ -197,7 +197,9 @@ get_elec_field(const struct efp *efp, size_t frag_idx, size_t pt_idx)
 
     // ATTENTION! field due to MM atoms is not added here. Is it needed in any circumstances?
 
-	for (size_t i = 0; i < efp->n_frag; i++) {
+	for (size_t kp = 0; kp < efp_n_partners(efp, frag_idx); kp++) {
+		size_t i = efp_partner(efp, frag_idx, kp);
+
 		if (i == frag_idx )
 			continue;
 		// do not use skip list if symmetry is 1
@@ -556,7 +558,9 @@ get_induced_dipole_field(struct efp *efp, size_t frag_idx,
 	*field = vec_zero;
 	*field_conj = vec_zero;
 
-	for (size_t j = 0; j < efp->n_frag; j++) {
+	for (size_t kp = 0; kp < efp_n_partners(efp, frag_idx); kp++) {
+		size_t j = efp_partner(efp, frag_idx, kp);
+
 		if (j == frag_idx)
 			continue;
 		// use skiplist only for no-symmetry systems
@@ -1168,7 +1172,8 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
             0.5 * (pt_i->indip.z + pt_i->indipconj.z),
     };
 
-    for (size_t j = 0; j < efp->n_frag; j++) {
+    for (size_t kp = 0; kp < efp_n_partners(efp, frag_idx); kp++) {
+        size_t j = efp_partner(efp, frag_idx, kp);
 
     	/* energy without switching applied */
 		energy = 0.0;
@@ -1275,7 +1280,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 			vec_scale(&add_j, swf.swf);
 
             if (efp->do_gradient) /* the stress tensor is available only with gradients */
-            	efp_add_stress(&swf.dr, &force, &efp->stress);
+            	efp_add_thread_stress(efp, &swf.dr, &force);
 
             // normal case
             if (not_torch_elpot) {
@@ -1336,7 +1341,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 			vec_scale(&add_j, swf.swf);
 
             if (efp->do_gradient) /* the stress tensor is available only with gradients */
-            	efp_add_stress(&swf.dr, &force, &efp->stress);
+            	efp_add_thread_stress(efp, &swf.dr, &force);
 
             // normal case
             if (not_torch_elpot) {
@@ -1356,7 +1361,7 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 		six_atomic_add_xyz(efp->grad + frag_idx, &force);
 		six_atomic_sub_xyz(efp->grad + j, &force);
 		if (efp->do_gradient) /* the stress tensor is available only with gradients */
-			efp_add_stress(&swf.dr, &force, &efp->stress);
+			efp_add_thread_stress(efp, &swf.dr, &force);
 	}
 
 	/* induced dipole - ab initio nuclei */
@@ -1444,7 +1449,9 @@ efp_get_electric_field(struct efp *efp, size_t frag_idx, const double *xyz,
 	const struct frag *frag = efp->frags + frag_idx;
 	vec_t elec_field = vec_zero;
 
-	for (size_t i = 0; i < efp->n_frag; i++) {
+	for (size_t kp = 0; kp < efp_n_partners(efp, frag_idx); kp++) {
+		size_t i = efp_partner(efp, frag_idx, kp);
+
 		if (i == frag_idx || efp_skip_frag_pair(efp, i, frag_idx))
 			continue;
 
@@ -1534,7 +1541,9 @@ efp_get_elec_potential(struct efp *efp, size_t frag_idx, const double *xyz,
     const struct frag *frag = efp->frags + frag_idx;
     double elpot = 0.0;
 
-    for (size_t i = 0; i < efp->n_frag; i++) {
+    for (size_t kp = 0; kp < efp_n_partners(efp, frag_idx); kp++) {
+        size_t i = efp_partner(efp, frag_idx, kp);
+
         if (i == frag_idx || efp_skip_frag_pair(efp, i, frag_idx))
             continue;
 

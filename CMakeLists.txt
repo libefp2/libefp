@@ -184,6 +184,7 @@ set(raw_sources_list
   electerms.c
   int.c
   log.c
+  pairs.c
   parse.c
   pol.c
   poldirect.c

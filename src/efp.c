@@ -539,8 +539,28 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 		    i < efp->n_frag / 2 ? efp->n_frag / 2 :
 		    efp->n_frag / 2 - 1;
 
-		for (size_t j = i + 1; j < i + 1 + cnt; j++) {
-			size_t fr_j = j % efp->n_frag;
+		/* the pair (i, j) is computed here if j = i + d (mod n_frag) with
+		 * 1 <= d <= cnt; with neighbor lists only the neighbors of i are
+		 * visited, starting after i as in the full loop */
+		size_t n_part = efp->nbr_valid ? efp_n_partners(efp, i) : cnt;
+		size_t start = 0;
+
+		if (efp->nbr_valid)
+			while (start < n_part && efp_partner(efp, i, start) <= i)
+				start++;
+
+		for (size_t k = 0; k < n_part; k++) {
+			size_t fr_j;
+
+			if (efp->nbr_valid) {
+				fr_j = efp_partner(efp, i, (start + k) % n_part);
+				size_t d = (fr_j + efp->n_frag - i) % efp->n_frag;
+
+				if (d < 1 || d > cnt)
+					continue;
+			}
+			else
+				fr_j = (i + 1 + k) % efp->n_frag;
 
             double e_elec_tmp = 0.0, e_disp_tmp = 0.0, e_qq_tmp = 0.0;
 
@@ -677,7 +697,8 @@ compute_two_body_crystal(struct efp *efp)
         // scaling factor that tells how many fragments like this are in the system
         size_t factor = nsymm_frag[k];
 	    // printf("nsymm_frag = %zu\n",factor);
-        for (size_t fr_j=0; fr_j<efp->n_frag; fr_j++){
+        for (size_t kp = 0; kp < efp_n_partners(efp, i); kp++){
+            size_t fr_j = efp_partner(efp, i, kp);
             if ( fr_j != i && !efp_skip_frag_pair(efp, i, fr_j)) {
 
                 struct frag *fragj = efp->frags + fr_j;
@@ -1627,7 +1648,7 @@ efp_prepare(struct efp *efp)
 	}
 
 	efp->grad = (six_t *)calloc(efp->n_frag, sizeof(six_t));
-	efp->skiplist = (char *)calloc(efp->n_frag * efp->n_frag, 1);
+	efp->prepared = true;
 	efp->pair_energies = (struct efp_energy *)calloc(efp->n_frag, sizeof(struct efp_energy));
     efp->symmlist = (size_t *)calloc(efp->n_frag, sizeof(size_t));
 
@@ -1705,8 +1726,50 @@ efp_get_wavefunction_dependent_energy_correction(struct efp *efp, double *energy
     return efp_compute_pol_correction(efp, energy);
 }
 
+static enum efp_result compute(struct efp *, int);
+
 EFP_EXPORT enum efp_result
 efp_compute(struct efp *efp, int do_gradient)
+{
+	enum efp_result res;
+
+	assert(efp);
+
+	if (efp->grad == NULL) {
+		efp_log("call efp_prepare after all fragments are added");
+		return EFP_RESULT_FATAL;
+	}
+
+	/* neighbor lists for the current positions, used by the pair loops
+	 * only during this computation */
+	if ((res = efp_build_neighbors(efp))) {
+		efp_log("efp_build_neighbors() failure");
+		return res;
+	}
+	/* per-thread stress tensors */
+#ifdef _OPENMP
+	size_t n_thr = (size_t)omp_get_max_threads();
+#else
+	size_t n_thr = 1;
+#endif
+	if (n_thr > efp->n_stress_thr) {
+		struct stress_slot *thr = (struct stress_slot *)realloc(
+		    efp->stress_thr, n_thr * sizeof(struct stress_slot));
+		if (thr == NULL)
+			return EFP_RESULT_NO_MEMORY;
+		efp->stress_thr = thr;
+		efp->n_stress_thr = n_thr;
+	}
+	memset(efp->stress_thr, 0, efp->n_stress_thr * sizeof(struct stress_slot));
+
+	res = compute(efp, do_gradient);
+	efp->nbr_valid = false;
+
+	return res;
+}
+
+static enum efp_result
+compute(struct efp *efp, int do_gradient)
 {
 	enum efp_result res;
 
@@ -1765,6 +1828,15 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_log("efp_compute_ai_mm() failure");
         return res;
     }
+
+	/* sum the per-thread stress tensors */
+	for (size_t t = 0; t < efp->n_stress_thr; t++) {
+		const mat_t *s = &efp->stress_thr[t].m;
+
+		efp->stress.xx += s->xx; efp->stress.xy += s->xy; efp->stress.xz += s->xz;
+		efp->stress.yx += s->yx; efp->stress.yy += s->yy; efp->stress.yz += s->yz;
+		efp->stress.zx += s->zx; efp->stress.zy += s->zy; efp->stress.zz += s->zz;
+	}
 
 #ifdef EFP_USE_MPI
 	efp_allreduce(&efp->energy.electrostatic, 1);
@@ -2399,7 +2471,8 @@ efp_shutdown(struct efp *efp)
 	free(efp->ptc_grad);
 	free(efp->ai_orbital_energies);
 	free(efp->ai_dipole_integrals);
-	free(efp->skiplist);
+	efp_free_pairs(efp);
+	free(efp->stress_thr);
 	free(efp->pair_energies);
     free(efp->symmlist);
 	free(efp);
@@ -2457,7 +2530,7 @@ efp_add_fragment(struct efp *efp, const char *name)
 	assert(efp);
 	assert(name);
 
-	if (efp->skiplist) {
+	if (efp->prepared) {
 		efp_log("cannot add fragments after efp_prepare");
 		return EFP_RESULT_FATAL;
 	}
@@ -2546,14 +2619,11 @@ EFP_EXPORT enum efp_result
 efp_skip_fragments(struct efp *efp, size_t i, size_t j, int value)
 {
 	assert(efp);
-	assert(efp->skiplist); /* call efp_prepare first */
+	assert(efp->prepared); /* call efp_prepare first */
 	assert(i < efp->n_frag);
 	assert(j < efp->n_frag);
 
-	efp->skiplist[i * efp->n_frag + j] = value ? 1 : 0;
-	efp->skiplist[j * efp->n_frag + i] = value ? 1 : 0;
-
-	return EFP_RESULT_SUCCESS;
+	return efp_set_pair_skip(efp, i, j, value);
 }
 
 EFP_EXPORT struct efp *
@@ -2981,7 +3051,7 @@ efp_set_symmlist(struct efp *efp)
 {
     assert(efp);
     assert(efp->symmlist);
-    assert(efp->skiplist);
+    assert(efp->prepared);
 
     if  (efp->opts.symmetry == 0)
     {
@@ -3019,24 +3089,25 @@ efp_set_symmlist(struct efp *efp)
             // printf("symm_list %d \n", efp->symmlist[i]);
         }
 
-        // setup skiplist now...
-        for (size_t i = 0; i < efp->n_frag; i++) {
-            for (size_t j = 0; j < efp->n_frag; j++) {
-                efp_skip_fragments(efp, i, j, 1);
-            }
+        // setup skipped pairs now: all pairs are skipped except those with
+        // the first fragment of a symmetry class (this replaces all pairs
+        // set before with efp_skip_fragments)
+        unsigned char *uniq = (unsigned char *)realloc(efp->frag_unique, efp->n_frag);
+        if (uniq == NULL) {
+            free(unique_names);
+            return EFP_RESULT_NO_MEMORY;
         }
+        efp->frag_unique = uniq;
+        efp_clear_pair_skips(efp);
 
         n_unique = 1;
-        //memset(efp->skiplist,true,efp->n_frag*efp->n_frag);
         for (size_t i = 0; i < efp->n_frag; i++) {
             // this is the first occuracnce of the symmetry-unique fragment
-            if (efp->symmlist[i] == n_unique) {
-                for (size_t j = 0; j < efp->n_frag; j++) {
-                    efp_skip_fragments(efp, i, j, 0);
-                }
+            efp->frag_unique[i] = efp->symmlist[i] == (size_t)n_unique;
+            if (efp->frag_unique[i])
                 n_unique ++;
-            }
         }
+        efp->skip_non_unique = true;
 
         free(unique_names);
     }
@@ -3048,7 +3119,7 @@ efp_set_symmlist(struct efp *efp)
     //printf("\n skiplist \n");
     for (int i = 0; i < efp->n_frag; i++){
         for (int j=0; j < efp->n_frag; j++){
-            printf(" %s ", efp->skiplist[i*efp->n_frag + j] ? "true" : "false");
+            printf(" %s ", efp_frag_pair_skipped(efp, i, j) ? "true" : "false");
         }
     }
      */

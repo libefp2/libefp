@@ -32,10 +32,16 @@
 int
 efp_skip_frag_pair(const struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
 {
-	size_t idx = fr_i_idx * efp->n_frag + fr_j_idx;
-
-	if (efp->skiplist[idx])
+	if (efp_frag_pair_skipped(efp, fr_i_idx, fr_j_idx))
 		return 1;
+	return efp_frag_pair_beyond_cutoff(efp, fr_i_idx, fr_j_idx);
+}
+
+/* minimum-image distance between the fragment centers is beyond the cutoff */
+int
+efp_frag_pair_beyond_cutoff(const struct efp *efp, size_t fr_i_idx,
+    size_t fr_j_idx)
+{
 	if (!efp->opts.enable_cutoff)
 		return 0;
 

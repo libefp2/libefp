@@ -103,7 +103,7 @@ disp_tt(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx, size_t pt_i_idx,
 		efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x),
 		    CVEC(pt_j->x), &force, NULL);
 		if (efp->do_gradient) /* the stress tensor is available only with gradients */
-			efp_add_stress(&swf->dr, &force, &efp->stress);
+			efp_add_thread_stress(efp, &swf->dr, &force);
 	}
 	return energy;
 }
@@ -177,7 +177,7 @@ disp_overlap(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 		six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
 		six_atomic_sub_abc(efp->grad + fr_j_idx, &torque_j);
 		if (efp->do_gradient) /* the stress tensor is available only with gradients */
-			efp_add_stress(&swf->dr, &force, &efp->stress);
+			efp_add_thread_stress(efp, &swf->dr, &force);
 	}
 	return energy;
 }
@@ -221,7 +221,7 @@ disp_off(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx, size_t pt_i_idx,
 		efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x),
 		    CVEC(pt_j->x), &force, NULL);
 		if (efp->do_gradient) /* the stress tensor is available only with gradients */
-			efp_add_stress(&swf->dr, &force, &efp->stress);
+			efp_add_thread_stress(efp, &swf->dr, &force);
 	}
 	return energy;
 }
@@ -313,7 +313,7 @@ efp_frag_frag_disp(struct efp *efp, size_t frag_i, size_t frag_j,
         six_atomic_add_xyz(efp->grad + frag_i, &force);
         six_atomic_sub_xyz(efp->grad + frag_j, &force);
         if (efp->do_gradient) /* the stress tensor is available only with gradients */
-        	efp_add_stress(&swf.dr, &force, &efp->stress);
+        	efp_add_thread_stress(efp, &swf.dr, &force);
         return energy * swf.swf;
     }
 }
