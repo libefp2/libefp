@@ -1782,9 +1782,7 @@ compute(struct efp *efp, int do_gradient)
 		return EFP_RESULT_FATAL;
 	}
 
-    // WARNING!!! Lyuda!!!
-	//efp->do_gradient = do_gradient;
-    efp->do_gradient = 1;
+	efp->do_gradient = do_gradient;
 
 	if (efp_counter == 0) {
         if ((res = check_params(efp))) {
