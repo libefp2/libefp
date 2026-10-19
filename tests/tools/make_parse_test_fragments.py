@@ -18,6 +18,10 @@ pentacene_3x.efp     one fragment made of three pentacene molecules (the origina
                      renumbered for the copies, e.g. BO10074 (atoms 100 and 74). Used with 'coord atoms', where
                      bond mid-points are recomputed from the atom positions; the energy must equal the one with
                      'coord points' (rigid placement). Exchange-repulsion data are dropped.
+h2o_shuffled.efp     water with the points of the MONOPOLES, DIPOLES, QUADRUPOLES, OCTUPOLES and SCREEN sections
+                     listed in reverse order: the parser matches them to the COORDINATES points by label (through
+                     a hash index since the linear search was too slow for large fragments). The energy must
+                     equal the one with h2o_l.
 h2o_dipquad.efp      water with an additional DIPOLE-QUADRUPOLE DYNAMIC POLARIZABLE POINTS section placed
                      before the DYNAMIC POLARIZABLE POINTS section (the parser used to write these points at
                      index n_dynamic_polarizable_pts - 1, i.e. out of bounds when no dynamic points were read
@@ -273,6 +277,22 @@ def pentacene_shift(src, dst):
     open(dst, 'w').write('\n'.join(out))
 
 
+def h2o_shuffled(src, dst):
+    head, secs = read_sections(src)
+    out = head[:]
+    out[[k for k, l in enumerate(out) if l.strip().startswith('$')][0]] = ' $h2o_shuffled'
+    for t, body in secs:
+        name = t.strip()
+        if name.startswith(('MONOPOLES', 'DIPOLES', 'QUADRUPOLES', 'OCTUPOLES', 'SCREEN')):
+            rows = [l for l in body if l.strip() and l.strip() != 'STOP']
+            stop = [l for l in body if l.strip() == 'STOP']
+            out += [t] + [l for r in reversed(records(rows)) for l in r] + stop
+        else:
+            out += [t] + body
+    out += [' $END', '']
+    open(dst, 'w').write('\n'.join(out))
+
+
 def h2o_dipquad(src, dst):
     head, secs = read_sections(src)
     out = head[:]
@@ -301,6 +321,7 @@ def main():
     pentacene_shift(os.path.join(fraglib, 'pentacene.efp'), os.path.join(here, 'pentacene_shift.efp'))
     pentacene_3x(os.path.join(fraglib, 'pentacene.efp'), os.path.join(here, 'pentacene_3x.efp'))
     h2o_dipquad(os.path.join(fraglib, 'h2o.efp'), os.path.join(here, 'h2o_dipquad.efp'))
+    h2o_shuffled(os.path.join(fraglib, 'h2o.efp'), os.path.join(here, 'h2o_shuffled.efp'))
 
 
 if __name__ == '__main__':

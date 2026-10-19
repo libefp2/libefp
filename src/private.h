@@ -202,6 +202,10 @@ struct frag {
 	bool if_mm_frag;
 	/* if the axes of the fragment frame are its principal axes of inertia */
 	bool principal_axes;
+	/* hash index of multipole point labels, used only while parsing */
+	size_t *label_index;
+	size_t label_index_size;
+	size_t label_index_n_pts;
 };
 
 /* structure derived from struct frag for describing ligand */

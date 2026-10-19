@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "stream.h"
 #include "private.h"
@@ -185,9 +186,118 @@ tok_double(struct stream *stream, double *val)
 	return efp_stream_parse_double(stream, val);
 }
 
+/* FNV-1a hash of a label */
+static size_t
+label_hash(const char *label)
+{
+	uint64_t h = 14695981039346656037ULL;
+
+	for (const unsigned char *c = (const unsigned char *)label; *c; c++) {
+		h ^= *c;
+		h *= 1099511628211ULL;
+	}
+	return (size_t)h;
+}
+
+static void
+free_label_index(struct frag *frag)
+{
+	free(frag->label_index);
+	frag->label_index = NULL;
+	frag->label_index_size = 0;
+	frag->label_index_n_pts = 0;
+}
+
+/* open-addressing hash index label -> first multipole point with this label */
+static int
+build_label_index(struct frag *frag)
+{
+	size_t size = 16;
+
+	while (size < 2 * frag->n_multipole_pts)
+		size *= 2;
+
+	free_label_index(frag);
+	frag->label_index = (size_t *)calloc(size, sizeof(size_t));
+	if (frag->label_index == NULL)
+		return 0;
+	frag->label_index_size = size;
+	frag->label_index_n_pts = frag->n_multipole_pts;
+
+	for (size_t i = 0; i < frag->n_multipole_pts; i++) {
+		const char *label = frag->multipole_pts[i].label;
+		size_t k = label_hash(label) & (size - 1);
+
+		/* slots hold point index + 1, 0 is empty; keep the first point of
+		 * duplicated labels, as the linear search did */
+		while (frag->label_index[k] != 0 &&
+		    strcmp(frag->multipole_pts[frag->label_index[k] - 1].label, label))
+			k = (k + 1) & (size - 1);
+		if (frag->label_index[k] == 0)
+			frag->label_index[k] = i + 1;
+	}
+	return 1;
+}
+
+/*
+ * Index of the first multipole point with the given label, -1 if there is none.
+ * The multipole sections give one line per point; a linear search for every
+ * line was quadratic in the number of points (hours for MM fragments with
+ * 10^5 - 10^6 point charges).
+ */
+static long
+find_multipole_pt(struct frag *frag, const char *label)
+{
+	if (frag->label_index == NULL ||
+	    frag->label_index_n_pts != frag->n_multipole_pts)
+		if (!build_label_index(frag)) {
+			/* out of memory: fall back to the linear search */
+			for (size_t j = 0; j < frag->n_multipole_pts; j++)
+				if (!strcmp(label, frag->multipole_pts[j].label))
+					return (long)j;
+			return -1;
+		}
+
+	size_t size = frag->label_index_size;
+	size_t k = label_hash(label) & (size - 1);
+
+	while (frag->label_index[k] != 0) {
+		size_t j = frag->label_index[k] - 1;
+
+		if (!strcmp(frag->multipole_pts[j].label, label))
+			return (long)j;
+		k = (k + 1) & (size - 1);
+	}
+	return -1;
+}
+
+/* grow an array geometrically (one realloc per point was quadratic for large fragments) */
+static int
+reserve(void **ptr, size_t *capacity, size_t n, size_t elem_size)
+{
+	if (n <= *capacity)
+		return 1;
+
+	size_t cap = *capacity ? 2 * *capacity : 64;
+
+	while (cap < n)
+		cap *= 2;
+
+	void *p = realloc(*ptr, cap * elem_size);
+
+	if (p == NULL)
+		return 0;
+	*ptr = p;
+	*capacity = cap;
+	return 1;
+}
+
 static enum efp_result
 parse_coordinates(struct frag *frag, struct stream *stream)
 {
+	size_t atoms_capacity = frag->n_atoms;
+	size_t pts_capacity = frag->n_multipole_pts;
+
 	efp_stream_next_line(stream);
 
 	while (!efp_stream_eof(stream)) {
@@ -196,6 +306,17 @@ parse_coordinates(struct frag *frag, struct stream *stream)
                 efp_log("parse_coordinates() for fragment %s: n_atoms < 1", frag->name);
                 return EFP_RESULT_SYNTAX_ERROR;
             }
+
+			/* release the unused capacity */
+			struct efp_atom *atoms = (struct efp_atom *)realloc(frag->atoms,
+			    frag->n_atoms * sizeof(struct efp_atom));
+			struct multipole_pt *pts = (struct multipole_pt *)realloc(
+			    frag->multipole_pts,
+			    frag->n_multipole_pts * sizeof(struct multipole_pt));
+			if (atoms)
+				frag->atoms = atoms;
+			if (pts)
+				frag->multipole_pts = pts;
 
 			return EFP_RESULT_SUCCESS;
 		}
@@ -212,20 +333,17 @@ parse_coordinates(struct frag *frag, struct stream *stream)
         }
 
 		if (!eq(atom.mass, 0.0)) {
-			frag->n_atoms++;
-			frag->atoms = (struct efp_atom *)realloc(frag->atoms,
-			    frag->n_atoms * sizeof(struct efp_atom));
-			if (frag->atoms == NULL)
+			if (!reserve((void **)&frag->atoms, &atoms_capacity,
+			    frag->n_atoms + 1, sizeof(struct efp_atom)))
 				return EFP_RESULT_NO_MEMORY;
+			frag->n_atoms++;
 			frag->atoms[frag->n_atoms - 1] = atom;
 		}
 
-		frag->n_multipole_pts++;
-		frag->multipole_pts = (struct multipole_pt *)realloc(
-		    frag->multipole_pts,
-		    frag->n_multipole_pts * sizeof(struct multipole_pt));
-		if (frag->multipole_pts == NULL)
+		if (!reserve((void **)&frag->multipole_pts, &pts_capacity,
+		    frag->n_multipole_pts + 1, sizeof(struct multipole_pt)))
 			return EFP_RESULT_NO_MEMORY;
+		frag->n_multipole_pts++;
 
 		struct multipole_pt *last_pt =
 		    frag->multipole_pts + frag->n_multipole_pts - 1;
@@ -273,17 +391,15 @@ parse_monopoles(struct frag *frag, struct stream *stream)
             efp_log("parse_monopoles() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
-        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
-            if (!strcmp(tmp_pt.label, frag->multipole_pts[j].label)) {
-                // found a match
-                frag->multipole_pts[j].monopole = tmp_pt.monopole;
-                frag->multipole_pts[j].if_mon = true;
-                // LVS: use znuc from monopole section now!
-                frag->multipole_pts[j].znuc = tmp_pt.znuc;
-                frag->multipole_pts[j].if_znuc = true;
-                counter++;
-                break;
-            }
+        long j = find_multipole_pt(frag, tmp_pt.label);
+        if (j >= 0) {
+            // found a match
+            frag->multipole_pts[j].monopole = tmp_pt.monopole;
+            frag->multipole_pts[j].if_mon = true;
+            // LVS: use znuc from monopole section now!
+            frag->multipole_pts[j].znuc = tmp_pt.znuc;
+            frag->multipole_pts[j].if_znuc = true;
+            counter++;
         }
 		efp_stream_next_line(stream);
 	}
@@ -327,16 +443,14 @@ parse_dipoles(struct frag *frag, struct stream *stream)
             efp_log("parse_dipoles() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
-        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
-            if (!strcmp(tmp_pt.label, frag->multipole_pts[j].label)) {
-                // found a match
-                frag->multipole_pts[j].dipole.x = tmp_pt.dipole.x;
-                frag->multipole_pts[j].dipole.y = tmp_pt.dipole.y;
-                frag->multipole_pts[j].dipole.z = tmp_pt.dipole.z;
-                frag->multipole_pts[j].if_dip = true;
-                counter++;
-                break;
-            }
+        long j = find_multipole_pt(frag, tmp_pt.label);
+        if (j >= 0) {
+            // found a match
+            frag->multipole_pts[j].dipole.x = tmp_pt.dipole.x;
+            frag->multipole_pts[j].dipole.y = tmp_pt.dipole.y;
+            frag->multipole_pts[j].dipole.z = tmp_pt.dipole.z;
+            frag->multipole_pts[j].if_dip = true;
+            counter++;
         }
         efp_stream_next_line(stream);
     }
@@ -395,16 +509,14 @@ parse_quadrupoles(struct frag *frag, struct stream *stream)
             efp_log("parse_quadrupoles() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
-        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
-            if (!strcmp(tmp_pt.label, frag->multipole_pts[j].label)) {
-                // found a match
-                for (int q=0; q<6; q++) {
-                    frag->multipole_pts[j].quadrupole[q] = tmp_pt.quadrupole[q];
-                }
-                frag->multipole_pts[j].if_quad = true;
-                counter++;
-                break;
+        long j = find_multipole_pt(frag, tmp_pt.label);
+        if (j >= 0) {
+            // found a match
+            for (int q=0; q<6; q++) {
+                frag->multipole_pts[j].quadrupole[q] = tmp_pt.quadrupole[q];
             }
+            frag->multipole_pts[j].if_quad = true;
+            counter++;
         }
         efp_stream_next_line(stream);
     }
@@ -470,16 +582,14 @@ parse_octupoles(struct frag *frag, struct stream *stream)
                 return EFP_RESULT_SYNTAX_ERROR;
             }
 
-        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
-            if (!strcmp(tmp_pt.label, frag->multipole_pts[j].label)) {
-                // found a match
-                for (int q=0; q<10; q++) {
-                    frag->multipole_pts[j].octupole[q] = tmp_pt.octupole[q];
-                }
-                frag->multipole_pts[j].if_oct = true;
-                counter++;
-                break;
+        long j = find_multipole_pt(frag, tmp_pt.label);
+        if (j >= 0) {
+            // found a match
+            for (int q=0; q<10; q++) {
+                frag->multipole_pts[j].octupole[q] = tmp_pt.octupole[q];
             }
+            frag->multipole_pts[j].if_oct = true;
+            counter++;
         }
         efp_stream_next_line(stream);
     }
@@ -1284,26 +1394,22 @@ parse_screen(struct frag *frag, struct stream *stream)
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
-        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
-            if (!strcmp(tmp_pt.label, frag->multipole_pts[j].label)) {
-                // found a match
-                if (screen_type == 2) {
-                    frag->multipole_pts[j].screen2 = tmp_screen;
-                    frag->multipole_pts[j].if_scr2 = true;
-                    //printf(" SCREEN2 param %lf \n", frag->multipole_pts[j].screen2);
-                }
-                if (screen_type == 0) {
-                    frag->multipole_pts[j].screen0 = tmp_screen;
-                    frag->multipole_pts[j].if_scr0 = true;
-                    //printf(" SCREEN0 param %lf \n", frag->multipole_pts[j].screen0);
-                }
-                if (screen_type == 3) {
-                    // do nothing with screen3
-                    continue;
-                }
-                counter++;
-                break;
+        long j = find_multipole_pt(frag, tmp_pt.label);
+        if (j >= 0) {
+            // found a match
+            if (screen_type == 2) {
+                frag->multipole_pts[j].screen2 = tmp_screen;
+                frag->multipole_pts[j].if_scr2 = true;
+                //printf(" SCREEN2 param %lf \n", frag->multipole_pts[j].screen2);
             }
+            if (screen_type == 0) {
+                frag->multipole_pts[j].screen0 = tmp_screen;
+                frag->multipole_pts[j].if_scr0 = true;
+                //printf(" SCREEN0 param %lf \n", frag->multipole_pts[j].screen0);
+            }
+            // nothing to do with screen3
+            if (screen_type != 3)
+                counter++;
         }
         efp_stream_next_line(stream);
     }
@@ -1818,7 +1924,9 @@ parse_file(struct efp *efp, struct stream *stream)
 		efp_stream_next_line(stream);
 		efp_stream_next_line(stream);
 
-		if ((res = parse_fragment(frag, stream)))
+		res = parse_fragment(frag, stream);
+		free_label_index(frag);
+		if (res)
 			return res;
 
 		center_fragment(frag);
