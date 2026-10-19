@@ -2660,10 +2660,23 @@ efp_get_frag_inertia(struct efp *efp, size_t frag_idx, double *inertia_out)
 	assert(inertia_out);
 	assert(frag_idx < efp->n_frag);
 
-	/* center of mass is in origin and axes are principal axes of inertia */
+	/* center of mass is in origin (see center_fragment() in parse.c) and axes
+	 * are principal axes of inertia */
 
 	const struct frag *frag = efp->frags[frag_idx].lib;
 	vec_t inertia = vec_zero;
+
+	if (!frag->principal_axes) {
+		if (efp->n_inertia_warnings < 5)
+			printf("WARNING! The frame of fragment %s is not the frame of its "
+			    "principal axes of inertia; its rotational motion will be "
+			    "wrong (write the fragment in its principal axes frame)\n",
+			    frag->name);
+		else if (efp->n_inertia_warnings == 5)
+			printf("WARNING! Further warnings about fragments without principal "
+			    "axes frames are suppressed\n");
+		efp->n_inertia_warnings++;
+	}
 
 	for (size_t i = 0; i < frag->n_atoms; i++) {
 		const struct efp_atom *atom = frag->atoms + i;

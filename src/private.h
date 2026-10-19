@@ -58,6 +58,10 @@ struct multipole_pt {
     bool if_oct;
     bool if_scr2;
     bool if_scr0;
+    /* indices of the fragment atoms that define the position of this point
+     * (equal for an atom, the two atoms of a bond for a bond mid-point,
+     * -1 for other points); used when atom positions are given */
+    long atom_idx[2];
 };
 
 struct polarizable_pt {
@@ -196,6 +200,8 @@ struct frag {
 
 	/* if classical (partial charges only and no QM-EFP screening) fragment */
 	bool if_mm_frag;
+	/* if the axes of the fragment frame are its principal axes of inertia */
+	bool principal_axes;
 };
 
 /* structure derived from struct frag for describing ligand */
@@ -243,6 +249,8 @@ struct efp {
 
     /* user parameters for this EFP computation */
 	struct efp_opts opts;
+	/* number of warnings about fragments without principal axes frames */
+	size_t n_inertia_warnings;
 
 	/* gradient will also be computed if nonzero */
 	int do_gradient;

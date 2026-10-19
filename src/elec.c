@@ -865,45 +865,23 @@ efp_update_elec(struct frag *frag)
 
 void efp_update_elec_special(struct frag *frag)
 {
-    size_t natom = frag->n_atoms;
-
     for (size_t i = 0; i < frag->n_multipole_pts; i++) {
         const struct multipole_pt *in = frag->lib->multipole_pts + i;
         struct multipole_pt *out = frag->multipole_pts + i;
 
-        /* copy atom coordinates into multipole points */
-        if (i < natom) {
-            out->x = frag->atoms[i].x;
-            out->y = frag->atoms[i].y;
-            out->z = frag->atoms[i].z;
+        /* atoms and bond mid-points follow the atom positions (atom_idx is set
+         * when the fragment is loaded, see assign_multipole_atoms() in parse.c);
+         * other points move with the fragment frame */
+        if (in->atom_idx[0] >= 0 && in->atom_idx[1] >= 0) {
+            const struct efp_atom *a = frag->atoms + in->atom_idx[0];
+            const struct efp_atom *b = frag->atoms + in->atom_idx[1];
+
+            out->x = 0.5 * (a->x + b->x);
+            out->y = 0.5 * (a->y + b->y);
+            out->z = 0.5 * (a->z + b->z);
         }
-        /* recomputing positions of mid-points using atom positions */
-        else {
-            if (out->label[0] == 'B' && out->label[1] == 'O') {
-                int length = strlen(out->label) - 2;
-                // printf(" Analyzing label %s, length is %d\n", out->label, length);
-                size_t m1, m2;
-                if (length == 2) {
-                    m1 = out->label[2] - 48;  // converting to char to size_t 1-digit number
-                    m2 = out->label[3] - 48;
-                }
-                else if (length == 3) {
-                    m1 = (out->label[2] - 48)*10 + out->label[3] - 48;  // converting to char to size_t 2-digit number
-                    m2 = out->label[4] - 48;
-                }
-                else if (length == 4) {
-                    m1 = (out->label[2] - 48)*10 + out->label[3] - 48;  // converting to char to size_t 2-digit number
-                    m2 = (out->label[4] - 48)*10 + out->label[5] - 48;
-                }
-                else printf("WARNING! Reading BO point %s but do not know what to do with it!\n", out->label);
-                if (m1 > natom || m2 > natom) 
-                     printf("WARNING! Reading BO point %s; bad atom numbers %zu and %zu\n", out->label, m1, m2);
-                // printf("m1, m2 are %zu  %zu\n", m1, m2);
-                out->x = (frag->atoms[m1-1].x + frag->atoms[m2-1].x)/2;
-                out->y = (frag->atoms[m1-1].y + frag->atoms[m2-1].y)/2;
-                out->z = (frag->atoms[m1-1].z + frag->atoms[m2-1].z)/2;
-            }
-        }
+        else
+            efp_move_pt(CVEC(frag->x), &frag->rotmat, CVEC(in->x), VEC(out->x));
 
         /* rotate dipole */
         if (out->if_dip)

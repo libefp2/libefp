@@ -44,6 +44,8 @@ static void init_multipole_pt(struct multipole_pt *pt) {
     pt->if_oct = false;
     pt->if_scr2 = false;
     pt->if_scr0 = false;
+    pt->atom_idx[0] = -1;
+    pt->atom_idx[1] = -1;
 }
 
 static int
@@ -1559,6 +1561,181 @@ get_parse_fn(struct stream *stream)
 	return NULL;
 }
 
+#define SAME_POINT_TOL 1.0e-6
+
+static void
+shift_xyz(double *x, double *y, double *z, const vec_t *d)
+{
+	*x -= d->x;
+	*y -= d->y;
+	*z -= d->z;
+}
+
+/*
+ * Move the fragment frame to the center of mass of the fragment atoms.
+ *
+ * Fragments are placed as frag->x + R * p_lib, where frag->x is the center of
+ * mass for the xyzabc and atoms coordinate types, so the library coordinates
+ * must have the center of mass at the origin. Fragments written by GAMESS do;
+ * fragments built in another frame (e.g. MD coordinates) did not and were
+ * misplaced. Also record whether the axes are principal axes of inertia, which
+ * molecular dynamics assumes (no rotation is done here: rotating would change
+ * the meaning of the Euler angles of xyzabc coordinates).
+ */
+static void
+center_fragment(struct frag *frag)
+{
+	double mass = 0.0;
+	vec_t com = vec_zero;
+
+	for (size_t i = 0; i < frag->n_atoms; i++) {
+		const struct efp_atom *at = frag->atoms + i;
+
+		mass += at->mass;
+		com.x += at->mass * at->x;
+		com.y += at->mass * at->y;
+		com.z += at->mass * at->z;
+	}
+	frag->principal_axes = true;
+
+	if (mass <= 0.0)
+		return;
+
+	vec_scale(&com, 1.0 / mass);
+
+	for (size_t i = 0; i < frag->n_atoms; i++)
+		shift_xyz(&frag->atoms[i].x, &frag->atoms[i].y, &frag->atoms[i].z, &com);
+	for (size_t i = 0; i < frag->n_multipole_pts; i++)
+		shift_xyz(&frag->multipole_pts[i].x, &frag->multipole_pts[i].y,
+		    &frag->multipole_pts[i].z, &com);
+	for (size_t i = 0; i < frag->n_polarizable_pts; i++)
+		shift_xyz(&frag->polarizable_pts[i].x, &frag->polarizable_pts[i].y,
+		    &frag->polarizable_pts[i].z, &com);
+	for (size_t i = 0; i < frag->n_dynamic_polarizable_pts; i++)
+		shift_xyz(&frag->dynamic_polarizable_pts[i].x,
+		    &frag->dynamic_polarizable_pts[i].y,
+		    &frag->dynamic_polarizable_pts[i].z, &com);
+	for (size_t i = 0; i < frag->n_dipquad_polarizable_pts; i++)
+		shift_xyz(&frag->dipquad_polarizable_pts[i].x,
+		    &frag->dipquad_polarizable_pts[i].y,
+		    &frag->dipquad_polarizable_pts[i].z, &com);
+	for (size_t i = 0; i < frag->n_xr_atoms; i++)
+		shift_xyz(&frag->xr_atoms[i].x, &frag->xr_atoms[i].y,
+		    &frag->xr_atoms[i].z, &com);
+	if (frag->lmo_centroids)
+		for (size_t i = 0; i < frag->n_lmo; i++)
+			shift_xyz(&frag->lmo_centroids[i].x, &frag->lmo_centroids[i].y,
+			    &frag->lmo_centroids[i].z, &com);
+
+	double ixx = 0.0, iyy = 0.0, izz = 0.0, ixy = 0.0, ixz = 0.0, iyz = 0.0;
+
+	for (size_t i = 0; i < frag->n_atoms; i++) {
+		const struct efp_atom *at = frag->atoms + i;
+
+		ixx += at->mass * (at->y * at->y + at->z * at->z);
+		iyy += at->mass * (at->x * at->x + at->z * at->z);
+		izz += at->mass * (at->x * at->x + at->y * at->y);
+		ixy -= at->mass * at->x * at->y;
+		ixz -= at->mass * at->x * at->z;
+		iyz -= at->mass * at->y * at->z;
+	}
+
+	double imax = fmax(ixx, fmax(iyy, izz));
+	double offdiag = fmax(fabs(ixy), fmax(fabs(ixz), fabs(iyz)));
+
+	frag->principal_axes = offdiag <= 1.0e-6 * imax;
+}
+
+static int
+same_point(const double *a, double x, double y, double z)
+{
+	return fabs(a[0] - x) < SAME_POINT_TOL && fabs(a[1] - y) < SAME_POINT_TOL &&
+	    fabs(a[2] - z) < SAME_POINT_TOL;
+}
+
+/*
+ * Find the atoms that define the position of every multipole point: the atom
+ * itself, or the two atoms of a bond for a bond mid-point. GAMESS labels bond
+ * mid-points "BO" followed by the two atom numbers without separator, which is
+ * ambiguous ("BO1211" is atoms 12 and 11, or 121 and 1), so every split of the
+ * digits into two atom numbers is checked against the coordinates. The work is
+ * linear in the number of points, also for large fragments.
+ */
+static void
+assign_multipole_atoms(struct frag *frag)
+{
+	long n_atoms = (long)frag->n_atoms;
+
+	for (size_t i = 0; i < frag->n_multipole_pts; i++) {
+		struct multipole_pt *pt = frag->multipole_pts + i;
+		const char *label = pt->label;
+
+		pt->atom_idx[0] = pt->atom_idx[1] = -1;
+
+		/* atoms are normally listed first, in order */
+		if ((long)i < n_atoms && same_point(&frag->atoms[i].x, pt->x, pt->y, pt->z)) {
+			pt->atom_idx[0] = pt->atom_idx[1] = (long)i;
+			continue;
+		}
+
+		/* atom label "A<number><name>" */
+		if (label[0] == 'A' && isdigit((unsigned char)label[1])) {
+			long k = strtol(label + 1, NULL, 10) - 1;
+
+			if (k >= 0 && k < n_atoms &&
+			    same_point(&frag->atoms[k].x, pt->x, pt->y, pt->z)) {
+				pt->atom_idx[0] = pt->atom_idx[1] = k;
+				continue;
+			}
+		}
+
+		/* bond mid-point label "BO<number><number>" */
+		if (label[0] != 'B' || label[1] != 'O')
+			continue;
+
+		size_t len = strlen(label + 2);
+		double best = -1.0;
+
+		for (size_t k = 0; k < len; k++)
+			if (!isdigit((unsigned char)label[2 + k]))
+				len = 0;
+
+		for (size_t split = 1; split < len; split++) {
+			char first[32] = {0};
+
+			if (label[2 + split] == '0')
+				continue; /* no leading zeros */
+			memcpy(first, label + 2, split);
+
+			long a = strtol(first, NULL, 10) - 1;
+			long b = strtol(label + 2 + split, NULL, 10) - 1;
+
+			if (a < 0 || b < 0 || a >= n_atoms || b >= n_atoms || a == b)
+				continue;
+
+			const struct efp_atom *at_a = frag->atoms + a;
+			const struct efp_atom *at_b = frag->atoms + b;
+			double mid[3] = { 0.5 * (at_a->x + at_b->x),
+			    0.5 * (at_a->y + at_b->y), 0.5 * (at_a->z + at_b->z) };
+
+			if (!same_point(mid, pt->x, pt->y, pt->z))
+				continue;
+
+			/* several splits can match for symmetric geometries: take the
+			 * shortest distance, i.e. the bond */
+			double dx = at_a->x - at_b->x, dy = at_a->y - at_b->y,
+			    dz = at_a->z - at_b->z;
+			double r2 = dx * dx + dy * dy + dz * dz;
+
+			if (best < 0.0 || r2 < best) {
+				best = r2;
+				pt->atom_idx[0] = a;
+				pt->atom_idx[1] = b;
+			}
+		}
+	}
+}
+
 static enum efp_result
 parse_fragment(struct frag *frag, struct stream *stream)
 {
@@ -1643,6 +1820,9 @@ parse_file(struct efp *efp, struct stream *stream)
 
 		if ((res = parse_fragment(frag, stream)))
 			return res;
+
+		center_fragment(frag);
+		assign_multipole_atoms(frag);
 		if (frag->n_lmo > 0 && frag->lmo_centroids == NULL) {
 			efp_log("LMO centroids are missing for fragment \"%s\"", name);
 			return EFP_RESULT_FATAL;

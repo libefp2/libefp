@@ -1,0 +1,54 @@
+# Regression test: fragment frames not centered at the center of mass. pentacene_shift.efp has its
+# internal frame 500 bohr away from the molecule (tests/tools/make_parse_test_fragments.py); with atom
+# coordinates, its parameters used to be placed relative to that origin. The energy must equal the one
+# with pentacene_l (coord_com_1a), which is the energy of parse_labels_2a (same geometry, coord points).
+run_type gtest
+ref_energy -0.0065500983
+coord atoms
+terms elec pol disp xr
+elec_damp screen
+pol_damp tt
+disp_damp overlap
+fraglib_path ../fraglib
+
+fragment pentacene_shift
+A01C             3.636109    -0.722305     0.000000
+A02C             4.911087    -1.405659     0.000000
+A03C             6.058717    -0.722932     0.000000
+A04C             6.058724     0.722904     0.000000
+A05C             4.911104     1.405640     0.000000
+A06C             3.636110     0.722315     0.000000
+A07C             1.210928    -0.715251     0.000000
+A08C             2.454710    -1.395503     0.000000
+A09C             2.454710     1.395506     0.000000
+A10C             1.210921     0.715267     0.000000
+A11C            -1.210832    -0.715259     0.000000
+A12C             0.000024    -1.392533     0.000000
+A13C             0.000023     1.392557     0.000000
+A14C            -1.210831     0.715281     0.000000
+A15C            -3.636073    -0.722327     0.000000
+A16C            -2.454678    -1.395455     0.000000
+A17C            -2.454696     1.395444     0.000000
+A18C            -3.636117     0.722347     0.000000
+A19C            -6.058849    -0.722992     0.000000
+A20C            -4.911138    -1.405543     0.000000
+A21C            -4.911158     1.405619     0.000000
+A22C            -6.058757     0.722888     0.000000
+A23H            -6.997530    -1.241720     0.000000
+A24H            -4.912631    -2.478467     0.000000
+A25H            -4.912612     2.478533     0.000000
+A26H            -6.997460     1.241608     0.000000
+A27H             4.912552    -2.478570     0.000000
+A28H             6.997366    -1.241740     0.000000
+A29H             6.997395     1.241673     0.000000
+A30H             4.912567     2.478551     0.000000
+A31H             2.454188    -2.468944     0.000000
+A32H             2.454202     2.468948     0.000000
+A33H            -0.000014    -2.465930     0.000000
+A34H            -0.000017     2.465953     0.000000
+A35H            -2.454240    -2.468903     0.000000
+A36H            -2.454246     2.468895     0.000000
+fragment h2o_l
+A01O1            1.200000     0.000000     3.363030
+A02H2            0.447348     0.000000     2.799834
+A03H3            1.952652     0.000000     2.799834

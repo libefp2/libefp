@@ -1,5 +1,8 @@
+# Reference updated for fragment centers at the center of mass: the internal origin of xxii_exp_n2_*.efp
+# is 14.1 bohr away from the molecule and was used as the fragment center for the cutoff and periodic
+# images before (reference -2.4694267624). Energies without cutoff are unchanged.
 run_type etest
-ref_energy -2.4694267624
+ref_energy -5.5786734069
 coord points
 terms elec pol disp xr
 elec_damp screen

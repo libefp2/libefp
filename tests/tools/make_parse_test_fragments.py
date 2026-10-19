@@ -13,6 +13,11 @@ pentacene_shift.efp  pentacene with its internal frame shifted by -500 bohr alon
                      formats: every x is a negative number that fills its F15.10 field and runs into the label
                      ("CT1-495.2951596447"), and full 8-character labels run into the coordinates
                      ("A01CXXXX-493.1287504085"). The energies must equal those with pentacene_l.
+pentacene_3x.efp     one fragment made of three pentacene molecules (the original one and copies at -15 and +15 bohr
+                     along z, 108 atoms, center of mass at the origin) with GAMESS bond mid-point labels BO<i><j>
+                     renumbered for the copies, e.g. BO10074 (atoms 100 and 74). Used with 'coord atoms', where
+                     bond mid-points are recomputed from the atom positions; the energy must equal the one with
+                     'coord points' (rigid placement). Exchange-repulsion data are dropped.
 h2o_dipquad.efp      water with an additional DIPOLE-QUADRUPOLE DYNAMIC POLARIZABLE POINTS section placed
                      before the DYNAMIC POLARIZABLE POINTS section (the parser used to write these points at
                      index n_dynamic_polarizable_pts - 1, i.e. out of bounds when no dynamic points were read
@@ -161,6 +166,75 @@ def pentacene_2x(src, dst):
     open(dst, 'w').write('\n'.join(out))
 
 
+def pentacene_3x(src, dst):
+    head, secs = read_sections(src)
+    shifts = [(0.0, 0.0, 0.0), (0.0, 0.0, -15.0), (0.0, 0.0, 15.0)]
+    out = head[:]
+    out[[k for k, l in enumerate(out) if l.strip().startswith('$')][0]] = ' $pentacene_3x'
+    keep = ('COORDINATES', 'MONOPOLES', 'DIPOLES', 'QUADRUPOLES', 'OCTUPOLES', 'POLARIZABLE POINTS',
+            'DYNAMIC POLARIZABLE POINTS', 'SCREEN2')
+    coords = records([l for l in next(b for t, b in secs if t.strip().startswith('COORDINATES'))
+                      if l.strip() and l.strip() != 'STOP'])
+    atoms = [[float(v) for v in r[0].split()[1:4]] for r in coords if r[0].startswith('A')]
+    natom = len(atoms)
+    # bond mid-point label -> (i, j), found from the coordinates
+    pair = {}
+    for r in coords:
+        p = r[0].split()
+        if not p[0].startswith('BO'):
+            continue
+        xyz = [float(v) for v in p[1:4]]
+        for i in range(natom):
+            for j in range(i):
+                mid = [(a + b) / 2 for a, b in zip(atoms[i], atoms[j])]
+                if max(abs(a - b) for a, b in zip(mid, xyz)) < 1e-6:
+                    pair[p[0]] = (i + 1, j + 1)
+
+    def rename(lab, c):
+        if c == 0:
+            return lab
+        m = re.match(r'A(\d+)(\D.*)?$', lab)
+        if m:
+            return 'A%02d%s' % (int(m.group(1)) + c * natom, m.group(2) or '')
+        if lab in pair:
+            i, j = pair[lab]
+            return 'BO%d%d' % (i + c * natom, j + c * natom)
+        return lab
+    for t, body in secs:
+        name = t.strip()
+        if not name.startswith(keep):
+            continue
+        rows = [l for l in body if l.strip() and l.strip() != 'STOP']
+        if name.startswith(('POLARIZABLE POINTS', 'DYNAMIC POLARIZABLE POINTS')):
+            dyn = name.startswith('DYNAMIC')
+            pts = parse_pts(body)
+            copies = [[(shift_xyz(x, d), t_, w) for x, t_, w in pts] for d in shifts]
+            if dyn:
+                n = len(pts) // 12
+                merged = []
+                for f in range(12):
+                    for c in copies:
+                        merged += c[f * n:(f + 1) * n]
+            else:
+                merged = [p for c in copies for p in c]
+            out += [t] + write_pts(merged, dyn) + ['STOP']
+            continue
+        recs = records(rows)
+
+        def copy_rec(r, c):
+            p = r[0].split()
+            if name.startswith('COORDINATES'):
+                xyz = shift_xyz([float(v) for v in p[1:4]], shifts[c])
+                return [coord_line(rename(p[0], c), xyz, '%12.7f%5.1f' % (float(p[4]), float(p[5])))]
+            return [r[0].replace(p[0], rename(p[0], c), 1)] + r[1:]
+        is_atom = lambda r: r[0].strip().startswith('A')
+        order = ([copy_rec(r, c) for c in range(3) for r in recs if is_atom(r)] +
+                 [copy_rec(r, c) for c in range(3) for r in recs if not is_atom(r)])
+        out += [t] + [l for r in order for l in r] + ['STOP']
+    out += [' $END', '']
+    open(dst, 'w').write('\n'.join(out))
+
+
 def pentacene_shift(src, dst):
     head, secs = read_sections(src)
     d = (-500.0, 0.0, 0.0)
@@ -225,6 +299,7 @@ def main():
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     pentacene_2x(os.path.join(fraglib, 'pentacene.efp'), os.path.join(here, 'pentacene_2x.efp'))
     pentacene_shift(os.path.join(fraglib, 'pentacene.efp'), os.path.join(here, 'pentacene_shift.efp'))
+    pentacene_3x(os.path.join(fraglib, 'pentacene.efp'), os.path.join(here, 'pentacene_3x.efp'))
     h2o_dipquad(os.path.join(fraglib, 'h2o.efp'), os.path.join(here, 'h2o_dipquad.efp'))
 
 
