@@ -279,8 +279,12 @@ find_neighbors(const struct efp *efp, const struct grid *g, size_t i,
     uint32_t *list)
 {
 	size_t count = 0;
+	/* pairs with the ligand have their own cutoff (ligand_cutoff): the ligand
+	 * is tested explicitly, its own list by brute force */
+	size_t ligand = efp->opts.ligand_cutoff > 0.0 && efp->opts.ligand >= 0 ?
+	    (size_t)efp->opts.ligand : efp->n_frag;
 
-	if (g == NULL) {
+	if (g == NULL || i == ligand) {
 		for (size_t j = 0; j < efp->n_frag; j++)
 			if (j != i && !efp_frag_pair_beyond_cutoff(efp, i, j)) {
 				if (list)
@@ -288,6 +292,12 @@ find_neighbors(const struct efp *efp, const struct grid *g, size_t i,
 				count++;
 			}
 		return count;
+	}
+
+	if (ligand < efp->n_frag && !efp_frag_pair_beyond_cutoff(efp, i, ligand)) {
+		if (list)
+			list[count] = (uint32_t)ligand;
+		count++;
 	}
 
 	const double *x = &efp->frags[i].x;
@@ -317,7 +327,7 @@ find_neighbors(const struct efp *efp, const struct grid *g, size_t i,
 		    (size_t)k[2];
 
 		for (size_t j = g->head[cell]; j < efp->n_frag; j = g->next[j])
-			if (j != i && !efp_frag_pair_beyond_cutoff(efp, i, j)) {
+			if (j != i && j != ligand && !efp_frag_pair_beyond_cutoff(efp, i, j)) {
 				if (list)
 					list[count] = (uint32_t)j;
 				count++;

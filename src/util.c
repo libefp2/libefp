@@ -48,6 +48,18 @@ efp_skip_frag_pair(const struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
 	return efp_frag_pair_beyond_cutoff(efp, fr_i_idx, fr_j_idx);
 }
 
+/* cutoff of a fragment pair: ligand_cutoff for the pairs with the ligand,
+ * swf_cutoff otherwise */
+double
+efp_pair_cutoff(const struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
+{
+	if (efp->opts.ligand_cutoff > 0.0 && efp->opts.ligand >= 0 &&
+	    ((size_t)efp->opts.ligand == fr_i_idx ||
+	    (size_t)efp->opts.ligand == fr_j_idx))
+		return efp->opts.ligand_cutoff;
+	return efp->opts.swf_cutoff;
+}
+
 /* minimum-image distance between the fragment centers is beyond the cutoff */
 int
 efp_frag_pair_beyond_cutoff(const struct efp *efp, size_t fr_i_idx,
@@ -59,7 +71,8 @@ efp_frag_pair_beyond_cutoff(const struct efp *efp, size_t fr_i_idx,
 	const struct frag *fr_i = efp->frags + fr_i_idx;
 	const struct frag *fr_j = efp->frags + fr_j_idx;
 
-	double cutoff2 = efp->opts.swf_cutoff * efp->opts.swf_cutoff;
+	double cutoff = efp_pair_cutoff(efp, fr_i_idx, fr_j_idx);
+	double cutoff2 = cutoff * cutoff;
 	vec_t dr = vec_sub(CVEC(fr_j->x), CVEC(fr_i->x));
 
 	if (efp->opts.enable_pbc) {
@@ -121,8 +134,16 @@ efp_make_swf(const struct efp *efp, const struct frag *fr_i,
         dswf = efp_get_dswf(r, efp->opts.xr_cutoff);
 	}
 	else {
-        swf.swf = efp_get_swf(r, efp->opts.swf_cutoff);
-        dswf = efp_get_dswf(r, efp->opts.swf_cutoff);
+        double cutoff = efp->opts.swf_cutoff;
+
+        /* ligand_cutoff for the pairs with the ligand */
+        if (efp->opts.ligand_cutoff > 0.0 && efp->opts.ligand >= 0 &&
+            fr_i >= efp->frags && fr_i < efp->frags + efp->n_frag &&
+            fr_j >= efp->frags && fr_j < efp->frags + efp->n_frag)
+            cutoff = efp_pair_cutoff(efp, (size_t)(fr_i - efp->frags),
+                (size_t)(fr_j - efp->frags));
+        swf.swf = efp_get_swf(r, cutoff);
+        dswf = efp_get_dswf(r, cutoff);
     }
 	swf.dswf.x = -dswf * swf.dr.x;
 	swf.dswf.y = -dswf * swf.dr.y;

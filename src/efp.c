@@ -407,6 +407,24 @@ check_opts(const struct efp_opts *opts)
 			return EFP_RESULT_FATAL;
 		}
 	}
+	if (opts->ligand_cutoff > 0.0) {
+		if (!opts->enable_cutoff) {
+			efp_log("ligand_cutoff requires enable_cutoff");
+			return EFP_RESULT_FATAL;
+		}
+		if (opts->ligand < 0) {
+			efp_log("ligand_cutoff requires a ligand fragment (ligand >= 0)");
+			return EFP_RESULT_FATAL;
+		}
+		if (opts->symmetry) {
+			efp_log("ligand_cutoff is not available with symmetry");
+			return EFP_RESULT_FATAL;
+		}
+		if (opts->ligand_cutoff < opts->xr_cutoff) {
+			efp_log("ligand_cutoff is smaller than the exchange-repulsion cutoff");
+			return EFP_RESULT_FATAL;
+		}
+	}
     if (opts->enable_cutoff) {
         if (opts->swf_cutoff < opts->xr_cutoff) {
             efp_log("exchange-repulsion cutoff is smaller than interaction cutoff");
@@ -1512,7 +1530,7 @@ efp_set_periodic_box(struct efp *efp, double x, double y, double z, double alpha
 	efp->box.c = gamma;
 
 	double max_cut = max_cutoff(efp->box);
-	double cut = efp->opts.swf_cutoff;
+	double cut = fmax(efp->opts.swf_cutoff, efp->opts.ligand_cutoff);
 	if (cut > max_cut) {
 	    printf("\n Maximum allowed cutoff is %lf ", max_cut*0.52917721092);
         printf("\n Given cutoff is %lf \n", cut*0.52917721092);
@@ -3368,6 +3386,7 @@ void print_opts(struct efp_opts *opts)
     printf("enable_elpot     %d\n", opts->enable_elpot);
     printf("enable_cutoff    %d\n", opts->enable_cutoff);
     printf("swf_cutoff       %lf\n", opts->swf_cutoff);
+    printf("ligand_cutoff    %lf\n", opts->ligand_cutoff);
     printf("xr_cutoff        %lf\n", opts->xr_cutoff);
     printf("enable_pairwise  %d\n", opts->enable_pairwise);
     printf("ligand           %d\n", opts->ligand);

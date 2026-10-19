@@ -136,6 +136,7 @@ static struct cfg *make_cfg(void)
 	cfg_add_string(cfg, "efp_params_file", "params.efp");
 	cfg_add_bool(cfg, "enable_cutoff", false);
 	cfg_add_double(cfg, "swf_cutoff", 10.0);
+	cfg_add_double(cfg, "ligand_cutoff", 0.0);
     cfg_add_double(cfg, "xr_cutoff", 0.0);
 	cfg_add_int(cfg, "max_steps", 100);
 	cfg_add_int(cfg, "multistep_steps", 1);
@@ -374,6 +375,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 		.enable_elpot = cfg_get_bool(cfg, "enable_elpot"),
 		.enable_cutoff = cfg_get_bool(cfg, "enable_cutoff"),
 		.swf_cutoff = cfg_get_double(cfg, "swf_cutoff"),
+		.ligand_cutoff = cfg_get_double(cfg, "ligand_cutoff"),
 		.xr_cutoff = cfg_get_double(cfg, "xr_cutoff"),
         .enable_pairwise = cfg_get_bool(cfg, "enable_pairwise"), 
         .ligand = cfg_get_int(cfg, "ligand"),
@@ -614,6 +616,8 @@ static void convert_units(struct cfg *cfg, struct sys *sys)
 		cfg_get_double(cfg, "pressure") * BAR_TO_AU);
 	cfg_set_double(cfg, "swf_cutoff",
 		cfg_get_double(cfg, "swf_cutoff") / BOHR_RADIUS);
+	cfg_set_double(cfg, "ligand_cutoff",
+		cfg_get_double(cfg, "ligand_cutoff") / BOHR_RADIUS);
     cfg_set_double(cfg, "xr_cutoff",
             cfg_get_double(cfg, "xr_cutoff") / BOHR_RADIUS);
     cfg_set_double(cfg, "num_step_dist",

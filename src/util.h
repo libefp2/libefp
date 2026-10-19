@@ -35,6 +35,7 @@ struct frag;
 int efp_skip_frag_pair(const struct efp *, size_t, size_t);
 double efp_wall_time(void);
 int efp_frag_pair_beyond_cutoff(const struct efp *, size_t, size_t);
+double efp_pair_cutoff(const struct efp *, size_t, size_t);
 struct swf efp_make_swf(const struct efp *, const struct frag *,
     const struct frag *, int);
 int efp_check_rotation_matrix(const mat_t *);

@@ -81,6 +81,8 @@ foreach(test_name
   grad_1
   hess_1
   lj_1
+  ligand_cutoff_1
+  ligand_cutoff_2
   lj_2
   md_1
   md_2
