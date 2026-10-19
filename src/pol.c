@@ -1274,7 +1274,8 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 			vec_scale(&add_i, swf.swf);
 			vec_scale(&add_j, swf.swf);
 
-            efp_add_stress(&swf.dr, &force, &efp->stress);
+            if (efp->do_gradient) /* the stress tensor is available only with gradients */
+            	efp_add_stress(&swf.dr, &force, &efp->stress);
 
             // normal case
             if (not_torch_elpot) {
@@ -1334,7 +1335,8 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 			vec_scale(&add_i, swf.swf);
 			vec_scale(&add_j, swf.swf);
 
-            efp_add_stress(&swf.dr, &force, &efp->stress);
+            if (efp->do_gradient) /* the stress tensor is available only with gradients */
+            	efp_add_stress(&swf.dr, &force, &efp->stress);
 
             // normal case
             if (not_torch_elpot) {
@@ -1353,7 +1355,8 @@ compute_grad_point(struct efp *efp, size_t frag_idx, size_t pt_idx)
 		force.z = swf.dswf.z * energy;
 		six_atomic_add_xyz(efp->grad + frag_idx, &force);
 		six_atomic_sub_xyz(efp->grad + j, &force);
-		efp_add_stress(&swf.dr, &force, &efp->stress);
+		if (efp->do_gradient) /* the stress tensor is available only with gradients */
+			efp_add_stress(&swf.dr, &force, &efp->stress);
 	}
 
 	/* induced dipole - ab initio nuclei */

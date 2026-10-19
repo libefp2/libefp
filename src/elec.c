@@ -328,7 +328,8 @@ ch_ch_grad(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 	vec_scale(&torque_i, swf->swf);
 	vec_scale(&torque_j, swf->swf);
 
-    efp_add_stress(&swf->dr, &force, &efp->stress);
+    if (efp->do_gradient) /* the stress tensor is available only with gradients */
+    	efp_add_stress(&swf->dr, &force, &efp->stress);
 
     // a check for torch special model with elpot on special fragment
     // gradient is not added to the special fragment in this case
@@ -461,7 +462,8 @@ ch_mult_grad(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 	vec_scale(&torque_i, swf->swf);
 	vec_scale(&torque_j, swf->swf);
 
-    efp_add_stress(&swf->dr, &force, &efp->stress);
+    if (efp->do_gradient) /* the stress tensor is available only with gradients */
+    	efp_add_stress(&swf->dr, &force, &efp->stress);
 
     // a check for torch special model with elpot on special fragment
     // gradient is not added to the special fragment in this case
@@ -635,7 +637,8 @@ mult_mult_grad(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 	vec_scale(&torque_i, swf->swf);
 	vec_scale(&torque_j, swf->swf);
 
-    efp_add_stress(&swf->dr, &force, &efp->stress);
+    if (efp->do_gradient) /* the stress tensor is available only with gradients */
+    	efp_add_stress(&swf->dr, &force, &efp->stress);
 
     // a check for torch special model with elpot on special fragment
     // gradient is not added to the special fragment in this case
@@ -735,7 +738,8 @@ efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
                 swf.dswf.z * energy
         };
 
-        efp_add_stress(&swf.dr, &force, &efp->stress);
+        if (efp->do_gradient) /* the stress tensor is available only with gradients */
+        	efp_add_stress(&swf.dr, &force, &efp->stress);
 
         // a check for torch special model with elpot on special fragment
         // gradient is not added to the special fragment in this case
@@ -1134,7 +1138,8 @@ qq_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
                       &force, &vec_zero);
         efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x),
                       &force, &vec_zero);
-        efp_add_stress(&swf->dr, &force, &efp->stress);
+        if (efp->do_gradient) /* the stress tensor is available only with gradients */
+        	efp_add_stress(&swf->dr, &force, &efp->stress);
 
         // adding forces to atoms as well - clean this place later
         vec_t force2 = {
@@ -1270,7 +1275,8 @@ lj_energy(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
                       &force, &vec_zero);
         efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x), CVEC(pt_j->x),
                       &force, &vec_zero);
-        efp_add_stress(&swf->dr, &force, &efp->stress);
+        if (efp->do_gradient) /* the stress tensor is available only with gradients */
+        	efp_add_stress(&swf->dr, &force, &efp->stress);
     }
     double energy_thresh = 0.1;
     if (efp->opts.print > 0) {
@@ -1311,7 +1317,8 @@ efp_frag_frag_qq(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
                     swf.dswf.z * energy
             };
 
-            efp_add_stress(&swf.dr, &force, &efp->stress);
+            if (efp->do_gradient) /* the stress tensor is available only with gradients */
+            	efp_add_stress(&swf.dr, &force, &efp->stress);
 
             // a check for torch special model with elpot on special fragment
             // gradient is not added to the special fragment in this case
@@ -1367,7 +1374,8 @@ efp_frag_frag_lj(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
 
             six_atomic_add_xyz(efp->grad + fr_i_idx, &force);
             six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
-            efp_add_stress(&swf.dr, &force, &efp->stress);
+            if (efp->do_gradient) /* the stress tensor is available only with gradients */
+            	efp_add_stress(&swf.dr, &force, &efp->stress);
         }
         return energy * swf.swf;
     }
