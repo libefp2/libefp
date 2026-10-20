@@ -353,15 +353,6 @@ static unsigned get_special_terms(const char *str)
     return terms;
 }
 
-/* monotonic wall clock time in seconds (for timing printouts) */
-static double wall_time(void)
-{
-	struct timespec ts;
-
-	clock_gettime(CLOCK_MONOTONIC, &ts);
-	return (double)ts.tv_sec + 1.0e-9 * (double)ts.tv_nsec;
-}
-
 static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 {
 	struct efp_opts opts = {
@@ -423,14 +414,14 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 
     check_fail(efp_set_opts(efp, &opts));
 
-	double t0 = wall_time();
+	double t0 = efpmd_wall_time();
 
 	if (cfg_get_bool(cfg, "single_params_file"))
 		check_fail(efp_add_potential(efp, cfg_get_string(cfg, "efp_params_file")));
 	else
 		add_potentials(efp, cfg, sys);
 
-	double t1 = wall_time();
+	double t1 = efpmd_wall_time();
 
 	for (size_t i = 0; i < sys->n_frags; i++)
 	    check_fail(efp_add_fragment(efp, sys->frags[i].name));
@@ -452,7 +443,7 @@ static struct efp *create_efp(const struct cfg *cfg, const struct sys *sys)
 	if (cfg_get_int(cfg, "print") > 0) {
 		msg(" TIMING reading fragment parameters %10.2f s\n", t1 - t0);
 		msg(" TIMING creating and placing %zu fragments %10.2f s\n",
-		    sys->n_frags, wall_time() - t1);
+		    sys->n_frags, efpmd_wall_time() - t1);
 	}
 
 	/*

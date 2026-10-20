@@ -190,6 +190,7 @@ set(raw_sources_list
   poldirect.c
   stream.c
   swf.c
+  timer.c
   util.c
   xr.c
   )

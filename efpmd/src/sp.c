@@ -24,8 +24,6 @@
  * SUCH DAMAGE.
  */
 
-#include <time.h>
-
 #include "common.h"
 
 void sim_sp(struct state *state);
@@ -35,14 +33,11 @@ void sim_sp(struct state *state)
 	msg("SINGLE POINT ENERGY JOB\n\n\n");
 
 	if (cfg_get_bool(state->cfg, "print_geometry")) {
-		struct timespec t0, t1;
+		double t0 = efpmd_wall_time();
 
-		clock_gettime(CLOCK_MONOTONIC, &t0);
 		print_geometry(state->efp);
-		clock_gettime(CLOCK_MONOTONIC, &t1);
 		if (cfg_get_int(state->cfg, "print") > 0)
-			msg(" TIMING printing geometry %10.2f s\n", (double)(t1.tv_sec - t0.tv_sec) +
-			    1.0e-9 * (double)(t1.tv_nsec - t0.tv_nsec));
+			msg(" TIMING printing geometry %10.2f s\n", efpmd_wall_time() - t0);
 	}
 	if (cfg_get_bool(state->cfg, "print_pbc") && cfg_get_bool(state->cfg, "enable_pbc") ) {
 		if (cfg_get_int(state->cfg, "ligand") > -1)
@@ -53,14 +48,11 @@ void sim_sp(struct state *state)
 	compute_energy(state, false);
 
     if (cfg_get_bool(state->cfg, "enable_pairwise") && cfg_get_int(state->cfg, "ligand") > -1){
-        struct timespec t0, t1;
+        double t0 = efpmd_wall_time();
 
-        clock_gettime(CLOCK_MONOTONIC, &t0);
         print_pair_energy(state);
-        clock_gettime(CLOCK_MONOTONIC, &t1);
         if (cfg_get_int(state->cfg, "print") > 0)
-            msg(" TIMING printing pairwise energies %10.2f s\n", (double)(t1.tv_sec - t0.tv_sec) +
-                1.0e-9 * (double)(t1.tv_nsec - t0.tv_nsec));
+            msg(" TIMING printing pairwise energies %10.2f s\n", efpmd_wall_time() - t0);
     }
 	print_energy(state);
 
