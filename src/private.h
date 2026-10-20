@@ -328,6 +328,10 @@ struct efp {
 	size_t skip_size;
 	size_t skip_count;
 
+	/* fragment of every polarizable point (global index, see
+	 * frag->polarizable_offset); the polarization loops run over points */
+	size_t *pol_pt_frag;
+
 	/* per-thread stress tensors (see efp_add_thread_stress), summed into
 	 * stress at the end of efp_compute */
 	struct stress_slot *stress_thr;

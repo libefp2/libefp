@@ -419,27 +419,46 @@ add_electron_density_field(struct efp *efp)
     return res;
 }
 
+/*
+ * The polarization loops run over polarizable points rather than fragments,
+ * so that the points of one large fragment (e.g. a ligand interacting with
+ * every other fragment) are shared among the threads: [from, to) is a range
+ * of fragments (efp_balance_work), *p_from and *p_to the range of their
+ * points.
+ */
+static void
+pol_pt_range(const struct efp *efp, size_t from, size_t to, size_t *p_from,
+    size_t *p_to)
+{
+	*p_from = from < efp->n_frag ? efp->frags[from].polarizable_offset :
+	    efp->n_polarizable_pts;
+	*p_to = to < efp->n_frag ? efp->frags[to].polarizable_offset :
+	    efp->n_polarizable_pts;
+}
+
 static void
 compute_elec_field_range(struct efp *efp, size_t from, size_t to, void *data)
 {
     (void)data;
+    size_t p_from, p_to;
+
+    pol_pt_range(efp, from, to, &p_from, &p_to);
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(dynamic, 32)
 #endif
-	for (size_t i = from; i < to; i++) {
+	for (size_t p = p_from; p < p_to; p++) {
+        size_t i = efp->pol_pt_frag[p];
+        size_t j = p - efp->frags[i].polarizable_offset;
+
         if (efp->opts.special_fragment >=0) 
             if (i == (size_t)efp->opts.special_fragment &&
             !(efp->opts.special_terms & EFP_SPEC_TERM_POL))
                 continue;
-        // const struct frag *frag = efp->frags + i;
 		struct frag *frag = efp->frags + i;
+		struct polarizable_pt *pt = frag->polarizable_pts + j;
 
-		for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
-		    struct polarizable_pt *pt = frag->polarizable_pts + j;
-
-            pt->elec_field = get_elec_field(efp, i, j);
-		}
+        pt->elec_field = get_elec_field(efp, i, j);
 	}
 }
 
@@ -448,16 +467,20 @@ compute_ligand_field_range(struct efp *efp, size_t from, size_t to, void *data)
 {
     (void)data;
 
-#ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic)
-#endif
-	for (size_t i = from; i < to; i++) {
-		struct frag *frag = efp->frags + i;
+    size_t p_from, p_to;
 
-		for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
-            struct polarizable_pt *pt = frag->polarizable_pts + j;
-            pt->ligand_field = get_ligand_field(efp, i, j, efp->opts.ligand);
-        }
+    pol_pt_range(efp, from, to, &p_from, &p_to);
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, 32)
+#endif
+	for (size_t p = p_from; p < p_to; p++) {
+        size_t i = efp->pol_pt_frag[p];
+        size_t j = p - efp->frags[i].polarizable_offset;
+		struct frag *frag = efp->frags + i;
+        struct polarizable_pt *pt = frag->polarizable_pts + j;
+
+        pt->ligand_field = get_ligand_field(efp, i, j, efp->opts.ligand);
 	}
 }
 
@@ -692,11 +715,15 @@ static void
 compute_id_range(struct efp *efp, size_t from, size_t to, void *data)
 {
 	double conv = 0.0;
+	size_t p_from, p_to;
+
+	pol_pt_range(efp, from, to, &p_from, &p_to);
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic) reduction(+:conv)
+#pragma omp parallel for schedule(dynamic, 32) reduction(+:conv)
 #endif
-	for (size_t i = from; i < to; i++) {
+	for (size_t p = p_from; p < p_to; p++) {
+        size_t i = efp->pol_pt_frag[p];
 
         if (efp->opts.special_fragment >=0) 
             if (i == (size_t)efp->opts.special_fragment &&
@@ -705,8 +732,9 @@ compute_id_range(struct efp *efp, size_t from, size_t to, void *data)
 
         struct frag *frag = efp->frags + i;
 
-		for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
-			struct polarizable_pt *pt = frag->polarizable_pts + j;
+		{
+			struct polarizable_pt *pt = frag->polarizable_pts +
+			    (p - frag->polarizable_offset);
 			vec_t field, field_conj;
 
             /* electric field from other induced dipoles */
@@ -1393,13 +1421,19 @@ static void
 compute_grad_range(struct efp *efp, size_t from, size_t to, void *data)
 {
 	(void)data;
+	size_t p_from, p_to;
 
+	pol_pt_range(efp, from, to, &p_from, &p_to);
+
+	/* gradient contributions are accumulated atomically */
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(dynamic, 32)
 #endif
-	for (size_t i = from; i < to; i++)
-		for (size_t j = 0; j < efp->frags[i].n_polarizable_pts; j++)
-			compute_grad_point(efp, i, j);
+	for (size_t p = p_from; p < p_to; p++) {
+		size_t i = efp->pol_pt_frag[p];
+
+		compute_grad_point(efp, i, p - efp->frags[i].polarizable_offset);
+	}
 }
 
 enum efp_result

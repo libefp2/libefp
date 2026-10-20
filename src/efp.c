@@ -1671,6 +1671,14 @@ efp_prepare(struct efp *efp)
 		efp->n_polarizable_pts += efp->frags[i].n_polarizable_pts;
 	}
 
+	efp->pol_pt_frag = (size_t *)malloc(
+	    (efp->n_polarizable_pts ? efp->n_polarizable_pts : 1) * sizeof(size_t));
+	if (efp->pol_pt_frag == NULL)
+		return EFP_RESULT_NO_MEMORY;
+	for (size_t i = 0; i < efp->n_frag; i++)
+		for (size_t j = 0; j < efp->frags[i].n_polarizable_pts; j++)
+			efp->pol_pt_frag[efp->frags[i].polarizable_offset + j] = i;
+
 	efp->grad = (six_t *)calloc(efp->n_frag, sizeof(six_t));
 	efp->prepared = true;
 	efp->pair_energies = (struct efp_energy *)calloc(efp->n_frag, sizeof(struct efp_energy));
@@ -2529,6 +2537,7 @@ efp_shutdown(struct efp *efp)
 	free(efp->ai_orbital_energies);
 	free(efp->ai_dipole_integrals);
 	efp_free_pairs(efp);
+	free(efp->pol_pt_frag);
 	free(efp->stress_thr);
 	free(efp->pair_energies);
     free(efp->symmlist);
