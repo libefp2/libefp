@@ -1,0 +1,30 @@
+# Regression test: electrostatics of a pair with more than 10^6 multipole point pairs (MM fragment of
+# 15000 point charges, mm_box.efp, with pentacene) is computed in chunks of points shared among threads
+# (heavy pairs in compute_two_body_range), with pairwise energies (ligand = pentacene). The reference energy
+# is from the code before the chunking (whole pair in one piece). Energy test: the analytic gradient is the
+# same as before the chunking, but the numerical gradient is not accurate enough for this 80 A wide charged
+# fragment (large forces, rotation steps of 0.01 rad move its points by 0.4 A).
+run_type etest
+ref_energy -0.2602382439
+coord points
+terms elec pol
+elec_damp screen
+pol_damp tt
+fraglib_path ../fraglib
+enable_pairwise true
+ligand 1
+
+fragment mm_box
+    7.000000   -37.200000   -37.200000
+    7.957200   -37.200000   -37.200000
+    6.760000   -36.273400   -37.200000
+
+fragment pentacene_l
+    3.636109    -0.722305     0.000000
+    4.911087    -1.405659     0.000000
+    6.058717    -0.722932     0.000000
+
+fragment h2o_l
+    1.200000     0.000000     3.363030
+    0.447348     0.000000     2.799834
+    1.952652     0.000000     2.799834

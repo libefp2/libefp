@@ -22,6 +22,9 @@ h2o_shuffled.efp     water with the points of the MONOPOLES, DIPOLES, QUADRUPOLE
                      listed in reverse order: the parser matches them to the COORDINATES points by label (through
                      a hash index since the linear search was too slow for large fragments). The energy must
                      equal the one with h2o_l.
+mm_box.efp           an MM fragment (point charges only) of 5000 TIP3P water molecules on a 3.1 A grid, 15000
+                     points: with pentacene its electrostatics has more than 10^6 point pairs and is computed in
+                     chunks shared among threads (heavy pairs in compute_two_body_range); test heavy_pair_1.
 h2o_dipquad.efp      water with an additional DIPOLE-QUADRUPOLE DYNAMIC POLARIZABLE POINTS section placed
                      before the DYNAMIC POLARIZABLE POINTS section (the parser used to write these points at
                      index n_dynamic_polarizable_pts - 1, i.e. out of bounds when no dynamic points were read
@@ -314,6 +317,26 @@ def h2o_dipquad(src, dst):
     open(dst, 'w').write('\n'.join(out))
 
 
+def mm_box(dst):
+    """5000 TIP3P waters (charges only) on a 25 x 25 x 8 grid, 3.1 A apart, starting 7 A from the origin"""
+    bohr = 1 / 0.52917721092
+    oh = [(0.0, 0.0, 0.0, -0.834, 'O'), (0.9572, 0.0, 0.0, 0.417, 'H'), (-0.2400, 0.9266, 0.0, 0.417, 'H')]
+    coords, monos, n = [], [], 0
+    for a in range(25):
+        for b in range(25):
+            for c in range(8):
+                x0, y0, z0 = 7.0 + 3.1 * c, -37.2 + 3.1 * a, -37.2 + 3.1 * b
+                for dx, dy, dz, q, el in oh:
+                    n += 1
+                    lab = 'A%d%s' % (n, el)
+                    coords.append('%-12s %15.10f %15.10f %15.10f %10.4f %5.1f' %
+                                  (lab, (x0 + dx) * bohr, (y0 + dy) * bohr, (z0 + dz) * bohr, 0.0001, 0.0))
+                    monos.append('%-12s %15.10f %10.5f' % (lab, q, 0.0))
+    out = [' $mm_box', ' MM fragment: 5000 TIP3P water molecules (charges only)', ' COORDINATES (BOHR)'] + coords + \
+          [' STOP', ' MONOPOLES'] + monos + [' STOP', ' $END', '']
+    open(dst, 'w').write('\n'.join(out))
+
+
 def main():
     fraglib = sys.argv[1] if len(sys.argv) > 1 else '../fraglib'
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -322,6 +345,7 @@ def main():
     pentacene_3x(os.path.join(fraglib, 'pentacene.efp'), os.path.join(here, 'pentacene_3x.efp'))
     h2o_dipquad(os.path.join(fraglib, 'h2o.efp'), os.path.join(here, 'h2o_dipquad.efp'))
     h2o_shuffled(os.path.join(fraglib, 'h2o.efp'), os.path.join(here, 'h2o_shuffled.efp'))
+    mm_box(os.path.join(here, 'mm_box.efp'))
 
 
 if __name__ == '__main__':

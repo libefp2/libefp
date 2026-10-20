@@ -33,6 +33,7 @@ struct efp;
 struct frag;
 
 double efp_frag_frag_elec(struct efp *, size_t, size_t);
+double efp_frag_frag_elec_range(struct efp *, size_t, size_t, size_t, size_t);
 double efp_frag_frag_disp(struct efp *, size_t, size_t,
     const double *, const six_t *);
 void efp_frag_frag_xr(struct efp *, size_t, size_t, double *,

@@ -674,6 +674,21 @@ mult_mult_grad(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 double
 efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
 {
+	return efp_frag_frag_elec_range(efp, fr_i_idx, fr_j_idx, 0,
+	    efp->frags[fr_i_idx].n_multipole_pts);
+}
+
+/*
+ * Electrostatic interaction of the multipole points [ii_from, ii_to) of
+ * fragment i with all points of fragment j (energy, gradient and the
+ * switching-function force of this part). The pair energy is the sum over
+ * the point ranges, so the points of a very large fragment can be split
+ * among threads (see compute_two_body_range in efp.c).
+ */
+double
+efp_frag_frag_elec_range(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
+    size_t ii_from, size_t ii_to)
+{
 	struct frag *fr_i = efp->frags + fr_i_idx;
 	struct frag *fr_j = efp->frags + fr_j_idx;
 	struct swf swf = efp_make_swf(efp, fr_i, fr_j, 0);
@@ -686,7 +701,7 @@ efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
     else {
         if (fr_i->if_mm_frag && fr_j->if_mm_frag) {
             /* charges - charges */
-            for (size_t ii = 0; ii < fr_i->n_multipole_pts; ii++) {
+            for (size_t ii = ii_from; ii < ii_to; ii++) {
                 for (size_t jj = 0; jj < fr_j->n_multipole_pts; jj++) {
                     energy += ch_ch_energy(efp, fr_i_idx, fr_j_idx,
                                             ii, jj, &swf);
@@ -697,7 +712,7 @@ efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
         }
         else if (fr_i->if_mm_frag) {
         /* charges - higher-order */
-            for (size_t ii = 0; ii < fr_i->n_multipole_pts; ii++) {
+            for (size_t ii = ii_from; ii < ii_to; ii++) {
                 for (size_t jj = 0; jj < fr_j->n_multipole_pts; jj++) {
                     energy += ch_mult_energy(efp, fr_i_idx, fr_j_idx,
                                             ii, jj, &swf);
@@ -708,7 +723,7 @@ efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
         }
         else if (fr_j->if_mm_frag) {
             /* charges - higher-order */
-            for (size_t ii = 0; ii < fr_i->n_multipole_pts; ii++) {
+            for (size_t ii = ii_from; ii < ii_to; ii++) {
                 for (size_t jj = 0; jj < fr_j->n_multipole_pts; jj++) {
                     // careful: flipping order of fragments 
                     energy += ch_mult_energy(efp, fr_j_idx, fr_i_idx,
@@ -720,7 +735,7 @@ efp_frag_frag_elec(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
         }
         else {
         /* mult points - mult points */
-            for (size_t ii = 0; ii < fr_i->n_multipole_pts; ii++) {
+            for (size_t ii = ii_from; ii < ii_to; ii++) {
                 for (size_t jj = 0; jj < fr_j->n_multipole_pts; jj++) {
                     energy += mult_mult_energy(efp, fr_i_idx, fr_j_idx,
                                             ii, jj, &swf);
