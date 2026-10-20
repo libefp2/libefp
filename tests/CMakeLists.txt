@@ -131,6 +131,8 @@ foreach(test_name
   symm_2
   symm_2pw
   symm_2pw_printout
+  symm_classes_a
+  symm_classes_b
   total_1a
   total_2a
   total_3a

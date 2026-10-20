@@ -454,10 +454,15 @@ unique_symm_frag(struct efp *efp, size_t *unique_frag){
 void
 n_symm_frag(struct efp *efp, size_t *symm_frag) {
 
+    /* number of fragments of every symmetry class; classes are numbered
+     * 1, 2, ... in the order of their first fragments (efp_set_symmlist),
+     * and symm_frag[i] belongs to class i + 1 (this used to compare with
+     * the class of fragment i, which is wrong unless the first fragments of
+     * the input are one per class) */
     for (size_t i = 0; i < efp->nsymm_frag; i++) {
         size_t counter = 0;
         for (size_t j = 0; j < efp->n_frag; j++) {
-            if (efp->symmlist[i] == efp->symmlist[j])
+            if (efp->symmlist[j] == i + 1)
                 counter++;
         }
         symm_frag[i] = counter;
