@@ -174,6 +174,7 @@ static struct cfg *make_cfg(void)
     cfg_add_bool(cfg, "pairwise_ligand_only", false);
     cfg_add_bool(cfg, "print_pbc", false);
     cfg_add_bool(cfg, "print_geometry", true);
+    cfg_add_bool(cfg, "print_pairwise_geometry", true);
     cfg_add_bool(cfg, "symmetry", false);
 
     cfg_add_int(cfg, "special_fragment", -100);
