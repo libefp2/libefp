@@ -891,25 +891,53 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 static void
 compute_two_body_crystal(struct efp *efp)
 {
-    double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0, e_elec_tmp = 0.0, e_disp_tmp = 0.0;
-// no parallelization
-    int nsymm = efp->nsymm_frag;
+    double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0;
+    size_t nsymm = efp->nsymm_frag;
     size_t *unique_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     unique_symm_frag(efp, unique_frag);
 
     size_t *nsymm_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     n_symm_frag(efp, nsymm_frag);
 
-    for (size_t k = 0; k < nsymm; k++) {
+    /* work items: blocks of PAIR_BLOCK partners of every symmetry-unique
+     * fragment (a few rows with all fragments as partners) */
+    size_t *item_start = (size_t *)malloc((nsymm + 1) * sizeof(size_t));
+    if (unique_frag == NULL || nsymm_frag == NULL || item_start == NULL) {
+        efp_log("compute_two_body_crystal(): out of memory");
+        abort();
+    }
+    item_start[0] = 0;
+    for (size_t k = 0; k < nsymm; k++)
+        item_start[k + 1] = item_start[k] + (efp_n_partners(efp, unique_frag[k]) +
+            PAIR_BLOCK - 1) / PAIR_BLOCK;
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic) reduction(+:e_elec,e_disp,e_xr,e_cp)
+#endif
+    for (size_t item = 0; item < item_start[nsymm]; item++) {
+        size_t k = 0, lo = 0, hi = nsymm;
+
+        while (lo < hi) {
+            size_t mid = (lo + hi) / 2;
+
+            if (item_start[mid + 1] <= item)
+                lo = mid + 1;
+            else
+                hi = mid;
+        }
+        k = lo;
+
         size_t i = unique_frag[k];
-        // printf("unique_frag %zu\n",unique_frag[k]);
-	    struct frag *frag = efp->frags + i;
+        size_t n_part = efp_n_partners(efp, i);
+        size_t kp_from = (item - item_start[k]) * PAIR_BLOCK;
+        size_t kp_to = kp_from + PAIR_BLOCK < n_part ? kp_from + PAIR_BLOCK : n_part;
 
         // scaling factor that tells how many fragments like this are in the system
         size_t factor = nsymm_frag[k];
-	    // printf("nsymm_frag = %zu\n",factor);
-        for (size_t kp = 0; kp < efp_n_partners(efp, i); kp++){
+        for (size_t kp = kp_from; kp < kp_to; kp++){
             size_t fr_j = efp_partner(efp, i, kp);
+            double e_elec_tmp = 0.0, e_disp_tmp = 0.0;
+
             if ( fr_j != i && !efp_skip_frag_pair(efp, i, fr_j)) {
 
                 struct frag *fragj = efp->frags + fr_j;
@@ -982,6 +1010,10 @@ compute_two_body_crystal(struct efp *efp)
             }
         }
     }
+    free(item_start);
+    free(unique_frag);
+    free(nsymm_frag);
+
     // really, we counted all pairwise interactions twice. Scaling back
     efp->energy.electrostatic += e_elec/2;
     efp->energy.dispersion += e_disp/2;

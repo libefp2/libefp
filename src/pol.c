@@ -529,6 +529,42 @@ compute_elec_field(struct efp *efp) {
     return EFP_RESULT_SUCCESS;
 }
 
+/*
+ * Polarizable points of the symmetry-unique fragments as a flat list for the
+ * parallel loops of symmetric crystals: point p of the list is point
+ * p - start[k] of fragment unique_frag[k], start[k] <= p < start[k + 1].
+ * Returns start (nsymm + 1 entries), NULL if out of memory.
+ */
+static size_t *
+unique_pt_start(const struct efp *efp, const size_t *unique_frag, size_t nsymm)
+{
+	size_t *start = (size_t *)malloc((nsymm + 1) * sizeof(size_t));
+
+	if (start == NULL)
+		return NULL;
+	start[0] = 0;
+	for (size_t k = 0; k < nsymm; k++)
+		start[k + 1] = start[k] + efp->frags[unique_frag[k]].n_polarizable_pts;
+	return start;
+}
+
+/* k with start[k] <= p < start[k + 1] */
+static size_t
+unique_pt_class(const size_t *start, size_t nsymm, size_t p)
+{
+	size_t lo = 0, hi = nsymm;
+
+	while (lo < hi) {
+		size_t mid = (lo + hi) / 2;
+
+		if (start[mid + 1] <= p)
+			lo = mid + 1;
+		else
+			hi = mid;
+	}
+	return lo;
+}
+
 static enum efp_result
 compute_elec_field_crystal(struct efp *efp)
 {
@@ -539,19 +575,33 @@ compute_elec_field_crystal(struct efp *efp)
     size_t *unique_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     unique_symm_frag(efp, unique_frag);
 
-    // This is not parallelized!!!
-    for (size_t i = 0; i < nsymm; i++) {
-        struct frag *frag = efp->frags + unique_frag[i];
-
-        for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
-            frag->polarizable_pts[j].elec_field = get_elec_field(efp, unique_frag[i], j);
-            frag->polarizable_pts[j].elec_field_wf = vec_zero;
-        }
+    size_t *start = unique_pt_start(efp, unique_frag, nsymm);
+    if (start == NULL) {
+        free(unique_frag);
+        return EFP_RESULT_NO_MEMORY;
     }
+
+    /* static field on the points of the symmetry-unique fragments */
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, 32)
+#endif
+    for (size_t p = 0; p < start[nsymm]; p++) {
+        size_t k = unique_pt_class(start, nsymm, p);
+        struct frag *frag = efp->frags + unique_frag[k];
+        size_t j = p - start[k];
+
+        frag->polarizable_pts[j].elec_field = get_elec_field(efp, unique_frag[k], j);
+        frag->polarizable_pts[j].elec_field_wf = vec_zero;
+    }
+    free(start);
 
     if (do_pairwise) {
         struct ligand *ligand = efp->ligand;
 
+        /* every fragment i writes only its own entries */
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic)
+#endif
         for (size_t i = 0; i < efp->n_frag; i++) {
             if (i != efp->ligand_index) {
                 // field on ligand due to other fragments "i"
@@ -568,6 +618,7 @@ compute_elec_field_crystal(struct efp *efp)
             }
         }
     }
+    free(unique_frag);
 
     return EFP_RESULT_SUCCESS;
 }
@@ -767,22 +818,29 @@ compute_id_range(struct efp *efp, size_t from, size_t to, void *data)
 static void
 compute_id_crystal(struct efp *efp, void *data)
 {
-    // This is not parallelized!!!
     double conv = 0.0;
 
-    int nsymm = efp->nsymm_frag;
+    size_t nsymm = efp->nsymm_frag;
     size_t *unique_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     unique_symm_frag(efp, unique_frag);
     size_t *nsymm_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     n_symm_frag(efp, nsymm_frag);
-
+    size_t *start = unique_pt_start(efp, unique_frag, nsymm);
+    if (start == NULL) {
+        efp_log("compute_id_crystal(): out of memory");
+        abort();
+    }
 
     // step 1: compute induced dipoles on symmetry-unique fragments
-    for (int i = 0; i < nsymm; i++) {
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, 32) reduction(+:conv)
+#endif
+    for (size_t p = 0; p < start[nsymm]; p++) {
+        size_t i = unique_pt_class(start, nsymm, p);
         struct frag *frag = efp->frags + unique_frag[i];
 
-        for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
-            struct polarizable_pt *pt = frag->polarizable_pts + j;
+        {
+            struct polarizable_pt *pt = frag->polarizable_pts + (p - start[i]);
             vec_t field, field_conj;
 
             /* electric field from other induced dipoles */
@@ -807,19 +865,23 @@ compute_id_crystal(struct efp *efp, void *data)
             conv += nsymm_frag[i]*vec_dist(&pt->indipconj, &pt->indipconj_old);
         }
     }
+    free(start);
     *(double *)data += conv;
 
-    // step 2: broadcast induced dipoles to symmetry-identical fragments
-    for (int j=0; j<nsymm; j++){
-        // printf("\n unique_frag %d", unique_frag[j]);
+    // step 2: broadcast induced dipoles to symmetry-identical fragments;
+    // fragment i is of class symmlist[i], whose unique fragment is
+    // unique_frag[symmlist[i] - 1] (efp_set_symmlist, unique_symm_frag)
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic)
+#endif
+    for (size_t i=0; i<efp->n_frag; i++){
+        size_t j = efp->symmlist[i] - 1;
         struct frag *symmfrag = efp->frags + unique_frag[j];
-        for (size_t i=0; i<efp->n_frag; i++){
+        {
             if (i == unique_frag[j]) // do nothing for self
                 continue;
 
-            // found same-symmetry fragment, copy induced dipoles
-            // printf("\n symm i %d, symm j %d", efp->symmlist[i], efp->symmlist[unique_frag[j]]);
-            if (efp->symmlist[i] == efp->symmlist[unique_frag[j]]){
+            {
                 struct frag *frag = efp->frags + i;
                 // compute rotation matrix between two fragments
                 mat_t rotmat;
@@ -836,6 +898,8 @@ compute_id_crystal(struct efp *efp, void *data)
             }
         }
     }
+    free(unique_frag);
+    free(nsymm_frag);
 }
 
 static double
@@ -998,58 +1062,70 @@ compute_energy_crystal(struct efp *efp, double *polenergy)
     double energy = 0.0;
     int do_pairwise = (efp->opts.enable_pairwise && efp->opts.ligand > -1) ? 1 : 0;
 
-    int nsymm = efp->nsymm_frag;
+    size_t nsymm = efp->nsymm_frag;
     size_t *unique_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     unique_symm_frag(efp, unique_frag);
 
     size_t *nsymm_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     n_symm_frag(efp, nsymm_frag);
 
-    struct ligand *ligand;
-    if (do_pairwise)
-        ligand = efp->ligand;
+    size_t *start = unique_pt_start(efp, unique_frag, nsymm);
+    if (start == NULL) {
+        efp_log("compute_energy_crystal(): out of memory");
+        abort();
+    }
 
-    for (int k=0; k<nsymm; k++) {
-        size_t i = unique_frag[k];
-        struct frag *frag = efp->frags + i;
+    /* energy of the points of the symmetry-unique fragments, scaled by the
+     * number of fragments of their class */
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, 32) reduction(+:energy)
+#endif
+    for (size_t p = 0; p < start[nsymm]; p++) {
+        size_t k = unique_pt_class(start, nsymm, p);
+        struct polarizable_pt *pt = efp->frags[unique_frag[k]].polarizable_pts + (p - start[k]);
 
-        size_t factor = nsymm_frag[k];
+        energy += nsymm_frag[k] * (0.5 * vec_dot(&pt->indipconj, &pt->elec_field_wf) -
+                                   0.5 * vec_dot(&pt->indip, &pt->elec_field));
+    }
+    free(start);
 
-        for (size_t j = 0; j < frag->n_polarizable_pts; j++) {
-            struct polarizable_pt *pt = frag->polarizable_pts + j;
+    /* pairwise energies of the ligand (a symmetry-unique fragment) with every
+     * other fragment fr; every fr is written by one thread */
+    bool ligand_unique = false;
 
-            energy += factor * (0.5 * vec_dot(&pt->indipconj, &pt->elec_field_wf) -
-                                0.5 * vec_dot(&pt->indip, &pt->elec_field));
+    for (size_t k = 0; k < nsymm; k++)
+        if (unique_frag[k] == efp->ligand_index)
+            ligand_unique = true;
 
-            if (do_pairwise && i == efp->ligand_index) {
-                for (size_t fr = 0; fr < efp->n_frag; fr++) {
-                    if (fr == i)
-                        continue;
+    if (do_pairwise && ligand_unique) {
+        struct ligand *ligand = efp->ligand;
+        struct frag *lig = efp->frags + efp->ligand_index;
 
-                    struct frag *other_frag = efp->frags + fr;
-                    efp->pair_energies[fr].polarization +=
-                            -0.5 * vec_dot(&pt->indip, &ligand->ligand_pts[j].fragment_field[fr]);
-                            //vec_dot(&pt->indip, &efp->fragment_field[other_frag->fragment_field_offset + j]);
-                }
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic)
+#endif
+        for (size_t fr = 0; fr < efp->n_frag; fr++) {
+            if (fr == efp->ligand_index)
+                continue;
+
+            double e = 0.0;
+            struct frag *other_frag = efp->frags + fr;
+
+            /* induced dipoles of the ligand in the field of fragment fr */
+            for (size_t j = 0; j < lig->n_polarizable_pts; j++)
+                e += -0.5 * vec_dot(&lig->polarizable_pts[j].indip,
+                    &ligand->ligand_pts[j].fragment_field[fr]);
+            /* induced dipoles of fragment fr in the field of the ligand */
+            for (size_t p = 0; p < other_frag->n_polarizable_pts; p++) {
+                struct polarizable_pt *pt = other_frag->polarizable_pts + p;
+
+                e += -0.5 * vec_dot(&pt->indip, &pt->ligand_field);
             }
-        }
-
-        if (do_pairwise && i == efp->ligand_index) {
-            for (size_t fr = 0; fr < efp->n_frag; fr++) {
-                if (fr == i)
-                    continue;
-
-                struct frag *other_frag = efp->frags + fr;
-                for (size_t p = 0; p < other_frag->n_polarizable_pts; p++) {
-                    struct polarizable_pt *pt = other_frag->polarizable_pts + p;
-                    // size_t idx = other_frag->polarizable_offset + p;
-
-                    efp->pair_energies[fr].polarization +=
-                            -0.5 * vec_dot(&pt->indip, &pt->ligand_field);
-                }
-            }
+            efp->pair_energies[fr].polarization += e;
         }
     }
+    free(unique_frag);
+    free(nsymm_frag);
     *polenergy = energy;
 }
 
