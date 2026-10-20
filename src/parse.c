@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "stream.h"
 #include "private.h"
@@ -44,6 +45,8 @@ static void init_multipole_pt(struct multipole_pt *pt) {
     pt->if_oct = false;
     pt->if_scr2 = false;
     pt->if_scr0 = false;
+    pt->atom_idx[0] = -1;
+    pt->atom_idx[1] = -1;
 }
 
 static int
@@ -89,6 +92,38 @@ skip_label(struct stream *stream)
 	return efp_stream_current_char(stream) != '\0';
 }
 
+/*
+ * Skip the label of a polarizable point or LMO centroid. GAMESS writes it as
+ * 'CT',I1 / 'CT',I2 / 'CT',I3 followed by 3F15.10 (static polarizable points and LMO
+ * centroids: "CT1", "CT12", "CT123"; dynamic and dipole-quadrupole points always
+ * 'CT',I3: "CT  1", "CT 12", "CT123"), so neither a fixed number of characters
+ * nor a whitespace-delimited token is right: the label length varies, contains
+ * blanks for I3 and runs into a negative coordinate that fills its F15.10 field
+ * ("CT1-132.2805782867"). Skip "CT", blanks and the index digits (or the asterisks
+ * of an overflowed index) and stop at the first coordinate. Labels that do not
+ * start with "CT" are skipped as a token.
+ */
+static int
+skip_ct_label(struct stream *stream)
+{
+	efp_stream_skip_space(stream);
+
+	if (efp_stream_eol(stream))
+		return 0;
+
+	if (efp_strncasecmp(efp_stream_get_ptr(stream), "CT", 2) != 0)
+		return skip_label(stream);
+
+	efp_stream_advance(stream, 2);
+	efp_stream_skip_space(stream);
+
+	while (isdigit((unsigned char)efp_stream_current_char(stream)) ||
+	    efp_stream_current_char(stream) == '*')
+		efp_stream_get_char(stream);
+
+	return !efp_stream_eol(stream);
+}
+
 static int
 tok_label(struct stream *stream, size_t size, char *val)
 {
@@ -99,8 +134,20 @@ tok_label(struct stream *stream, size_t size, char *val)
 	if (efp_stream_eol(stream))
 		return 0;
 
+	/* GAMESS writes these labels as an A8 field followed by F15.10 numbers, so a
+	 * full 8-character label ("BO123124") runs into a negative number that fills
+	 * its field ("BO123124-132.2805782867"): end the label there */
 	start = efp_stream_get_ptr(stream);
-	efp_stream_skip_nonspace(stream);
+	for (size_t n = 0; ; n++) {
+		char c = efp_stream_current_char(stream);
+
+		if (c == '\0' || isspace((unsigned char)c))
+			break;
+		if (n == 8 && c == '-' && (isdigit((unsigned char)start[n + 1]) ||
+		    start[n + 1] == '.'))
+			break;
+		efp_stream_get_char(stream);
+	}
 	end = efp_stream_get_ptr(stream);
 	memset(val, 0, size);
 
@@ -139,9 +186,118 @@ tok_double(struct stream *stream, double *val)
 	return efp_stream_parse_double(stream, val);
 }
 
+/* FNV-1a hash of a label */
+static size_t
+label_hash(const char *label)
+{
+	uint64_t h = 14695981039346656037ULL;
+
+	for (const unsigned char *c = (const unsigned char *)label; *c; c++) {
+		h ^= *c;
+		h *= 1099511628211ULL;
+	}
+	return (size_t)h;
+}
+
+static void
+free_label_index(struct frag *frag)
+{
+	free(frag->label_index);
+	frag->label_index = NULL;
+	frag->label_index_size = 0;
+	frag->label_index_n_pts = 0;
+}
+
+/* open-addressing hash index label -> first multipole point with this label */
+static int
+build_label_index(struct frag *frag)
+{
+	size_t size = 16;
+
+	while (size < 2 * frag->n_multipole_pts)
+		size *= 2;
+
+	free_label_index(frag);
+	frag->label_index = (size_t *)calloc(size, sizeof(size_t));
+	if (frag->label_index == NULL)
+		return 0;
+	frag->label_index_size = size;
+	frag->label_index_n_pts = frag->n_multipole_pts;
+
+	for (size_t i = 0; i < frag->n_multipole_pts; i++) {
+		const char *label = frag->multipole_pts[i].label;
+		size_t k = label_hash(label) & (size - 1);
+
+		/* slots hold point index + 1, 0 is empty; keep the first point of
+		 * duplicated labels, as the linear search did */
+		while (frag->label_index[k] != 0 &&
+		    strcmp(frag->multipole_pts[frag->label_index[k] - 1].label, label))
+			k = (k + 1) & (size - 1);
+		if (frag->label_index[k] == 0)
+			frag->label_index[k] = i + 1;
+	}
+	return 1;
+}
+
+/*
+ * Index of the first multipole point with the given label, -1 if there is none.
+ * The multipole sections give one line per point; a linear search for every
+ * line was quadratic in the number of points (hours for MM fragments with
+ * 10^5 - 10^6 point charges).
+ */
+static long
+find_multipole_pt(struct frag *frag, const char *label)
+{
+	if (frag->label_index == NULL ||
+	    frag->label_index_n_pts != frag->n_multipole_pts)
+		if (!build_label_index(frag)) {
+			/* out of memory: fall back to the linear search */
+			for (size_t j = 0; j < frag->n_multipole_pts; j++)
+				if (!strcmp(label, frag->multipole_pts[j].label))
+					return (long)j;
+			return -1;
+		}
+
+	size_t size = frag->label_index_size;
+	size_t k = label_hash(label) & (size - 1);
+
+	while (frag->label_index[k] != 0) {
+		size_t j = frag->label_index[k] - 1;
+
+		if (!strcmp(frag->multipole_pts[j].label, label))
+			return (long)j;
+		k = (k + 1) & (size - 1);
+	}
+	return -1;
+}
+
+/* grow an array geometrically (one realloc per point was quadratic for large fragments) */
+static int
+reserve(void **ptr, size_t *capacity, size_t n, size_t elem_size)
+{
+	if (n <= *capacity)
+		return 1;
+
+	size_t cap = *capacity ? 2 * *capacity : 64;
+
+	while (cap < n)
+		cap *= 2;
+
+	void *p = realloc(*ptr, cap * elem_size);
+
+	if (p == NULL)
+		return 0;
+	*ptr = p;
+	*capacity = cap;
+	return 1;
+}
+
 static enum efp_result
 parse_coordinates(struct frag *frag, struct stream *stream)
 {
+	size_t atoms_capacity = frag->n_atoms;
+	size_t pts_capacity = frag->n_multipole_pts;
+
 	efp_stream_next_line(stream);
 
 	while (!efp_stream_eof(stream)) {
@@ -150,6 +306,17 @@ parse_coordinates(struct frag *frag, struct stream *stream)
                 efp_log("parse_coordinates() for fragment %s: n_atoms < 1", frag->name);
                 return EFP_RESULT_SYNTAX_ERROR;
             }
+
+			/* release the unused capacity */
+			struct efp_atom *atoms = (struct efp_atom *)realloc(frag->atoms,
+			    frag->n_atoms * sizeof(struct efp_atom));
+			struct multipole_pt *pts = (struct multipole_pt *)realloc(
+			    frag->multipole_pts,
+			    frag->n_multipole_pts * sizeof(struct multipole_pt));
+			if (atoms)
+				frag->atoms = atoms;
+			if (pts)
+				frag->multipole_pts = pts;
 
 			return EFP_RESULT_SUCCESS;
 		}
@@ -166,20 +333,17 @@ parse_coordinates(struct frag *frag, struct stream *stream)
         }
 
 		if (!eq(atom.mass, 0.0)) {
-			frag->n_atoms++;
-			frag->atoms = (struct efp_atom *)realloc(frag->atoms,
-			    frag->n_atoms * sizeof(struct efp_atom));
-			if (frag->atoms == NULL)
+			if (!reserve((void **)&frag->atoms, &atoms_capacity,
+			    frag->n_atoms + 1, sizeof(struct efp_atom)))
 				return EFP_RESULT_NO_MEMORY;
+			frag->n_atoms++;
 			frag->atoms[frag->n_atoms - 1] = atom;
 		}
 
-		frag->n_multipole_pts++;
-		frag->multipole_pts = (struct multipole_pt *)realloc(
-		    frag->multipole_pts,
-		    frag->n_multipole_pts * sizeof(struct multipole_pt));
-		if (frag->multipole_pts == NULL)
+		if (!reserve((void **)&frag->multipole_pts, &pts_capacity,
+		    frag->n_multipole_pts + 1, sizeof(struct multipole_pt)))
 			return EFP_RESULT_NO_MEMORY;
+		frag->n_multipole_pts++;
 
 		struct multipole_pt *last_pt =
 		    frag->multipole_pts + frag->n_multipole_pts - 1;
@@ -227,17 +391,15 @@ parse_monopoles(struct frag *frag, struct stream *stream)
             efp_log("parse_monopoles() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
-        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
-            if (!strcmp(tmp_pt.label, frag->multipole_pts[j].label)) {
-                // found a match
-                frag->multipole_pts[j].monopole = tmp_pt.monopole;
-                frag->multipole_pts[j].if_mon = true;
-                // LVS: use znuc from monopole section now!
-                frag->multipole_pts[j].znuc = tmp_pt.znuc;
-                frag->multipole_pts[j].if_znuc = true;
-                counter++;
-                break;
-            }
+        long j = find_multipole_pt(frag, tmp_pt.label);
+        if (j >= 0) {
+            // found a match
+            frag->multipole_pts[j].monopole = tmp_pt.monopole;
+            frag->multipole_pts[j].if_mon = true;
+            // LVS: use znuc from monopole section now!
+            frag->multipole_pts[j].znuc = tmp_pt.znuc;
+            frag->multipole_pts[j].if_znuc = true;
+            counter++;
         }
 		efp_stream_next_line(stream);
 	}
@@ -281,16 +443,14 @@ parse_dipoles(struct frag *frag, struct stream *stream)
             efp_log("parse_dipoles() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
-        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
-            if (!strcmp(tmp_pt.label, frag->multipole_pts[j].label)) {
-                // found a match
-                frag->multipole_pts[j].dipole.x = tmp_pt.dipole.x;
-                frag->multipole_pts[j].dipole.y = tmp_pt.dipole.y;
-                frag->multipole_pts[j].dipole.z = tmp_pt.dipole.z;
-                frag->multipole_pts[j].if_dip = true;
-                counter++;
-                break;
-            }
+        long j = find_multipole_pt(frag, tmp_pt.label);
+        if (j >= 0) {
+            // found a match
+            frag->multipole_pts[j].dipole.x = tmp_pt.dipole.x;
+            frag->multipole_pts[j].dipole.y = tmp_pt.dipole.y;
+            frag->multipole_pts[j].dipole.z = tmp_pt.dipole.z;
+            frag->multipole_pts[j].if_dip = true;
+            counter++;
         }
         efp_stream_next_line(stream);
     }
@@ -349,16 +509,14 @@ parse_quadrupoles(struct frag *frag, struct stream *stream)
             efp_log("parse_quadrupoles() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
-        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
-            if (!strcmp(tmp_pt.label, frag->multipole_pts[j].label)) {
-                // found a match
-                for (int q=0; q<6; q++) {
-                    frag->multipole_pts[j].quadrupole[q] = tmp_pt.quadrupole[q];
-                }
-                frag->multipole_pts[j].if_quad = true;
-                counter++;
-                break;
+        long j = find_multipole_pt(frag, tmp_pt.label);
+        if (j >= 0) {
+            // found a match
+            for (int q=0; q<6; q++) {
+                frag->multipole_pts[j].quadrupole[q] = tmp_pt.quadrupole[q];
             }
+            frag->multipole_pts[j].if_quad = true;
+            counter++;
         }
         efp_stream_next_line(stream);
     }
@@ -424,16 +582,14 @@ parse_octupoles(struct frag *frag, struct stream *stream)
                 return EFP_RESULT_SYNTAX_ERROR;
             }
 
-        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
-            if (!strcmp(tmp_pt.label, frag->multipole_pts[j].label)) {
-                // found a match
-                for (int q=0; q<10; q++) {
-                    frag->multipole_pts[j].octupole[q] = tmp_pt.octupole[q];
-                }
-                frag->multipole_pts[j].if_oct = true;
-                counter++;
-                break;
+        long j = find_multipole_pt(frag, tmp_pt.label);
+        if (j >= 0) {
+            // found a match
+            for (int q=0; q<10; q++) {
+                frag->multipole_pts[j].octupole[q] = tmp_pt.octupole[q];
             }
+            frag->multipole_pts[j].if_oct = true;
+            counter++;
         }
         efp_stream_next_line(stream);
     }
@@ -484,7 +640,7 @@ parse_polarizable_pts(struct frag *frag, struct stream *stream)
 		// zero out all entries
         memset(pt, 0, sizeof(struct polarizable_pt));
  
-		if (!efp_stream_advance(stream, 4)){
+		if (!skip_ct_label(stream)){
             efp_log("parse_polarizable_pts() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -546,7 +702,7 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
         memset(pt, 0, sizeof(*pt));
 
 
-		if (!efp_stream_advance(stream, 5)){
+		if (!skip_ct_label(stream)){
             efp_log("parse_dynamic_polarizable_pts() failure for fragment %s", frag->name);
             return EFP_RESULT_SYNTAX_ERROR;
         }
@@ -597,7 +753,7 @@ parse_dynamic_polarizable_pts(struct frag *frag, struct stream *stream)
 			struct dynamic_polarizable_pt *pt =
 			    frag->dynamic_polarizable_pts + i;
 
-			if (!efp_stream_advance(stream, 5)){
+			if (!skip_ct_label(stream)){
                 efp_log("parse_dynamic_polarizable_pts() failure for fragment %s", frag->name);
                 return EFP_RESULT_SYNTAX_ERROR;
             }
@@ -648,6 +804,8 @@ parse_projection_basis(struct frag *frag, struct stream *stream)
 		if (tok_stop(stream))
 			return EFP_RESULT_SUCCESS;
 
+		/* GAMESS writes the atom line as FORMAT(A8,A2,3F15.10,1X,F6.1): the label is a
+		 * fixed-width field, the A2 part is blank, so skipping 8 characters is correct */
 		if (!efp_stream_advance(stream, 8)){
             printf("problem with fragment %s", frag->name);
             efp_log("parse_projection_basis() failure");
@@ -785,6 +943,8 @@ parse_projection_wf(struct frag *frag, struct stream *stream)
 
 	for (size_t j = 0; j < frag->n_lmo; j++) {
 		for (size_t i = 0; i < frag->xr_wf_size / 5; i++) {
+			/* GAMESS writes FORMAT(I2,I3,5E15.8): the coefficients follow a fixed 5-character
+			 * index field and are not separated by blanks, so skip exactly 5 characters */
 			if (!efp_stream_advance(stream, 5)){
                 printf("problem with fragment %s, reading wf coefficients", frag->name);
                 efp_log("parse_projection_wf() failure");
@@ -869,7 +1029,7 @@ parse_lmo_centroids(struct frag *frag, struct stream *stream)
 	for (size_t i = 0; i < frag->n_lmo; i++) {
 		vec_t *ct = frag->lmo_centroids + i;
 
-		if (!skip_label(stream) ||
+		if (!skip_ct_label(stream) ||
 		    !tok_double(stream, &ct->x) ||
 		    !tok_double(stream, &ct->y) ||
 		    !tok_double(stream, &ct->z)){
@@ -993,10 +1153,10 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
 
         struct dipquad_polarizable_pt *pt =
                 frag->dipquad_polarizable_pts +
-                frag->n_dynamic_polarizable_pts - 1;
+                frag->n_dipquad_polarizable_pts - 1;
         memset(pt, 0, sizeof(*pt));
 
-        if (!efp_stream_advance(stream, 5)){
+        if (!skip_ct_label(stream)){
             printf("problem with fragment %s", frag->name);
             efp_log("parse_dipquad_polarizable_pts() failure");
             return EFP_RESULT_SYNTAX_ERROR;
@@ -1070,7 +1230,7 @@ parse_dipquad_polarizable_pts(struct frag *frag, struct stream *stream)
             struct dipquad_polarizable_pt *pt =
                     frag->dipquad_polarizable_pts + i;
 
-            if (!efp_stream_advance(stream, 5)){
+            if (!skip_ct_label(stream)){
                 printf("problem with fragment %s", frag->name);
                 efp_log("parse_dipquad_polarizable_pts() failure");
                 return EFP_RESULT_SYNTAX_ERROR;
@@ -1234,26 +1394,22 @@ parse_screen(struct frag *frag, struct stream *stream)
             return EFP_RESULT_SYNTAX_ERROR;
         }
 
-        for (size_t j = 0; j < frag->n_multipole_pts; j++) {
-            if (!strcmp(tmp_pt.label, frag->multipole_pts[j].label)) {
-                // found a match
-                if (screen_type == 2) {
-                    frag->multipole_pts[j].screen2 = tmp_screen;
-                    frag->multipole_pts[j].if_scr2 = true;
-                    //printf(" SCREEN2 param %lf \n", frag->multipole_pts[j].screen2);
-                }
-                if (screen_type == 0) {
-                    frag->multipole_pts[j].screen0 = tmp_screen;
-                    frag->multipole_pts[j].if_scr0 = true;
-                    //printf(" SCREEN0 param %lf \n", frag->multipole_pts[j].screen0);
-                }
-                if (screen_type == 3) {
-                    // do nothing with screen3
-                    continue;
-                }
-                counter++;
-                break;
+        long j = find_multipole_pt(frag, tmp_pt.label);
+        if (j >= 0) {
+            // found a match
+            if (screen_type == 2) {
+                frag->multipole_pts[j].screen2 = tmp_screen;
+                frag->multipole_pts[j].if_scr2 = true;
+                //printf(" SCREEN2 param %lf \n", frag->multipole_pts[j].screen2);
             }
+            if (screen_type == 0) {
+                frag->multipole_pts[j].screen0 = tmp_screen;
+                frag->multipole_pts[j].if_scr0 = true;
+                //printf(" SCREEN0 param %lf \n", frag->multipole_pts[j].screen0);
+            }
+            // nothing to do with screen3
+            if (screen_type != 3)
+                counter++;
         }
         efp_stream_next_line(stream);
     }
@@ -1511,6 +1667,181 @@ get_parse_fn(struct stream *stream)
 	return NULL;
 }
 
+#define SAME_POINT_TOL 1.0e-6
+
+static void
+shift_xyz(double *x, double *y, double *z, const vec_t *d)
+{
+	*x -= d->x;
+	*y -= d->y;
+	*z -= d->z;
+}
+
+/*
+ * Move the fragment frame to the center of mass of the fragment atoms.
+ *
+ * Fragments are placed as frag->x + R * p_lib, where frag->x is the center of
+ * mass for the xyzabc and atoms coordinate types, so the library coordinates
+ * must have the center of mass at the origin. Fragments written by GAMESS do;
+ * fragments built in another frame (e.g. MD coordinates) did not and were
+ * misplaced. Also record whether the axes are principal axes of inertia, which
+ * molecular dynamics assumes (no rotation is done here: rotating would change
+ * the meaning of the Euler angles of xyzabc coordinates).
+ */
+static void
+center_fragment(struct frag *frag)
+{
+	double mass = 0.0;
+	vec_t com = vec_zero;
+
+	for (size_t i = 0; i < frag->n_atoms; i++) {
+		const struct efp_atom *at = frag->atoms + i;
+
+		mass += at->mass;
+		com.x += at->mass * at->x;
+		com.y += at->mass * at->y;
+		com.z += at->mass * at->z;
+	}
+	frag->principal_axes = true;
+
+	if (mass <= 0.0)
+		return;
+
+	vec_scale(&com, 1.0 / mass);
+
+	for (size_t i = 0; i < frag->n_atoms; i++)
+		shift_xyz(&frag->atoms[i].x, &frag->atoms[i].y, &frag->atoms[i].z, &com);
+	for (size_t i = 0; i < frag->n_multipole_pts; i++)
+		shift_xyz(&frag->multipole_pts[i].x, &frag->multipole_pts[i].y,
+		    &frag->multipole_pts[i].z, &com);
+	for (size_t i = 0; i < frag->n_polarizable_pts; i++)
+		shift_xyz(&frag->polarizable_pts[i].x, &frag->polarizable_pts[i].y,
+		    &frag->polarizable_pts[i].z, &com);
+	for (size_t i = 0; i < frag->n_dynamic_polarizable_pts; i++)
+		shift_xyz(&frag->dynamic_polarizable_pts[i].x,
+		    &frag->dynamic_polarizable_pts[i].y,
+		    &frag->dynamic_polarizable_pts[i].z, &com);
+	for (size_t i = 0; i < frag->n_dipquad_polarizable_pts; i++)
+		shift_xyz(&frag->dipquad_polarizable_pts[i].x,
+		    &frag->dipquad_polarizable_pts[i].y,
+		    &frag->dipquad_polarizable_pts[i].z, &com);
+	for (size_t i = 0; i < frag->n_xr_atoms; i++)
+		shift_xyz(&frag->xr_atoms[i].x, &frag->xr_atoms[i].y,
+		    &frag->xr_atoms[i].z, &com);
+	if (frag->lmo_centroids)
+		for (size_t i = 0; i < frag->n_lmo; i++)
+			shift_xyz(&frag->lmo_centroids[i].x, &frag->lmo_centroids[i].y,
+			    &frag->lmo_centroids[i].z, &com);
+
+	double ixx = 0.0, iyy = 0.0, izz = 0.0, ixy = 0.0, ixz = 0.0, iyz = 0.0;
+
+	for (size_t i = 0; i < frag->n_atoms; i++) {
+		const struct efp_atom *at = frag->atoms + i;
+
+		ixx += at->mass * (at->y * at->y + at->z * at->z);
+		iyy += at->mass * (at->x * at->x + at->z * at->z);
+		izz += at->mass * (at->x * at->x + at->y * at->y);
+		ixy -= at->mass * at->x * at->y;
+		ixz -= at->mass * at->x * at->z;
+		iyz -= at->mass * at->y * at->z;
+	}
+
+	double imax = fmax(ixx, fmax(iyy, izz));
+	double offdiag = fmax(fabs(ixy), fmax(fabs(ixz), fabs(iyz)));
+
+	frag->principal_axes = offdiag <= 1.0e-6 * imax;
+}
+
+static int
+same_point(const double *a, double x, double y, double z)
+{
+	return fabs(a[0] - x) < SAME_POINT_TOL && fabs(a[1] - y) < SAME_POINT_TOL &&
+	    fabs(a[2] - z) < SAME_POINT_TOL;
+}
+
+/*
+ * Find the atoms that define the position of every multipole point: the atom
+ * itself, or the two atoms of a bond for a bond mid-point. GAMESS labels bond
+ * mid-points "BO" followed by the two atom numbers without separator, which is
+ * ambiguous ("BO1211" is atoms 12 and 11, or 121 and 1), so every split of the
+ * digits into two atom numbers is checked against the coordinates. The work is
+ * linear in the number of points, also for large fragments.
+ */
+static void
+assign_multipole_atoms(struct frag *frag)
+{
+	long n_atoms = (long)frag->n_atoms;
+
+	for (size_t i = 0; i < frag->n_multipole_pts; i++) {
+		struct multipole_pt *pt = frag->multipole_pts + i;
+		const char *label = pt->label;
+
+		pt->atom_idx[0] = pt->atom_idx[1] = -1;
+
+		/* atoms are normally listed first, in order */
+		if ((long)i < n_atoms && same_point(&frag->atoms[i].x, pt->x, pt->y, pt->z)) {
+			pt->atom_idx[0] = pt->atom_idx[1] = (long)i;
+			continue;
+		}
+
+		/* atom label "A<number><name>" */
+		if (label[0] == 'A' && isdigit((unsigned char)label[1])) {
+			long k = strtol(label + 1, NULL, 10) - 1;
+
+			if (k >= 0 && k < n_atoms &&
+			    same_point(&frag->atoms[k].x, pt->x, pt->y, pt->z)) {
+				pt->atom_idx[0] = pt->atom_idx[1] = k;
+				continue;
+			}
+		}
+
+		/* bond mid-point label "BO<number><number>" */
+		if (label[0] != 'B' || label[1] != 'O')
+			continue;
+
+		size_t len = strlen(label + 2);
+		double best = -1.0;
+
+		for (size_t k = 0; k < len; k++)
+			if (!isdigit((unsigned char)label[2 + k]))
+				len = 0;
+
+		for (size_t split = 1; split < len; split++) {
+			char first[32] = {0};
+
+			if (label[2 + split] == '0')
+				continue; /* no leading zeros */
+			memcpy(first, label + 2, split);
+
+			long a = strtol(first, NULL, 10) - 1;
+			long b = strtol(label + 2 + split, NULL, 10) - 1;
+
+			if (a < 0 || b < 0 || a >= n_atoms || b >= n_atoms || a == b)
+				continue;
+
+			const struct efp_atom *at_a = frag->atoms + a;
+			const struct efp_atom *at_b = frag->atoms + b;
+			double mid[3] = { 0.5 * (at_a->x + at_b->x),
+			    0.5 * (at_a->y + at_b->y), 0.5 * (at_a->z + at_b->z) };
+
+			if (!same_point(mid, pt->x, pt->y, pt->z))
+				continue;
+
+			/* several splits can match for symmetric geometries: take the
+			 * shortest distance, i.e. the bond */
+			double dx = at_a->x - at_b->x, dy = at_a->y - at_b->y,
+			    dz = at_a->z - at_b->z;
+			double r2 = dx * dx + dy * dy + dz * dz;
+
+			if (best < 0.0 || r2 < best) {
+				best = r2;
+				pt->atom_idx[0] = a;
+				pt->atom_idx[1] = b;
+			}
+		}
+	}
+}
+
 static enum efp_result
 parse_fragment(struct frag *frag, struct stream *stream)
 {
@@ -1593,8 +1924,13 @@ parse_file(struct efp *efp, struct stream *stream)
 		efp_stream_next_line(stream);
 		efp_stream_next_line(stream);
 
-		if ((res = parse_fragment(frag, stream)))
+		res = parse_fragment(frag, stream);
+		free_label_index(frag);
+		if (res)
 			return res;
+
+		center_fragment(frag);
+		assign_multipole_atoms(frag);
 		if (frag->n_lmo > 0 && frag->lmo_centroids == NULL) {
 			efp_log("LMO centroids are missing for fragment \"%s\"", name);
 			return EFP_RESULT_FATAL;

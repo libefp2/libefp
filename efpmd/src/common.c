@@ -370,6 +370,18 @@ void print_pair_energy(struct state *state) {
     char frag_name[32];
     size_t frag_atoms;
     double lattice_energy[6] = {0.0};
+    /* without geometries every fragment block is one line plus the energies;
+     * the ligand geometry is printed once */
+    bool print_geometries = cfg_get_bool(state->cfg, "print_pairwise_geometry");
+
+    if (!print_geometries) {
+        msg("ligand %zu fragment %s\n", ligand_index, ligand);
+        for (size_t a = 0; a < lig_atoms; a++)
+            msg("   %-16s %12.6lf %12.6lf %12.6lf\n", latoms[a].label,
+                latoms[a].x * BOHR_RADIUS, latoms[a].y * BOHR_RADIUS,
+                latoms[a].z * BOHR_RADIUS);
+        msg("\n");
+    }
 
 	for (size_t i=0; i <n_frags; i++){
         check_fail(efp_get_frag_name(state->efp, i, sizeof(frag_name),frag_name));
@@ -379,6 +391,7 @@ void print_pair_energy(struct state *state) {
         check_fail(efp_get_frag_atoms(state->efp, i, frag_atoms, atoms));
 
         msg("   PAIRWISE ENERGY BETWEEN FRAGMENT %zu (%s) AND LIGAND %zu (%s) \n", i, frag_name, ligand_index, ligand);
+        if (print_geometries) {
         msg("fragment %s\n", frag_name);
         for (size_t a = 0; a < frag_atoms; a++) {
             double x = atoms[a].x * BOHR_RADIUS;
@@ -395,9 +408,10 @@ void print_pair_energy(struct state *state) {
             double z = latoms[a].z * BOHR_RADIUS;
             msg("   %-16s %12.6lf %12.6lf %12.6lf\n", latoms[a].label, x, y, z);
         }
+        }
 
 		free(atoms);
-        
+
 		msg("\n");
         msg("    PAIRWISE ENERGY COMPONENTS (ATOMIC UNITS)\n");
         msg("%40s %16.10lf\n", "PAIRWISE ELECTROSTATIC ENERGY", energies[i].electrostatic);

@@ -1,0 +1,27 @@
+# Regression test: ligand_cutoff, a separate cutoff for the pairs with the ligand (fragment 1).
+# Fragment centers on a line: B -14 A, ligand 0, A +4 A, C +8 A. With swf_cutoff 10 and ligand_cutoff 16
+# the pairs L-A, L-C, A-C have switching function 1, L-B (14 A) is in the switching region of the
+# 16 A cutoff, A-B (17 A) and C-B (22 A) are beyond both cutoffs: the same pairs and switching factors
+# as a standard run with swf_cutoff 16, which gives the reference energy (including polarization).
+run_type gtest
+ref_energy -0.0019181280
+coord xyzabc
+terms elec pol disp xr
+elec_damp screen
+pol_damp tt
+disp_damp tt
+enable_cutoff true
+swf_cutoff 10.0
+xr_cutoff 8.0
+ligand 1
+ligand_cutoff 16.0
+fraglib_path ../fraglib
+
+fragment h2o_l
+  -14.000   0.300   0.000   0.500   1.200   0.300
+fragment h2o_l
+    0.000   0.000   0.000   0.000   0.000   0.000
+fragment h2o_l
+    4.000   0.200  -0.100   2.000   0.700   2.000
+fragment h2o_l
+    8.000  -0.300   0.200   1.100   2.300   0.400

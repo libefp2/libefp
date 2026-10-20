@@ -1,0 +1,22 @@
+# Regression test: dispersion with Tang-Toennies damping for a fragment without LMOs (no exchange-
+# repulsion data: pentacene_2x.efp). The LMO overlap arrays are not allocated for such pairs and used
+# to be read anyway. The energy must equal the one with pentacene_l (disp_no_lmo_1a).
+run_type gtest
+ref_energy -0.0045017013
+# the center of mass of pentacene_2x is 200 bohr away from the first molecule: a rotation by the default
+# num_step_angle (0.01) moves it by 2 bohr, too far for the numerical derivative
+num_step_angle 0.00001
+coord points
+terms disp
+disp_damp tt
+fraglib_path ../fraglib
+
+fragment pentacene_l
+    3.636109    -0.722305     0.000000
+    4.911087    -1.405659     0.000000
+    6.058717    -0.722932     0.000000
+
+fragment h2o_l
+    1.200000     0.000000     3.363030
+    0.447348     0.000000     2.799834
+    1.952652     0.000000     2.799834

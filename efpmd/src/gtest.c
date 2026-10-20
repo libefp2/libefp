@@ -397,7 +397,8 @@ void sim_etest(struct state *state)
     msg("ENERGY TEST JOB\n\n\n");
 
     print_geometry(state->efp);
-    compute_energy(state, 1);
+    /* only the energy is tested */
+    compute_energy(state, 0);
     print_energy(state);
     test_energy(state);
 

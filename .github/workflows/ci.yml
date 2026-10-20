@@ -296,7 +296,15 @@ jobs:
       # psi4 with MKL avail for qmefp test
       - name: Install Psi4 for QM/EFP testing
         if: ${{ matrix.cfg.blas == 'MKL' }}
-        run: conda install psi4 -c conda-forge
+        # einsums 1.1.6 lacks a symbol of the conda-forge psi4 1.11 build (import fails with
+        # undefined symbol einsums::random_engine); pin einsums until psi4 is rebuilt.
+        # psi4 on Windows does not use einsums (no win-64 package).
+        run: |
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            conda install psi4 -c conda-forge
+          else
+            conda install psi4 einsums=1.1.5 -c conda-forge
+          fi
         
       - name: Test (pytest) -- unit tests Python bindings
         run: |

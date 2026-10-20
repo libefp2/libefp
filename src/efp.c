@@ -407,6 +407,24 @@ check_opts(const struct efp_opts *opts)
 			return EFP_RESULT_FATAL;
 		}
 	}
+	if (opts->ligand_cutoff > 0.0) {
+		if (!opts->enable_cutoff) {
+			efp_log("ligand_cutoff requires enable_cutoff");
+			return EFP_RESULT_FATAL;
+		}
+		if (opts->ligand < 0) {
+			efp_log("ligand_cutoff requires a ligand fragment (ligand >= 0)");
+			return EFP_RESULT_FATAL;
+		}
+		if (opts->symmetry) {
+			efp_log("ligand_cutoff is not available with symmetry");
+			return EFP_RESULT_FATAL;
+		}
+		if (opts->ligand_cutoff < opts->xr_cutoff) {
+			efp_log("ligand_cutoff is smaller than the exchange-repulsion cutoff");
+			return EFP_RESULT_FATAL;
+		}
+	}
     if (opts->enable_cutoff) {
         if (opts->swf_cutoff < opts->xr_cutoff) {
             efp_log("exchange-repulsion cutoff is smaller than interaction cutoff");
@@ -519,28 +537,39 @@ do_qq(const struct efp_opts *opts)
 }
 
 
+/*
+ * Electrostatics of pairs with more multipole point pairs than this (e.g. an
+ * MM fragment with 10^5 - 10^6 point charges) is not computed in the pair
+ * loop, where one thread would do the whole pair, but afterwards in chunks
+ * of HEAVY_PAIR_CHUNK points of the larger fragment shared among threads.
+ */
+#define HEAVY_PAIR_POINTS 1.0e6
+#define HEAVY_PAIR_CHUNK 2048
+/* partners of one fragment per work item in the pair loop (neighbor lists) */
+#define PAIR_BLOCK 256
+
+struct heavy_pair {
+	size_t big;    /* fragment whose points are split into chunks */
+	size_t small;
+};
+
+struct two_body_energy {
+	double elec, disp, xr, cp, lj, qq;
+};
+
+struct heavy_list {
+	struct heavy_pair *pairs;
+	size_t n, capacity;
+	bool no_memory;
+};
+
+/* two-body terms of the pair (i, fr_j) */
 static void
-compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
-    void *data)
+compute_pair(struct efp *efp, size_t i, size_t fr_j, struct two_body_energy *acc,
+    struct heavy_list *hl)
 {
-	double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0;
-    double e_lj = 0.0, e_qq = 0.0;
-
-	(void)data;
-
 	// ligand is a fragment (not QM)
 	bool if_pairwise = efp->opts.enable_pairwise && efp->opts.ligand > -1;
-
-#ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic) reduction(+:e_elec,e_disp,e_xr,e_cp,e_qq,e_lj)
-#endif
-	for (size_t i = frag_from; i < frag_to; i++) {
-		size_t cnt = efp->n_frag % 2 ? (efp->n_frag - 1) / 2 :
-		    i < efp->n_frag / 2 ? efp->n_frag / 2 :
-		    efp->n_frag / 2 - 1;
-
-		for (size_t j = i + 1; j < i + 1 + cnt; j++) {
-			size_t fr_j = j % efp->n_frag;
 
             double e_elec_tmp = 0.0, e_disp_tmp = 0.0, e_qq_tmp = 0.0;
 
@@ -558,8 +587,9 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
             special_lj = if_special_fragment && (efp->opts.special_terms & EFP_SPEC_TERM_LJ);
 
 			if (!efp_skip_frag_pair(efp, i, fr_j)) {
-				double *s;
-				six_t *ds;
+				/* LMO overlap integrals, only computed when both fragments have LMOs */
+				double *s = NULL;
+				six_t *ds = NULL;
 				size_t n_lmo_ij = efp->frags[i].n_lmo *
 				    efp->frags[fr_j].n_lmo;
 
@@ -573,8 +603,8 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 
                         efp_frag_frag_xr(efp, i, fr_j,
                                          s, ds, &exr, &ecp);
-                        e_xr += exr;
-                        e_cp += ecp;
+                        acc->xr += exr;
+                        acc->cp += ecp;
 
                         /* */
                         if (if_pairwise) {
@@ -589,7 +619,37 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                         }
                     }
                 }
-				if (((do_elec(&efp->opts)  && !if_special_fragment) || special_elec) 
+				size_t n_mult_i = efp->frags[i].n_multipole_pts;
+				size_t n_mult_j = efp->frags[fr_j].n_multipole_pts;
+				bool heavy_pair = do_elec(&efp->opts) && !if_special_fragment &&
+				    !efp->opts.enable_elpot &&
+				    (double)n_mult_i * (double)n_mult_j > HEAVY_PAIR_POINTS;
+
+				if (heavy_pair) {
+					/* electrostatics after the pair loop, in chunks */
+#ifdef _OPENMP
+#pragma omp critical(heavy_pairs)
+#endif
+					{
+						if (hl->n == hl->capacity) {
+							size_t cap = hl->capacity ? 2 * hl->capacity : 16;
+							struct heavy_pair *p = (struct heavy_pair *)realloc(
+							    hl->pairs, cap * sizeof(struct heavy_pair));
+							if (p) {
+								hl->pairs = p;
+								hl->capacity = cap;
+							}
+						}
+						if (hl->n < hl->capacity) {
+							hl->pairs[hl->n].big = n_mult_i >= n_mult_j ? i : fr_j;
+							hl->pairs[hl->n].small = n_mult_i >= n_mult_j ? fr_j : i;
+							hl->n++;
+						}
+						else
+							hl->no_memory = true;
+					}
+				}
+				else if (((do_elec(&efp->opts)  && !if_special_fragment) || special_elec) 
                         && efp->frags[i].n_multipole_pts > 0 && efp->frags[fr_j].n_multipole_pts > 0) {
 					e_elec_tmp = efp_frag_frag_elec(efp, i, fr_j);
 
@@ -600,7 +660,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                     if (efp->opts.enable_elpot && if_special_fragment) 
                         e_elec_tmp = 0.0;
 
-					e_elec += e_elec_tmp;
+					acc->elec += e_elec_tmp;
 					/* */
 					if (if_pairwise) {
                         if (i == efp->ligand_index)
@@ -612,7 +672,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 				if (((do_disp(&efp->opts)  && !if_special_fragment) || special_disp) 
                         && efp->frags[i].n_dynamic_polarizable_pts > 0 && efp->frags[fr_j].n_dynamic_polarizable_pts > 0) {
 					e_disp_tmp = efp_frag_frag_disp(efp, i, fr_j, s, ds);
-					e_disp += e_disp_tmp;
+					acc->disp += e_disp_tmp;
 					/* */
 					if (if_pairwise) {
                         if (i == efp->opts.ligand) 
@@ -623,7 +683,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 				}
                 // LJ terms
                 if ((do_lj(&efp->opts)  && !if_special_fragment) || special_lj) {
-                    e_lj += efp_frag_frag_lj(efp, i, fr_j);
+                    acc->lj += efp_frag_frag_lj(efp, i, fr_j);
                 }
                 // MM-like charge-charge interactions
                 if ((do_qq(&efp->opts)  && !if_special_fragment) || special_qq) {
@@ -631,7 +691,7 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 
                     // zeroing the energy contribution on the special fragment in torch custom models
                     if (efp->opts.enable_elpot && if_special_fragment) e_qq_tmp = 0.0;
-                    e_qq += e_qq_tmp;
+                    acc->qq += e_qq_tmp;
                 }
 
                 if (n_lmo_ij > 0) {
@@ -639,8 +699,180 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
                     free(ds);
                 }
 			}
+}
+
+static void
+compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
+    void *data)
+{
+	double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0;
+    double e_lj = 0.0, e_qq = 0.0;
+	struct heavy_list hl = { NULL, 0, 0, false };
+
+	(void)data;
+
+	// ligand is a fragment (not QM)
+	bool if_pairwise = efp->opts.enable_pairwise && efp->opts.ligand > -1;
+	// two-body terms only for the pairs with the ligand
+	bool ligand_only = efp->opts.enable_pairwise && efp->opts.pairwise_ligand_only;
+	size_t ligand = efp->opts.ligand > -1 ? (size_t)efp->opts.ligand : efp->n_frag;
+
+	/* the pair (i, j) is computed for fragment i if j = i + d (mod n_frag)
+	 * with 1 <= d <= cnt(i) (every pair once, and the same number of pairs
+	 * for all fragments) */
+#define PAIR_COUNT(i) (efp->n_frag % 2 ? (efp->n_frag - 1) / 2 : \
+	    (i) < efp->n_frag / 2 ? efp->n_frag / 2 : efp->n_frag / 2 - 1)
+
+	if (efp->nbr_valid) {
+		/* neighbor lists: the partners of every fragment are visited in
+		 * blocks, so that a fragment with very many neighbors (e.g. the
+		 * ligand with a large ligand_cutoff) is shared among threads */
+		size_t n_rows = frag_to > frag_from ? frag_to - frag_from : 0;
+		size_t *item_start = (size_t *)malloc((n_rows + 1) * sizeof(size_t));
+
+		if (item_start == NULL) {
+			efp_log("compute_two_body_range(): out of memory");
+			abort();
+		}
+		item_start[0] = 0;
+		for (size_t r = 0; r < n_rows; r++)
+			item_start[r + 1] = item_start[r] + (efp_n_partners(efp,
+			    frag_from + r) + PAIR_BLOCK - 1) / PAIR_BLOCK;
+
+		size_t n_items = item_start[n_rows];
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic) reduction(+:e_elec,e_disp,e_xr,e_cp,e_qq,e_lj)
+#endif
+		for (size_t item = 0; item < n_items; item++) {
+			size_t lo = 0, hi = n_rows;
+
+			/* row of this item: item_start[r] <= item < item_start[r + 1] */
+			while (lo < hi) {
+				size_t mid = (lo + hi) / 2;
+
+				if (item_start[mid + 1] <= item)
+					lo = mid + 1;
+				else
+					hi = mid;
+			}
+
+			size_t i = frag_from + lo;
+			size_t cnt = PAIR_COUNT(i);
+			size_t n_part = efp_n_partners(efp, i);
+			size_t k_from = (item - item_start[lo]) * PAIR_BLOCK;
+			size_t k_to = k_from + PAIR_BLOCK < n_part ? k_from + PAIR_BLOCK : n_part;
+			struct two_body_energy acc = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+			for (size_t k = k_from; k < k_to; k++) {
+				size_t fr_j = efp_partner(efp, i, k);
+				size_t d = (fr_j + efp->n_frag - i) % efp->n_frag;
+
+				if (d < 1 || d > cnt)
+					continue;
+				if (ligand_only && i != ligand && fr_j != ligand)
+					continue;
+				compute_pair(efp, i, fr_j, &acc, &hl);
+			}
+			e_elec += acc.elec;
+			e_disp += acc.disp;
+			e_xr += acc.xr;
+			e_cp += acc.cp;
+			e_lj += acc.lj;
+			e_qq += acc.qq;
+		}
+		free(item_start);
+	}
+	else {
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic) reduction(+:e_elec,e_disp,e_xr,e_cp,e_qq,e_lj)
+#endif
+		for (size_t i = frag_from; i < frag_to; i++) {
+			size_t cnt = PAIR_COUNT(i);
+			struct two_body_energy acc = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+			for (size_t k = 0; k < cnt; k++) {
+				size_t fr_j = (i + 1 + k) % efp->n_frag;
+
+				if (ligand_only && i != ligand && fr_j != ligand)
+					continue;
+				compute_pair(efp, i, fr_j, &acc, &hl);
+			}
+			e_elec += acc.elec;
+			e_disp += acc.disp;
+			e_xr += acc.xr;
+			e_cp += acc.cp;
+			e_lj += acc.lj;
+			e_qq += acc.qq;
 		}
 	}
+#undef PAIR_COUNT
+
+	struct heavy_pair *heavy = hl.pairs;
+	size_t n_heavy = hl.n;
+	bool heavy_no_memory = hl.no_memory;
+
+	/* electrostatics of the heavy pairs: work items (pair, chunk of points of
+	 * the larger fragment) shared among threads */
+	if (heavy_no_memory) {
+		efp_log("compute_two_body_range(): out of memory for heavy pairs");
+		abort();
+	}
+	if (n_heavy > 0) {
+		size_t n_items = 0;
+		size_t *item_start = (size_t *)malloc((n_heavy + 1) * sizeof(size_t));
+
+		if (item_start == NULL) {
+			efp_log("compute_two_body_range(): out of memory for heavy pairs");
+			abort();
+		}
+		for (size_t h = 0; h < n_heavy; h++) {
+			item_start[h] = n_items;
+			n_items += (efp->frags[heavy[h].big].n_multipole_pts +
+			    HEAVY_PAIR_CHUNK - 1) / HEAVY_PAIR_CHUNK;
+		}
+		item_start[n_heavy] = n_items;
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic) reduction(+:e_elec)
+#endif
+		for (size_t item = 0; item < n_items; item++) {
+			size_t h = 0, lo = 0, hi = n_heavy;
+
+			/* pair of this item: item_start[h] <= item < item_start[h + 1] */
+			while (lo < hi) {
+				size_t mid = (lo + hi) / 2;
+
+				if (item_start[mid + 1] <= item)
+					lo = mid + 1;
+				else
+					hi = mid;
+			}
+			h = lo;
+
+			size_t big = heavy[h].big, small = heavy[h].small;
+			size_t n_big = efp->frags[big].n_multipole_pts;
+			size_t from = (item - item_start[h]) * HEAVY_PAIR_CHUNK;
+			size_t to = from + HEAVY_PAIR_CHUNK < n_big ? from + HEAVY_PAIR_CHUNK : n_big;
+			double e = efp_frag_frag_elec_range(efp, big, small, from, to);
+
+			e_elec += e;
+			if (if_pairwise) {
+				size_t other = big == efp->ligand_index ? small :
+				    small == efp->ligand_index ? big : efp->n_frag;
+
+				if (other < efp->n_frag) {
+#ifdef _OPENMP
+#pragma omp atomic
+#endif
+					efp->pair_energies[other].electrostatic += e;
+				}
+			}
+		}
+		free(item_start);
+	}
+	free(heavy);
+
 	efp->energy.electrostatic += e_elec;
 	efp->energy.dispersion += e_disp;
 	efp->energy.exchange_repulsion += e_xr;
@@ -659,29 +891,59 @@ compute_two_body_range(struct efp *efp, size_t frag_from, size_t frag_to,
 static void
 compute_two_body_crystal(struct efp *efp)
 {
-    double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0, e_elec_tmp = 0.0, e_disp_tmp = 0.0;
-// no parallelization
-    int nsymm = efp->nsymm_frag;
+    double e_elec = 0.0, e_disp = 0.0, e_xr = 0.0, e_cp = 0.0;
+    size_t nsymm = efp->nsymm_frag;
     size_t *unique_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     unique_symm_frag(efp, unique_frag);
 
     size_t *nsymm_frag = (size_t *)calloc(nsymm, sizeof(size_t));
     n_symm_frag(efp, nsymm_frag);
 
-    for (size_t k = 0; k < nsymm; k++) {
+    /* work items: blocks of PAIR_BLOCK partners of every symmetry-unique
+     * fragment (a few rows with all fragments as partners) */
+    size_t *item_start = (size_t *)malloc((nsymm + 1) * sizeof(size_t));
+    if (unique_frag == NULL || nsymm_frag == NULL || item_start == NULL) {
+        efp_log("compute_two_body_crystal(): out of memory");
+        abort();
+    }
+    item_start[0] = 0;
+    for (size_t k = 0; k < nsymm; k++)
+        item_start[k + 1] = item_start[k] + (efp_n_partners(efp, unique_frag[k]) +
+            PAIR_BLOCK - 1) / PAIR_BLOCK;
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic) reduction(+:e_elec,e_disp,e_xr,e_cp)
+#endif
+    for (size_t item = 0; item < item_start[nsymm]; item++) {
+        size_t k = 0, lo = 0, hi = nsymm;
+
+        while (lo < hi) {
+            size_t mid = (lo + hi) / 2;
+
+            if (item_start[mid + 1] <= item)
+                lo = mid + 1;
+            else
+                hi = mid;
+        }
+        k = lo;
+
         size_t i = unique_frag[k];
-        // printf("unique_frag %zu\n",unique_frag[k]);
-	    struct frag *frag = efp->frags + i;
+        size_t n_part = efp_n_partners(efp, i);
+        size_t kp_from = (item - item_start[k]) * PAIR_BLOCK;
+        size_t kp_to = kp_from + PAIR_BLOCK < n_part ? kp_from + PAIR_BLOCK : n_part;
 
         // scaling factor that tells how many fragments like this are in the system
         size_t factor = nsymm_frag[k];
-	    // printf("nsymm_frag = %zu\n",factor);
-        for (size_t fr_j=0; fr_j<efp->n_frag; fr_j++){
+        for (size_t kp = kp_from; kp < kp_to; kp++){
+            size_t fr_j = efp_partner(efp, i, kp);
+            double e_elec_tmp = 0.0, e_disp_tmp = 0.0;
+
             if ( fr_j != i && !efp_skip_frag_pair(efp, i, fr_j)) {
 
                 struct frag *fragj = efp->frags + fr_j;
-                double *s;
-                six_t *ds;
+                /* LMO overlap integrals, only computed when both fragments have LMOs */
+                double *s = NULL;
+                six_t *ds = NULL;
                 size_t n_lmo_ij = efp->frags[i].n_lmo *
                                   efp->frags[fr_j].n_lmo;
                 // if need to compute exrep and overlap screening for this pair
@@ -748,6 +1010,10 @@ compute_two_body_crystal(struct efp *efp)
             }
         }
     }
+    free(item_start);
+    free(unique_frag);
+    free(nsymm_frag);
+
     // really, we counted all pairwise interactions twice. Scaling back
     efp->energy.electrostatic += e_elec/2;
     efp->energy.dispersion += e_disp/2;
@@ -1483,7 +1749,7 @@ efp_set_periodic_box(struct efp *efp, double x, double y, double z, double alpha
 	efp->box.c = gamma;
 
 	double max_cut = max_cutoff(efp->box);
-	double cut = efp->opts.swf_cutoff;
+	double cut = fmax(efp->opts.swf_cutoff, efp->opts.ligand_cutoff);
 	if (cut > max_cut) {
 	    printf("\n Maximum allowed cutoff is %lf ", max_cut*0.52917721092);
         printf("\n Given cutoff is %lf \n", cut*0.52917721092);
@@ -1624,8 +1890,16 @@ efp_prepare(struct efp *efp)
 		efp->n_polarizable_pts += efp->frags[i].n_polarizable_pts;
 	}
 
+	efp->pol_pt_frag = (size_t *)malloc(
+	    (efp->n_polarizable_pts ? efp->n_polarizable_pts : 1) * sizeof(size_t));
+	if (efp->pol_pt_frag == NULL)
+		return EFP_RESULT_NO_MEMORY;
+	for (size_t i = 0; i < efp->n_frag; i++)
+		for (size_t j = 0; j < efp->frags[i].n_polarizable_pts; j++)
+			efp->pol_pt_frag[efp->frags[i].polarizable_offset + j] = i;
+
 	efp->grad = (six_t *)calloc(efp->n_frag, sizeof(six_t));
-	efp->skiplist = (char *)calloc(efp->n_frag * efp->n_frag, 1);
+	efp->prepared = true;
 	efp->pair_energies = (struct efp_energy *)calloc(efp->n_frag, sizeof(struct efp_energy));
     efp->symmlist = (size_t *)calloc(efp->n_frag, sizeof(size_t));
 
@@ -1703,8 +1977,54 @@ efp_get_wavefunction_dependent_energy_correction(struct efp *efp, double *energy
     return efp_compute_pol_correction(efp, energy);
 }
 
+static enum efp_result compute(struct efp *, int);
+
 EFP_EXPORT enum efp_result
 efp_compute(struct efp *efp, int do_gradient)
+{
+	enum efp_result res;
+
+	assert(efp);
+
+	if (efp->grad == NULL) {
+		efp_log("call efp_prepare after all fragments are added");
+		return EFP_RESULT_FATAL;
+	}
+
+	/* neighbor lists for the current positions, used by the pair loops
+	 * only during this computation */
+	double t0 = efp_wall_time();
+	if ((res = efp_build_neighbors(efp))) {
+		efp_log("efp_build_neighbors() failure");
+		return res;
+	}
+	if (efp->opts.print > 0 && efp->nbr_valid)
+		printf(" TIMING neighbor lists %10.2f s (%zu pairs)\n",
+		    efp_wall_time() - t0, efp->nbr_offset[efp->n_frag] / 2);
+	/* per-thread stress tensors */
+#ifdef _OPENMP
+	size_t n_thr = (size_t)omp_get_max_threads();
+#else
+	size_t n_thr = 1;
+#endif
+	if (n_thr > efp->n_stress_thr) {
+		struct stress_slot *thr = (struct stress_slot *)realloc(
+		    efp->stress_thr, n_thr * sizeof(struct stress_slot));
+		if (thr == NULL)
+			return EFP_RESULT_NO_MEMORY;
+		efp->stress_thr = thr;
+		efp->n_stress_thr = n_thr;
+	}
+	memset(efp->stress_thr, 0, efp->n_stress_thr * sizeof(struct stress_slot));
+
+	res = compute(efp, do_gradient);
+	efp->nbr_valid = false;
+
+	return res;
+}
+
+static enum efp_result
+compute(struct efp *efp, int do_gradient)
 {
 	enum efp_result res;
 
@@ -1717,11 +2037,29 @@ efp_compute(struct efp *efp, int do_gradient)
 		return EFP_RESULT_FATAL;
 	}
 
-    // WARNING!!! Lyuda!!!
-	//efp->do_gradient = do_gradient;
-    efp->do_gradient = 1;
+	efp->do_gradient = do_gradient;
+
+	if (efp->opts.pairwise_ligand_only) {
+		if (!efp->opts.enable_pairwise) {
+			efp_log("pairwise_ligand_only requires enable_pairwise");
+			return EFP_RESULT_FATAL;
+		}
+		if (efp->opts.symmetry) {
+			efp_log("pairwise_ligand_only is not available with symmetry");
+			return EFP_RESULT_FATAL;
+		}
+		if (do_gradient) {
+			efp_log("gradients are not available with pairwise_ligand_only");
+			return EFP_RESULT_FATAL;
+		}
+	}
 
 	if (efp_counter == 0) {
+        if (efp->opts.pairwise_ligand_only)
+            printf(" NOTE: pairwise_ligand_only: two-body energies (electrostatic, "
+                "dispersion, exchange repulsion, charge penetration) include only "
+                "the fragment pairs with the ligand; the total energy is not the "
+                "energy of the system\n");
         if ((res = check_params(efp))) {
             efp_log("check_params() failure");
             return res;
@@ -1740,6 +2078,8 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_log("zero_atomic_gradient(efp) failure");
         return res;
     }
+	double t_start = efp_wall_time();
+
 	if (efp->opts.symmetry == 0) { // standard case
         efp_balance_work(efp, compute_two_body_range, NULL);
 	}
@@ -1747,10 +2087,19 @@ efp_compute(struct efp *efp, int do_gradient)
         compute_two_body_crystal(efp);
     }
 
+	double t_two_body = efp_wall_time();
+	if (efp->opts.print > 0)
+		printf(" TIMING two-body terms (elec, disp, xr%s) %10.2f s\n",
+		    efp->do_gradient ? ", with gradient" : "", t_two_body - t_start);
+
 	if ((res = efp_compute_pol(efp))) {
         efp_log("efp_compute_pol() failure");
         return res;
     }
+
+	double t_pol = efp_wall_time();
+	if (efp->opts.print > 0)
+		printf(" TIMING polarization total %10.2f s\n", t_pol - t_two_body);
     if ((res = efp_compute_ai_elec(efp))){
         efp_log("efp_compute_ai_elec() failure");
         return res;
@@ -1763,6 +2112,15 @@ efp_compute(struct efp *efp, int do_gradient)
         efp_log("efp_compute_ai_mm() failure");
         return res;
     }
+
+	/* sum the per-thread stress tensors */
+	for (size_t t = 0; t < efp->n_stress_thr; t++) {
+		const mat_t *s = &efp->stress_thr[t].m;
+
+		efp->stress.xx += s->xx; efp->stress.xy += s->xy; efp->stress.xz += s->xz;
+		efp->stress.yx += s->yx; efp->stress.yy += s->yy; efp->stress.yz += s->yz;
+		efp->stress.zx += s->zx; efp->stress.zy += s->zy; efp->stress.zz += s->zz;
+	}
 
 #ifdef EFP_USE_MPI
 	efp_allreduce(&efp->energy.electrostatic, 1);
@@ -2397,7 +2755,9 @@ efp_shutdown(struct efp *efp)
 	free(efp->ptc_grad);
 	free(efp->ai_orbital_energies);
 	free(efp->ai_dipole_integrals);
-	free(efp->skiplist);
+	efp_free_pairs(efp);
+	free(efp->pol_pt_frag);
+	free(efp->stress_thr);
 	free(efp->pair_energies);
     free(efp->symmlist);
 	free(efp);
@@ -2455,7 +2815,7 @@ efp_add_fragment(struct efp *efp, const char *name)
 	assert(efp);
 	assert(name);
 
-	if (efp->skiplist) {
+	if (efp->prepared) {
 		efp_log("cannot add fragments after efp_prepare");
 		return EFP_RESULT_FATAL;
 	}
@@ -2544,14 +2904,11 @@ EFP_EXPORT enum efp_result
 efp_skip_fragments(struct efp *efp, size_t i, size_t j, int value)
 {
 	assert(efp);
-	assert(efp->skiplist); /* call efp_prepare first */
+	assert(efp->prepared); /* call efp_prepare first */
 	assert(i < efp->n_frag);
 	assert(j < efp->n_frag);
 
-	efp->skiplist[i * efp->n_frag + j] = value ? 1 : 0;
-	efp->skiplist[j * efp->n_frag + i] = value ? 1 : 0;
-
-	return EFP_RESULT_SUCCESS;
+	return efp_set_pair_skip(efp, i, j, value);
 }
 
 EFP_EXPORT struct efp *
@@ -2658,10 +3015,23 @@ efp_get_frag_inertia(struct efp *efp, size_t frag_idx, double *inertia_out)
 	assert(inertia_out);
 	assert(frag_idx < efp->n_frag);
 
-	/* center of mass is in origin and axes are principal axes of inertia */
+	/* center of mass is in origin (see center_fragment() in parse.c) and axes
+	 * are principal axes of inertia */
 
 	const struct frag *frag = efp->frags[frag_idx].lib;
 	vec_t inertia = vec_zero;
+
+	if (!frag->principal_axes) {
+		if (efp->n_inertia_warnings < 5)
+			printf("WARNING! The frame of fragment %s is not the frame of its "
+			    "principal axes of inertia; its rotational motion will be "
+			    "wrong (write the fragment in its principal axes frame)\n",
+			    frag->name);
+		else if (efp->n_inertia_warnings == 5)
+			printf("WARNING! Further warnings about fragments without principal "
+			    "axes frames are suppressed\n");
+		efp->n_inertia_warnings++;
+	}
 
 	for (size_t i = 0; i < frag->n_atoms; i++) {
 		const struct efp_atom *atom = frag->atoms + i;
@@ -2966,7 +3336,7 @@ efp_set_symmlist(struct efp *efp)
 {
     assert(efp);
     assert(efp->symmlist);
-    assert(efp->skiplist);
+    assert(efp->prepared);
 
     if  (efp->opts.symmetry == 0)
     {
@@ -3004,24 +3374,25 @@ efp_set_symmlist(struct efp *efp)
             // printf("symm_list %d \n", efp->symmlist[i]);
         }
 
-        // setup skiplist now...
-        for (size_t i = 0; i < efp->n_frag; i++) {
-            for (size_t j = 0; j < efp->n_frag; j++) {
-                efp_skip_fragments(efp, i, j, 1);
-            }
+        // setup skipped pairs now: all pairs are skipped except those with
+        // the first fragment of a symmetry class (this replaces all pairs
+        // set before with efp_skip_fragments)
+        unsigned char *uniq = (unsigned char *)realloc(efp->frag_unique, efp->n_frag);
+        if (uniq == NULL) {
+            free(unique_names);
+            return EFP_RESULT_NO_MEMORY;
         }
+        efp->frag_unique = uniq;
+        efp_clear_pair_skips(efp);
 
         n_unique = 1;
-        //memset(efp->skiplist,true,efp->n_frag*efp->n_frag);
         for (size_t i = 0; i < efp->n_frag; i++) {
             // this is the first occuracnce of the symmetry-unique fragment
-            if (efp->symmlist[i] == n_unique) {
-                for (size_t j = 0; j < efp->n_frag; j++) {
-                    efp_skip_fragments(efp, i, j, 0);
-                }
+            efp->frag_unique[i] = efp->symmlist[i] == (size_t)n_unique;
+            if (efp->frag_unique[i])
                 n_unique ++;
-            }
         }
+        efp->skip_non_unique = true;
 
         free(unique_names);
     }
@@ -3033,7 +3404,7 @@ efp_set_symmlist(struct efp *efp)
     //printf("\n skiplist \n");
     for (int i = 0; i < efp->n_frag; i++){
         for (int j=0; j < efp->n_frag; j++){
-            printf(" %s ", efp->skiplist[i*efp->n_frag + j] ? "true" : "false");
+            printf(" %s ", efp_frag_pair_skipped(efp, i, j) ? "true" : "false");
         }
     }
      */
@@ -3243,6 +3614,7 @@ void print_opts(struct efp_opts *opts)
     printf("enable_elpot     %d\n", opts->enable_elpot);
     printf("enable_cutoff    %d\n", opts->enable_cutoff);
     printf("swf_cutoff       %lf\n", opts->swf_cutoff);
+    printf("ligand_cutoff    %lf\n", opts->ligand_cutoff);
     printf("xr_cutoff        %lf\n", opts->xr_cutoff);
     printf("enable_pairwise  %d\n", opts->enable_pairwise);
     printf("ligand           %d\n", opts->ligand);

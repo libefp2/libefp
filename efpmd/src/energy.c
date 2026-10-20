@@ -42,7 +42,7 @@ void compute_energy(struct state *state, bool do_grad)
 	size_t ifrag, nfrag, iatom, natom, spec_frag, n_special_atoms;
 	int itotal;
 
-    if (cfg_get_int(state->cfg, "print")>0) {
+    if (cfg_get_int(state->cfg, "print") > 0 && cfg_get_bool(state->cfg, "print_geometry")) {
         print_geometry(state->efp);
     }
 

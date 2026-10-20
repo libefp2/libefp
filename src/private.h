@@ -29,6 +29,11 @@
 
 #include <assert.h>
 #include <stdbool.h>
+#include <stdint.h>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 #include "efp.h"
 #include "int.h"
@@ -58,6 +63,10 @@ struct multipole_pt {
     bool if_oct;
     bool if_scr2;
     bool if_scr0;
+    /* indices of the fragment atoms that define the position of this point
+     * (equal for an atom, the two atoms of a bond for a bond mid-point,
+     * -1 for other points); used when atom positions are given */
+    long atom_idx[2];
 };
 
 struct polarizable_pt {
@@ -196,6 +205,12 @@ struct frag {
 
 	/* if classical (partial charges only and no QM-EFP screening) fragment */
 	bool if_mm_frag;
+	/* if the axes of the fragment frame are its principal axes of inertia */
+	bool principal_axes;
+	/* hash index of multipole point labels, used only while parsing */
+	size_t *label_index;
+	size_t label_index_size;
+	size_t label_index_n_pts;
 };
 
 /* structure derived from struct frag for describing ligand */
@@ -208,6 +223,12 @@ struct ligand {
 
     /* number of ligand points */
     size_t n_ligand_pts;
+};
+
+/* stress tensor of one thread, padded to its own cache lines */
+struct stress_slot {
+	mat_t m;
+	double pad[7];
 };
 
 struct efp {
@@ -243,6 +264,8 @@ struct efp {
 
     /* user parameters for this EFP computation */
 	struct efp_opts opts;
+	/* number of warnings about fragments without principal axes frames */
+	size_t n_inertia_warnings;
 
 	/* gradient will also be computed if nonzero */
 	int do_gradient;
@@ -291,8 +314,35 @@ struct efp {
 	/* EFP energy terms */
 	struct efp_energy energy;
 
-	/* skip-list of fragments - boolean array of nfrag^2 elements */
-	char *skiplist;
+	/* efp_prepare() was called */
+	bool prepared;
+
+	/* skipped fragment pairs (see pairs.c): a default rule plus the pairs
+	 * set with efp_skip_fragments() */
+	bool skip_non_unique;        /* symmetric crystals: skip the pairs
+	                                without a symmetry-unique fragment */
+	unsigned char *frag_unique;  /* n_frag flags: first fragment of its
+	                                symmetry class */
+	uint64_t *skip_keys;         /* hash map of explicitly set pairs */
+	unsigned char *skip_vals;
+	size_t skip_size;
+	size_t skip_count;
+
+	/* fragment of every polarizable point (global index, see
+	 * frag->polarizable_offset); the polarization loops run over points */
+	size_t *pol_pt_frag;
+
+	/* per-thread stress tensors (see efp_add_thread_stress), summed into
+	 * stress at the end of efp_compute */
+	struct stress_slot *stress_thr;
+	size_t n_stress_thr;
+
+	/* neighbor lists of the fragments within the cutoff, built by
+	 * efp_compute() and valid only during it (see pairs.c) */
+	bool nbr_valid;
+	size_t *nbr_offset;          /* n_frag + 1 offsets into nbr_list */
+	uint32_t *nbr_list;
+	size_t nbr_capacity;
 
 	/* energies of pairwise interactions with the ligand */
 	struct efp_energy *pair_energies;
@@ -303,5 +353,63 @@ struct efp {
 	/* symmetry list - list of n_frag length specifying symmetrically identical fragments */
 	size_t *symmlist;
 };
+
+/* fragment pairs (pairs.c) */
+enum efp_result efp_set_pair_skip(struct efp *, size_t, size_t, int);
+void efp_clear_pair_skips(struct efp *);
+int efp_frag_pair_skipped(const struct efp *, size_t, size_t);
+enum efp_result efp_build_neighbors(struct efp *);
+void efp_free_pairs(struct efp *);
+
+/*
+ * Pair loops: for (size_t k = 0; k < efp_n_partners(efp, i); k++) with
+ * j = efp_partner(efp, i, k) visit the neighbors of fragment i within the
+ * cutoff (in increasing order) while efp_compute() runs with a cutoff, and
+ * all fragments otherwise. The loops keep their own checks (j == i,
+ * efp_skip_frag_pair()).
+ */
+static inline size_t
+efp_n_partners(const struct efp *efp, size_t i)
+{
+	return efp->nbr_valid ? efp->nbr_offset[i + 1] - efp->nbr_offset[i] :
+	    efp->n_frag;
+}
+
+static inline size_t
+efp_partner(const struct efp *efp, size_t i, size_t k)
+{
+	return efp->nbr_valid ? (size_t)efp->nbr_list[efp->nbr_offset[i] + k] : k;
+}
+
+/*
+ * Add dr x force to the stress tensor. Every thread adds to its own copy
+ * during efp_compute (one shared tensor with atomic updates for every pair
+ * serialized the threads); outside, or for threads without a copy, the
+ * shared tensor is updated atomically.
+ */
+static inline void
+efp_add_thread_stress(const struct efp *efp, const vec_t *dr, const vec_t *force)
+{
+#ifdef _OPENMP
+	size_t t = (size_t)omp_get_thread_num();
+#else
+	size_t t = 0;
+#endif
+	if (t < efp->n_stress_thr) {
+		mat_t *s = &efp->stress_thr[t].m;
+
+		s->xx += dr->x * force->x;
+		s->xy += dr->x * force->y;
+		s->xz += dr->x * force->z;
+		s->yx += dr->y * force->x;
+		s->yy += dr->y * force->y;
+		s->yz += dr->y * force->z;
+		s->zx += dr->z * force->x;
+		s->zy += dr->z * force->y;
+		s->zz += dr->z * force->z;
+	}
+	else
+		efp_add_stress(dr, force, (mat_t *)&efp->stress);
+}
 
 #endif /* LIBEFP_PRIVATE_H */

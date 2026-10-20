@@ -123,6 +123,7 @@ void *xrealloc(void *, size_t);
 
 void print_vec(const double *);
 void print_geometry(struct efp *);
+double efpmd_wall_time(void); /* timer.c */
 void print_geometry_pbc(struct efp *, int);
 void print_energy(struct state *);
 void print_gradient(struct state *);

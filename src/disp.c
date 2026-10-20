@@ -102,7 +102,8 @@ disp_tt(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx, size_t pt_i_idx,
 		    CVEC(pt_i->x), &force, NULL);
 		efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x),
 		    CVEC(pt_j->x), &force, NULL);
-		efp_add_stress(&swf->dr, &force, &efp->stress);
+		if (efp->do_gradient) /* the stress tensor is available only with gradients */
+			efp_add_thread_stress(efp, &swf->dr, &force);
 	}
 	return energy;
 }
@@ -175,7 +176,8 @@ disp_overlap(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx,
 		six_atomic_add_abc(efp->grad + fr_i_idx, &torque_i);
 		six_atomic_sub_xyz(efp->grad + fr_j_idx, &force);
 		six_atomic_sub_abc(efp->grad + fr_j_idx, &torque_j);
-		efp_add_stress(&swf->dr, &force, &efp->stress);
+		if (efp->do_gradient) /* the stress tensor is available only with gradients */
+			efp_add_thread_stress(efp, &swf->dr, &force);
 	}
 	return energy;
 }
@@ -218,7 +220,8 @@ disp_off(struct efp *efp, size_t fr_i_idx, size_t fr_j_idx, size_t pt_i_idx,
 		    CVEC(pt_i->x), &force, NULL);
 		efp_sub_force(efp->grad + fr_j_idx, CVEC(fr_j->x),
 		    CVEC(pt_j->x), &force, NULL);
-		efp_add_stress(&swf->dr, &force, &efp->stress);
+		if (efp->do_gradient) /* the stress tensor is available only with gradients */
+			efp_add_thread_stress(efp, &swf->dr, &force);
 	}
 	return energy;
 }
@@ -290,10 +293,16 @@ efp_frag_frag_disp(struct efp *efp, size_t frag_i, size_t frag_j,
         size_t n_disp_j = fr_j->n_dynamic_polarizable_pts;
 
 
+        /* s and ds (LMO overlaps, one LMO per dynamic polarizable point) exist
+         * only when both fragments have LMOs; they are used only for overlap
+         * damping, which requires n_lmo == n_dynamic_polarizable_pts */
+        six_t ds_zero = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
         for (size_t ii = 0, idx = 0; ii < n_disp_i; ii++)
             for (size_t jj = 0; jj < n_disp_j; jj++, idx++)
                 energy += point_point_disp(efp, frag_i, frag_j, ii, jj,
-                                           s[idx], ds[idx], &swf);
+                                           s ? s[idx] : 0.0,
+                                           ds ? ds[idx] : ds_zero, &swf);
 
         vec_t force = {
                 swf.dswf.x * energy,
@@ -303,7 +312,8 @@ efp_frag_frag_disp(struct efp *efp, size_t frag_i, size_t frag_j,
 
         six_atomic_add_xyz(efp->grad + frag_i, &force);
         six_atomic_sub_xyz(efp->grad + frag_j, &force);
-        efp_add_stress(&swf.dr, &force, &efp->stress);
+        if (efp->do_gradient) /* the stress tensor is available only with gradients */
+        	efp_add_thread_stress(efp, &swf.dr, &force);
         return energy * swf.swf;
     }
 }

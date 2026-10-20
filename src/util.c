@@ -32,17 +32,36 @@
 int
 efp_skip_frag_pair(const struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
 {
-	size_t idx = fr_i_idx * efp->n_frag + fr_j_idx;
-
-	if (efp->skiplist[idx])
+	if (efp_frag_pair_skipped(efp, fr_i_idx, fr_j_idx))
 		return 1;
+	return efp_frag_pair_beyond_cutoff(efp, fr_i_idx, fr_j_idx);
+}
+
+/* cutoff of a fragment pair: ligand_cutoff for the pairs with the ligand,
+ * swf_cutoff otherwise */
+double
+efp_pair_cutoff(const struct efp *efp, size_t fr_i_idx, size_t fr_j_idx)
+{
+	if (efp->opts.ligand_cutoff > 0.0 && efp->opts.ligand >= 0 &&
+	    ((size_t)efp->opts.ligand == fr_i_idx ||
+	    (size_t)efp->opts.ligand == fr_j_idx))
+		return efp->opts.ligand_cutoff;
+	return efp->opts.swf_cutoff;
+}
+
+/* minimum-image distance between the fragment centers is beyond the cutoff */
+int
+efp_frag_pair_beyond_cutoff(const struct efp *efp, size_t fr_i_idx,
+    size_t fr_j_idx)
+{
 	if (!efp->opts.enable_cutoff)
 		return 0;
 
 	const struct frag *fr_i = efp->frags + fr_i_idx;
 	const struct frag *fr_j = efp->frags + fr_j_idx;
 
-	double cutoff2 = efp->opts.swf_cutoff * efp->opts.swf_cutoff;
+	double cutoff = efp_pair_cutoff(efp, fr_i_idx, fr_j_idx);
+	double cutoff2 = cutoff * cutoff;
 	vec_t dr = vec_sub(CVEC(fr_j->x), CVEC(fr_i->x));
 
 	if (efp->opts.enable_pbc) {
@@ -104,8 +123,16 @@ efp_make_swf(const struct efp *efp, const struct frag *fr_i,
         dswf = efp_get_dswf(r, efp->opts.xr_cutoff);
 	}
 	else {
-        swf.swf = efp_get_swf(r, efp->opts.swf_cutoff);
-        dswf = efp_get_dswf(r, efp->opts.swf_cutoff);
+        double cutoff = efp->opts.swf_cutoff;
+
+        /* ligand_cutoff for the pairs with the ligand */
+        if (efp->opts.ligand_cutoff > 0.0 && efp->opts.ligand >= 0 &&
+            fr_i >= efp->frags && fr_i < efp->frags + efp->n_frag &&
+            fr_j >= efp->frags && fr_j < efp->frags + efp->n_frag)
+            cutoff = efp_pair_cutoff(efp, (size_t)(fr_i - efp->frags),
+                (size_t)(fr_j - efp->frags));
+        swf.swf = efp_get_swf(r, cutoff);
+        dswf = efp_get_dswf(r, cutoff);
     }
 	swf.dswf.x = -dswf * swf.dr.x;
 	swf.dswf.y = -dswf * swf.dr.y;
@@ -416,10 +443,15 @@ unique_symm_frag(struct efp *efp, size_t *unique_frag){
 void
 n_symm_frag(struct efp *efp, size_t *symm_frag) {
 
+    /* number of fragments of every symmetry class; classes are numbered
+     * 1, 2, ... in the order of their first fragments (efp_set_symmlist),
+     * and symm_frag[i] belongs to class i + 1 (this used to compare with
+     * the class of fragment i, which is wrong unless the first fragments of
+     * the input are one per class) */
     for (size_t i = 0; i < efp->nsymm_frag; i++) {
         size_t counter = 0;
         for (size_t j = 0; j < efp->n_frag; j++) {
-            if (efp->symmlist[i] == efp->symmlist[j])
+            if (efp->symmlist[j] == i + 1)
                 counter++;
         }
         symm_frag[i] = counter;

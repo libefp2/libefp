@@ -32,7 +32,13 @@ void sim_sp(struct state *state)
 {
 	msg("SINGLE POINT ENERGY JOB\n\n\n");
 
-	print_geometry(state->efp);
+	if (cfg_get_bool(state->cfg, "print_geometry")) {
+		double t0 = efpmd_wall_time();
+
+		print_geometry(state->efp);
+		if (cfg_get_int(state->cfg, "print") > 0)
+			msg(" TIMING printing geometry %10.2f s\n", efpmd_wall_time() - t0);
+	}
 	if (cfg_get_bool(state->cfg, "print_pbc") && cfg_get_bool(state->cfg, "enable_pbc") ) {
 		if (cfg_get_int(state->cfg, "ligand") > -1)
 	    	print_geometry_pbc(state->efp,cfg_get_int(state->cfg, "ligand"));
@@ -42,7 +48,11 @@ void sim_sp(struct state *state)
 	compute_energy(state, false);
 
     if (cfg_get_bool(state->cfg, "enable_pairwise") && cfg_get_int(state->cfg, "ligand") > -1){
+        double t0 = efpmd_wall_time();
+
         print_pair_energy(state);
+        if (cfg_get_int(state->cfg, "print") > 0)
+            msg(" TIMING printing pairwise energies %10.2f s\n", efpmd_wall_time() - t0);
     }
 	print_energy(state);
 

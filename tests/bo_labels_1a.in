@@ -1,0 +1,22 @@
+# Regression test: bond mid-points with atom numbers above 99 (labels like BO10075, atoms 100 and 75).
+# pentacene_3x.efp (108 atoms; tests/tools/make_parse_test_fragments.py) is placed with atom coordinates,
+# where bond mid-points are recomputed from the atom positions (bo_labels_1b), and rigidly with coord
+# points (bo_labels_1a); the energies must be equal.
+run_type gtest
+ref_energy -0.0090673901
+coord points
+terms elec pol disp
+elec_damp screen
+pol_damp tt
+disp_damp tt
+fraglib_path ../fraglib
+
+fragment pentacene_3x
+    3.636109    -0.722305     0.000000
+    4.911087    -1.405659     0.000000
+    6.058717    -0.722932     0.000000
+
+fragment h2o_l
+    1.200000     0.000000     3.363030
+    0.447348     0.000000     2.799834
+    1.952652     0.000000     2.799834

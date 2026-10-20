@@ -44,6 +44,7 @@ if(TORCH_SWITCH)
     src/parse.c
     src/rand.c
     src/sp.c
+    src/timer.c
     src/torch.c
   )
 else()
@@ -64,6 +65,7 @@ else()
     src/parse.c
     src/rand.c
     src/sp.c
+    src/timer.c
   )
 endif()
  
